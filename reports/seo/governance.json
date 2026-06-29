@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-27T05:49:56.881Z",
+  "generatedAt": "2026-06-29T05:01:25.413Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -59,7 +59,7 @@
         },
         {
           "path": "countries/algeria/algiers/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/algiers/gold-shops/index.html",
@@ -67,7 +67,7 @@
         },
         {
           "path": "countries/algeria/constantine/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/constantine/gold-shops/index.html",
@@ -79,7 +79,7 @@
         },
         {
           "path": "countries/algeria/oran/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/oran/gold-shops/index.html",
@@ -91,7 +91,7 @@
         },
         {
           "path": "countries/bahrain/manama/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/manama/gold-shops/index.html",
@@ -99,7 +99,7 @@
         },
         {
           "path": "countries/bahrain/muharraq/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/muharraq/gold-shops/index.html",
@@ -107,7 +107,7 @@
         },
         {
           "path": "countries/bahrain/rifaa/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/rifaa/gold-shops/index.html",
@@ -115,7 +115,7 @@
         },
         {
           "path": "countries/egypt/alexandria/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/egypt/alexandria/gold-shops/index.html",
@@ -127,7 +127,7 @@
         },
         {
           "path": "countries/egypt/giza/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/egypt/giza/gold-shops/index.html",
@@ -139,7 +139,7 @@
         },
         {
           "path": "countries/india/chennai/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/chennai/gold-shops/index.html",
@@ -147,7 +147,7 @@
         },
         {
           "path": "countries/india/delhi/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/delhi/gold-shops/index.html",
@@ -159,7 +159,7 @@
         },
         {
           "path": "countries/india/mumbai/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/mumbai/gold-shops/index.html",
@@ -183,7 +183,7 @@
         },
         {
           "path": "countries/jordan/amman/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/amman/gold-shops/index.html",
@@ -195,7 +195,7 @@
         },
         {
           "path": "countries/jordan/irbid/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/irbid/gold-shops/index.html",
@@ -203,7 +203,7 @@
         },
         {
           "path": "countries/jordan/zarqa/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/zarqa/gold-shops/index.html",
@@ -211,7 +211,7 @@
         },
         {
           "path": "countries/kuwait/hawalli/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/kuwait/hawalli/gold-shops/index.html",
@@ -223,7 +223,7 @@
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
-          "words": 56
+          "words": 52
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
@@ -231,7 +231,7 @@
         },
         {
           "path": "countries/kuwait/salmiya/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/kuwait/salmiya/gold-shops/index.html",
@@ -239,7 +239,7 @@
         },
         {
           "path": "countries/lebanon/beirut/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/beirut/gold-shops/index.html",
@@ -251,7 +251,7 @@
         },
         {
           "path": "countries/lebanon/sidon/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/sidon/gold-shops/index.html",
@@ -259,7 +259,7 @@
         },
         {
           "path": "countries/lebanon/tripoli/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/tripoli/gold-shops/index.html",
@@ -267,7 +267,7 @@
         },
         {
           "path": "countries/libya/benghazi/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/benghazi/gold-shops/index.html",
@@ -279,7 +279,7 @@
         },
         {
           "path": "countries/libya/misrata/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/misrata/gold-shops/index.html",
@@ -287,7 +287,7 @@
         },
         {
           "path": "countries/libya/tripoli/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/tripoli/gold-shops/index.html",
@@ -295,7 +295,7 @@
         },
         {
           "path": "countries/morocco/casablanca/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/casablanca/gold-shops/index.html",
@@ -307,7 +307,7 @@
         },
         {
           "path": "countries/morocco/marrakech/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/marrakech/gold-shops/index.html",
@@ -315,7 +315,7 @@
         },
         {
           "path": "countries/morocco/rabat/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/rabat/gold-shops/index.html",
@@ -327,7 +327,7 @@
         },
         {
           "path": "countries/oman/muscat/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/muscat/gold-shops/index.html",
@@ -335,7 +335,7 @@
         },
         {
           "path": "countries/oman/salalah/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/salalah/gold-shops/index.html",
@@ -343,7 +343,7 @@
         },
         {
           "path": "countries/oman/sohar/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/sohar/gold-shops/index.html",
@@ -383,7 +383,7 @@
         },
         {
           "path": "countries/qatar/al-rayyan/gold-rate/index.html",
-          "words": 57
+          "words": 53
         },
         {
           "path": "countries/qatar/al-rayyan/gold-shops/index.html",
@@ -391,7 +391,7 @@
         },
         {
           "path": "countries/qatar/al-wakrah/gold-rate/index.html",
-          "words": 57
+          "words": 53
         },
         {
           "path": "countries/qatar/al-wakrah/gold-shops/index.html",
@@ -407,7 +407,7 @@
         },
         {
           "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/dammam/gold-shops/index.html",
@@ -419,7 +419,7 @@
         },
         {
           "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/jeddah/gold-shops/index.html",
@@ -427,7 +427,7 @@
         },
         {
           "path": "countries/saudi-arabia/mecca/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/mecca/gold-shops/index.html",
@@ -435,7 +435,7 @@
         },
         {
           "path": "countries/saudi-arabia/medina/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/medina/gold-shops/index.html",
@@ -451,7 +451,7 @@
         },
         {
           "path": "countries/sudan/khartoum/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/sudan/khartoum/gold-shops/index.html",
@@ -459,7 +459,7 @@
         },
         {
           "path": "countries/sudan/omdurman/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/sudan/omdurman/gold-shops/index.html",
@@ -467,7 +467,7 @@
         },
         {
           "path": "countries/sudan/port-sudan/gold-rate/index.html",
-          "words": 56
+          "words": 52
         },
         {
           "path": "countries/sudan/port-sudan/gold-shops/index.html",
@@ -495,7 +495,7 @@
         },
         {
           "path": "countries/tunisia/sfax/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/sfax/gold-shops/index.html",
@@ -503,7 +503,7 @@
         },
         {
           "path": "countries/tunisia/sousse/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/sousse/gold-shops/index.html",
@@ -511,7 +511,7 @@
         },
         {
           "path": "countries/tunisia/tunis/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/tunis/gold-shops/index.html",
@@ -535,7 +535,7 @@
         },
         {
           "path": "countries/uae/abu-dhabi/gold-rate/index.html",
-          "words": 64
+          "words": 58
         },
         {
           "path": "countries/uae/abu-dhabi/gold-shops/index.html",
@@ -543,7 +543,7 @@
         },
         {
           "path": "countries/uae/ajman/gold-rate/index.html",
-          "words": 61
+          "words": 55
         },
         {
           "path": "countries/uae/ajman/gold-shops/index.html",
@@ -555,7 +555,7 @@
         },
         {
           "path": "countries/uae/fujairah/gold-rate/index.html",
-          "words": 59
+          "words": 53
         },
         {
           "path": "countries/uae/fujairah/gold-shops/index.html",
@@ -567,7 +567,7 @@
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-rate/index.html",
-          "words": 67
+          "words": 61
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-shops/index.html",
@@ -575,7 +575,7 @@
         },
         {
           "path": "countries/uae/sharjah/gold-rate/index.html",
-          "words": 61
+          "words": 55
         },
         {
           "path": "countries/uae/sharjah/gold-shops/index.html",
@@ -583,7 +583,7 @@
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-rate/index.html",
-          "words": 67
+          "words": 61
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-shops/index.html",
@@ -2087,7 +2087,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2144,7 +2144,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2239,7 +2239,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2334,7 +2334,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2391,7 +2391,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2448,7 +2448,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2505,7 +2505,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2562,7 +2562,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 327,
+      "wordCount": 308,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2657,7 +2657,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2809,7 +2809,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2866,7 +2866,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2961,7 +2961,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3018,7 +3018,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 283,
+      "wordCount": 264,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3075,7 +3075,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 257,
+      "wordCount": 238,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3132,7 +3132,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 266,
+      "wordCount": 247,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3227,7 +3227,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3322,7 +3322,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3379,7 +3379,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3455,7 +3455,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3531,7 +3531,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3588,7 +3588,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3645,7 +3645,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3740,7 +3740,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3797,7 +3797,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3854,7 +3854,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3949,7 +3949,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4006,7 +4006,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4063,7 +4063,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4158,7 +4158,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4215,7 +4215,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4310,7 +4310,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4367,7 +4367,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4424,7 +4424,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4519,7 +4519,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4576,7 +4576,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 269,
+      "wordCount": 250,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4633,7 +4633,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 229,
+      "wordCount": 210,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4690,7 +4690,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4785,7 +4785,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4842,7 +4842,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 233,
+      "wordCount": 214,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4899,7 +4899,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4956,7 +4956,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5051,7 +5051,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 336,
+      "wordCount": 317,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5184,7 +5184,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5279,7 +5279,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5336,7 +5336,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5393,7 +5393,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5450,7 +5450,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 330,
+      "wordCount": 311,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5545,7 +5545,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5602,7 +5602,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5659,7 +5659,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5716,7 +5716,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 232,
+      "wordCount": 213,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5773,7 +5773,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 250,
+      "wordCount": 231,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5849,7 +5849,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5963,7 +5963,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6020,7 +6020,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6077,7 +6077,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6134,7 +6134,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 221,
+      "wordCount": 202,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6229,7 +6229,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 267,
+      "wordCount": 248,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6286,7 +6286,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 221,
+      "wordCount": 202,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6343,7 +6343,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 64,
+      "wordCount": 58,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6400,7 +6400,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 61,
+      "wordCount": 55,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6514,7 +6514,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 337,
+      "wordCount": 318,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6571,7 +6571,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6704,7 +6704,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 67,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6761,7 +6761,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 61,
+      "wordCount": 55,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6818,7 +6818,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 67,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6875,7 +6875,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 234,
+      "wordCount": 215,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6970,7 +6970,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 263,
+      "wordCount": 244,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7027,7 +7027,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 216,
+      "wordCount": 197,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
