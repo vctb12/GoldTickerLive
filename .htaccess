@@ -49,6 +49,13 @@ RewriteRule ^countries/algeria\.html$ /countries/algeria/ [R=301,L]
 # ═══════════════════════════════════════════════════════════════
 # Security Headers
 # ═══════════════════════════════════════════════════════════════
+# ⚠️  HOST CAVEAT: these Header directives only take effect on an Apache host
+# with mod_headers. The default production deploy (.github/workflows/deploy.yml)
+# copies this file into dist/ but publishes to GitHub Pages, which serves it as
+# a static file and does NOT process .htaccess — so NONE of the headers below
+# are emitted on the public site. To ship them, front the site with Apache /
+# Cloudflare / Netlify, or set equivalent Cloudflare Transform Rules. The
+# parity note on HSTS below refers to value parity, not to where it is applied.
 
 <IfModule mod_headers.c>
   # Prevent MIME-type sniffing
