@@ -1,22 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Gold Ticker Live">
   <defs>
-    <linearGradient id="coin-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#e8bf5a"/>
-      <stop offset="40%" stop-color="#d4a840"/>
-      <stop offset="100%" stop-color="#b8892c"/>
+    <linearGradient id="gtl-coin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0ca5c"/>
+      <stop offset="45%" stop-color="#d8aa3e"/>
+      <stop offset="100%" stop-color="#b07d1f"/>
     </linearGradient>
-    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f1118"/>
-      <stop offset="100%" stop-color="#08090e"/>
+    <linearGradient id="gtl-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10141d"/>
+      <stop offset="100%" stop-color="#080a0e"/>
     </linearGradient>
+    <style>
+      /* SVG favicon adapts to the browser-chrome theme */
+      .tile-edge { stroke: #caa24a; stroke-opacity: 0.28; }
+      @media (prefers-color-scheme: dark) {
+        .tile-edge { stroke-opacity: 0.45; }
+      }
+    </style>
   </defs>
-  <!-- Background -->
-  <rect width="32" height="32" rx="8" fill="url(#bg-grad)"/>
-  <!-- Gold coin circle -->
-  <circle cx="16" cy="16" r="11" fill="none" stroke="url(#coin-grad)" stroke-width="1.5"/>
-  <circle cx="16" cy="16" r="8.5" fill="url(#coin-grad)" opacity="0.12"/>
-  <!-- GT mark -->
-  <text x="16" y="20.5" font-size="11" text-anchor="middle" fill="url(#coin-grad)" font-family="Georgia,serif" font-weight="700" letter-spacing="-0.5">G</text>
-  <!-- Ticker bar accent -->
-  <rect x="8" y="25.5" width="16" height="1" rx="0.5" fill="url(#coin-grad)" opacity="0.6"/>
+  <!-- App tile so the mark holds contrast on any browser chrome -->
+  <rect class="tile-edge" x="0.6" y="0.6" width="30.8" height="30.8" rx="7.4" fill="url(#gtl-bg)" stroke-width="0.8"/>
+  <!-- Struck gold coin -->
+  <circle cx="16" cy="16" r="11" fill="none" stroke="url(#gtl-coin)" stroke-width="1.5"/>
+  <circle cx="16" cy="16" r="8.7" fill="url(#gtl-coin)" opacity="0.10"/>
+  <!-- Geometric "G" (path, no font dependency) -->
+  <path d="M21.08 12.44 A6.2 6.2 0 1 0 21.08 19.56 L21.08 16.1 L16.7 16.1"
+        fill="none" stroke="url(#gtl-coin)" stroke-width="2.4"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Ticker accent -->
+  <rect x="9.5" y="25.4" width="13" height="1.25" rx="0.62" fill="url(#gtl-coin)" opacity="0.65"/>
 </svg>

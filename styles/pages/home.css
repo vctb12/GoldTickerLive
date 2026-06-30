@@ -112,6 +112,28 @@
   background: var(--gradient-hero-dark);
 }
 
+/* Decorative hero ambient slot — sits at z-index:0, BEHIND .hero-inner
+   (z-index:1), reserves no layout box (no CLS) and intercepts no pointer events. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dark theme only: a soft warm gold glow weighted to the right of the midnight
+   hero, behind the price card. Pure CSS radial gradients ON PURPOSE — a measured
+   raster ambient became the LCP element and added ~34ms (406ms→440ms); a CSS
+   gradient is never an LCP candidate, so this keeps the warm depth at zero
+   LCP/CLS cost (re-measured: LCP stays ~406ms, element stays the hero text).
+   Light keeps its deliberately flat parchment gradient. */
+[data-theme='dark'] .hero::before {
+  background:
+    radial-gradient(58% 78% at 86% 32%, rgb(240 202 92 / 11%) 0%, transparent 60%),
+    radial-gradient(42% 62% at 98% 72%, rgb(176 125 31 / 10%) 0%, transparent 58%);
+}
+
 /* Phase 13: Hero inner layout — wider gap, better proportions */
 .hero-inner {
   max-width: 1200px;
@@ -1118,6 +1140,43 @@
   border-radius: var(--radius-sm);
   background: var(--color-gold-bg);
   border: 1px solid rgb(196 144 46 / 20%);
+  color: var(--color-gold-dark);
+}
+
+/* Inline monoline icons (sprite <use>) inside the homepage chips/strips */
+.trust-icon svg,
+.trust-banner-icon svg,
+.explainer-strip-icon svg {
+  display: block;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.trust-banner-icon {
+  display: inline-flex;
+  color: var(--color-gold-dark);
+}
+
+.trust-banner-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.explainer-strip-icon {
+  color: var(--color-gold-dark);
+}
+
+.explainer-strip-icon svg {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .trust-content {
@@ -1554,9 +1613,35 @@
 }
 
 .tool-card-icon {
-  font-size: 1.85rem;
-  line-height: 1;
-  margin-bottom: 0.15rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: 0.35rem;
+  border-radius: 0.7rem;
+  background: var(--color-gold-bg);
+  border: 1px solid rgb(196 144 46 / 22%);
+  color: var(--color-gold-dark);
+}
+
+.tool-card-icon .ti {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sprite host must never occupy layout space */
+.ti-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 .tool-card-title {
@@ -1603,7 +1688,8 @@
 /* ◈ tool-card glyph retired (DESIGN-SYSTEM §4 — no decorative glyphs) */
 
 .tool-card--primary .tool-card-icon {
-  font-size: 2.2rem;
+  background: linear-gradient(145deg, rgb(255 255 255 / 60%), var(--color-gold-tint));
+  border-color: rgb(196 144 46 / 40%);
 }
 
 .tool-card--primary .tool-card-title {

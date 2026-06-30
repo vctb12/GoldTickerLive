@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-27T05:49:56.881Z",
+  "generatedAt": "2026-06-30T05:43:04.878Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -59,7 +59,7 @@
         },
         {
           "path": "countries/algeria/algiers/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/algiers/gold-shops/index.html",
@@ -67,7 +67,7 @@
         },
         {
           "path": "countries/algeria/constantine/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/constantine/gold-shops/index.html",
@@ -79,7 +79,7 @@
         },
         {
           "path": "countries/algeria/oran/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/algeria/oran/gold-shops/index.html",
@@ -91,7 +91,7 @@
         },
         {
           "path": "countries/bahrain/manama/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/manama/gold-shops/index.html",
@@ -99,7 +99,7 @@
         },
         {
           "path": "countries/bahrain/muharraq/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/muharraq/gold-shops/index.html",
@@ -107,7 +107,7 @@
         },
         {
           "path": "countries/bahrain/rifaa/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/bahrain/rifaa/gold-shops/index.html",
@@ -115,7 +115,7 @@
         },
         {
           "path": "countries/egypt/alexandria/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/egypt/alexandria/gold-shops/index.html",
@@ -127,7 +127,7 @@
         },
         {
           "path": "countries/egypt/giza/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/egypt/giza/gold-shops/index.html",
@@ -139,7 +139,7 @@
         },
         {
           "path": "countries/india/chennai/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/chennai/gold-shops/index.html",
@@ -147,7 +147,7 @@
         },
         {
           "path": "countries/india/delhi/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/delhi/gold-shops/index.html",
@@ -159,7 +159,7 @@
         },
         {
           "path": "countries/india/mumbai/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/india/mumbai/gold-shops/index.html",
@@ -183,7 +183,7 @@
         },
         {
           "path": "countries/jordan/amman/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/amman/gold-shops/index.html",
@@ -195,7 +195,7 @@
         },
         {
           "path": "countries/jordan/irbid/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/irbid/gold-shops/index.html",
@@ -203,7 +203,7 @@
         },
         {
           "path": "countries/jordan/zarqa/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/jordan/zarqa/gold-shops/index.html",
@@ -211,7 +211,7 @@
         },
         {
           "path": "countries/kuwait/hawalli/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/kuwait/hawalli/gold-shops/index.html",
@@ -223,7 +223,7 @@
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
-          "words": 56
+          "words": 52
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
@@ -231,7 +231,7 @@
         },
         {
           "path": "countries/kuwait/salmiya/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/kuwait/salmiya/gold-shops/index.html",
@@ -239,7 +239,7 @@
         },
         {
           "path": "countries/lebanon/beirut/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/beirut/gold-shops/index.html",
@@ -251,7 +251,7 @@
         },
         {
           "path": "countries/lebanon/sidon/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/sidon/gold-shops/index.html",
@@ -259,7 +259,7 @@
         },
         {
           "path": "countries/lebanon/tripoli/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/lebanon/tripoli/gold-shops/index.html",
@@ -267,7 +267,7 @@
         },
         {
           "path": "countries/libya/benghazi/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/benghazi/gold-shops/index.html",
@@ -279,7 +279,7 @@
         },
         {
           "path": "countries/libya/misrata/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/misrata/gold-shops/index.html",
@@ -287,7 +287,7 @@
         },
         {
           "path": "countries/libya/tripoli/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/libya/tripoli/gold-shops/index.html",
@@ -295,7 +295,7 @@
         },
         {
           "path": "countries/morocco/casablanca/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/casablanca/gold-shops/index.html",
@@ -307,7 +307,7 @@
         },
         {
           "path": "countries/morocco/marrakech/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/marrakech/gold-shops/index.html",
@@ -315,7 +315,7 @@
         },
         {
           "path": "countries/morocco/rabat/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/morocco/rabat/gold-shops/index.html",
@@ -327,7 +327,7 @@
         },
         {
           "path": "countries/oman/muscat/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/muscat/gold-shops/index.html",
@@ -335,7 +335,7 @@
         },
         {
           "path": "countries/oman/salalah/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/salalah/gold-shops/index.html",
@@ -343,7 +343,7 @@
         },
         {
           "path": "countries/oman/sohar/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/oman/sohar/gold-shops/index.html",
@@ -383,7 +383,7 @@
         },
         {
           "path": "countries/qatar/al-rayyan/gold-rate/index.html",
-          "words": 57
+          "words": 53
         },
         {
           "path": "countries/qatar/al-rayyan/gold-shops/index.html",
@@ -391,7 +391,7 @@
         },
         {
           "path": "countries/qatar/al-wakrah/gold-rate/index.html",
-          "words": 57
+          "words": 53
         },
         {
           "path": "countries/qatar/al-wakrah/gold-shops/index.html",
@@ -407,7 +407,7 @@
         },
         {
           "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/dammam/gold-shops/index.html",
@@ -419,7 +419,7 @@
         },
         {
           "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/jeddah/gold-shops/index.html",
@@ -427,7 +427,7 @@
         },
         {
           "path": "countries/saudi-arabia/mecca/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/mecca/gold-shops/index.html",
@@ -435,7 +435,7 @@
         },
         {
           "path": "countries/saudi-arabia/medina/gold-rate/index.html",
-          "words": 56
+          "words": 51
         },
         {
           "path": "countries/saudi-arabia/medina/gold-shops/index.html",
@@ -451,7 +451,7 @@
         },
         {
           "path": "countries/sudan/khartoum/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/sudan/khartoum/gold-shops/index.html",
@@ -459,7 +459,7 @@
         },
         {
           "path": "countries/sudan/omdurman/gold-rate/index.html",
-          "words": 53
+          "words": 49
         },
         {
           "path": "countries/sudan/omdurman/gold-shops/index.html",
@@ -467,7 +467,7 @@
         },
         {
           "path": "countries/sudan/port-sudan/gold-rate/index.html",
-          "words": 56
+          "words": 52
         },
         {
           "path": "countries/sudan/port-sudan/gold-shops/index.html",
@@ -495,7 +495,7 @@
         },
         {
           "path": "countries/tunisia/sfax/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/sfax/gold-shops/index.html",
@@ -503,7 +503,7 @@
         },
         {
           "path": "countries/tunisia/sousse/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/sousse/gold-shops/index.html",
@@ -511,7 +511,7 @@
         },
         {
           "path": "countries/tunisia/tunis/gold-rate/index.html",
-          "words": 52
+          "words": 48
         },
         {
           "path": "countries/tunisia/tunis/gold-shops/index.html",
@@ -535,7 +535,7 @@
         },
         {
           "path": "countries/uae/abu-dhabi/gold-rate/index.html",
-          "words": 64
+          "words": 58
         },
         {
           "path": "countries/uae/abu-dhabi/gold-shops/index.html",
@@ -543,7 +543,7 @@
         },
         {
           "path": "countries/uae/ajman/gold-rate/index.html",
-          "words": 61
+          "words": 55
         },
         {
           "path": "countries/uae/ajman/gold-shops/index.html",
@@ -555,7 +555,7 @@
         },
         {
           "path": "countries/uae/fujairah/gold-rate/index.html",
-          "words": 59
+          "words": 53
         },
         {
           "path": "countries/uae/fujairah/gold-shops/index.html",
@@ -567,7 +567,7 @@
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-rate/index.html",
-          "words": 67
+          "words": 61
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-shops/index.html",
@@ -575,7 +575,7 @@
         },
         {
           "path": "countries/uae/sharjah/gold-rate/index.html",
-          "words": 61
+          "words": 55
         },
         {
           "path": "countries/uae/sharjah/gold-shops/index.html",
@@ -583,7 +583,7 @@
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-rate/index.html",
-          "words": 67
+          "words": 61
         },
         {
           "path": "countries/uae/umm-al-quwain/gold-shops/index.html",
@@ -1088,7 +1088,7 @@
       "group": "core",
       "noindex": false,
       "title": "Compare Gold Prices by Country — GCC &amp; Arab World | Gold Ticker Live",
-      "description": "Compare live gold prices and all-in retail estimates across the UAE, GCC and the wider Arab world. Sortable table, country chips, side-by-side detail and a cheapest-to-buy callout.",
+      "description": "Compare reference gold prices and all-in retail estimates across the UAE, GCC and the wider Arab world. Sortable table, country chips, side-by-side detail and a cheapest-to-buy callout.",
       "canonical": "https://goldtickerlive.com/compare.html",
       "hreflangs": [
         "x-default",
@@ -1156,7 +1156,7 @@
       "group": "content",
       "noindex": true,
       "title": "Gold Price Widget — Gold Ticker Live",
-      "description": "Embeddable live gold price widget. Iframe this on any site to show real-time 24K, 22K, 21K, 18K gold prices in AED or your currency.",
+      "description": "Embeddable reference gold price widget. Iframe this on any site to show real-time 24K, 22K, 21K, 18K gold prices in AED or your currency.",
       "canonical": "https://goldtickerlive.com/embed/gold-ticker.html",
       "hreflangs": [],
       "hasSchema": false,
@@ -1171,7 +1171,7 @@
       "group": "content",
       "noindex": false,
       "title": "Gold Price FAQ — UAE, GCC &amp; Arab Markets | Gold Ticker Live",
-      "description": "Answers to common questions about live gold prices, 24K vs 22K, AED peg, shop prices, freshness labels, and Gold Ticker Live methodology.",
+      "description": "Answers to common questions about reference gold prices, 24K vs 22K, AED peg, shop prices, freshness labels, and Gold Ticker Live methodology.",
       "canonical": "https://goldtickerlive.com/content/faq/",
       "hreflangs": [
         "x-default",
@@ -1836,7 +1836,7 @@
       "group": "content",
       "noindex": false,
       "title": "Search Gold Prices — Countries, Cities & Tools | Gold Ticker Live",
-      "description": "Search live gold prices by country, city, or karat. Find gold shops, price history, and tools for UAE, GCC, and Arab world markets.",
+      "description": "Search reference gold prices by country, city, or karat. Find gold shops, price history, and tools for UAE, GCC, and Arab world markets.",
       "canonical": "https://goldtickerlive.com/content/search/",
       "hreflangs": [
         "x-default",
@@ -1855,7 +1855,7 @@
       "group": "content",
       "noindex": true,
       "title": "X/Twitter Gold Price Post Generator | Gold Ticker Live",
-      "description": "Generate ready-to-post X/Twitter updates with live gold prices. Choose from daily, alert, weekly, and ATH templates.",
+      "description": "Generate ready-to-post X/Twitter updates with reference gold prices. Choose from daily, alert, weekly, and ATH templates.",
       "canonical": "https://goldtickerlive.com/content/social/x-post-generator.html",
       "hreflangs": [
         "x-default",
@@ -2079,7 +2079,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Algiers Today — 24K, 22K, 21K, 18K in DZD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Algiers, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Algiers, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/algeria/algiers/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2087,7 +2087,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2117,7 +2117,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Algiers, Algeria | Gold Ticker Live",
-      "description": "Navigate to live Algiers gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Algiers reference gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/algeria/algiers/",
       "hreflangs": [
         "x-default",
@@ -2136,7 +2136,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Constantine Today — 24K, 22K, 21K, 18K in DZD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Constantine, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Constantine, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/algeria/constantine/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2144,7 +2144,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2174,7 +2174,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Constantine, Algeria | Gold Ticker Live",
-      "description": "Navigate to live Constantine gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Constantine reference gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/algeria/constantine/",
       "hreflangs": [
         "x-default",
@@ -2231,7 +2231,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Oran Today — 24K, 22K, 21K, 18K in DZD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Oran, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Oran, Algeria today. Compare rates in DZD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/algeria/oran/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2239,7 +2239,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2269,7 +2269,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Oran, Algeria | Gold Ticker Live",
-      "description": "Navigate to live Oran gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Oran reference gold rates (24K–18K in DZD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/algeria/oran/",
       "hreflangs": [
         "x-default",
@@ -2326,7 +2326,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Manama Today — 24K, 22K, 21K, 18K in BHD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Manama, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Manama, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/manama/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2334,7 +2334,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2364,7 +2364,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Manama, Bahrain | Gold Ticker Live",
-      "description": "Navigate to live Manama gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Manama reference gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/manama/",
       "hreflangs": [
         "x-default",
@@ -2383,7 +2383,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Muharraq Today — 24K, 22K, 21K, 18K in BHD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Muharraq, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Muharraq, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/muharraq/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2391,7 +2391,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2421,7 +2421,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Muharraq, Bahrain | Gold Ticker Live",
-      "description": "Navigate to live Muharraq gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Muharraq reference gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/muharraq/",
       "hreflangs": [
         "x-default",
@@ -2440,7 +2440,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Rifaa Today — 24K, 22K, 21K, 18K in BHD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Rifaa, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Rifaa, Bahrain today. Compare rates in BHD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/rifaa/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2448,7 +2448,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2478,7 +2478,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Rifaa, Bahrain | Gold Ticker Live",
-      "description": "Navigate to live Rifaa gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Rifaa reference gold rates (24K–18K in BHD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/bahrain/rifaa/",
       "hreflangs": [
         "x-default",
@@ -2497,7 +2497,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Alexandria Today — 24K, 22K, 21K, 18K in EGP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Alexandria, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Alexandria, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/egypt/alexandria/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2505,7 +2505,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2535,7 +2535,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Alexandria, Egypt | Gold Ticker Live",
-      "description": "Navigate to live Alexandria gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Alexandria reference gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/egypt/alexandria/",
       "hreflangs": [
         "x-default",
@@ -2554,7 +2554,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Cairo Today — 24K, 22K, 21K, 18K in EGP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Cairo, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Cairo, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/egypt/cairo/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2562,7 +2562,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 327,
+      "wordCount": 308,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2592,7 +2592,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Cairo, Egypt | Gold Ticker Live",
-      "description": "Navigate to live Cairo gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Cairo reference gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/egypt/cairo/",
       "hreflangs": [
         "x-default",
@@ -2611,7 +2611,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Cairo Today — EGP per Gram | Gold Ticker Live",
-      "description": "Live gold price in Cairo today in Egyptian Pounds (EGP) per gram — 24K, 22K, 21K, 18K. Khan el-Khalili, Nasr City gold markets, and where to buy gold in Cairo.",
+      "description": "Reference gold price in Cairo today in Egyptian Pounds (EGP) per gram — 24K, 22K, 21K, 18K. Khan el-Khalili, Nasr City gold markets, and where to buy gold in Cairo.",
       "canonical": "https://goldtickerlive.com/countries/egypt/cities/cairo.html",
       "hreflangs": [
         "x-default",
@@ -2630,7 +2630,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Cities in Egypt | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Egypt — live gold rates, shops and karat pages.",
+      "description": "Cities covered by Gold Ticker Live in Egypt — reference gold rates, shops and karat pages.",
       "canonical": "https://goldtickerlive.com/countries/egypt/cities/",
       "hreflangs": [
         "x-default",
@@ -2649,7 +2649,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Giza Today — 24K, 22K, 21K, 18K in EGP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Giza, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Giza, Egypt today. Compare rates in EGP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/egypt/giza/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2657,7 +2657,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2687,7 +2687,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Giza, Egypt | Gold Ticker Live",
-      "description": "Navigate to live Giza gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Giza reference gold rates (24K–18K in EGP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/egypt/giza/",
       "hreflangs": [
         "x-default",
@@ -2782,7 +2782,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price by Country — GCC, Levant, Africa &amp; India | Gold Ticker Live",
-      "description": "Live gold prices by country — UAE, Saudi Arabia, Kuwait, Qatar, Egypt, India and 15+ more. Spot-linked estimates in local currencies, refreshed every 90s.",
+      "description": "Reference gold prices by country — UAE, Saudi Arabia, Kuwait, Qatar, Egypt, India and 15+ more. Spot-linked estimates in local currencies, refreshed every 90s.",
       "canonical": "https://goldtickerlive.com/countries/",
       "hreflangs": [
         "x-default",
@@ -2801,7 +2801,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Chennai Today — 24K, 22K, 21K, 18K in INR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Chennai, India today. Compare rates in INR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Chennai, India today. Compare rates in INR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/india/chennai/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2809,7 +2809,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2839,7 +2839,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Chennai, India | Gold Ticker Live",
-      "description": "Navigate to live Chennai gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Chennai reference gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/india/chennai/",
       "hreflangs": [
         "x-default",
@@ -2858,7 +2858,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Delhi Today — 24K, 22K, 21K, 18K in INR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Delhi, India today. Compare rates in INR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Delhi, India today. Compare rates in INR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/india/delhi/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2866,7 +2866,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2896,7 +2896,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Delhi, India | Gold Ticker Live",
-      "description": "Navigate to live Delhi gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Delhi reference gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/india/delhi/",
       "hreflangs": [
         "x-default",
@@ -2953,7 +2953,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Mumbai Today — 24K, 22K, 21K, 18K in INR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Mumbai, India today. Compare rates in INR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Mumbai, India today. Compare rates in INR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/india/mumbai/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -2961,7 +2961,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2991,7 +2991,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Mumbai, India | Gold Ticker Live",
-      "description": "Navigate to live Mumbai gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Mumbai reference gold rates (24K–18K in INR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/india/mumbai/",
       "hreflangs": [
         "x-default",
@@ -3010,7 +3010,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Baghdad, Iraq Today — 24K, 22K, 21K, 18K in IQD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Baghdad, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Baghdad, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/iraq/baghdad/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3018,7 +3018,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 283,
+      "wordCount": 264,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3048,7 +3048,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Baghdad, Iraq | Gold Ticker Live",
-      "description": "Navigate to live Baghdad gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Baghdad reference gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/iraq/baghdad/",
       "hreflangs": [
         "x-default",
@@ -3067,7 +3067,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Basra, Iraq Today — 24K, 22K, 21K, 18K in IQD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Basra, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Basra, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/iraq/basra/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3075,7 +3075,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 257,
+      "wordCount": 238,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3105,7 +3105,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Basra, Iraq | Gold Ticker Live",
-      "description": "Navigate to live Basra gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Basra reference gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/iraq/basra/",
       "hreflangs": [
         "x-default",
@@ -3124,7 +3124,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Erbil, Iraq Today — 24K, 22K, 21K, 18K in IQD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Erbil, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Erbil, Iraq today. Compare rates in IQD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/iraq/erbil/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3132,7 +3132,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 266,
+      "wordCount": 247,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3162,7 +3162,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Erbil, Iraq | Gold Ticker Live",
-      "description": "Navigate to live Erbil gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Erbil reference gold rates (24K–18K in IQD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/iraq/erbil/",
       "hreflangs": [
         "x-default",
@@ -3219,7 +3219,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Amman Today — 24K, 22K, 21K, 18K in JOD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Amman, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Amman, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/jordan/amman/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3227,7 +3227,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3257,7 +3257,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Amman, Jordan | Gold Ticker Live",
-      "description": "Navigate to live Amman gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Amman reference gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/jordan/amman/",
       "hreflangs": [
         "x-default",
@@ -3314,7 +3314,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Irbid Today — 24K, 22K, 21K, 18K in JOD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Irbid, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Irbid, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/jordan/irbid/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3322,7 +3322,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3352,7 +3352,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Irbid, Jordan | Gold Ticker Live",
-      "description": "Navigate to live Irbid gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Irbid reference gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/jordan/irbid/",
       "hreflangs": [
         "x-default",
@@ -3371,7 +3371,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Zarqa Today — 24K, 22K, 21K, 18K in JOD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Zarqa, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Zarqa, Jordan today. Compare rates in JOD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/jordan/zarqa/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3379,7 +3379,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3409,7 +3409,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Zarqa, Jordan | Gold Ticker Live",
-      "description": "Navigate to live Zarqa gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Zarqa reference gold rates (24K–18K in JOD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/jordan/zarqa/",
       "hreflangs": [
         "x-default",
@@ -3447,7 +3447,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Hawalli Today — 24K, 22K, 21K, 18K in KWD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Hawalli, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Hawalli, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/hawalli/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3455,7 +3455,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3485,7 +3485,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Hawalli, Kuwait | Gold Ticker Live",
-      "description": "Navigate to live Hawalli gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Hawalli reference gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/hawalli/",
       "hreflangs": [
         "x-default",
@@ -3523,7 +3523,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Kuwait City Today — 24K, 22K, 21K, 18K in KWD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Kuwait City, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Kuwait City, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/kuwait-city/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3531,7 +3531,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3561,7 +3561,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Kuwait City, Kuwait | Gold Ticker Live",
-      "description": "Navigate to live Kuwait City gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Kuwait City reference gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/kuwait-city/",
       "hreflangs": [
         "x-default",
@@ -3580,7 +3580,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Salmiya Today — 24K, 22K, 21K, 18K in KWD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Salmiya, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Salmiya, Kuwait today. Compare rates in KWD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/salmiya/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3588,7 +3588,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3618,7 +3618,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Salmiya, Kuwait | Gold Ticker Live",
-      "description": "Navigate to live Salmiya gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Salmiya reference gold rates (24K–18K in KWD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/kuwait/salmiya/",
       "hreflangs": [
         "x-default",
@@ -3637,7 +3637,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Beirut Today — 24K, 22K, 21K, 18K in LBP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Beirut, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Beirut, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/beirut/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3645,7 +3645,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3675,7 +3675,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Beirut, Lebanon | Gold Ticker Live",
-      "description": "Navigate to live Beirut gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Beirut reference gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/beirut/",
       "hreflangs": [
         "x-default",
@@ -3732,7 +3732,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sidon Today — 24K, 22K, 21K, 18K in LBP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sidon, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sidon, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/sidon/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3740,7 +3740,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3770,7 +3770,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sidon, Lebanon | Gold Ticker Live",
-      "description": "Navigate to live Sidon gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Sidon reference gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/sidon/",
       "hreflangs": [
         "x-default",
@@ -3789,7 +3789,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Tripoli Today — 24K, 22K, 21K, 18K in LBP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Tripoli, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Tripoli, Lebanon today. Compare rates in LBP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/tripoli/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3797,7 +3797,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3827,7 +3827,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Tripoli, Lebanon | Gold Ticker Live",
-      "description": "Navigate to live Tripoli gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Tripoli reference gold rates (24K–18K in LBP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/lebanon/tripoli/",
       "hreflangs": [
         "x-default",
@@ -3846,7 +3846,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Benghazi Today — 24K, 22K, 21K, 18K in LYD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Benghazi, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Benghazi, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/libya/benghazi/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3854,7 +3854,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3884,7 +3884,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Benghazi, Libya | Gold Ticker Live",
-      "description": "Navigate to live Benghazi gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Benghazi reference gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/libya/benghazi/",
       "hreflangs": [
         "x-default",
@@ -3941,7 +3941,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Misrata Today — 24K, 22K, 21K, 18K in LYD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Misrata, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Misrata, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/libya/misrata/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -3949,7 +3949,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3979,7 +3979,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Misrata, Libya | Gold Ticker Live",
-      "description": "Navigate to live Misrata gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Misrata reference gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/libya/misrata/",
       "hreflangs": [
         "x-default",
@@ -3998,7 +3998,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Tripoli Today — 24K, 22K, 21K, 18K in LYD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Tripoli, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Tripoli, Libya today. Compare rates in LYD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/libya/tripoli/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4006,7 +4006,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4036,7 +4036,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Tripoli, Libya | Gold Ticker Live",
-      "description": "Navigate to live Tripoli gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Tripoli reference gold rates (24K–18K in LYD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/libya/tripoli/",
       "hreflangs": [
         "x-default",
@@ -4055,7 +4055,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Casablanca Today — 24K, 22K, 21K, 18K in MAD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Casablanca, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Casablanca, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/morocco/casablanca/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4063,7 +4063,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4093,7 +4093,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Casablanca, Morocco | Gold Ticker Live",
-      "description": "Navigate to live Casablanca gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Casablanca reference gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/morocco/casablanca/",
       "hreflangs": [
         "x-default",
@@ -4150,7 +4150,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Marrakech Today — 24K, 22K, 21K, 18K in MAD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Marrakech, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Marrakech, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/morocco/marrakech/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4158,7 +4158,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4188,7 +4188,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Marrakech, Morocco | Gold Ticker Live",
-      "description": "Navigate to live Marrakech gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Marrakech reference gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/morocco/marrakech/",
       "hreflangs": [
         "x-default",
@@ -4207,7 +4207,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Rabat Today — 24K, 22K, 21K, 18K in MAD | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Rabat, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Rabat, Morocco today. Compare rates in MAD per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/morocco/rabat/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4215,7 +4215,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4245,7 +4245,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Rabat, Morocco | Gold Ticker Live",
-      "description": "Navigate to live Rabat gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Rabat reference gold rates (24K–18K in MAD) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/morocco/rabat/",
       "hreflangs": [
         "x-default",
@@ -4302,7 +4302,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Muscat Today — 24K, 22K, 21K, 18K in OMR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Muscat, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Muscat, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/oman/muscat/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4310,7 +4310,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4340,7 +4340,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Muscat, Oman | Gold Ticker Live",
-      "description": "Navigate to live Muscat gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Muscat reference gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/oman/muscat/",
       "hreflangs": [
         "x-default",
@@ -4359,7 +4359,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Salalah Today — 24K, 22K, 21K, 18K in OMR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Salalah, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Salalah, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/oman/salalah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4367,7 +4367,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4397,7 +4397,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Salalah, Oman | Gold Ticker Live",
-      "description": "Navigate to live Salalah gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Salalah reference gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/oman/salalah/",
       "hreflangs": [
         "x-default",
@@ -4416,7 +4416,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sohar Today — 24K, 22K, 21K, 18K in OMR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sohar, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sohar, Oman today. Compare rates in OMR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/oman/sohar/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4424,7 +4424,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4454,7 +4454,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sohar, Oman | Gold Ticker Live",
-      "description": "Navigate to live Sohar gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Sohar reference gold rates (24K–18K in OMR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/oman/sohar/",
       "hreflangs": [
         "x-default",
@@ -4511,7 +4511,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Islamabad, Pakistan Today — 24K, 22K, 21K, 18K in PKR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Islamabad, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Islamabad, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/islamabad/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4519,7 +4519,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4549,7 +4549,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Islamabad, Pakistan | Gold Ticker Live",
-      "description": "Navigate to live Islamabad gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Islamabad reference gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/islamabad/",
       "hreflangs": [
         "x-default",
@@ -4568,7 +4568,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Karachi, Pakistan Today — 24K, 22K, 21K, 18K in PKR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Karachi, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Karachi, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/karachi/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4576,7 +4576,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 269,
+      "wordCount": 250,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4606,7 +4606,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Karachi, Pakistan | Gold Ticker Live",
-      "description": "Navigate to live Karachi gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Karachi reference gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/karachi/",
       "hreflangs": [
         "x-default",
@@ -4625,7 +4625,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Lahore, Pakistan Today — 24K, 22K, 21K, 18K in PKR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Lahore, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Lahore, Pakistan today. Compare rates in PKR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/lahore/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4633,7 +4633,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 229,
+      "wordCount": 210,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4663,7 +4663,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Lahore, Pakistan | Gold Ticker Live",
-      "description": "Navigate to live Lahore gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Lahore reference gold rates (24K–18K in PKR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/pakistan/lahore/",
       "hreflangs": [
         "x-default",
@@ -4682,7 +4682,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Gaza, Palestine Today — 24K, 22K, 21K, 18K in ILS | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Gaza, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Gaza, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/palestine/gaza/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4690,7 +4690,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4720,7 +4720,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Gaza, Palestine | Gold Ticker Live",
-      "description": "Navigate to live Gaza gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Gaza reference gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/palestine/gaza/",
       "hreflangs": [
         "x-default",
@@ -4777,7 +4777,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Nablus, Palestine Today — 24K, 22K, 21K, 18K in ILS | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Nablus, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Nablus, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/palestine/nablus/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4785,7 +4785,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4815,7 +4815,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Nablus, Palestine | Gold Ticker Live",
-      "description": "Navigate to live Nablus gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Nablus reference gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/palestine/nablus/",
       "hreflangs": [
         "x-default",
@@ -4834,7 +4834,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Ramallah, Palestine Today — 24K, 22K, 21K, 18K in ILS | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Ramallah, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Ramallah, Palestine today. Compare rates in ILS per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/palestine/ramallah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4842,7 +4842,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 233,
+      "wordCount": 214,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4872,7 +4872,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Ramallah, Palestine | Gold Ticker Live",
-      "description": "Navigate to live Ramallah gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Ramallah reference gold rates (24K–18K in ILS) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/palestine/ramallah/",
       "hreflangs": [
         "x-default",
@@ -4891,7 +4891,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Al Rayyan Today — 24K, 22K, 21K, 18K in QAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Al Rayyan, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Al Rayyan, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/qatar/al-rayyan/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4899,7 +4899,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4929,7 +4929,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Al Rayyan, Qatar | Gold Ticker Live",
-      "description": "Navigate to live Al Rayyan gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Al Rayyan reference gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/qatar/al-rayyan/",
       "hreflangs": [
         "x-default",
@@ -4948,7 +4948,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Al Wakrah Today — 24K, 22K, 21K, 18K in QAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Al Wakrah, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Al Wakrah, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/qatar/al-wakrah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -4956,7 +4956,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 57,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4986,7 +4986,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Al Wakrah, Qatar | Gold Ticker Live",
-      "description": "Navigate to live Al Wakrah gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Al Wakrah reference gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/qatar/al-wakrah/",
       "hreflangs": [
         "x-default",
@@ -5005,7 +5005,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Doha Today — QAR per Gram | Gold Ticker Live",
-      "description": "Live gold price in Doha today in Qatari Riyals (QAR) per gram — 24K, 22K, 21K, 18K. Souq Waqif gold market, where to buy gold in Doha.",
+      "description": "Reference gold price in Doha today in Qatari Riyals (QAR) per gram — 24K, 22K, 21K, 18K. Souq Waqif gold market, where to buy gold in Doha.",
       "canonical": "https://goldtickerlive.com/countries/qatar/cities/doha.html",
       "hreflangs": [
         "x-default",
@@ -5024,7 +5024,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Cities in Qatar | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Qatar — live gold rates, shops and karat pages.",
+      "description": "Cities covered by Gold Ticker Live in Qatar — reference gold rates, shops and karat pages.",
       "canonical": "https://goldtickerlive.com/countries/qatar/cities/",
       "hreflangs": [
         "x-default",
@@ -5043,7 +5043,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Doha Today — 24K, 22K, 21K, 18K in QAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Doha, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Doha, Qatar today. Compare rates in QAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/qatar/doha/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5051,7 +5051,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 336,
+      "wordCount": 317,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5081,7 +5081,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Doha, Qatar | Gold Ticker Live",
-      "description": "Navigate to live Doha gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Doha reference gold rates (24K–18K in QAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/qatar/doha/",
       "hreflangs": [
         "x-default",
@@ -5138,7 +5138,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Cities in Saudi Arabia | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Saudi Arabia — live gold rates, shops and karat pages.",
+      "description": "Cities covered by Gold Ticker Live in Saudi Arabia — reference gold rates, shops and karat pages.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/",
       "hreflangs": [
         "x-default",
@@ -5157,7 +5157,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Riyadh Today — SAR per Gram | Gold Ticker Live",
-      "description": "Live gold price in Riyadh today in SAR per gram — 24K, 22K, 21K, 18K. Taiba Markets, gold souks, and where to buy gold in Riyadh.",
+      "description": "Reference gold price in Riyadh today in SAR per gram — 24K, 22K, 21K, 18K. Taiba Markets, gold souks, and where to buy gold in Riyadh.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/riyadh.html",
       "hreflangs": [
         "x-default",
@@ -5176,7 +5176,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Dammam Today — 24K, 22K, 21K, 18K in SAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Dammam, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Dammam, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/dammam/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5184,7 +5184,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5214,7 +5214,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Dammam, Saudi Arabia | Gold Ticker Live",
-      "description": "Navigate to live Dammam gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Dammam reference gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/dammam/",
       "hreflangs": [
         "x-default",
@@ -5271,7 +5271,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Jeddah Today — 24K, 22K, 21K, 18K in SAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Jeddah, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Jeddah, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5279,7 +5279,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5309,7 +5309,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Jeddah, Saudi Arabia | Gold Ticker Live",
-      "description": "Navigate to live Jeddah gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Jeddah reference gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/",
       "hreflangs": [
         "x-default",
@@ -5328,7 +5328,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Mecca Today — 24K, 22K, 21K, 18K in SAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Mecca, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Mecca, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/mecca/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5336,7 +5336,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5366,7 +5366,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Mecca, Saudi Arabia | Gold Ticker Live",
-      "description": "Navigate to live Mecca gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Mecca reference gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/mecca/",
       "hreflangs": [
         "x-default",
@@ -5385,7 +5385,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Medina Today — 24K, 22K, 21K, 18K in SAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Medina, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Medina, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/medina/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5393,7 +5393,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 51,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5423,7 +5423,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Medina, Saudi Arabia | Gold Ticker Live",
-      "description": "Navigate to live Medina gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Medina reference gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/medina/",
       "hreflangs": [
         "x-default",
@@ -5442,7 +5442,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Riyadh Today — 24K, 22K, 21K, 18K in SAR | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Riyadh, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Riyadh, Saudi Arabia today. Compare rates in SAR per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5450,7 +5450,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 330,
+      "wordCount": 311,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5480,7 +5480,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Riyadh, Saudi Arabia | Gold Ticker Live",
-      "description": "Navigate to live Riyadh gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Riyadh reference gold rates (24K–18K in SAR) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/",
       "hreflangs": [
         "x-default",
@@ -5537,7 +5537,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Khartoum Today — 24K, 22K, 21K, 18K in SDG | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Khartoum, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Khartoum, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/sudan/khartoum/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5545,7 +5545,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5575,7 +5575,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Khartoum, Sudan | Gold Ticker Live",
-      "description": "Navigate to live Khartoum gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Khartoum reference gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/sudan/khartoum/",
       "hreflangs": [
         "x-default",
@@ -5594,7 +5594,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Omdurman Today — 24K, 22K, 21K, 18K in SDG | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Omdurman, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Omdurman, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/sudan/omdurman/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5602,7 +5602,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 53,
+      "wordCount": 49,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5632,7 +5632,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Omdurman, Sudan | Gold Ticker Live",
-      "description": "Navigate to live Omdurman gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Omdurman reference gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/sudan/omdurman/",
       "hreflangs": [
         "x-default",
@@ -5651,7 +5651,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Port Sudan Today — 24K, 22K, 21K, 18K in SDG | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Port Sudan, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Port Sudan, Sudan today. Compare rates in SDG per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/sudan/port-sudan/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5659,7 +5659,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 56,
+      "wordCount": 52,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5689,7 +5689,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Port Sudan, Sudan | Gold Ticker Live",
-      "description": "Navigate to live Port Sudan gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Port Sudan reference gold rates (24K–18K in SDG) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/sudan/port-sudan/",
       "hreflangs": [
         "x-default",
@@ -5708,7 +5708,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Aleppo, Syria Today — 24K, 22K, 21K, 18K in SYP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Aleppo, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Aleppo, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/syria/aleppo/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5716,7 +5716,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 232,
+      "wordCount": 213,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5746,7 +5746,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Aleppo, Syria | Gold Ticker Live",
-      "description": "Navigate to live Aleppo gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Aleppo reference gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/syria/aleppo/",
       "hreflangs": [
         "x-default",
@@ -5765,7 +5765,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Damascus, Syria Today — 24K, 22K, 21K, 18K in SYP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Damascus, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Damascus, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/syria/damascus/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5773,7 +5773,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 250,
+      "wordCount": 231,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5803,7 +5803,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Damascus, Syria | Gold Ticker Live",
-      "description": "Navigate to live Damascus gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Damascus reference gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/syria/damascus/",
       "hreflangs": [
         "x-default",
@@ -5841,7 +5841,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Homs, Syria Today — 24K, 22K, 21K, 18K in SYP | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Homs, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Homs, Syria today. Compare rates in SYP per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/syria/homs/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5849,7 +5849,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 227,
+      "wordCount": 208,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5879,7 +5879,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Homs, Syria | Gold Ticker Live",
-      "description": "Navigate to live Homs gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Homs reference gold rates (24K–18K in SYP) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/syria/homs/",
       "hreflangs": [
         "x-default",
@@ -5955,7 +5955,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sfax Today — 24K, 22K, 21K, 18K in TND | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sfax, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sfax, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/sfax/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -5963,7 +5963,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5993,7 +5993,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sfax, Tunisia | Gold Ticker Live",
-      "description": "Navigate to live Sfax gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Sfax reference gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/sfax/",
       "hreflangs": [
         "x-default",
@@ -6012,7 +6012,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sousse Today — 24K, 22K, 21K, 18K in TND | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sousse, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sousse, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/sousse/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6020,7 +6020,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6050,7 +6050,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sousse, Tunisia | Gold Ticker Live",
-      "description": "Navigate to live Sousse gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Sousse reference gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/sousse/",
       "hreflangs": [
         "x-default",
@@ -6069,7 +6069,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Tunis Today — 24K, 22K, 21K, 18K in TND | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Tunis, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Tunis, Tunisia today. Compare rates in TND per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/tunis/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6077,7 +6077,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 48,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6107,7 +6107,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Tunis, Tunisia | Gold Ticker Live",
-      "description": "Navigate to live Tunis gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Tunis reference gold rates (24K–18K in TND) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/tunisia/tunis/",
       "hreflangs": [
         "x-default",
@@ -6126,7 +6126,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Ankara, Turkey Today — 24K, 22K, 21K, 18K in TRY | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Ankara, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Ankara, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/turkey/ankara/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6134,7 +6134,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 221,
+      "wordCount": 202,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6164,7 +6164,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Ankara, Turkey | Gold Ticker Live",
-      "description": "Navigate to live Ankara gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Ankara reference gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/turkey/ankara/",
       "hreflangs": [
         "x-default",
@@ -6221,7 +6221,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Istanbul, Turkey Today — 24K, 22K, 21K, 18K in TRY | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Istanbul, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Istanbul, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/turkey/istanbul/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6229,7 +6229,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 267,
+      "wordCount": 248,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6259,7 +6259,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Istanbul, Turkey | Gold Ticker Live",
-      "description": "Navigate to live Istanbul gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Istanbul reference gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/turkey/istanbul/",
       "hreflangs": [
         "x-default",
@@ -6278,7 +6278,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Izmir, Turkey Today — 24K, 22K, 21K, 18K in TRY | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Izmir, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Izmir, Turkey today. Compare rates in TRY per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/turkey/izmir/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6286,7 +6286,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 221,
+      "wordCount": 202,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6316,7 +6316,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Izmir, Turkey | Gold Ticker Live",
-      "description": "Navigate to live Izmir gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Izmir reference gold rates (24K–18K in TRY) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/turkey/izmir/",
       "hreflangs": [
         "x-default",
@@ -6335,7 +6335,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Abu Dhabi Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Abu Dhabi, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Abu Dhabi, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/abu-dhabi/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6343,7 +6343,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 64,
+      "wordCount": 58,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6373,7 +6373,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Abu Dhabi, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Abu Dhabi gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Abu Dhabi reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/abu-dhabi/",
       "hreflangs": [
         "x-default",
@@ -6392,7 +6392,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Ajman Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Ajman, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Ajman, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/ajman/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6400,7 +6400,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 61,
+      "wordCount": 55,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6430,7 +6430,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Ajman, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Ajman gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Ajman reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/ajman/",
       "hreflangs": [
         "x-default",
@@ -6449,7 +6449,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Abu Dhabi Today — AED per Gram | Gold Ticker Live",
-      "description": "Live gold price in Abu Dhabi today in AED per gram — 24K, 22K, 21K, 18K. Madinat Zayed Gold Center, Hamdan Street, and where to buy gold in Abu Dhabi.",
+      "description": "Reference gold price in Abu Dhabi today in AED per gram — 24K, 22K, 21K, 18K. Madinat Zayed Gold Center, Hamdan Street, and where to buy gold in Abu Dhabi.",
       "canonical": "https://goldtickerlive.com/countries/uae/cities/abu-dhabi.html",
       "hreflangs": [
         "x-default",
@@ -6468,7 +6468,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Dubai Today — AED per Gram, Dubai Gold Souk | Gold Ticker Live",
-      "description": "Live gold price in Dubai today in AED per gram — 24K, 22K, 21K and 18K. Dubai Gold Souk guide, buying tips, and where to find the best gold prices in Dubai.",
+      "description": "Reference gold price in Dubai today in AED per gram — 24K, 22K, 21K and 18K. Dubai Gold Souk guide, buying tips, and where to find the best gold prices in Dubai.",
       "canonical": "https://goldtickerlive.com/countries/uae/cities/dubai.html",
       "hreflangs": [
         "x-default",
@@ -6487,7 +6487,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Cities in United Arab Emirates | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in United Arab Emirates — live gold rates, shops and karat pages.",
+      "description": "Cities covered by Gold Ticker Live in United Arab Emirates — reference gold rates, shops and karat pages.",
       "canonical": "https://goldtickerlive.com/countries/uae/cities/",
       "hreflangs": [
         "x-default",
@@ -6506,7 +6506,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Dubai Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Dubai, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Dubai, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/dubai/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6514,7 +6514,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 337,
+      "wordCount": 318,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6544,7 +6544,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Dubai, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Dubai gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Dubai reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/dubai/",
       "hreflangs": [
         "x-default",
@@ -6563,7 +6563,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Fujairah Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Fujairah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Fujairah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/fujairah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6571,7 +6571,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 59,
+      "wordCount": 53,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6601,7 +6601,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Fujairah, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Fujairah gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Fujairah reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/fujairah/",
       "hreflangs": [
         "x-default",
@@ -6696,7 +6696,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Ras Al Khaimah Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Ras Al Khaimah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Ras Al Khaimah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6704,7 +6704,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 67,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6734,7 +6734,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Ras Al Khaimah, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Ras Al Khaimah gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Ras Al Khaimah reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/",
       "hreflangs": [
         "x-default",
@@ -6753,7 +6753,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sharjah Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sharjah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sharjah, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/sharjah/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6761,7 +6761,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 61,
+      "wordCount": 55,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6791,7 +6791,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sharjah, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Sharjah gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Sharjah reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/sharjah/",
       "hreflangs": [
         "x-default",
@@ -6810,7 +6810,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Umm Al Quwain Today — 24K, 22K, 21K, 18K in AED | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Umm Al Quwain, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Umm Al Quwain, United Arab Emirates today. Compare rates in AED per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/uae/umm-al-quwain/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6818,7 +6818,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 67,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6848,7 +6848,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Umm Al Quwain, United Arab Emirates | Gold Ticker Live",
-      "description": "Navigate to live Umm Al Quwain gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Umm Al Quwain reference gold rates (24K–18K in AED) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/uae/umm-al-quwain/",
       "hreflangs": [
         "x-default",
@@ -6867,7 +6867,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Aden, Yemen Today — 24K, 22K, 21K, 18K in YER | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Aden, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Aden, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/yemen/aden/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6875,7 +6875,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 234,
+      "wordCount": 215,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6905,7 +6905,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Aden, Yemen | Gold Ticker Live",
-      "description": "Navigate to live Aden gold rates (24K–18K in YER) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Aden reference gold rates (24K–18K in YER) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/yemen/aden/",
       "hreflangs": [
         "x-default",
@@ -6962,7 +6962,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Sana&#039;a, Yemen Today — 24K, 22K, 21K, 18K in YER | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Sana&#039;a, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Sana&#039;a, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/yemen/sanaa/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -6970,7 +6970,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 263,
+      "wordCount": 244,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7000,7 +7000,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Sana'a, Yemen | Gold Ticker Live",
-      "description": "Navigate to live Sana",
+      "description": "Navigate to Sana",
       "canonical": "https://goldtickerlive.com/countries/yemen/sanaa/",
       "hreflangs": [
         "x-default",
@@ -7019,7 +7019,7 @@
       "group": "countries",
       "noindex": false,
       "title": "Gold Price in Taiz, Yemen Today — 24K, 22K, 21K, 18K in YER | Gold Ticker Live",
-      "description": "Live 24K, 22K, 21K, 18K gold prices in Taiz, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
+      "description": "Reference 24K, 22K, 21K, 18K gold prices in Taiz, Yemen today. Compare rates in YER per gram. Updated every 90 seconds.",
       "canonical": "https://goldtickerlive.com/countries/yemen/taiz/gold-rate/",
       "hreflangs": [
         "x-default",
@@ -7027,7 +7027,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 216,
+      "wordCount": 197,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7057,7 +7057,7 @@
       "group": "countries",
       "noindex": true,
       "title": "Gold Rate in Taiz, Yemen | Gold Ticker Live",
-      "description": "Navigate to live Taiz gold rates (24K–18K in YER) or gold shops. Reference pricing hub — commercial rates live on the gold-rate page.",
+      "description": "Navigate to Taiz reference gold rates (24K–18K in YER) or gold shops. Reference pricing hub — commercial rates on the gold-rate page.",
       "canonical": "https://goldtickerlive.com/countries/yemen/taiz/",
       "hreflangs": [
         "x-default",
@@ -7219,8 +7219,8 @@
       "path": "index.html",
       "group": "core",
       "noindex": false,
-      "title": "Gold Ticker Live — Live Gold Prices UAE &amp; GCC Today",
-      "description": "Current gold price per gram in UAE AED — live 24K, 22K, 21K, 18K rates for GCC and 20+ Arab countries. Auto-refresh with a visible freshness label.",
+      "title": "Gold Ticker Live — Reference Gold Prices UAE &amp; GCC Today",
+      "description": "Current gold price per gram in UAE AED — reference 24K, 22K, 21K, 18K rates for GCC and 20+ Arab countries. Auto-refresh with a visible freshness label.",
       "canonical": "https://goldtickerlive.com/",
       "hreflangs": [
         "x-default",
@@ -7228,7 +7228,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1542,
+      "wordCount": 1530,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
