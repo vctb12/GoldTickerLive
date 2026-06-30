@@ -116,6 +116,11 @@ app.use(
     crossOriginOpenerPolicy: { policy: 'same-origin' },
     crossOriginResourcePolicy: { policy: 'same-origin' },
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+    // Emit X-Frame-Options: DENY so the dynamic tier matches the DENY set in the
+    // static-tier `_headers` / `.htaccess` (Helmet's default is SAMEORIGIN).
+    // CSP `frame-ancestors 'none'` above is the authoritative control for modern
+    // browsers; this keeps legacy XFO-only clients consistent across tiers.
+    xFrameOptions: { action: 'deny' },
     hsts: IS_PROD ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false,
   })
 );
