@@ -265,9 +265,10 @@
           <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
           <p id="gold-data-freshness-p">
             A live countdown timer and "last updated" timestamp are displayed throughout the site.
-            If a live fetch fails, the UI labels the value as "Cached". If the gold timestamp is
-            older than <strong>12 minutes</strong>, the UI labels the value as "Stale" (so the site
-            never implies a value is live when it is multiple server refresh windows old).
+            If a live fetch fails, the UI labels the value as "Cached". Once the gold timestamp is
+            older than <strong>30 minutes</strong> the UI labels the value as "Delayed", and after
+            <strong>75 minutes</strong> as "Stale" (so the site never implies a value is live when it
+            is multiple server refresh windows old).
           </p>
 
           <div class="method-warning" id="gold-data-warning">

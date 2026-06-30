@@ -1211,11 +1211,10 @@ export const TRANSLATIONS = {
     'methodology.title': 'Reference methodology',
     'methodology.sub': 'How we derive each published reference estimate.',
     'methodology.stepSpot': 'Start with live XAU/USD spot per troy ounce.',
-    'methodology.stepGram': 'Convert ounce to gram using 31.1034768.',
+    'methodology.stepGram': 'Convert ounce to gram using 31.1035.',
     'methodology.stepKarat': 'Apply karat purity factor for the selected grade.',
     'methodology.stepLocal': 'Convert USD/gram into local currency (AED uses fixed 3.6725 peg).',
-    'methodology.formula':
-      'price_per_gram_local = (XAU/USD ÷ 31.1034768) × karat_factor × local_fx',
+    'methodology.formula': 'price_per_gram_local = (XAU/USD ÷ 31.1035) × karat_factor × local_fx',
     'methodology.karatTableCaption': 'Karat purity factors for reference calculations',
     'methodology.karatHeader': 'Karat',
     'methodology.purityHeader': 'Purity',
@@ -2553,12 +2552,11 @@ export const TRANSLATIONS = {
     'methodology.title': 'منهجية التسعير المرجعي',
     'methodology.sub': 'كيف نشتق كل تقدير مرجعي منشور.',
     'methodology.stepSpot': 'نبدأ بسعر XAU/USD الفوري لكل أوقية تروية.',
-    'methodology.stepGram': 'نحوّل الأوقية إلى غرام باستخدام 31.1034768.',
+    'methodology.stepGram': 'نحوّل الأوقية إلى غرام باستخدام 31.1035.',
     'methodology.stepKarat': 'نطبق معامل نقاء العيار المختار.',
     'methodology.stepLocal':
       'نحوّل USD/غرام إلى العملة المحلية (الدرهم يعتمد الربط الثابت 3.6725).',
-    'methodology.formula':
-      'السعر_المحلي_للغرام = (XAU/USD ÷ 31.1034768) × معامل_العيار × سعر_الصرف',
+    'methodology.formula': 'السعر_المحلي_للغرام = (XAU/USD ÷ 31.1035) × معامل_العيار × سعر_الصرف',
     'methodology.karatTableCaption': 'معاملات نقاء العيارات المستخدمة في الحساب المرجعي',
     'methodology.karatHeader': 'العيار',
     'methodology.purityHeader': 'النقاء',

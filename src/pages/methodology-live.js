@@ -86,13 +86,13 @@ function renderFormulaPipeline(spotUsd, lang) {
     lang === 'ar'
       ? [
           { label: 'XAU/USD (أونصة)', value: `$${formatUsd(spotUsd)}` },
-          { label: '÷ 31.1034768 → USD/غ 24K', value: `$${formatUsd(usdPerGram24)}` },
+          { label: '÷ 31.1035 → USD/غ 24K', value: `$${formatUsd(usdPerGram24)}` },
           { label: '× 22/24 → USD/غ 22K', value: `$${formatUsd(usdPerGram22)}` },
           { label: `× ${AED_PEG} (ربط AED)`, value: `${formatAed(aedPerGram22)} AED/غ` },
         ]
       : [
           { label: 'XAU/USD (troy oz)', value: `$${formatUsd(spotUsd)}` },
-          { label: '÷ 31.1034768 → USD/gram 24K', value: `$${formatUsd(usdPerGram24)}` },
+          { label: '÷ 31.1035 → USD/gram 24K', value: `$${formatUsd(usdPerGram24)}` },
           { label: '× 22/24 → USD/gram 22K', value: `$${formatUsd(usdPerGram22)}` },
           { label: `× ${AED_PEG} AED peg`, value: `${formatAed(aedPerGram22)} AED/g` },
         ];

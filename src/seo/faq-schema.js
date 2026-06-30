@@ -8,7 +8,7 @@ export function buildMethodologyFaqSchema(lang = 'en') {
           ],
           [
             'كيف يتم حساب السعر لكل غرام؟',
-            'نقسم XAU/USD على 31.1034768 ثم نطبّق نقاء العيار ثم سعر الصرف المحلي.',
+            'نقسم XAU/USD على 31.1035 ثم نطبّق نقاء العيار ثم سعر الصرف المحلي.',
           ],
           ['هل يتم تثبيت سعر الدرهم؟', 'نعم. تحويلات الدرهم تعتمد الربط الرسمي 3.6725 افتراضياً.'],
         ]
@@ -19,7 +19,7 @@ export function buildMethodologyFaqSchema(lang = 'en') {
           ],
           [
             'How is price per gram calculated?',
-            'We divide XAU/USD by 31.1034768, apply karat purity, then convert to local currency.',
+            'We divide XAU/USD by 31.1035, apply karat purity, then convert to local currency.',
           ],
           [
             'Is the AED conversion fixed?',
