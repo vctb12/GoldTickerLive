@@ -162,6 +162,15 @@ const REQUIRED_KEYS = [
   'nav.country',
   'breadcrumbs.ariaLabel',
   'home.countrySearchEmptyQuery',
+  // FAQ question summaries (i18n parity)
+  'home.faqTitle',
+  'home.faq1Q',
+  'home.faq2Q',
+  'home.faq3Q',
+  'home.faq4Q',
+  'home.faq5Q',
+  'home.faq6Q',
+  'home.faq7Q',
 ];
 
 test('new home translation keys exist in both EN and AR', async () => {

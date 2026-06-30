@@ -1,5 +1,9 @@
 # Gold-price provider migration
 
+> **Historical context (2026-06-09):** This document records the GoldPriceZ → gold-api.com provider
+> migration evaluation. Gold-api.com is now the confirmed primary source. See
+> `docs/data-source-methodology.md` for current production truth.
+
 This is the runbook for flipping production from GoldPriceZ to whichever provider wins the bakeoff
 (see [`gold-price-provider-bakeoff.md`](./gold-price-provider-bakeoff.md)).
 

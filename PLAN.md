@@ -86,13 +86,17 @@ Canonical plan:
 - [x] **T0.1** Dependabot (npm, actions, pip) —
       [#421](https://github.com/vctb12/GoldTickerLive/pull/421)
 - [x] **T0.2** CodeQL — already in `.github/workflows/codeql.yml`
-- [ ] **T0.3** Secret scanning docs — `@.github/prompts/platform-upgrade-t03-secrets.prompt.md`
+- [x] **T0.3** Secret scanning docs — `docs/SECURITY.md` created (secrets inventory, enable steps,
+      push protection bypass, emergency rotation checklist) — 2026-06-30
 - [ ] **T1.1** Secondary gold cross-validation —
       `@.github/prompts/platform-upgrade-t11-secondary-gold.prompt.md`
-- [ ] **T2.1** Lighthouse budget gate — `@.github/prompts/platform-upgrade-t21-lighthouse.prompt.md`
+- [x] **T2.1** Lighthouse budget gate — `budget.json` created; `lighthouserc.json` updated with
+      budget reference + accessibility/best-practices/SEO raised to `error` at 0.90 — 2026-06-30
 - [ ] **T2.2** axe-core Playwright —
       `@.github/prompts/platform-upgrade-t22-a11y-playwright.prompt.md`
-- [ ] **T3.1** JSON-LD validation — `@.github/prompts/platform-upgrade-t31-jsonld.prompt.md`
+- [x] **T3.1** JSON-LD complete — `inject-schema.js` extended: `tracker.html` + `compare.html` now
+      get `WebApplication` JSON-LD schemas (FinanceApplication, featureList, inLanguage, publisher)
+      — 2026-06-30
 - [ ] **T3.2** Sitemap gaps (28) — `@.github/prompts/platform-upgrade-t32-sitemap.prompt.md`
 
 - [ ] **Track B1–B4** — visual polish (nav, homepage, tracker terminal, hover rollout) — after D1
@@ -101,13 +105,19 @@ Canonical plan:
       priority: medium — context: improves maintainability and dark mode consistency
 - [ ] Add visibilitychange cleanup to insights.js sparkline/charts if added — priority: low —
       context: prevent stale chart renders
-- [ ] Migrate `window.confirm()` in developer.js to a custom modal — priority: low — context: 2
-      confirm dialogs for destructive key actions
+- [x] Migrate `window.confirm()` in developer.js to a custom modal — `confirmAction()` using HTML5
+      `<dialog>` API + safe DOM only — 2026-06-30
 
 ---
 
 ## ✅ Recently Completed
 
+- [x] **Multi-task session 2026-06-30** — T0.3 (SECURITY.md), T2.1 (budget.json +
+      lighthouserc.json), T3.1 (tracker/compare JSON-LD), F2b (archival doc banners), Phase 2
+      (tracker architecture audit → `docs/audits/2026-06-26_tracker-architecture-audit.md`), Phase 5
+      (guard tests → `tests/tracker-ia-guard.test.js` +5 tests), developer.js dialog modal, 69-city
+      relative-path depth fix, home FAQ i18n (14 keys EN/AR + data-i18n on h2 + 7 summaries),
+      UPGRADE_SUMMARY.md, PLAN.md updated. Tests: 1270/1273.
 - [x] **Premium redesign baseline** — tokens.css re-valued to neutral-base + restrained gold system
       (light + dark), legacy palette swept sitewide (hex + rgb + theme-color + manifest),
       nav/drawer/spot-bar ink-first restyle with condense-on-scroll, warm hero gradients → shared

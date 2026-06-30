@@ -102,7 +102,7 @@
   "name": "Gold Ticker Live",
   "url": "https://goldtickerlive.com",
   "logo": "https://goldtickerlive.com/assets/logo.png",
-  "description": "Reference gold prices for GCC, Arab world and global markets",
+  "description": "Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels",
   "sameAs": [
     "https://twitter.com/goldtickerlive",
     "https://x.com/GoldTickerLive"
@@ -123,7 +123,7 @@
   "@type": "WebSite",
   "name": "Gold Ticker Live",
   "url": "https://goldtickerlive.com",
-  "description": "Reference gold prices for GCC, Arab world and global markets",
+  "description": "Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels",
   "potentialAction": {
     "@type": "SearchAction",
     "target": {
@@ -1143,7 +1143,7 @@
       <section id="faq" class="home-section" aria-labelledby="faq-title" data-reveal>
         <div class="home-section-inner home-section-inner--narrow">
           <div class="section-intro centered">
-            <h2 id="faq-title" class="home-section-title">Common Questions</h2>
+            <h2 id="faq-title" class="home-section-title" data-i18n="faqTitle">Common Questions</h2>
           </div>
           <div class="faq-list" itemscope itemtype="https://schema.org/FAQPage">
             <details
@@ -1152,7 +1152,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq1Q">
                 What is the gold price per gram in UAE today?
               </summary>
               <div
@@ -1161,7 +1161,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a1">
                   The live gold price per gram in UAE (AED) is shown on the
                   <a href="tracker.html">Live Tracker</a> and the
                   <a href="countries/uae/">UAE page</a>. Spot source updates hourly during market hours;
@@ -1175,7 +1175,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq2Q">
                 What is the difference between 24K, 22K and 21K gold?
               </summary>
               <div
@@ -1184,7 +1184,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a2">
                   24K is 100% pure gold. 22K is 91.7% gold (common for Gulf jewelry). 21K is 87.5%
                   gold (popular in Egypt and Levant). 18K is 75% gold (common for fine jewelry
                   worldwide). The price scales with purity — see our
@@ -1198,7 +1198,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq3Q">
                 Why is the AED price different from a live API conversion?
               </summary>
               <div
@@ -1207,7 +1207,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a3">
                   The UAE Dirham is officially pegged to the US Dollar at 3.6725 by the UAE Central
                   Bank. This rate never changes. Most FX APIs show a slightly different rate due to
                   bid/ask spreads. We hardcode the official peg to give you accurate AED gold
@@ -1221,7 +1221,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq4Q">
                 Is this the actual jewelry or retail gold price?
               </summary>
               <div
@@ -1230,7 +1230,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a4">
                   No — these are spot-linked bullion estimates. Actual jewellery prices at retail
                   stores are higher due to making charges, shop premiums, taxes, and markups. The
                   Dubai Gold &amp; Jewellery Group publishes a daily retail rate. Our tracker gives
@@ -1244,14 +1244,14 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">How often do prices update?</summary>
+              <summary class="faq-q" itemprop="name" data-i18n="faq5Q">How often do prices update?</summary>
               <div
                 class="faq-a"
                 itemscope
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a5">
                   The gold spot price auto-refreshes while you have the page open; the underlying source data
                   updates hourly during market hours. FX rates update once per day (via open.er-api.com).
                   A countdown timer on the tracker shows you exactly when the next refresh is due. Data is
@@ -1266,7 +1266,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq6Q">
                 Does the price include making charges or VAT?
               </summary>
               <div
@@ -1275,7 +1275,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a6">
                   No. The prices on Gold Ticker Live are spot-linked reference estimates for the gold
                   content only. When you buy jewellery in a shop, the final price is higher because
                   it adds making charges (fabrication fees, typically 5–25%), dealer margin, and
@@ -1293,7 +1293,7 @@
               itemtype="https://schema.org/Question"
               itemprop="mainEntity"
             >
-              <summary class="faq-q" itemprop="name">
+              <summary class="faq-q" itemprop="name" data-i18n="faq7Q">
                 Can I use these prices when selling gold?
               </summary>
               <div
@@ -1302,7 +1302,7 @@
                 itemtype="https://schema.org/Answer"
                 itemprop="acceptedAnswer"
               >
-                <div itemprop="text">
+                <div itemprop="text" id="faq-a7">
                   The displayed price is a useful starting point. When selling gold, dealers
                   typically offer below the spot price — often 1–5% less — to cover their spread
                   and processing costs. The amount you receive depends on the karat of the piece,

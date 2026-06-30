@@ -961,6 +961,25 @@ function syncCrossPageLinks() {
 // Declarative hydrator: any element tagged data-i18n / data-i18n-aria-label
 // gets its text/aria-label from tx('home.<value>'). Lets static home copy be
 // localized with one attribute instead of a bespoke setTextById call.
+
+/**
+ * Render a FAQ answer into `id`. `segments` is either a plain string (text
+ * only) or an array of strings / [href, displayText] pairs (for answers
+ * that include inline links). Uses replaceChildren so no innerHTML is needed.
+ */
+function renderFaqAnswer(id, segments) {
+  const container = document.getElementById(id);
+  if (!container) return;
+  const nodes = (Array.isArray(segments) ? segments : [segments]).map((s) => {
+    if (!Array.isArray(s)) return s;
+    const a = document.createElement('a');
+    a.href = s[0];
+    a.textContent = s[1];
+    return a;
+  });
+  container.replaceChildren(...nodes);
+}
+
 function hydrateHomeI18n() {
   for (const el of document.querySelectorAll('[data-i18n]')) {
     el.textContent = tx(el.dataset.i18n);
@@ -1096,6 +1115,9 @@ function applyLangToPage() {
   setTextById('explainer-local-title', tx('explainerLocalTitle'));
   setTextById('explainer-local-desc', tx('explainerLocalDesc'));
   setTextById('faq-title', tx('faqTitle'));
+  for (let n = 1; n <= 7; n++) {
+    renderFaqAnswer(`faq-a${n}`, tx(`faq${n}A`));
+  }
   setTextById('faq-more-link', tx('faqMore'));
   setTextById('home-methodology-title', txGlobal('methodology.sectionTitle'));
   setTextById('home-methodology-sub', txGlobal('methodology.sectionSub'));

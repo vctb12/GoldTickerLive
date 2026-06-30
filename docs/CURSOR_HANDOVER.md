@@ -368,7 +368,8 @@ Always-on background agents (configured at https://cursor.com/automations):
 - **Policy:** `.cursor/automation-policy.md` — non-negotiables for all automations
 - **Prompts:** `.github/prompts/cursor-automations/` — copy-paste Agent Instructions (×5)
 
-Build order: Gold Integrity → Bilingual Consistency → SERP Structure → SEO Expansion → Market Insight Writer.
+Build order: Gold Integrity → Bilingual Consistency → SERP Structure → SEO Expansion → Market
+Insight Writer.
 
 ### Prompts (`.github/prompts/`)
 
@@ -567,7 +568,21 @@ When starting a new Cursor session on this project, use these @-mentions for con
 
 ---
 
-## 12. Security Reminders
+## 12. Security
+
+### Secret Scanning & Push Protection
+
+GitHub secret scanning and push protection steps are documented in
+[`docs/SECURITY.md`](./SECURITY.md). That file covers:
+
+- How to enable secret scanning + push protection in **Settings → Code security**
+- A full table of secret _names_ (never values) used by this repository
+- What to do when push protection blocks a push (real secret vs. false positive)
+
+> Dependabot and CodeQL are already enabled — see `.github/dependabot.yml` and
+> `.github/workflows/codeql.yml`.
+
+### Security Reminders
 
 - **This is a PUBLIC repo.** Never commit real secrets.
 - `.env.example` has variable **names only** — never real values.

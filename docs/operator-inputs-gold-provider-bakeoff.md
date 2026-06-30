@@ -1,5 +1,9 @@
 # Operator Inputs — Gold Provider Bakeoff & X Automation
 
+> **Historical context (2026-06-09):** This document records the GoldPriceZ → gold-api.com provider
+> migration evaluation. Gold-api.com is now the confirmed primary source. See
+> `docs/data-source-methodology.md` for current production truth.
+
 > Single source of truth for everything the repo owner/operator must do **manually** before the new
 > provider-adapter + bakeoff system can be activated in production. Fill in this file as you go and
 > treat the checklists as the go/no-go gates.

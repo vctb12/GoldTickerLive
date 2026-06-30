@@ -238,13 +238,81 @@ async function handleCreateKey(evt) {
 }
 
 // ---------------------------------------------------------------------------
+// Custom confirm dialog (replaces window.confirm for destructive actions)
+// ---------------------------------------------------------------------------
+
+/**
+ * Show a modal confirmation dialog built with safe DOM helpers (no innerHTML).
+ * Returns a Promise that resolves to `true` when the user confirms, or `false`
+ * when they cancel or press Escape.
+ *
+ * @param {string} message - The confirmation prompt to display.
+ * @param {string} [confirmLabel='Confirm'] - Label for the confirm button.
+ * @returns {Promise<boolean>}
+ */
+function confirmAction(message, confirmLabel = 'Confirm') {
+  return new Promise((resolve) => {
+    const dialog = document.createElement('dialog');
+    dialog.className = 'dev-confirm-dialog';
+    dialog.setAttribute('aria-modal', 'true');
+    dialog.setAttribute('aria-labelledby', 'dev-confirm-msg');
+
+    const msg = document.createElement('p');
+    msg.id = 'dev-confirm-msg';
+    msg.textContent = message;
+
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.className = 'btn btn-sm btn-outline';
+    cancelBtn.textContent = 'Cancel';
+
+    const confirmBtn = document.createElement('button');
+    confirmBtn.type = 'button';
+    confirmBtn.className = 'btn btn-sm btn-danger';
+    confirmBtn.textContent = confirmLabel;
+
+    const actions = document.createElement('div');
+    actions.className = 'dev-confirm-actions';
+    actions.append(cancelBtn, confirmBtn);
+
+    dialog.append(msg, actions);
+    document.body.appendChild(dialog);
+
+    let settled = false;
+    function settle(result) {
+      if (settled) return;
+      settled = true;
+      resolve(result);
+    }
+
+    cancelBtn.addEventListener('click', () => {
+      dialog.close('cancel');
+    });
+    confirmBtn.addEventListener('click', () => {
+      dialog.close('confirm');
+    });
+    dialog.addEventListener('close', () => {
+      // Fires for button clicks and Escape — returnValue tells us which.
+      dialog.remove();
+      settle(dialog.returnValue === 'confirm');
+    });
+
+    dialog.showModal();
+    confirmBtn.focus();
+  });
+}
+
+// ---------------------------------------------------------------------------
 // Revoke key
 // ---------------------------------------------------------------------------
 
 async function handleRevoke(keyId) {
   if (!keyId) return;
   if (
-    !window.confirm('Revoke this API key? Any application using it will stop working immediately.')
+    !(await confirmAction(
+      'Revoke this API key? Any application using it will stop working immediately.',
+      'Revoke'
+    ))
   )
     return;
 
@@ -263,9 +331,10 @@ async function handleRevoke(keyId) {
 async function handleRegenerate(keyId) {
   if (!keyId) return;
   if (
-    !window.confirm(
-      'Rotate this key? The old key will be revoked immediately and a new one issued.'
-    )
+    !(await confirmAction(
+      'Rotate this key? The old key will be revoked immediately and a new one issued.',
+      'Rotate'
+    ))
   )
     return;
 

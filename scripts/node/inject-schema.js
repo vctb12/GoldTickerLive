@@ -24,7 +24,8 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '../..');
 const SITE_URL = 'https://goldtickerlive.com';
 const SITE_NAME = 'Gold Ticker Live';
-const SITE_DESCRIPTION = 'Live gold prices for GCC, Arab world and global markets';
+const SITE_DESCRIPTION =
+  'Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels';
 
 // ── Trusted local config loaders ────────────────────────────────────────────
 // data/shops.js and src/config/countries.js are ES modules that can't be
@@ -533,6 +534,76 @@ function generateSchemasForPage(filePath, content) {
         description: pageDescription || SITE_DESCRIPTION,
       })
     );
+  }
+
+  // Tracker — WebApplication (gold price terminal with live data, karat table, chart).
+  if (relativePath === 'tracker.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Price Tracker',
+      url: canonicalUrl || `${SITE_URL}/tracker.html`,
+      description:
+        pageDescription ||
+        'Spot-linked reference gold price tracker with XAU/USD data, multi-karat table, historical charts, and currency conversion — freshness labels visible on page.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'XAU/USD spot-linked reference price (freshness label on page)',
+        'Multi-karat reference table (24K–14K)',
+        'Historical price chart (7D–5Y)',
+        'Currency comparison (AED and majors)',
+        'Price alerts',
+        'Export to CSV/JSON',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
+  }
+
+  // Compare countries tool — WebApplication for multi-country gold price comparison.
+  if (relativePath === 'compare.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Price Country Comparison',
+      url: canonicalUrl || `${SITE_URL}/compare.html`,
+      description:
+        pageDescription ||
+        'Compare gold prices across GCC and global countries side by side, with karat breakdowns and VAT/making-charge estimates.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'Side-by-side gold price comparison across countries',
+        'Per-karat breakdown (24K–14K)',
+        'VAT and making-charge retail estimate',
+        'Cheapest-to-buy country callout',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
   }
 
   // Country hub (countries/{slug}/index.html, indexable) — add a Dataset for
