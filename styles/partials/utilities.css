@@ -2407,6 +2407,29 @@ body[data-shell='market'] {
   height: 1.15rem;
 }
 
+/* Country flags: filled multi-colour SVG (not monoline), shown as a small
+   rounded badge framed by the chip. No currentColor override — the symbol's own
+   fills paint. Renders identically on every OS (unlike flag emoji). */
+.nav-flag {
+  display: block;
+  flex: 0 0 auto;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgb(0 0 0 / 14%),
+    0 1px 2px rgb(0 0 0 / 12%);
+}
+.nav-dropdown-featured-icon .nav-flag {
+  width: 1.7rem;
+  height: 1.7rem;
+}
+.mobile-bottom-nav-icon .nav-flag {
+  width: 24px;
+  height: 24px;
+}
+
 /* Mirror reading-direction glyphs (e.g. exchange arrows) in RTL. */
 [dir='rtl'] .nav-ico--dir {
   transform: scaleX(-1);

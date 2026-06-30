@@ -105,6 +105,46 @@ const SYMBOLS = [
     'i-theme-auto',
     '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor" stroke="none"/>',
   ],
+  // ── Country flags (simplified, recognisable at ~20px). These are FILLED, not
+  //    monoline — the consumer renders them with the `nav-flag` class (no
+  //    currentColor override). Inline SVG, so they render identically on every
+  //    OS (unlike flag emoji, which fall back to "AE" letter pairs on Windows).
+  [
+    'f-ae',
+    '<rect width="24" height="24" fill="#ffffff"/><rect x="6" width="18" height="8" fill="#009739"/><rect x="6" y="16" width="18" height="8" fill="#000000"/><rect width="6" height="24" fill="#ce1126"/>',
+  ],
+  [
+    'f-sa',
+    '<rect width="24" height="24" fill="#006c35"/><rect x="4.5" y="14.4" width="15" height="1.6" rx="0.7" fill="#ffffff"/><rect x="6" y="8.8" width="12" height="1.2" rx="0.6" fill="#ffffff"/>',
+  ],
+  [
+    'f-kw',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#007a3d"/><rect y="16" width="24" height="8" fill="#ce1126"/><path d="M0 0H8L4 8v8l4 8H0Z" fill="#000000"/>',
+  ],
+  [
+    'f-qa',
+    '<rect width="24" height="24" fill="#8a1538"/><path d="M0 0H7l3 3-3 3 3 3-3 3 3 3-3 3 3 3-3 3H0Z" fill="#ffffff"/>',
+  ],
+  [
+    'f-bh',
+    '<rect width="24" height="24" fill="#ce1126"/><path d="M0 0H6l4 2.4-4 2.4 4 2.4-4 2.4 4 2.4-4 2.4 4 2.4-4 2.4 4 2.4-4 2.4H0Z" fill="#ffffff"/>',
+  ],
+  [
+    'f-eg',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#ce1126"/><rect y="16" width="24" height="8" fill="#000000"/><path d="M12 9.4l3.2 2.6-3.2 2.6-3.2-2.6z" fill="#c09300"/>',
+  ],
+  [
+    'f-jo',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#000000"/><rect y="16" width="24" height="8" fill="#007a3d"/><path d="M0 0L11 12 0 24Z" fill="#ce1126"/><path d="M4.2 10.2l.62 1.78h1.86l-1.5 1.1.57 1.8-1.55-1.12-1.55 1.12.57-1.8-1.5-1.1h1.86z" fill="#ffffff"/>',
+  ],
+  [
+    'f-ma',
+    '<rect width="24" height="24" fill="#c1272d"/><path d="M12 7l1.45 4.46h4.69l-3.8 2.76 1.45 4.46L12 16.18l-3.79 2.5 1.45-4.46-3.8-2.76h4.69z" fill="none" stroke="#006233" stroke-width="1"/>',
+  ],
+  [
+    'f-tr',
+    '<rect width="24" height="24" fill="#e30a17"/><circle cx="10" cy="12" r="5.2" fill="#ffffff"/><circle cx="11.9" cy="12" r="4.1" fill="#e30a17"/><path d="M16.4 12l1.55.5-.96 1.32.01-1.64-1.56-.5 1.56-.5-.01-1.64z" fill="#ffffff"/>',
+  ],
 ];
 
 /** Set of valid symbol ids — used to sanitise any id before it reaches markup. */
@@ -135,21 +175,22 @@ export const NAV_ICONS = {
   RATE: 'i-scale',
   HIST: 'i-chart',
   SPOT: 'i-exchange',
-  // Places
+  // Places — country/city items use real inline-SVG flags (Dubai→UAE,
+  // Cairo→Egypt); all-countries stays a globe, the GCC region stays a map.
   GLB: 'i-globe',
   GCC: 'i-map',
-  AE: 'i-pin',
-  DXB: 'i-pin',
-  CAI: 'i-pin',
-  SA: 'i-pin',
-  KW: 'i-pin',
-  QA: 'i-pin',
-  BH: 'i-pin',
-  EG: 'i-pin',
-  JO: 'i-pin',
-  MA: 'i-pin',
-  TR: 'i-pin',
-  UAE: 'i-pin',
+  AE: 'f-ae',
+  DXB: 'f-ae',
+  CAI: 'f-eg',
+  SA: 'f-sa',
+  KW: 'f-kw',
+  QA: 'f-qa',
+  BH: 'f-bh',
+  EG: 'f-eg',
+  JO: 'f-jo',
+  MA: 'f-ma',
+  TR: 'f-tr',
+  UAE: 'f-ae',
   // Karat guides (product categories, never prices → a coin glyph, not a numeral)
   '22K': 'i-coins',
   '24K': 'i-coins',
@@ -207,8 +248,11 @@ function iconClass(id, base) {
 export function iconSvg(symbol, opts = {}) {
   const id = safeSymbolId(symbol);
   if (!id) return '';
-  const className = iconClass(id, opts.className);
-  return `<svg class="${className}" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
+  const isFlag = id.startsWith('f-');
+  const className = iconClass(id, opts.className || (isFlag ? 'nav-flag' : 'nav-ico'));
+  // Flags are multi-colour fills; monoline icons inherit currentColor as stroke.
+  const paint = isFlag ? '' : ' fill="none" stroke="currentColor"';
+  return `<svg class="${className}" viewBox="0 0 24 24"${paint} aria-hidden="true" focusable="false"><use href="#${id}"/></svg>`;
 }
 
 /**
@@ -218,14 +262,18 @@ export function iconSvg(symbol, opts = {}) {
  * @param {string} [className]
  * @returns {SVGSVGElement}
  */
-export function iconUseElement(symbol, className = 'nav-ico') {
+export function iconUseElement(symbol, className) {
   const NS = 'http://www.w3.org/2000/svg';
   const XLINK = 'http://www.w3.org/1999/xlink';
+  const id = safeSymbolId(symbol);
+  const isFlag = id.startsWith('f-');
   const svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('class', iconClass(safeSymbolId(symbol), className));
+  svg.setAttribute('class', iconClass(id, className || (isFlag ? 'nav-flag' : 'nav-ico')));
   svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
+  if (!isFlag) {
+    svg.setAttribute('fill', 'none');
+    svg.setAttribute('stroke', 'currentColor');
+  }
   svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('focusable', 'false');
   const use = document.createElementNS(NS, 'use');
