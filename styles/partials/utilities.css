@@ -2406,6 +2406,10 @@ body[data-shell='market'] {
   width: 1.15rem;
   height: 1.15rem;
 }
+.nav-search-result-icon .nav-flag {
+  width: 1.15rem;
+  height: 1.15rem;
+}
 
 /* Country flags: filled multi-colour SVG (not monoline), shown as a small
    rounded badge framed by the chip. No currentColor override — the symbol's own

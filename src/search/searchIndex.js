@@ -6,6 +6,7 @@
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import { SHOPS } from '../../data/shops.js';
+import { navIconSymbol } from '../components/icon-sprite.js';
 
 const _BASE_URL = 'https://goldtickerlive.com';
 
@@ -21,7 +22,9 @@ function buildIndex() {
       label: c.nameEn,
       labelAr: c.nameAr,
       url: `/${c.slug}/gold-price/`,
-      icon: 'i-pin',
+      // Match the nav: show the country's flag (falls back to a location pin
+      // for countries without a flag symbol). navIconSymbol handles the lookup.
+      icon: navIconSymbol(c.code),
       keywords: [c.nameEn, c.nameAr, c.currency, ...(c.searchAliases || [])],
     });
 
