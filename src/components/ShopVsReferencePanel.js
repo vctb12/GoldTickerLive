@@ -40,7 +40,9 @@ export function renderShopVsReferencePanel({ referenceLocal, currency, decimals 
     'a',
     {
       class: 'shop-vs-reference__link',
-      href: 'content/spot-vs-retail-gold-price/',
+      // Leading `./` is required: safe-dom's safeHref() drops bare-relative
+      // hrefs, which would otherwise render this trust link with no href.
+      href: './content/spot-vs-retail-gold-price/',
     },
     [t('link')]
   );

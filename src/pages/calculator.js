@@ -137,7 +137,7 @@ const T = {
       'Spot-linked reference estimate only. Final retail prices can include making charges, dealer margins, and taxes.',
     shop_vs_ref_title: 'Reference vs typical shop range',
     shop_vs_ref_intro:
-      'Jewellery shops often quote above the raw gold reference. The range below is illustrative (8–22% making charges) — not a live shop price.',
+      'Jewellery shops often quote above the raw gold reference. The range below is illustrative (5–25% making charges) — not a live shop price.',
     shop_vs_ref_reference: 'Raw gold reference',
     shop_vs_ref_low: 'Typical shop (low making)',
     shop_vs_ref_high: 'Typical shop (higher making)',
@@ -272,7 +272,7 @@ const T = {
       'تقدير مرجعي مرتبط بالسعر الفوري فقط. قد تشمل أسعار التجزئة النهائية المصنعية وهوامش التجار والضرائب.',
     shop_vs_ref_title: 'المرجع مقابل نطاق المحلات التقريبي',
     shop_vs_ref_intro:
-      'غالباً ما تقتبس محلات المجوهرات فوق قيمة الذهب الخام. النطاق أدناه توضيحي (مصنعية 8–22٪) — وليس سعر محل مباشر.',
+      'غالباً ما تقتبس محلات المجوهرات فوق قيمة الذهب الخام. النطاق أدناه توضيحي (مصنعية 5–25٪) — وليس سعر محل مباشر.',
     shop_vs_ref_reference: 'المرجع (ذهب خام)',
     shop_vs_ref_low: 'محل نموذجي (مصنعية منخفضة)',
     shop_vs_ref_high: 'محل نموذجي (مصنعية أعلى)',
@@ -398,7 +398,10 @@ function getSelectedCountryContext(currency) {
 }
 
 function buildCountryPageHref(country) {
-  return country?.slug ? `countries/${country.slug}/` : 'countries/index.html';
+  // Keep the leading `./` — safe-dom's safeHref() strips bare-relative hrefs
+  // (only `/`, `./`, `../`, `#`, or absolute schemes survive), so an el()-built
+  // anchor would otherwise render with no href and become a dead link.
+  return country?.slug ? `./countries/${country.slug}/` : './countries/index.html';
 }
 
 let _shopsHandoffListenersBound = false;
@@ -495,14 +498,58 @@ const UNIT_TO_GRAMS = {
 };
 
 const UNIT_LABELS = {
-  gram: 'Gram (g)',
-  oz: 'Troy Ounce (ozt)',
-  kg: 'Kilogram (kg)',
-  tola: 'Tola',
-  masha: 'Masha',
-  baht: 'Baht (Thai)',
-  taels: 'Taels (Chinese)',
+  en: {
+    gram: 'Gram (g)',
+    oz: 'Troy Ounce (ozt)',
+    kg: 'Kilogram (kg)',
+    tola: 'Tola (11.66g)',
+    masha: 'Masha (0.972g)',
+    baht: 'Baht (Thai)',
+    taels: 'Taels (Chinese)',
+  },
+  ar: {
+    gram: 'جرام (g)',
+    oz: 'أونصة تروي (ozt)',
+    kg: 'كيلوغرام (kg)',
+    tola: 'تولة (11.66غ)',
+    masha: 'ماشة (0.972غ)',
+    baht: 'باهت (تايلندي)',
+    taels: 'تيل (صيني)',
+  },
 };
+
+// Units offered by each weight-unit <select> (option order preserved).
+const UNIT_SELECT_OPTIONS = {
+  'val-unit': ['gram', 'oz', 'tola', 'masha'],
+  'scrap-unit': ['gram', 'oz', 'tola'],
+  'zakat-unit': ['gram', 'oz', 'tola'],
+  'conv-from': ['gram', 'oz', 'kg', 'tola', 'masha', 'baht', 'taels'],
+};
+
+/** Localized display label for a weight unit (falls back to EN, then the raw code). */
+function unitLabel(unit) {
+  const labels = UNIT_LABELS[STATE.lang === 'ar' ? 'ar' : 'en'];
+  return labels[unit] ?? UNIT_LABELS.en[unit] ?? unit;
+}
+
+/** Rebuild every weight-unit <select> with localized labels, preserving the chosen value. */
+function populateUnitSelects() {
+  for (const [id, units] of Object.entries(UNIT_SELECT_OPTIONS)) {
+    const select = document.getElementById(id);
+    if (!select) continue;
+    const previous = select.value;
+    select.replaceChildren(
+      ...units.map((unit) => {
+        const opt = document.createElement('option');
+        opt.value = unit;
+        opt.textContent = unitLabel(unit);
+        return opt;
+      })
+    );
+    if (units.includes(previous)) select.value = previous;
+    else if (units[0]) select.value = units[0];
+  }
+}
 
 function toGrams(amount, unit) {
   return amount * (UNIT_TO_GRAMS[unit] ?? 1);
@@ -748,7 +795,7 @@ function calcScrap() {
   result.hidden = false;
   updateTrackerHandoff({ karat, currency });
   updateMobileDock({
-    title: t('scrap_label_spot'),
+    title: t('scrap_label_dealer'),
     value: document.getElementById('scrap-result-dealer').textContent,
     meta: t('dock_meta'),
     targetId: 'scrap-result',
@@ -903,7 +950,7 @@ function calcConvert() {
   for (const [unit, factor] of entries) {
     grid.appendChild(
       el('div', { class: 'conv-row' }, [
-        el('span', { class: 'conv-row-label' }, [UNIT_LABELS[unit] ?? unit]),
+        el('span', { class: 'conv-row-label' }, [unitLabel(unit)]),
         el('span', { class: 'conv-row-value' }, [
           (inGrams / factor).toLocaleString('en-US', { maximumFractionDigits: 6 }),
         ]),
@@ -914,7 +961,7 @@ function calcConvert() {
   convResults.hidden = false;
   updateMobileDock({
     title: t('conv_results_title'),
-    value: `${amount.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${UNIT_LABELS[from] ?? from}`,
+    value: `${amount.toLocaleString('en-US', { maximumFractionDigits: 4 })} ${unitLabel(from)}`,
     meta: t('dock_meta'),
     targetId: 'conv-results',
   });
@@ -941,7 +988,7 @@ function refreshMobileDockForActiveTab() {
       currency: document.getElementById('scrap-currency')?.value ?? 'AED',
     });
     updateMobileDock({
-      title: t('scrap_label_spot'),
+      title: t('scrap_label_dealer'),
       value: document.getElementById('scrap-result-dealer')?.textContent || '—',
       meta: t('dock_meta'),
       targetId: 'scrap-result',
@@ -1001,9 +1048,9 @@ function applyLang() {
     clear(trustNote);
     trustNote.append(
       `${t('trust_note')} `,
-      el('a', { href: 'content/spot-vs-retail-gold-price/' }, [`${t('trust_spot_link')} →`]),
+      el('a', { href: './content/spot-vs-retail-gold-price/' }, [`${t('trust_spot_link')} →`]),
       ' · ',
-      el('a', { href: 'methodology.html' }, [`${t('trust_method_link')} →`])
+      el('a', { href: './methodology.html' }, [`${t('trust_method_link')} →`])
     );
     if (explicitCountry) {
       trustNote.append(
@@ -1070,7 +1117,18 @@ function applyLang() {
   set('val-currency-label', t('val_currency'));
   set('val-currency-hint', t('val_currency_hint'));
   set('val-result-label', t('val_result_label'));
-  set('val-disclaimer', t('val_disclaimer'));
+  // Rebuild (not textContent=) so the "What is a making charge?" cross-link
+  // survives applyLang(); a plain set() wipes the static anchor on every load.
+  const valDisclaimer = document.getElementById('val-disclaimer');
+  if (valDisclaimer) {
+    clear(valDisclaimer);
+    valDisclaimer.append(
+      `${t('val_disclaimer')} `,
+      el('a', { href: './content/gold-making-charges-guide/', class: 'calc-inline-link' }, [
+        STATE.lang === 'ar' ? 'ما هي المصنعية؟' : 'What is a making charge?',
+      ])
+    );
+  }
   updateShopsHandoff({
     currency: document.getElementById('val-currency')?.value || 'AED',
   });
@@ -1101,6 +1159,9 @@ function applyLang() {
   set('calc-convert-h2', t('convert_title'));
   set('calc-convert-desc', t('convert_desc'));
   set('conv-amount-label', t('conv_amount'));
+  document
+    .getElementById('conv-amount')
+    ?.setAttribute('placeholder', STATE.lang === 'ar' ? 'أدخل قيمة' : 'Enter a value');
   set('conv-from-label', t('conv_from'));
   set('conv-results-title', t('conv_results_title'));
   set('calc-freshness-note', t('freshness_waiting'));
@@ -1165,6 +1226,7 @@ function applyLang() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
   populateKaratSelects();
+  populateUnitSelects();
   refreshMobileDockForActiveTab();
   rerenderActiveCalc();
 }
@@ -1740,6 +1802,7 @@ function populateKaratSelects() {
 // ── Init ─────────────────────────────────────────────────────────────────────
 async function init() {
   populateKaratSelects();
+  populateUnitSelects();
   cache.loadState(STATE);
 
   const urlLang = new URLSearchParams(location.search).get('lang');
