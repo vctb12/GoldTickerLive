@@ -1,6 +1,7 @@
 'use strict';
 
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
@@ -10,6 +11,27 @@ const { getSupabaseClient } = require('../lib/supabase-client');
 const { buildUrl } = require('../lib/site-url');
 
 const router = express.Router();
+
+// ---------------------------------------------------------------------------
+// Rate limiter for the public, unauthenticated alert write surface.
+// ---------------------------------------------------------------------------
+// POST /alerts triggers a verification email to a caller-supplied address, and
+// the management/verify/unsubscribe routes mutate state — all anonymous. Without
+// a dedicated limiter these are throttled only by the broad global /api limiter
+// (120/min in prod), which is enough headroom to email-bomb arbitrary inboxes
+// and create unbounded alert rules. Mirror the tight per-route limiter every
+// sibling public-write router already uses (submissions/leads/newsletter/shops).
+// The token-gated /jobs/check-alerts route is intentionally NOT wrapped — it has
+// its own ALERT_JOB_TOKEN check. Headroom under NODE_ENV=test keeps the route
+// tests (which share one IP) from tripping the limit.
+const alertsWriteLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: process.env.NODE_ENV === 'test' ? 1000 : 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: errorResponse('RATE_LIMITED', 'Too many requests. Please try again later.'),
+});
+
 const ROOT = path.resolve(__dirname, '../..');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -769,7 +791,7 @@ function updateSubscriptionByDestination(destination, channel, patch) {
   return Promise.resolve();
 }
 
-router.post('/alerts', async (req, res) => {
+router.post('/alerts', alertsWriteLimiter, async (req, res) => {
   const parsed = sanitizeAlertInput(req.body);
   if (!parsed.ok) {
     return res.status(400).json(errorResponse('VALIDATION_ERROR', parsed.message));
@@ -832,7 +854,7 @@ router.get('/alerts/:managementToken', async (req, res) => {
   );
 });
 
-router.patch('/alerts/:managementToken', async (req, res) => {
+router.patch('/alerts/:managementToken', alertsWriteLimiter, async (req, res) => {
   const existing = await findRuleByManagementToken(req.params.managementToken);
   if (!existing) {
     return res.status(404).json(errorResponse('ALERT_NOT_FOUND', 'Alert not found.'));
@@ -870,7 +892,7 @@ router.patch('/alerts/:managementToken', async (req, res) => {
   );
 });
 
-router.delete('/alerts/:managementToken', async (req, res) => {
+router.delete('/alerts/:managementToken', alertsWriteLimiter, async (req, res) => {
   const existing = await findRuleByManagementToken(req.params.managementToken);
   if (!existing) {
     return res.status(404).json(errorResponse('ALERT_NOT_FOUND', 'Alert not found.'));
@@ -893,7 +915,7 @@ router.delete('/alerts/:managementToken', async (req, res) => {
   );
 });
 
-router.post('/alerts/verify', async (req, res) => {
+router.post('/alerts/verify', alertsWriteLimiter, async (req, res) => {
   const token = safeTrimmed(req.body?.token || req.query?.token, 256);
   if (!token) {
     return res
@@ -917,7 +939,7 @@ router.post('/alerts/verify', async (req, res) => {
   );
 });
 
-router.post('/alerts/unsubscribe', async (req, res) => {
+router.post('/alerts/unsubscribe', alertsWriteLimiter, async (req, res) => {
   const token = safeTrimmed(req.body?.token || req.query?.token, 256);
   if (!token) {
     return res
