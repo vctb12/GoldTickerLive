@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T04:49:53.264Z",
+  "generatedAt": "2026-06-30T05:24:45.865Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -7228,7 +7228,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1540,
+      "wordCount": 1530,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
