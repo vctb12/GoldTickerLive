@@ -535,6 +535,76 @@ function generateSchemasForPage(filePath, content) {
     );
   }
 
+  // Tracker — WebApplication (gold price terminal with live data, karat table, chart).
+  if (relativePath === 'tracker.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Price Tracker',
+      url: canonicalUrl || `${SITE_URL}/tracker.html`,
+      description:
+        pageDescription ||
+        'Live gold price tracker with real-time XAU/USD spot data, multi-karat reference table, historical charts, and currency conversion for GCC and global markets.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'Live XAU/USD gold spot price (reference estimate)',
+        'Multi-karat reference table (24K–14K)',
+        'Historical price chart (7D–5Y)',
+        'Currency comparison (AED and majors)',
+        'Price alerts',
+        'Export to CSV/JSON',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
+  }
+
+  // Compare countries tool — WebApplication for multi-country gold price comparison.
+  if (relativePath === 'compare.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Price Country Comparison',
+      url: canonicalUrl || `${SITE_URL}/compare.html`,
+      description:
+        pageDescription ||
+        'Compare gold prices across GCC and global countries side by side, with karat breakdowns and VAT/making-charge estimates.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'Side-by-side gold price comparison across countries',
+        'Per-karat breakdown (24K–14K)',
+        'VAT and making-charge retail estimate',
+        'Cheapest-to-buy country callout',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
+  }
+
   // Country hub (countries/{slug}/index.html, indexable) — add a Dataset for
   // the reference price data the page displays. FAQPage is injected at runtime
   // by country-page.js alongside the visible FAQ (parity-correct), so it is not
