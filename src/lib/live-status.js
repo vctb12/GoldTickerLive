@@ -16,6 +16,12 @@ import { FRESHNESS_POLICY } from './freshness-policy.js';
  *   flips to "stale". This must match upstream cadence — never claim "Live"
  *   for data that is older than the refresh interval.
  *
+ * NOTE: these age thresholds govern the age-based path only — i.e. when upstream
+ * `isFresh` is null/unset. When a snapshot carries `isFresh: true` (e.g. the
+ * committed `gold_price.json` surfaced via `api.js`), `getLiveFreshness` applies
+ * the tighter `FRESHNESS_POLICY` live-API budget (5s/60s/300s) instead, and these
+ * 30/75-min thresholds are intentionally bypassed for that path.
+ *
  * If you change the cron cadence, update these thresholds in lock-step and
  * keep `docs/realtime-baseline-audit.md` in sync. The truth invariant is:
  *   DELAYED_AFTER_MS < STALE_AFTER_MS <= upstream cron interval + tolerance

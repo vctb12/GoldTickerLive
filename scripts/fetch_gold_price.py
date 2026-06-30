@@ -2,6 +2,10 @@
 """
 scripts/fetch_gold_price.py
 
+DEAD/LEGACY: not invoked by any GitHub Actions workflow or npm script.
+Production fetch uses scripts/python/fetch_gold_price.py (the provider-adapter
+orchestrator). Retained for reference only; do not wire back without review.
+
 Fetches gold prices from goldpricez.com and writes the canonical data file
 `data/gold_price.json` atomically.
 
@@ -44,12 +48,12 @@ RETRY_BACKOFFS = (2, 4)  # 2 retries with 2s then 4s pause; do NOT retry on 401/
 
 USER_AGENT = "GoldTickerLive/1.0"
 
-# Karat purity ratios (24k = 1.0000)
+# Karat purity ratios (exact fractions; 24k = 1.0)
 KARAT_RATIOS = {
-    "24k": 1.0000,
-    "22k": 0.9167,
-    "21k": 0.8750,
-    "18k": 0.7500,
+    "24k": 1.0,
+    "22k": 22 / 24,
+    "21k": 21 / 24,
+    "18k": 18 / 24,
 }
 
 # Repo-root-relative output path. Script is expected to be invoked from the

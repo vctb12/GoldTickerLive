@@ -413,7 +413,7 @@ with a section above.
 
 - Base adapter → `scripts/python/gold_providers/base.py` — HTTP client, error categorization
   (rate-limit, quota-exhausted, network, parse), circuit-breaker utilities. Constants:
-  `DEFAULT_AED_PEG = 3.6725`, `TROY_OUNCE_GRAMS = 31.1035`, `DEFAULT_MAX_FRESHNESS_SECONDS = 900`
+  `DEFAULT_AED_PEG = 3.6725`, `TROY_OUNCE_GRAMS = 31.1034768`, `DEFAULT_MAX_FRESHNESS_SECONDS = 900`
   (15 min).
 - Normalizer → `scripts/python/gold_providers/normalize.py` (lines 1–113): Converts raw provider
   quotes to canonical schema. Computes `aed_per_gram_24k = usd_per_gram_24k * aed_peg` (line 38).

@@ -51,7 +51,11 @@ export async function fetchWithProviderTimeout(url, { signal, timeoutMs = 5000, 
 }
 
 /**
- * Sanity band aligned with Python gold_providers adapters.
+ * Client-side sanity band for XAU/USD spot. The upper bound (10000) matches the
+ * Python adapter (`gold_providers/base.py` DEFAULT_MAX_VALID_XAU_USD); the lower
+ * bound is intentionally tighter than Python's (1000 vs the Python 500 floor) —
+ * the browser only consumes already-validated snapshots, so a stricter floor
+ * adds defense-in-depth without rejecting any real quote.
  * @param {number} price
  */
 export function isSaneGoldSpotUsd(price) {
