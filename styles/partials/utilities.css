@@ -2412,6 +2412,33 @@ body[data-shell='market'] {
   transform: scaleX(-1);
 }
 
+/* Icon-chip micro-interaction: a subtle GPU-only lift + gold glow when its menu
+   row is hovered/focused. Premium, not noisy; disabled under reduced-motion. */
+.nav-dropdown-item-icon,
+.nav-drawer-link-icon {
+  transition:
+    transform 0.18s var(--ease-out, ease),
+    box-shadow 0.18s var(--ease-out, ease),
+    border-color 0.18s var(--ease-out, ease);
+}
+.nav-dropdown-item:hover .nav-dropdown-item-icon,
+.nav-dropdown-item:focus-visible .nav-dropdown-item-icon,
+.nav-drawer-link:hover .nav-drawer-link-icon,
+.nav-drawer-link:focus-visible .nav-drawer-link-icon {
+  transform: translateY(-1px) scale(1.06);
+  border-color: rgb(176 138 62 / 55%);
+  box-shadow: 0 4px 12px rgb(176 138 62 / 22%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-dropdown-item:hover .nav-dropdown-item-icon,
+  .nav-dropdown-item:focus-visible .nav-dropdown-item-icon,
+  .nav-drawer-link:hover .nav-drawer-link-icon,
+  .nav-drawer-link:focus-visible .nav-drawer-link-icon {
+    transform: none;
+  }
+}
+
 .nav-dropdown-featured-body,
 .nav-dropdown-cta-text,
 .nav-dropdown-item-body,

@@ -1261,6 +1261,85 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
+   On-page premium imagery — trust band gets a real gold backdrop.
+   The band becomes an intentional dark "precision-instrument" accent in BOTH
+   themes: a trust-safe abstract gold still life (brushed bullion + BLANK coins,
+   no numerals/charts/arrows/prices), served as a Vite-bundled WebP (~35 KB,
+   well under the 200 KB budget) behind a dark scrim that keeps the reference-
+   price disclaimer AA-legible. The existing data-reveal handles the entrance; a
+   slow, GPU-only ambient drift adds life and is disabled under
+   prefers-reduced-motion. Backdrop lives in ::before → no layout change, CLS 0.
+   ══════════════════════════════════════════════════════════════ */
+.home-section--trust-banner .trust-banner-box {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0a0c12;
+  color: #f3e9d4;
+  border-color: rgb(208 162 74 / 52%);
+  border-inline-start-color: var(--color-gold);
+  box-shadow:
+    0 20px 50px rgb(0 0 0 / 38%),
+    inset 0 0 0 1px rgb(255 255 255 / 6%);
+}
+.home-section--trust-banner .trust-banner-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(
+      100deg,
+      rgb(8 10 16 / 94%) 0%,
+      rgb(9 11 17 / 86%) 46%,
+      rgb(12 13 20 / 48%) 100%
+    ),
+    url('../../assets/hero/gold-bullion-band.webp');
+  background-repeat: no-repeat;
+  background-position:
+    center,
+    right center;
+  background-size: cover, cover;
+  transform: scale(1.06);
+  animation: trust-band-drift 30s ease-in-out infinite alternate;
+}
+
+@keyframes trust-band-drift {
+  from {
+    transform: scale(1.06) translate3d(0, 0, 0);
+  }
+  to {
+    transform: scale(1.11) translate3d(-1.4%, -0.6%, 0);
+  }
+}
+.home-section--trust-banner .trust-banner-content h3,
+.home-section--trust-banner .trust-banner-content .h3 {
+  color: #fbf4e3;
+}
+.home-section--trust-banner .trust-banner-content p,
+.home-section--trust-banner #trust-banner-copy,
+.home-section--trust-banner #trust-banner-source-tail {
+  color: #ece1c8;
+}
+.home-section--trust-banner .trust-banner-content a {
+  color: #f0ca5c;
+  border-bottom-color: rgb(240 202 92 / 45%);
+}
+.home-section--trust-banner .trust-banner-content a:hover {
+  border-bottom-color: #f0ca5c;
+}
+.home-section--trust-banner .trust-banner-icon {
+  color: #f0ca5c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-section--trust-banner .trust-banner-box::before {
+    animation: none;
+    transform: scale(1.06);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
    HOME SECTIONS — shared scaffolding
    ══════════════════════════════════════════════════════════════ */
 .home-section {
