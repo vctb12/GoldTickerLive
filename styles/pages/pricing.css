@@ -96,6 +96,16 @@
   transform: translateX(24px);
 }
 
+/* RTL: thumb starts on the right and slides left so the switch reads correctly in Arabic */
+[dir='rtl'] .toggle-label input::before {
+  left: auto;
+  right: 2px;
+}
+
+[dir='rtl'] .toggle-label input:checked::before {
+  transform: translateX(-24px);
+}
+
 .toggle-badge {
   background: var(--color-live-bg);
   color: var(--color-live);

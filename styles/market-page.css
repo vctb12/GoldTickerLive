@@ -312,6 +312,10 @@
   flex-direction: row-reverse;
 }
 
+[dir='rtl'] .mkt-tips-list li::before {
+  content: '←';
+}
+
 /* ═══════════════════════════════════════════════
    Phase 50: Market Page — Premium Visual Polish
    ═══════════════════════════════════════════════ */

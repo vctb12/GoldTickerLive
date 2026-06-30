@@ -139,6 +139,8 @@
   padding: 0.2rem 0.65rem;
   border-radius: var(--radius-pill);
   letter-spacing: 0.01em;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 
 .price-hero__change--up,
