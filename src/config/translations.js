@@ -968,6 +968,34 @@ export const TRANSLATIONS = {
     'home.faq5Q': 'How often do prices update?',
     'home.faq6Q': 'Does the price include making charges or VAT?',
     'home.faq7Q': 'Can I use these prices when selling gold?',
+    'home.faq1A': [
+      'The live gold price per gram in UAE (AED) is shown on the ',
+      ['./tracker.html', 'Live Tracker'],
+      ' and the ',
+      ['./countries/uae/', 'UAE page'],
+      '. Spot source updates hourly during market hours; pages re-poll about every 90 seconds while open. Prices use the official AED peg of 3.6725.',
+    ],
+    'home.faq2A': [
+      '24K is 100% pure gold. 22K is 91.7% gold (common for Gulf jewelry). 21K is 87.5% gold (popular in Egypt and Levant). 18K is 75% gold (common for fine jewelry worldwide). The price scales with purity — see our ',
+      ['./learn.html', 'Learn page'],
+      ' for the full breakdown.',
+    ],
+    'home.faq3A':
+      'The UAE Dirham is officially pegged to the US Dollar at 3.6725 by the UAE Central Bank. This rate never changes. Most FX APIs show a slightly different rate due to bid/ask spreads. We hardcode the official peg to give you accurate AED gold prices.',
+    'home.faq4A':
+      'No — these are spot-linked bullion estimates. Actual jewellery prices at retail stores are higher due to making charges, shop premiums, taxes, and markups. The Dubai Gold & Jewellery Group publishes a daily retail rate. Our tracker gives you the international spot baseline.',
+    'home.faq5A':
+      "The gold spot price auto-refreshes while you have the page open; the underlying source data updates hourly during market hours. FX rates update once per day (via open.er-api.com). A countdown timer on the tracker shows you exactly when the next refresh is due. Data is cached locally so the last known price shows even when you're offline, with a visible cached / fallback label so you can tell the difference.",
+    'home.faq6A': [
+      'No. The prices on Gold Ticker Live are spot-linked reference estimates for the gold content only. When you buy jewellery in a shop, the final price is higher because it adds making charges (fabrication fees, typically 5–25%), dealer margin, and in some countries VAT (e.g. 5% in the UAE). The tracker gives you the bullion baseline so you can understand how much of the quoted price is gold and how much is markup. See ',
+      ['./content/spot-vs-retail-gold-price/', 'Spot vs retail price'],
+      ' for a detailed breakdown.',
+    ],
+    'home.faq7A': [
+      "The displayed price is a useful starting point. When selling gold, dealers typically offer below the spot price — often 1–5% less — to cover their spread and processing costs. The amount you receive depends on the karat of the piece, the buyer's buy-back rate, and any applicable fees. Use our ",
+      ['./calculator.html', 'Gold Calculator'],
+      ' to estimate the melt value of your piece, then compare offers from multiple dealers.',
+    ],
     'home.faqMore': 'More gold price questions answered →',
     'home.trackerLink': 'Full Tracker →',
     'home.karatStripLabel': 'AED / gram',
@@ -2285,6 +2313,34 @@ export const TRANSLATIONS = {
     'home.faq5Q': 'كم مرة تُحدَّث الأسعار؟',
     'home.faq6Q': 'هل يشمل السعر رسوم الصياغة أو ضريبة القيمة المضافة؟',
     'home.faq7Q': 'هل يمكنني استخدام هذه الأسعار عند بيع الذهب؟',
+    'home.faq1A': [
+      'يظهر سعر غرام الذهب المرتبط بالسعر الفوري في الإمارات (بالدرهم) في ',
+      ['./tracker.html', 'المتتبع المباشر'],
+      ' وفي ',
+      ['./countries/uae/', 'صفحة الإمارات'],
+      '. يُحدَّث مصدر السعر الفوري كل ساعة خلال ساعات السوق؛ وتعيد الصفحات الاستعلام كل 90 ثانية تقريبًا أثناء فتحها. تعتمد الأسعار على الربط الرسمي للدرهم عند 3.6725.',
+    ],
+    'home.faq2A': [
+      'عيار 24 ذهب نقي 100%. وعيار 22 يحتوي 91.7% ذهبًا (شائع في مجوهرات الخليج). وعيار 21 يحتوي 87.5% (منتشر في مصر وبلاد الشام). وعيار 18 يحتوي 75% (شائع للمجوهرات الراقية عالميًا). يتناسب السعر مع النقاء — راجع ',
+      ['./learn.html', 'صفحة التعلّم'],
+      ' للتفاصيل الكاملة.',
+    ],
+    'home.faq3A':
+      'الدرهم الإماراتي مرتبط رسميًا بالدولار الأمريكي عند 3.6725 من قِبل مصرف الإمارات المركزي، وهذا السعر لا يتغير. وتُظهر معظم واجهات أسعار الصرف سعرًا مختلفًا قليلًا بسبب فروق العرض والطلب. نحن نعتمد الربط الرسمي الثابت لنمنحك أسعار ذهب دقيقة بالدرهم.',
+    'home.faq4A':
+      'لا — هذه تقديرات مرتبطة بالسعر الفوري للسبائك. أما أسعار المجوهرات الفعلية في متاجر التجزئة فأعلى بسبب رسوم الصياغة وهوامش المتجر والضرائب والزيادات. وتنشر مجموعة دبي للذهب والمجوهرات سعر تجزئة يوميًا. أما المتتبع لدينا فيمنحك خط الأساس الفوري العالمي.',
+    'home.faq5A':
+      'يُحدَّث السعر الفوري للذهب تلقائيًا أثناء فتح الصفحة؛ بينما تُحدَّث بيانات المصدر الأساسية كل ساعة خلال ساعات السوق. وتُحدَّث أسعار الصرف مرة واحدة يوميًا (عبر open.er-api.com). ويعرض مؤقت تنازلي في المتتبع موعد التحديث التالي بدقة. وتُخزَّن البيانات محليًا فيظهر آخر سعر معروف حتى دون اتصال بالإنترنت، مع تسمية واضحة للبيانات المخزنة/الاحتياطية لتمييزها.',
+    'home.faq6A': [
+      'لا. الأسعار على Gold Ticker Live تقديرات مرجعية مرتبطة بالسعر الفوري لمحتوى الذهب فقط. وعند شراء المجوهرات من متجر يكون السعر النهائي أعلى لأنه يضيف رسوم الصياغة (رسوم التصنيع، عادةً 5–25%) وهامش التاجر، وفي بعض الدول ضريبة القيمة المضافة (مثل 5% في الإمارات). يمنحك المتتبع خط أساس السبائك لتفهم كم من السعر المعروض ذهب وكم منه زيادة. راجع ',
+      ['./content/spot-vs-retail-gold-price/', 'السعر الفوري مقابل التجزئة'],
+      ' لتفصيل كامل.',
+    ],
+    'home.faq7A': [
+      'السعر المعروض نقطة انطلاق مفيدة. وعند بيع الذهب يعرض التجار عادةً أقل من السعر الفوري — غالبًا بنسبة 1–5% أقل — لتغطية فرق السعر وتكاليف المعالجة. ويعتمد المبلغ الذي تحصل عليه على عيار القطعة وسعر إعادة الشراء لدى المشتري وأي رسوم سارية. استخدم ',
+      ['./calculator.html', 'حاسبة الذهب'],
+      ' لتقدير قيمة صهر قطعتك، ثم قارن العروض من عدة تجار.',
+    ],
     'home.faqMore': 'المزيد من الأسئلة حول أسعار الذهب ←',
     'home.trackerLink': 'التتبع الكامل ←',
     'home.karatStripLabel': 'درهم / غرام',
