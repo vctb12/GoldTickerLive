@@ -17,12 +17,18 @@ const UNIT_TO_GRAMS = {
 /**
  * @param {{
  *   lang: string,
- *   spotUsdPerOz: number,
+ *   spotUsdPerOz?: number,
+ *   getSpot?: () => (number|null),
  *   t: (key: string, params?: Record<string, string>) => string,
  *   mount: HTMLElement,
  * }} options
+ *
+ * Pass `getSpot` when the spot price arrives after mount (the homepage case):
+ * recalc() reads it live, so the widget fills in as soon as a price exists
+ * instead of staying stuck on the placeholder. `spotUsdPerOz` is a static
+ * fallback for callers that already have the value.
  */
-export function mountQuickConvertWidget({ lang, spotUsdPerOz, t, mount }) {
+export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount }) {
   if (!mount) return null;
 
   let weight = 10;
@@ -52,7 +58,11 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, t, mount }) {
 
   const unitSelect = el(
     'select',
-    { class: 'quick-convert-widget__select', id: 'home-quick-unit', 'aria-label': t('quickConvertUnit') },
+    {
+      class: 'quick-convert-widget__select',
+      id: 'home-quick-unit',
+      'aria-label': t('quickConvertUnit'),
+    },
     [
       el('option', { value: 'gram' }, [t('unitGram')]),
       el('option', { value: 'tola' }, [t('unitTola')]),
@@ -62,7 +72,11 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, t, mount }) {
 
   const karatSelect = el(
     'select',
-    { class: 'quick-convert-widget__select', id: 'home-quick-karat', 'aria-label': t('quickConvertKarat') },
+    {
+      class: 'quick-convert-widget__select',
+      id: 'home-quick-karat',
+      'aria-label': t('quickConvertKarat'),
+    },
     ['24', '22', '21', '18'].map((code) => {
       const k = KARATS.find((item) => item.code === code);
       const pct = k ? `${(k.purity * 100).toFixed(1)}%` : '';
@@ -70,17 +84,27 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, t, mount }) {
     })
   );
 
-  const resultValue = el('div', {
-    class: 'quick-convert-widget__result-value',
-    id: 'home-quick-result',
-  }, ['—']);
-  const resultNote = el('p', { class: 'quick-convert-widget__result-note' }, [t('quickConvertNote')]);
+  const resultValue = el(
+    'div',
+    {
+      class: 'quick-convert-widget__result-value',
+      id: 'home-quick-result',
+    },
+    ['—']
+  );
+  const resultNote = el('p', { class: 'quick-convert-widget__result-note' }, [
+    t('quickConvertNote'),
+  ]);
 
-  const calcLink = el('a', {
-    class: 'btn btn-outline btn-sm quick-convert-widget__cta',
-    id: 'home-quick-calc-link',
-    href: 'calculator.html',
-  }, [t('quickConvertCta')]);
+  const calcLink = el(
+    'a',
+    {
+      class: 'btn btn-outline btn-sm quick-convert-widget__cta',
+      id: 'home-quick-calc-link',
+      href: 'calculator.html',
+    },
+    [t('quickConvertCta')]
+  );
 
   const form = el('div', { class: 'quick-convert-widget__form' }, [
     el('div', { class: 'quick-convert-widget__field' }, [
@@ -115,11 +139,12 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, t, mount }) {
     unit = unitSelect.value;
     karat = karatSelect.value;
     const k = KARATS.find((item) => item.code === karat);
-    if (!spotUsdPerOz || !k || gramsFromInput() <= 0) {
+    const spot = typeof getSpot === 'function' ? getSpot() : spotUsdPerOz;
+    if (!spot || !k || gramsFromInput() <= 0) {
       resultValue.textContent = '—';
       return;
     }
-    const aedPerGram = usdPerGram(spotUsdPerOz, k.purity) * CONSTANTS.AED_PEG;
+    const aedPerGram = usdPerGram(spot, k.purity) * CONSTANTS.AED_PEG;
     const total = aedPerGram * gramsFromInput();
     countUp(resultValue, total, {
       decimals: 2,

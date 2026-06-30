@@ -771,7 +771,10 @@ function mountHomeQuickConvert() {
   if (!mount) return;
   _quickConvert = mountQuickConvertWidget({
     lang,
-    spotUsdPerOz: goldPrice,
+    // Pass a live getter, not a snapshot: goldPrice is null until the first
+    // price (cache-boot or live) lands, and the later recalc() calls must see
+    // the current value instead of the null captured at mount time.
+    getSpot: () => goldPrice,
     t: (key) => tx(key),
     mount,
   });
