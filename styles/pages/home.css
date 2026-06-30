@@ -112,6 +112,28 @@
   background: var(--gradient-hero-dark);
 }
 
+/* Decorative hero ambient slot — sits at z-index:0, BEHIND .hero-inner
+   (z-index:1), reserves no layout box (no CLS) and intercepts no pointer events. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Dark theme only: a soft warm gold glow weighted to the right of the midnight
+   hero, behind the price card. Pure CSS radial gradients ON PURPOSE — a measured
+   raster ambient became the LCP element and added ~34ms (406ms→440ms); a CSS
+   gradient is never an LCP candidate, so this keeps the warm depth at zero
+   LCP/CLS cost (re-measured: LCP stays ~406ms, element stays the hero text).
+   Light keeps its deliberately flat parchment gradient. */
+[data-theme='dark'] .hero::before {
+  background:
+    radial-gradient(58% 78% at 86% 32%, rgb(240 202 92 / 11%) 0%, transparent 60%),
+    radial-gradient(42% 62% at 98% 72%, rgb(176 125 31 / 10%) 0%, transparent 58%);
+}
+
 /* Phase 13: Hero inner layout — wider gap, better proportions */
 .hero-inner {
   max-width: 1200px;
