@@ -353,7 +353,7 @@ export function injectNav(lang = 'en', depth = 0) {
 
   const html = `
 ${spriteMarkupIfAbsent()}
-<a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
+<a class="nav-skip-link" href="#main-content">${data.skipLink}</a>
 <header class="site-header" role="banner">
 <nav class="site-nav site-nav--premium" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
   <div class="nav-inner">
@@ -505,7 +505,7 @@ ${spriteMarkupIfAbsent()}
   const nodes = Array.from(wrapper.children);
   const anchor = document.querySelector('main') || document.body.firstElementChild;
   for (const n of nodes) document.body.insertBefore(n, anchor);
-  // The <nav> now lives inside the <header class="site-header" role="banner"> wrapper.
+  // The <nav> now lives inside the site-header banner wrapper.
   const headerEl = nodes.find((n) => n.matches && n.matches('header.site-header'));
   const navEl =
     (headerEl && headerEl.querySelector('nav.site-nav')) ||
