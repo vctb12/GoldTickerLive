@@ -22,7 +22,7 @@ export function renderLocationGuideSection({ lang = 'en', t = (key) => key, clas
       el(
         'h4',
         { class: 'location-guide-card__checklist-title' },
-        t('locationGuides.checklistTitle')
+        `${pickText(guide, lang, 'city', 'cityAr')} — ${t('locationGuides.checklistTitle')}`
       ),
       el(
         'ul',
