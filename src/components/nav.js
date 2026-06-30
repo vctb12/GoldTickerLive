@@ -431,7 +431,7 @@ ${spriteMarkupIfAbsent()}
   <!-- Search overlay -->
   <div id="nav-search-overlay" class="nav-search-overlay" hidden>
     <input id="nav-search-input" class="nav-search-input" type="search"
-      placeholder="Search countries, cities, karats..." autocomplete="off"
+      placeholder="${escapeHtml(data.searchPlaceholder || 'Search countries, cities, karats…')}" autocomplete="off"
       aria-label="${escapeHtml(data.searchLabel || 'Search')}" />
     <div id="nav-search-dropdown" class="nav-search-dropdown" role="listbox"></div>
   </div>
@@ -1109,6 +1109,10 @@ export function updateNavLang(lang) {
   document.querySelectorAll('#nav-search-btn, #nav-search-input').forEach((elx) => {
     elx.setAttribute('aria-label', data.searchLabel || 'Search');
   });
+  const searchInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById('nav-search-input')
+  );
+  if (searchInput && data.searchPlaceholder) searchInput.placeholder = data.searchPlaceholder;
 
   // Primary journey links
   if (Array.isArray(data.primaryLinks)) {
@@ -1274,7 +1278,7 @@ export function updateNavLang(lang) {
       tracker: isRtl ? 'تتبع' : 'Tracker',
       calculator: isRtl ? 'حاسبة' : 'Calc',
       shops: isRtl ? 'المحلات' : 'Shops',
-      menu: isRtl ? 'القائمة' : 'More',
+      menu: isRtl ? 'القائمة' : 'Menu',
     };
     bottomNav.querySelectorAll('[data-mobile-nav]').forEach((el) => {
       const key = el.dataset.mobileNav;
