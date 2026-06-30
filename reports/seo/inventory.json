@@ -428,7 +428,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "WebApplication"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
@@ -12483,7 +12484,8 @@
         }
       ],
       "jsonLdTypes": [
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "WebApplication"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
