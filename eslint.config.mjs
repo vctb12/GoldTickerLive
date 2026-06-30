@@ -1,6 +1,8 @@
 export default [
   {
     ignores: [
+      // Agent Workflow-DSL scripts (top-level await/return); not app modules.
+      '.claude/**',
       'dist/**',
       'node_modules/**',
       'build/**',

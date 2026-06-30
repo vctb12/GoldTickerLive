@@ -13,6 +13,9 @@ country pages, and Arabic-first accessibility.
 > **For coding agents:** start every session with
 > [`prompts/master-rerun.md`](prompts/master-rerun.md), then [`PLAN.md`](PLAN.md) and
 > [`AGENTS.md`](AGENTS.md). Prompt index: [`docs/AI_PROMPT_LIBRARY.md`](docs/AI_PROMPT_LIBRARY.md).
+> Active revamp: [`docs/revamp/`](docs/revamp/) — audit, 50-phase plan,
+> [progress tracker](docs/revamp/PROGRESS.md), [live QA](docs/revamp/qa/). Reusable agent workflows:
+> [`.claude/workflows/`](.claude/workflows/).
 
 <p>
   <a href="https://goldtickerlive.com/">
