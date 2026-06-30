@@ -321,7 +321,7 @@
           <p id="aed-peg-p1">
             The UAE Dirham has been officially pegged to the US Dollar at a rate of
             <strong>3.6725 AED per 1 USD</strong> since November 1997. This peg is maintained by the
-            UAE Central Bank and has never changed in over 27 years of continuous operation.
+            UAE Central Bank and has remained unchanged through every market cycle since.
           </p>
 
           <div class="method-formula-block">
@@ -341,10 +341,11 @@
           </p>
 
           <p id="aed-peg-effect-p">
-            This means AED gold prices on this site are always mathematically exact relative to the
-            USD spot price — with zero exchange rate uncertainty. This is actually a feature, not a
-            limitation: because the peg has held since 1997, our hardcoded value is more accurate
-            than any API-derived figure.
+            This means the USD→AED conversion step itself carries no exchange-rate uncertainty —
+            because the peg has held since 1997, the hardcoded value is more reliable than a
+            free-tier API rate for that one step. The AED gold price is still only as fresh and
+            accurate as the XAU/USD spot input it is built on, which is why every AED figure keeps a
+            freshness label and remains a reference estimate, not a guaranteed price.
           </p>
 
           <p id="aed-peg-reference-p">
@@ -576,6 +577,7 @@
             <li><span class="badge badge--delayed">Delayed</span> Provider lag (often FX)</li>
             <li><span class="badge badge--stale">Stale</span> Older than our stale threshold</li>
             <li><span class="badge badge--fallback">Fallback</span> Last known value after failure</li>
+            <li><span class="badge badge--unavailable">Unavailable</span> Every provider failed — no price is shown, only a clear error state</li>
           </ul>
         </section>
 

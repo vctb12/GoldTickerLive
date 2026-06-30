@@ -5,9 +5,9 @@
 import { el, clear } from '../lib/safe-dom.js';
 import { formatPrice } from '../lib/formatter.js';
 
-/** Typical GCC jewellery making-charge range (illustrative). */
-const MAKING_LOW = 0.08;
-const MAKING_HIGH = 0.22;
+/** Typical jewellery making-charge range (illustrative; matches the 5–25% band cited in the FAQ). */
+const MAKING_LOW = 0.05;
+const MAKING_HIGH = 0.25;
 
 /**
  * @param {{
@@ -18,12 +18,7 @@ const MAKING_HIGH = 0.22;
  * }} options
  * @returns {HTMLElement}
  */
-export function renderShopVsReferencePanel({
-  referenceLocal,
-  currency,
-  decimals = 2,
-  t,
-}) {
+export function renderShopVsReferencePanel({ referenceLocal, currency, decimals = 2, t }) {
   const root = el('div', { class: 'shop-vs-reference', 'aria-labelledby': 'shop-vs-ref-heading' });
   const heading = el('h3', { class: 'shop-vs-reference__title', id: 'shop-vs-ref-heading' }, [
     t('title'),
@@ -41,10 +36,14 @@ export function renderShopVsReferencePanel({
   ]);
 
   const disclaimer = el('p', { class: 'shop-vs-reference__disclaimer' }, [t('disclaimer')]);
-  const link = el('a', {
-    class: 'shop-vs-reference__link',
-    href: 'content/spot-vs-retail-gold-price/',
-  }, [t('link')]);
+  const link = el(
+    'a',
+    {
+      class: 'shop-vs-reference__link',
+      href: 'content/spot-vs-retail-gold-price/',
+    },
+    [t('link')]
+  );
 
   root.append(heading, intro, bars, disclaimer, link);
   return root;
