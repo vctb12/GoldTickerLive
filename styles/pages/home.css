@@ -1118,6 +1118,43 @@
   border-radius: var(--radius-sm);
   background: var(--color-gold-bg);
   border: 1px solid rgb(196 144 46 / 20%);
+  color: var(--color-gold-dark);
+}
+
+/* Inline monoline icons (sprite <use>) inside the homepage chips/strips */
+.trust-icon svg,
+.trust-banner-icon svg,
+.explainer-strip-icon svg {
+  display: block;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.trust-icon svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.trust-banner-icon {
+  display: inline-flex;
+  color: var(--color-gold-dark);
+}
+
+.trust-banner-icon svg {
+  width: 1.45rem;
+  height: 1.45rem;
+}
+
+.explainer-strip-icon {
+  color: var(--color-gold-dark);
+}
+
+.explainer-strip-icon svg {
+  width: 1.6rem;
+  height: 1.6rem;
 }
 
 .trust-content {
