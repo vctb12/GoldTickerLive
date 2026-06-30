@@ -43,6 +43,8 @@ const T = {
     'fx-rates-update-h3': 'Update Frequency',
     'aed-peg-h2': 'The AED Fixed Peg (Special Case)',
     'aed-peg-approach-h3': 'Our Approach',
+    'aed-peg-effect-p':
+      'This means the USD→AED conversion step itself carries no exchange-rate uncertainty — because the peg has held since 1997, the hardcoded value is more reliable than a free-tier API rate for that one step. The AED gold price is still only as fresh and accurate as the XAU/USD spot input it is built on, which is why every AED figure keeps a freshness label and remains a reference estimate, not a guaranteed price.',
     'karat-h2': 'Karat Conversion',
     'karat-formula-h3': 'The Price Formula',
     'not-included-h2': 'What Our Prices Are Not',
@@ -81,6 +83,8 @@ const T = {
     'fx-rates-update-h3': 'معدّل التحديث',
     'aed-peg-h2': 'ربط الدرهم الثابت (حالة خاصة)',
     'aed-peg-approach-h3': 'نهجنا',
+    'aed-peg-effect-p':
+      'هذا يعني أن خطوة التحويل من الدولار إلى الدرهم لا تحمل عدم يقين في سعر الصرف — وبما أن الربط ثابت منذ 1997، فالقيمة المُثبتة في الكود أكثر موثوقية من سعر واجهة برمجية مجانية لتلك الخطوة وحدها. ومع ذلك، يبقى سعر الذهب بالدرهم بقدر حداثة ودقة مدخل XAU/USD الذي يُبنى عليه، ولذلك يحتفظ كل رقم بالدرهم بوسم الحداثة ويبقى تقديراً مرجعياً وليس سعراً مضموناً.',
     'karat-h2': 'تحويل العيار',
     'karat-formula-h3': 'معادلة السعر',
     'not-included-h2': 'ما لا تمثّله أسعارنا',

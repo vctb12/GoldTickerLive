@@ -179,7 +179,9 @@ const T = {
     convert_title: 'Gold Weight Unit Converter',
     convert_desc: 'Convert between grams, troy ounces, tolas, mashas, and more.',
     conv_amount: 'Amount',
+    conv_amount_placeholder: 'Enter a value',
     conv_from: 'From',
+    val_making_charge_link: 'What is a making charge?',
     conv_results_title: 'Equivalent weights',
     freshness_waiting: 'Freshness: waiting for source timestamp…',
     trust_note:
@@ -312,7 +314,9 @@ const T = {
     convert_title: 'محوّل وحدات الذهب',
     convert_desc: 'حوّل بين الغرام والأوقية التروي والتولة والمثقال وغيرها.',
     conv_amount: 'الكمية',
+    conv_amount_placeholder: 'أدخل قيمة',
     conv_from: 'من',
+    val_making_charge_link: 'ما هي المصنعية؟',
     conv_results_title: 'الأوزان المكافئة',
     freshness_waiting: 'حداثة البيانات: بانتظار الطابع الزمني من المصدر…',
     trust_note:
@@ -1125,7 +1129,7 @@ function applyLang() {
     valDisclaimer.append(
       `${t('val_disclaimer')} `,
       el('a', { href: './content/gold-making-charges-guide/', class: 'calc-inline-link' }, [
-        STATE.lang === 'ar' ? 'ما هي المصنعية؟' : 'What is a making charge?',
+        t('val_making_charge_link'),
       ])
     );
   }
@@ -1159,9 +1163,7 @@ function applyLang() {
   set('calc-convert-h2', t('convert_title'));
   set('calc-convert-desc', t('convert_desc'));
   set('conv-amount-label', t('conv_amount'));
-  document
-    .getElementById('conv-amount')
-    ?.setAttribute('placeholder', STATE.lang === 'ar' ? 'أدخل قيمة' : 'Enter a value');
+  document.getElementById('conv-amount')?.setAttribute('placeholder', t('conv_amount_placeholder'));
   set('conv-from-label', t('conv_from'));
   set('conv-results-title', t('conv_results_title'));
   set('calc-freshness-note', t('freshness_waiting'));

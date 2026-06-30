@@ -335,9 +335,9 @@
           <p id="aed-peg-approach-p">
             We <strong>never</strong> use the AED rate returned by the open.er-api.com API. Even
             though the API returns an AED rate, free-tier exchange rate APIs can occasionally return
-            rounded or slightly off values. To guarantee accuracy for AED-denominated gold prices,
-            we hardcode the official peg rate of <strong>3.6725</strong> and delete any AED value
-            from the API response before processing.
+            rounded or slightly off values. To keep the USD→AED conversion step exact, we hardcode
+            the official peg rate of <strong>3.6725</strong> and delete any AED value from the API
+            response before processing.
           </p>
 
           <p id="aed-peg-effect-p">
