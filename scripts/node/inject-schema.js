@@ -24,7 +24,8 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '../..');
 const SITE_URL = 'https://goldtickerlive.com';
 const SITE_NAME = 'Gold Ticker Live';
-const SITE_DESCRIPTION = 'Live gold prices for GCC, Arab world and global markets';
+const SITE_DESCRIPTION =
+  'Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels';
 
 // ── Trusted local config loaders ────────────────────────────────────────────
 // data/shops.js and src/config/countries.js are ES modules that can't be
@@ -544,7 +545,7 @@ function generateSchemasForPage(filePath, content) {
       url: canonicalUrl || `${SITE_URL}/tracker.html`,
       description:
         pageDescription ||
-        'Live gold price tracker with real-time XAU/USD spot data, multi-karat reference table, historical charts, and currency conversion for GCC and global markets.',
+        'Spot-linked reference gold price tracker with XAU/USD data, multi-karat table, historical charts, and currency conversion — freshness labels visible on page.',
       applicationCategory: 'FinanceApplication',
       operatingSystem: 'Any (web browser)',
       browserRequirements: 'Requires JavaScript',
@@ -555,7 +556,7 @@ function generateSchemasForPage(filePath, content) {
         priceCurrency: 'USD',
       },
       featureList: [
-        'Live XAU/USD gold spot price (reference estimate)',
+        'XAU/USD spot-linked reference price (freshness label on page)',
         'Multi-karat reference table (24K–14K)',
         'Historical price chart (7D–5Y)',
         'Currency comparison (AED and majors)',
