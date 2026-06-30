@@ -5,12 +5,12 @@
     "totalHtmlFiles": 343,
     "withCanonical": 341,
     "withoutCanonical": 2,
-    "withOgImage": 263,
-    "withoutOgImage": 80,
-    "withJsonLd": 338,
-    "withoutJsonLd": 5,
+    "withOgImage": 264,
+    "withoutOgImage": 79,
+    "withJsonLd": 339,
+    "withoutJsonLd": 4,
     "hreflangEnArPairs": 339,
-    "noindexCount": 104
+    "noindexCount": 103
   },
   "records": [
     {
@@ -259,21 +259,21 @@
       "exempt": null,
       "lang": "ar",
       "dir": "rtl",
-      "title": "Gold Ticker Live — العربية",
-      "metaDescription": null,
-      "canonical": "https://goldtickerlive.com/",
-      "robots": "noindex,follow",
-      "ogTitle": null,
-      "ogDescription": null,
-      "ogImage": null,
-      "ogUrl": null,
-      "ogType": null,
-      "twitterCard": null,
-      "twitterImage": null,
+      "title": "أسعار الذهب اليوم في الإمارات والخليج | Gold Ticker Live",
+      "metaDescription": "سعر جرام الذهب اليوم في الإمارات بالدرهم — أسعار مرجعية لعيار 24 و22 و21 و18 لدول الخليج وأكثر من 20 دولة عربية، مع تحديث تلقائي ووسم يوضّح حداثة السعر. الأسعار مرجعية وليست أسعار تجزئة.",
+      "canonical": "https://goldtickerlive.com/ar/",
+      "robots": null,
+      "ogTitle": "Gold Ticker Live — Reference Gold Prices for GCC & the Arab World | أسعار الذهب المرجعية",
+      "ogDescription": "Track gold spot prices in 24+ countries. Seven karat grades (14K–24K) from gold-api.com spot + open.er-api.com FX. Source updates hourly; pages re-poll ~90s. Bilingual EN/AR.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/ar/",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
       "hreflang": [
         {
           "lang": "ar",
-          "href": "https://goldtickerlive.com/?lang=ar"
+          "href": "https://goldtickerlive.com/ar/"
         },
         {
           "lang": "en",
@@ -284,8 +284,11 @@
           "href": "https://goldtickerlive.com/"
         }
       ],
-      "jsonLdTypes": [],
-      "hasStructuredData": false,
+      "jsonLdTypes": [
+        "Organization",
+        "WebSite"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {
@@ -12089,7 +12092,7 @@
       "hreflang": [
         {
           "lang": "ar",
-          "href": "https://goldtickerlive.com/?lang=ar"
+          "href": "https://goldtickerlive.com/ar/"
         },
         {
           "lang": "en",
