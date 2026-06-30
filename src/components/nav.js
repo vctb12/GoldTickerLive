@@ -13,6 +13,7 @@
  */
 
 import { NAV_DATA, PAGE_SHELLS } from './nav-data.js';
+import { iconSvg, iconUseElement, navIconSymbol, spriteMarkupIfAbsent } from './icon-sprite.js';
 import { applyFeatureFlags } from '../lib/site-settings.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { collapseInactiveAdSlots } from './adSlot.js';
@@ -159,7 +160,7 @@ function buildDropdown(group, depth) {
     if (item.primary) classes.push('nav-dropdown-item--primary');
     const ariaCurrent = isActive ? ' aria-current="page"' : '';
     const iconHtml = item.icon
-      ? `<span class="nav-dropdown-item-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+      ? `<span class="nav-dropdown-item-icon" aria-hidden="true">${iconSvg(navIconSymbol(item.icon))}</span>`
       : '';
     const descHtml = item.description
       ? `<span class="nav-dropdown-item-desc">${escapeHtml(item.description)}</span>`
@@ -175,7 +176,7 @@ function buildDropdown(group, depth) {
 
   const featuredHtml = group.featured
     ? `<a href="${resolveHref(group.featured.href, depth)}" class="nav-dropdown-featured" role="menuitem">
-        <span class="nav-dropdown-featured-icon" aria-hidden="true">${escapeHtml(group.featured.icon || '')}</span>
+        <span class="nav-dropdown-featured-icon" aria-hidden="true">${iconSvg(navIconSymbol(group.featured.icon), { className: 'nav-ico nav-ico--featured' })}</span>
         <span class="nav-dropdown-featured-body">
           <span class="nav-dropdown-featured-label">${escapeHtml(group.featured.label)}</span>
           <span class="nav-dropdown-featured-desc">${escapeHtml(group.featured.description)}</span>
@@ -264,7 +265,7 @@ function buildDrawerPrimaryLink(item, depth) {
   if (item.primary) classes.push('nav-drawer-link--primary');
   const ariaCurrent = isActive ? ' aria-current="page"' : '';
   const iconHtml = item.icon
-    ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+    ? `<span class="nav-drawer-link-icon" aria-hidden="true">${iconSvg(navIconSymbol(item.icon))}</span>`
     : '';
   return `<a href="${href}"
      class="${classes.join(' ')}"
@@ -282,7 +283,7 @@ function buildDrawerGroup(group, depth) {
     if (item.primary) classes.push('nav-drawer-link--primary');
     const ariaCurrent = isActive ? ' aria-current="page"' : '';
     const iconHtml = item.icon
-      ? `<span class="nav-drawer-link-icon" aria-hidden="true">${escapeHtml(item.icon)}</span>`
+      ? `<span class="nav-drawer-link-icon" aria-hidden="true">${iconSvg(navIconSymbol(item.icon))}</span>`
       : '';
     const descHtml = item.description
       ? `<span class="nav-drawer-link-desc">${escapeHtml(item.description)}</span>`
@@ -351,6 +352,7 @@ export function injectNav(lang = 'en', depth = 0) {
   const mobileGroupsHtml = data.groups.map((g) => buildDrawerGroup(g, depth)).join('');
 
   const html = `
+${spriteMarkupIfAbsent()}
 <a class="nav-skip-link" href="#main-content">${lang === 'ar' ? 'تخطي إلى المحتوى' : 'Skip to main content'}</a>
 <header class="site-header" role="banner">
 <nav class="site-nav site-nav--premium" role="navigation" aria-label="${data.mainNav}" dir="${isRtl ? 'rtl' : 'ltr'}">
@@ -391,7 +393,7 @@ export function injectNav(lang = 'en', depth = 0) {
               aria-label="Search"
               aria-expanded="false"
               aria-controls="nav-search-overlay"
-      >🔍</button>
+      >${iconSvg('i-search')}</button>
 
       <button id="nav-theme-toggle"
               class="nav-icon-btn nav-icon-btn--theme"
@@ -399,7 +401,7 @@ export function injectNav(lang = 'en', depth = 0) {
               aria-label="Theme: auto"
               title="Theme: auto"
               data-theme-mode="auto"
-      >🌓</button>
+      >${iconSvg('i-theme-auto')}</button>
 
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
@@ -477,7 +479,7 @@ export function injectNav(lang = 'en', depth = 0) {
                 aria-label="Theme: auto"
                 title="Theme: auto"
                 data-theme-mode="auto"
-        >🌓</button>
+        >${iconSvg('i-theme-auto')}</button>
         <button id="nav-lang-toggle-mobile"
                 class="nav-lang-btn nav-lang-btn--drawer"
                 type="button"
@@ -537,7 +539,14 @@ export function injectNav(lang = 'en', depth = 0) {
   const themeBtn = document.getElementById('nav-theme-toggle');
   if (themeBtn) {
     const THEME_CYCLE = ['auto', 'light', 'dark'];
-    const THEME_ICON = { auto: '🌓', light: '☀️', dark: '🌙' };
+    const THEME_ICON = { auto: 'i-theme-auto', light: 'i-sun', dark: 'i-moon' };
+    const setThemeIcon = (btn, symbol) => {
+      const use = btn && btn.querySelector('use');
+      if (!use) return;
+      const ref = '#' + symbol;
+      use.setAttribute('href', ref);
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', ref);
+    };
     const mql =
       typeof window.matchMedia === 'function'
         ? window.matchMedia('(prefers-color-scheme: dark)')
@@ -566,14 +575,14 @@ export function injectNav(lang = 'en', depth = 0) {
       document.documentElement.setAttribute('data-theme-mode', mode);
       const icon = THEME_ICON[mode] || THEME_ICON.auto;
       const label = THEME_LABEL[mode] || THEME_LABEL.auto;
-      themeBtn.textContent = icon;
+      setThemeIcon(themeBtn, icon);
       themeBtn.setAttribute('aria-label', label);
       themeBtn.setAttribute('title', label);
       themeBtn.setAttribute('data-theme-mode', mode);
       // Sync the drawer theme button if present
       const drawerBtn = document.getElementById('nav-theme-toggle-drawer');
       if (drawerBtn) {
-        drawerBtn.textContent = icon;
+        setThemeIcon(drawerBtn, icon);
         drawerBtn.setAttribute('aria-label', label);
         drawerBtn.setAttribute('title', label);
         drawerBtn.setAttribute('data-theme-mode', mode);
@@ -984,29 +993,29 @@ function _injectMobileBottomNav(lang, _depth) {
   const items = [
     {
       href: '/tracker.html',
-      icon: '📈',
+      icon: 'i-chart',
       label: findLabel('/tracker.html', isAr ? 'تتبع' : 'Tracker'),
       key: 'tracker',
     },
     {
       href: '/calculator.html',
-      icon: '🧮',
+      icon: 'i-calc',
       label: findLabel('/calculator.html', isAr ? 'الحاسبة' : 'Calculator'),
       key: 'calculator',
     },
     {
       href: '/countries/index.html',
-      icon: '🌍',
+      icon: 'i-globe',
       label: findLabel('/countries/index.html', isAr ? 'الدول' : 'Countries'),
       key: 'countries',
     },
     {
       href: '/shops.html',
-      icon: '🏪',
+      icon: 'i-shop',
       label: findLabel('/shops.html', isAr ? 'المحلات' : 'Shops'),
       key: 'shops',
     },
-    { action: 'menu', icon: '☰', label: isAr ? 'القائمة' : 'More', key: 'menu' },
+    { action: 'menu', icon: 'i-menu', label: isAr ? 'القائمة' : 'More', key: 'menu' },
   ];
 
   const itemsHtml = items
@@ -1016,13 +1025,13 @@ function _injectMobileBottomNav(lang, _depth) {
 
       if (item.action === 'menu') {
         return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}" aria-expanded="false" aria-controls="nav-drawer">
-          <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
+          <span class="mobile-bottom-nav-icon" aria-hidden="true">${iconSvg(item.icon)}</span>
           <span class="mobile-bottom-nav-label">${item.label}</span>
         </button>`;
       }
 
       return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}" aria-label="${item.label}">
-        <span class="mobile-bottom-nav-icon" aria-hidden="true">${item.icon}</span>
+        <span class="mobile-bottom-nav-icon" aria-hidden="true">${iconSvg(item.icon)}</span>
         <span class="mobile-bottom-nav-label">${item.label}</span>
       </a>`;
     })
@@ -1123,8 +1132,12 @@ export function updateNavLang(lang) {
       const featured = panel.querySelector('.nav-dropdown-featured');
       if (featured && group.featured) {
         featured.setAttribute('href', resolveHref(group.featured.href, 0));
-        const featuredIcon = featured.querySelector('.nav-dropdown-featured-icon');
-        if (featuredIcon) featuredIcon.textContent = group.featured.icon || '';
+        const featuredUse = featured.querySelector('.nav-dropdown-featured-icon use');
+        if (featuredUse && group.featured.icon) {
+          const ref = '#' + navIconSymbol(group.featured.icon);
+          featuredUse.setAttribute('href', ref);
+          featuredUse.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', ref);
+        }
         const featuredLabel = featured.querySelector('.nav-dropdown-featured-label');
         if (featuredLabel) featuredLabel.textContent = group.featured.label;
         const featuredDesc = featured.querySelector('.nav-dropdown-featured-desc');
@@ -1488,7 +1501,7 @@ export function initNavSearch(basePath = '/') {
         const icon = document.createElement('span');
         icon.className = 'nav-search-result-icon';
         icon.setAttribute('aria-hidden', 'true');
-        icon.textContent = r.icon || '🔍';
+        icon.appendChild(iconUseElement(navIconSymbol(r.icon) || 'i-search'));
         a.appendChild(icon);
 
         const body = document.createElement('span');

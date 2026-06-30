@@ -21,7 +21,7 @@ function buildIndex() {
       label: c.nameEn,
       labelAr: c.nameAr,
       url: `/${c.slug}/gold-price/`,
-      icon: c.flag || '🌍',
+      icon: 'i-pin',
       keywords: [c.nameEn, c.nameAr, c.currency, ...(c.searchAliases || [])],
     });
 
@@ -34,7 +34,7 @@ function buildIndex() {
         label: `${city.nameEn}, ${c.nameEn}`,
         labelAr: `${city.nameAr}, ${c.nameAr}`,
         url: `/${c.slug}/${city.slug}/gold-rate/`,
-        icon: '🏙️',
+        icon: 'i-skyline',
         keywords: [city.nameEn, city.nameAr, c.nameEn, c.nameAr, c.currency],
       });
     }
@@ -48,7 +48,7 @@ function buildIndex() {
       label: `${k.code}K Gold Price`,
       labelAr: `سعر ذهب عيار ${k.code}`,
       url: `/tracker.html#mode=live&k=${k.code}`,
-      icon: '✨',
+      icon: 'i-coins',
       keywords: [`${k.code}K`, `${k.code} karat`, `عيار ${k.code}`, k.labelEn, k.labelAr],
     });
   }
@@ -60,7 +60,7 @@ function buildIndex() {
       label: 'Live Gold Tracker',
       labelAr: 'تتبع الذهب المباشر',
       url: '/tracker.html',
-      icon: '📊',
+      icon: 'i-chart',
       keywords: ['tracker', 'live', 'real-time', 'تتبع'],
     },
     {
@@ -68,7 +68,7 @@ function buildIndex() {
       label: 'Gold Price Calculator',
       labelAr: 'حاسبة أسعار الذهب',
       url: '/calculator.html',
-      icon: '🧮',
+      icon: 'i-calc',
       keywords: ['calculator', 'calc', 'compute', 'حاسبة'],
     },
     {
@@ -76,7 +76,7 @@ function buildIndex() {
       label: 'Gold Price History & Charts',
       labelAr: 'تاريخ أسعار الذهب',
       url: '/gold-price-history/',
-      icon: '📈',
+      icon: 'i-chart',
       keywords: ['history', 'chart', 'historical', 'تاريخ'],
     },
     {
@@ -84,7 +84,7 @@ function buildIndex() {
       label: 'Order Gold',
       labelAr: 'اطلب الذهب',
       url: '/order-gold/',
-      icon: '🛒',
+      icon: 'i-receipt',
       keywords: ['buy', 'order', 'purchase', 'شراء', 'طلب'],
     },
     {
@@ -92,7 +92,7 @@ function buildIndex() {
       label: 'Gold Shops Directory',
       labelAr: 'دليل محلات الذهب',
       url: '/shops.html',
-      icon: '🏪',
+      icon: 'i-shop',
       keywords: ['shops', 'dealers', 'jewellers', 'محلات', 'بائعين'],
     },
     {
@@ -100,7 +100,7 @@ function buildIndex() {
       label: 'Gold Price Methodology',
       labelAr: 'منهجية أسعار الذهب',
       url: '/methodology.html',
-      icon: '📋',
+      icon: 'i-book',
       keywords: ['methodology', 'how', 'منهجية'],
     },
     {
@@ -108,7 +108,7 @@ function buildIndex() {
       label: 'Gold Insights & Analysis',
       labelAr: 'تحليلات الذهب',
       url: '/insights.html',
-      icon: '💡',
+      icon: 'i-info',
       keywords: ['insights', 'analysis', 'news', 'تحليل'],
     }
   );
@@ -123,7 +123,7 @@ function buildIndex() {
       label: s.name,
       labelAr: s.nameAr || s.name,
       url: `/shops.html#${s.id || ''}`,
-      icon: '🏪',
+      icon: 'i-shop',
       keywords: [
         s.name,
         s.nameAr || '',

@@ -2363,6 +2363,55 @@ body[data-shell='market'] {
   color: var(--nav-icon-on-gold);
 }
 
+/* ─── Monoline SVG nav icons (shared #gtl-icon-sprite via <use>) ─────────────
+   Replaces the legacy text-badge "icons" (CAI / LIVE / 22K) and emoji with one
+   cohesive vector set. The icon chips keep their exact 2rem footprint, so the
+   text→SVG swap reserves the same space (CLS stays 0). Stroke colour inherits
+   the chip's `color` token (gold-dark on tiles, on-gold on the featured chip),
+   so both light (parchment) and dark (midnight) themes stay AA-legible. */
+.nav-ico {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: block;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* Chips were sized for ~0.62rem badge text; null it out so no ghost metrics
+   affect the now-SVG contents. */
+.nav-dropdown-item-icon,
+.nav-drawer-link-icon,
+.nav-dropdown-featured-icon {
+  font-size: 0;
+  letter-spacing: normal;
+}
+.nav-ico--featured {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+.mobile-bottom-nav-icon .nav-ico {
+  width: 24px;
+  height: 24px;
+}
+.nav-icon-btn .nav-ico {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+.nav-search-result-icon .nav-ico {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* Mirror reading-direction glyphs (e.g. exchange arrows) in RTL. */
+[dir='rtl'] .nav-ico--dir {
+  transform: scaleX(-1);
+}
+
 .nav-dropdown-featured-body,
 .nav-dropdown-cta-text,
 .nav-dropdown-item-body,
