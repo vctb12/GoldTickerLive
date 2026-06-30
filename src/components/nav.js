@@ -390,7 +390,7 @@ ${spriteMarkupIfAbsent()}
       <button id="nav-search-btn"
               class="nav-icon-btn"
               type="button"
-              aria-label="Search"
+              aria-label="${escapeHtml(data.searchLabel || 'Search')}"
               aria-expanded="false"
               aria-controls="nav-search-overlay"
       >${iconSvg('i-search')}</button>
@@ -406,7 +406,7 @@ ${spriteMarkupIfAbsent()}
       <button id="nav-lang-toggle"
               class="nav-lang-btn"
               type="button"
-              aria-label="Toggle language"
+              aria-label="${escapeHtml(data.langToggleLabel || 'Toggle language')}"
       >${data.langToggle}</button>
 
       <a id="nav-cta-tracker"
@@ -431,8 +431,8 @@ ${spriteMarkupIfAbsent()}
   <!-- Search overlay -->
   <div id="nav-search-overlay" class="nav-search-overlay" hidden>
     <input id="nav-search-input" class="nav-search-input" type="search"
-      placeholder="Search countries, cities, karats..." autocomplete="off"
-      aria-label="Search" />
+      placeholder="${escapeHtml(data.searchPlaceholder || 'Search countries, cities, karats…')}" autocomplete="off"
+      aria-label="${escapeHtml(data.searchLabel || 'Search')}" />
     <div id="nav-search-dropdown" class="nav-search-dropdown" role="listbox"></div>
   </div>
 
@@ -483,7 +483,7 @@ ${spriteMarkupIfAbsent()}
         <button id="nav-lang-toggle-mobile"
                 class="nav-lang-btn nav-lang-btn--drawer"
                 type="button"
-                aria-label="Toggle language"
+                aria-label="${escapeHtml(data.langToggleLabel || 'Toggle language')}"
         >${data.langToggle}</button>
         <a id="nav-drawer-cta"
            href="${resolveHref('/tracker.html', depth)}"
@@ -1015,7 +1015,7 @@ function _injectMobileBottomNav(lang, _depth) {
       label: findLabel('/shops.html', isAr ? 'المحلات' : 'Shops'),
       key: 'shops',
     },
-    { action: 'menu', icon: 'i-menu', label: isAr ? 'القائمة' : 'More', key: 'menu' },
+    { action: 'menu', icon: 'i-menu', label: isAr ? 'القائمة' : 'Menu', key: 'menu' },
   ];
 
   const itemsHtml = items
@@ -1100,10 +1100,19 @@ export function updateNavLang(lang) {
   nav.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
   nav.setAttribute('aria-label', data.mainNav);
 
-  // Language toggle buttons
+  // Language toggle buttons (label text + localized aria-label)
   document.querySelectorAll('#nav-lang-toggle, #nav-lang-toggle-mobile').forEach((btn) => {
     btn.textContent = data.langToggle;
+    btn.setAttribute('aria-label', data.langToggleLabel || 'Toggle language');
   });
+  // Search controls: keep the accessible name localized after a language switch.
+  document.querySelectorAll('#nav-search-btn, #nav-search-input').forEach((elx) => {
+    elx.setAttribute('aria-label', data.searchLabel || 'Search');
+  });
+  const searchInput = /** @type {HTMLInputElement|null} */ (
+    document.getElementById('nav-search-input')
+  );
+  if (searchInput && data.searchPlaceholder) searchInput.placeholder = data.searchPlaceholder;
 
   // Primary journey links
   if (Array.isArray(data.primaryLinks)) {
@@ -1269,7 +1278,7 @@ export function updateNavLang(lang) {
       tracker: isRtl ? 'تتبع' : 'Tracker',
       calculator: isRtl ? 'حاسبة' : 'Calc',
       shops: isRtl ? 'المحلات' : 'Shops',
-      menu: isRtl ? 'القائمة' : 'More',
+      menu: isRtl ? 'القائمة' : 'Menu',
     };
     bottomNav.querySelectorAll('[data-mobile-nav]').forEach((el) => {
       const key = el.dataset.mobileNav;

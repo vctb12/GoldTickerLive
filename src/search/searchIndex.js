@@ -6,6 +6,7 @@
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import { SHOPS } from '../../data/shops.js';
+import { navIconSymbol } from '../components/icon-sprite.js';
 
 const _BASE_URL = 'https://goldtickerlive.com';
 
@@ -20,8 +21,12 @@ function buildIndex() {
       slug: c.slug,
       label: c.nameEn,
       labelAr: c.nameAr,
-      url: `/${c.slug}/gold-price/`,
-      icon: 'i-pin',
+      // Canonical indexable hub is /countries/{slug}/ (see build/generateSitemap.js);
+      // the bare /{slug}/gold-price/ path is not a real route and 404s in search.
+      url: `/countries/${c.slug}/`,
+      // Match the nav: show the country's flag (falls back to a location pin
+      // for countries without a flag symbol). navIconSymbol handles the lookup.
+      icon: navIconSymbol(c.code),
       keywords: [c.nameEn, c.nameAr, c.currency, ...(c.searchAliases || [])],
     });
 
@@ -33,7 +38,7 @@ function buildIndex() {
         country: c.slug,
         label: `${city.nameEn}, ${c.nameEn}`,
         labelAr: `${city.nameAr}, ${c.nameAr}`,
-        url: `/${c.slug}/${city.slug}/gold-rate/`,
+        url: `/countries/${c.slug}/${city.slug}/gold-rate/`,
         icon: 'i-skyline',
         keywords: [city.nameEn, city.nameAr, c.nameEn, c.nameAr, c.currency],
       });
