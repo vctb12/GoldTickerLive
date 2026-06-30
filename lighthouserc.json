@@ -10,7 +10,7 @@
       "numberOfRuns": 1,
       "settings": {
         "preset": "desktop",
-        "budgets": "./budget.json",
+        "budgetPath": "./budget.json",
         "onlyCategories": [
           "performance",
           "accessibility",
