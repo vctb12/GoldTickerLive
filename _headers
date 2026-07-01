@@ -4,6 +4,16 @@
 # defaults for a multi-page static site with a separate admin app on a
 # different host. If deploying admin/ to the same host, tighten admin-specific
 # headers below.
+#
+# ⚠️  HOST CAVEAT — this file is ONLY honored by Netlify / Cloudflare Pages.
+# The default production deploy (.github/workflows/deploy.yml) publishes dist/
+# to GitHub Pages, which does NOT read this file (nor `.htaccess`). On that
+# host the security headers below are NOT emitted. To actually ship them on the
+# public site, front it with Cloudflare/Netlify (which consume this file) or add
+# a Cloudflare Transform Rule / Worker that sets the same headers. Until then,
+# the only header-equivalents that reach GitHub Pages are the `<meta>` tags the
+# build injects (X-Content-Type-Options, referrer) — note X-Frame-Options and
+# HSTS cannot be set via <meta> and so are absent on the GitHub Pages tier.
 
 # Long-cache immutable static assets (fingerprinted by Vite).
 /assets/*
@@ -29,13 +39,15 @@
 /manifest.json
   Cache-Control: public, max-age=3600
 
-# Global security headers applied to every response.
-# Kept in parity with the Helmet header set at server.js:42–99 so the static
-# tier (Netlify / Cloudflare Pages) ships the same hardening as the dynamic
-# admin tier. Note: CSP is intentionally NOT set here — production CSP is
-# enforced by Helmet for the admin/API host and is locked by
-# tests/csp-regression.test.js. Adding a static-host CSP would require a
-# parallel regression test in the same commit (plan item A.A.2 #9).
+# Global security headers — emitted for every response ONLY on a host that reads
+# this file (Netlify / Cloudflare Pages). They mirror the Helmet header set at
+# server.js:57–121 so that, when the static tier is fronted by such a host, it
+# ships the same hardening as the dynamic admin tier. See the HOST CAVEAT at the
+# top of this file: under the default GitHub Pages deploy these are inert.
+# Note: CSP is intentionally NOT set here — production CSP is enforced by Helmet
+# for the admin/API host and is locked by tests/csp-regression.test.js. Adding a
+# static-host CSP would require a parallel regression test in the same commit
+# (plan item A.A.2 #9).
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
