@@ -1052,6 +1052,11 @@ export const TRANSLATIONS = {
     'home.mktCairoCta': 'View Egypt prices →',
     'home.marketsNote':
       'Reference prices only — actual shop prices vary by location, making charges, and VAT.',
+    'home.mktImgDubaiAlt': 'Jewellery shopfront glowing at night in the Dubai Gold Souk, Deira',
+    'home.mktImgRiyadhAlt': 'Covered souq alley in Riyadh’s Ad Dirah market district',
+    'home.mktImgKuwaitAlt': 'Wooden-roofed walkway of Souq Al-Mubarakiya in Kuwait City',
+    'home.mktImgCairoAlt': 'Brass lanterns glowing at a stall in Khan el-Khalili, Cairo',
+    'home.mktPhotoCreditsLead': 'Photography via Wikimedia Commons:',
     'home.countrySearchPlaceholder': 'Filter countries…',
     'home.countrySearchEmpty': 'No countries match your search. Try UAE, Saudi Arabia, or Kuwait.',
     'home.countrySearchEmptyQuery':
@@ -2402,6 +2407,11 @@ export const TRANSLATIONS = {
     'home.mktCairoCta': 'أسعار مصر ←',
     'home.marketsNote':
       'أسعار مرجعية فقط — تتفاوت الأسعار الفعلية في المحلات بحسب الموقع والمصنعية وضريبة القيمة المضافة.',
+    'home.mktImgDubaiAlt': 'واجهة محل مجوهرات مضاءة ليلاً في سوق الذهب بديرة، دبي',
+    'home.mktImgRiyadhAlt': 'ممر سوق مسقوف في حي الديرة التجاري بالرياض',
+    'home.mktImgKuwaitAlt': 'ممر سوق المباركية المسقوف بالخشب في مدينة الكويت',
+    'home.mktImgCairoAlt': 'فوانيس نحاسية مضيئة في أحد أكشاك خان الخليلي بالقاهرة',
+    'home.mktPhotoCreditsLead': 'الصور عبر ويكيميديا كومنز:',
     'home.countrySearchPlaceholder': 'تصفية الدول…',
     'home.countrySearchEmpty': 'لا توجد دول مطابقة. جرّب الإمارات أو السعودية أو الكويت.',
     'home.countrySearchEmptyQuery':

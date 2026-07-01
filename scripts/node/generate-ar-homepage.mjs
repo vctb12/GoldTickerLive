@@ -16,6 +16,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { TRANSLATIONS } from '../../src/config/translations.js';
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SRC = path.join(ROOT, 'index.html');
 const OUT = path.join(ROOT, 'ar', 'index.html');
@@ -88,6 +90,18 @@ function build() {
       .join(', ');
     return `${prefix}${rewritten}"`;
   });
+
+  // 6c. Localize image alt text statically: any <img> carrying data-i18n-alt
+  //     gets its alt swapped to the Arabic string for that home.* key (the
+  //     runtime hydrator in src/pages/home.js does the same for the EN page's
+  //     ?lang=ar mode). Keys missing from the AR table keep the English alt.
+  html = html.replace(
+    /(<img\b[^>]*\balt=")([^"]*)("[^>]*\bdata-i18n-alt="([^"]+)")/gi,
+    (match, before, _enAlt, after, key) => {
+      const ar = TRANSLATIONS.ar?.[`home.${key}`];
+      return ar ? `${before}${ar}${after}` : match;
+    }
+  );
 
   // 7. Provenance marker.
   html = html.replace(

@@ -950,34 +950,34 @@
           </div>
           <div class="country-tiles" role="list">
             <a href="countries/uae/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇦🇪</span><span id="ct-uae">UAE</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg><span id="ct-uae">UAE</span></a
             >
             <a href="countries/saudi-arabia/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇸🇦</span><span id="ct-sa">Saudi Arabia</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg><span id="ct-sa">Saudi Arabia</span></a
             >
             <a href="countries/kuwait/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇰🇼</span><span id="ct-kw">Kuwait</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-kw"/></svg><span id="ct-kw">Kuwait</span></a
             >
             <a href="countries/qatar/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇶🇦</span><span id="ct-qa">Qatar</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-qa"/></svg><span id="ct-qa">Qatar</span></a
             >
             <a href="countries/bahrain/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇧🇭</span><span id="ct-bh">Bahrain</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-bh"/></svg><span id="ct-bh">Bahrain</span></a
             >
             <a href="countries/oman/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇴🇲</span><span id="ct-om">Oman</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-om"/></svg><span id="ct-om">Oman</span></a
             >
             <a href="countries/egypt/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇪🇬</span><span id="ct-eg">Egypt</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg><span id="ct-eg">Egypt</span></a
             >
             <a href="countries/jordan/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇯🇴</span><span id="ct-jo">Jordan</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-jo"/></svg><span id="ct-jo">Jordan</span></a
             >
             <a href="countries/morocco/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇲🇦</span><span id="ct-ma">Morocco</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ma"/></svg><span id="ct-ma">Morocco</span></a
             >
             <a href="countries/india/gold-price/" class="country-tile" role="listitem"
-              ><span aria-hidden="true">🇮🇳</span><span id="ct-in">India</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-in"/></svg><span id="ct-in">India</span></a
             >
             <a href="countries/index.html" class="country-tile country-tile--more"
               ><span aria-hidden="true">+</span><span id="ct-more">See all countries</span></a
@@ -1011,10 +1011,37 @@
           </div>
           <div class="markets-grid">
             <a href="countries/uae/gold-price/" class="market-card hover-lift">
-              <div class="market-card-flag" aria-hidden="true">🇦🇪</div>
+              <figure class="market-card-media">
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcset="assets/images/markets/dubai-gold-souk-480.avif 480w, assets/images/markets/dubai-gold-souk-768.avif 768w, assets/images/markets/dubai-gold-souk-960.avif 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <source
+                    type="image/webp"
+                    srcset="assets/images/markets/dubai-gold-souk-480.webp 480w, assets/images/markets/dubai-gold-souk-768.webp 768w, assets/images/markets/dubai-gold-souk-960.webp 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <img
+                    src="assets/images/markets/dubai-gold-souk-768.jpg"
+                    srcset="assets/images/markets/dubai-gold-souk-480.jpg 480w, assets/images/markets/dubai-gold-souk-768.jpg 768w, assets/images/markets/dubai-gold-souk-960.jpg 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                    width="768"
+                    height="576"
+                    loading="lazy"
+                    decoding="async"
+                    alt="Jewellery shopfront glowing at night in the Dubai Gold Souk, Deira"
+                    data-i18n-alt="mktImgDubaiAlt"
+                  />
+                </picture>
+              </figure>
               <div class="market-card-body">
                 <h3 class="market-card-name" id="mkt-dubai-name">Dubai Gold Souk</h3>
-                <p class="market-card-loc" id="mkt-dubai-loc">UAE — AED</p>
+                <p class="market-card-loc">
+                  <svg class="nav-flag market-card-flag-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg>
+                  <span id="mkt-dubai-loc">UAE — AED</span>
+                </p>
                 <p class="market-card-desc" id="mkt-dubai-desc">
                   One of the world's largest gold trading centres, with hundreds of shops along
                   the Dubai Creek and Deira.
@@ -1023,10 +1050,37 @@
               </div>
             </a>
             <a href="countries/saudi-arabia/gold-price/" class="market-card hover-lift">
-              <div class="market-card-flag" aria-hidden="true">🇸🇦</div>
+              <figure class="market-card-media">
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcset="assets/images/markets/riyadh-dirah-souq-480.avif 480w, assets/images/markets/riyadh-dirah-souq-768.avif 768w, assets/images/markets/riyadh-dirah-souq-960.avif 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <source
+                    type="image/webp"
+                    srcset="assets/images/markets/riyadh-dirah-souq-480.webp 480w, assets/images/markets/riyadh-dirah-souq-768.webp 768w, assets/images/markets/riyadh-dirah-souq-960.webp 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <img
+                    src="assets/images/markets/riyadh-dirah-souq-768.jpg"
+                    srcset="assets/images/markets/riyadh-dirah-souq-480.jpg 480w, assets/images/markets/riyadh-dirah-souq-768.jpg 768w, assets/images/markets/riyadh-dirah-souq-960.jpg 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                    width="768"
+                    height="576"
+                    loading="lazy"
+                    decoding="async"
+                    alt="Covered souq alley in Riyadh’s Ad Dirah market district"
+                    data-i18n-alt="mktImgRiyadhAlt"
+                  />
+                </picture>
+              </figure>
               <div class="market-card-body">
                 <h3 class="market-card-name" id="mkt-riyadh-name">Riyadh Gold Market</h3>
-                <p class="market-card-loc" id="mkt-riyadh-loc">Saudi Arabia — SAR</p>
+                <p class="market-card-loc">
+                  <svg class="nav-flag market-card-flag-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg>
+                  <span id="mkt-riyadh-loc">Saudi Arabia — SAR</span>
+                </p>
                 <p class="market-card-desc" id="mkt-riyadh-desc">
                   Al-Dirah and Thumairy gold souqs offer traditional and modern gold jewelry for
                   local and visiting buyers.
@@ -1035,10 +1089,37 @@
               </div>
             </a>
             <a href="countries/kuwait/gold-price/" class="market-card hover-lift">
-              <div class="market-card-flag" aria-hidden="true">🇰🇼</div>
+              <figure class="market-card-media">
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcset="assets/images/markets/kuwait-mubarakiya-480.avif 480w, assets/images/markets/kuwait-mubarakiya-768.avif 768w, assets/images/markets/kuwait-mubarakiya-960.avif 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <source
+                    type="image/webp"
+                    srcset="assets/images/markets/kuwait-mubarakiya-480.webp 480w, assets/images/markets/kuwait-mubarakiya-768.webp 768w, assets/images/markets/kuwait-mubarakiya-960.webp 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <img
+                    src="assets/images/markets/kuwait-mubarakiya-768.jpg"
+                    srcset="assets/images/markets/kuwait-mubarakiya-480.jpg 480w, assets/images/markets/kuwait-mubarakiya-768.jpg 768w, assets/images/markets/kuwait-mubarakiya-960.jpg 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                    width="768"
+                    height="576"
+                    loading="lazy"
+                    decoding="async"
+                    alt="Wooden-roofed walkway of Souq Al-Mubarakiya in Kuwait City"
+                    data-i18n-alt="mktImgKuwaitAlt"
+                  />
+                </picture>
+              </figure>
               <div class="market-card-body">
                 <h3 class="market-card-name" id="mkt-kuwait-name">Kuwait Gold Souk</h3>
-                <p class="market-card-loc" id="mkt-kuwait-loc">Kuwait — KWD</p>
+                <p class="market-card-loc">
+                  <svg class="nav-flag market-card-flag-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-kw"/></svg>
+                  <span id="mkt-kuwait-loc">Kuwait — KWD</span>
+                </p>
                 <p class="market-card-desc" id="mkt-kuwait-desc">
                   Kuwait's gold district concentrates hundreds of jewelry shops in a compact
                   trading area near the old city.
@@ -1047,10 +1128,37 @@
               </div>
             </a>
             <a href="countries/egypt/gold-price/" class="market-card hover-lift">
-              <div class="market-card-flag" aria-hidden="true">🇪🇬</div>
+              <figure class="market-card-media">
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcset="assets/images/markets/cairo-khan-el-khalili-480.avif 480w, assets/images/markets/cairo-khan-el-khalili-768.avif 768w, assets/images/markets/cairo-khan-el-khalili-960.avif 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <source
+                    type="image/webp"
+                    srcset="assets/images/markets/cairo-khan-el-khalili-480.webp 480w, assets/images/markets/cairo-khan-el-khalili-768.webp 768w, assets/images/markets/cairo-khan-el-khalili-960.webp 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                  />
+                  <img
+                    src="assets/images/markets/cairo-khan-el-khalili-768.jpg"
+                    srcset="assets/images/markets/cairo-khan-el-khalili-480.jpg 480w, assets/images/markets/cairo-khan-el-khalili-768.jpg 768w, assets/images/markets/cairo-khan-el-khalili-960.jpg 960w"
+                    sizes="(max-width: 700px) 92vw, 320px"
+                    width="768"
+                    height="576"
+                    loading="lazy"
+                    decoding="async"
+                    alt="Brass lanterns glowing at a stall in Khan el-Khalili, Cairo"
+                    data-i18n-alt="mktImgCairoAlt"
+                  />
+                </picture>
+              </figure>
               <div class="market-card-body">
                 <h3 class="market-card-name" id="mkt-cairo-name">Khan el-Khalili</h3>
-                <p class="market-card-loc" id="mkt-cairo-loc">Egypt — EGP</p>
+                <p class="market-card-loc">
+                  <svg class="nav-flag market-card-flag-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg>
+                  <span id="mkt-cairo-loc">Egypt — EGP</span>
+                </p>
                 <p class="market-card-desc" id="mkt-cairo-desc">
                   Cairo's historic bazaar is one of the oldest gold markets in the Arab world,
                   trading since the 14th century.
@@ -1061,6 +1169,13 @@
           </div>
           <p class="markets-note" id="markets-note">
             Reference prices only — actual shop prices vary by location, making charges, and VAT.
+          </p>
+          <p class="markets-note markets-note--credits">
+            <span id="markets-credits-lead" data-i18n="mktPhotoCreditsLead">Photography via Wikimedia Commons:</span>
+            <a href="https://commons.wikimedia.org/wiki/File:Gold_Souk_@_Deira_@_Dubai_(15698382719).jpg" target="_blank" rel="noopener nofollow">Guilhem Vellut</a> (CC BY 2.0) ·
+            <a href="https://commons.wikimedia.org/wiki/File:Incense_souk_in_downtown_Riyadh_(12754047044).jpg" target="_blank" rel="noopener nofollow">Francisco Anzola</a> (CC BY 2.0) ·
+            <a href="https://commons.wikimedia.org/wiki/File:Kuwait_City_Souq_al-Mubarakeya_1.jpg" target="_blank" rel="noopener nofollow">Zairon</a> (CC BY 4.0) ·
+            <a href="https://commons.wikimedia.org/wiki/File:Khan_el-Khalili_2019.jpg" target="_blank" rel="noopener nofollow">Mohammed Moussa</a> (CC BY-SA 4.0)
           </p>
         </div>
       </section>
