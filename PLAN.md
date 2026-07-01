@@ -17,6 +17,16 @@ Endless prompts:
 
 ## 🔴 In Progress
 
+### 20-Phase Design, Functionality & Page/Dead-Code Cleanup (2026-07-01)
+
+Canonical plan:
+[`docs/plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md`](docs/plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md)
+· branch `cursor/20-phase-design-page-cleanup-revamp-6c1b` · cross-cutting revamp: design + functionality +
+HTML page-count hygiene (390 files; 30 phantom stubs) + dead JS/CSS cleanup. One phase per PR.
+Baseline: [`reports/baseline-2026-07/html-count-summary.md`](reports/baseline-2026-07/html-count-summary.md).
+
+- [ ] **Phases 0–20** — see plan §7 phase tracker. Start with Phase 0 baseline lock.
+
 ### Tracker HTML 50-Phase Flagship Revamp (2026-06-26)
 
 Canonical plan:
