@@ -248,7 +248,8 @@
             slow down. Static fallbacks (mintedmetal, committed JSON, recent cache) use slower
             cadences. <strong>Server-side:</strong> GitHub Actions still commits hourly updates to
             <code>data/gold_price.json</code> during market hours. Every visible price carries a
-            freshness label (<em>live · delayed · cached · stale · fallback · unavailable</em>) with
+            freshness label (<em>live · delayed · cached · stale · fallback · closed · unavailable</em>)
+            with
             source and timestamp — we never present stale or cached values as live without that
             label.
           </p>
@@ -577,6 +578,8 @@
             <li><span class="badge badge--delayed">Delayed</span> Provider lag (often FX)</li>
             <li><span class="badge badge--stale">Stale</span> Older than our stale threshold</li>
             <li><span class="badge badge--fallback">Fallback</span> Last known value after failure</li>
+            <li><span class="badge badge--closed">Closed</span> Market in its scheduled closed window — recent data is still labelled closed</li>
+            <li><span class="badge badge--unavailable">Unavailable</span> Timestamp missing or unreadable</li>
           </ul>
         </section>
 
