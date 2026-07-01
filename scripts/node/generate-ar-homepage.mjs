@@ -56,9 +56,14 @@ function build() {
     'property="og:locale:alternate" content="en_US"'
   );
 
-  // 5. Localized title + meta description.
+  // 5. Localized title + meta description (og:/twitter: mirror the same pair,
+  //    matching the convention used by ar/chart/ and ar/methodology/).
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${AR_TITLE}</title>`);
   html = html.replace(/(name="description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
+  html = html.replace(/(property="og:title"\s+content=")[^"]*(")/, `$1${AR_TITLE}$2`);
+  html = html.replace(/(property="og:description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
+  html = html.replace(/(name="twitter:title"\s+content=")[^"]*(")/, `$1${AR_TITLE}$2`);
+  html = html.replace(/(name="twitter:description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
 
   // 6. This page lives one directory deep (/ar/). Prepend ../ to every RELATIVE
   //    href/src so assets/scripts/links still resolve. Absolute URLs (scheme:,
