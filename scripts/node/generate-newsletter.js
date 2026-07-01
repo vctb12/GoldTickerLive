@@ -74,9 +74,9 @@ function calculateKaratPrices(spotPrice, fxRate) {
 
   const karats = {
     '24K': { purity: 1.0 },
-    '22K': { purity: 0.9167 },
-    '21K': { purity: 0.875 },
-    '18K': { purity: 0.75 },
+    '22K': { purity: 22 / 24 },
+    '21K': { purity: 21 / 24 },
+    '18K': { purity: 18 / 24 },
   };
 
   const prices = {};

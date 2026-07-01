@@ -15,7 +15,7 @@
  *   updateTickerLang(lang)       — switch language labels live
  */
 
-import { getLiveFreshness } from '../lib/live-status.js';
+import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Config
@@ -73,6 +73,8 @@ function freshnessLabel(key, lang) {
       return isAr ? 'قديم' : 'Stale';
     case 'fallback':
       return isAr ? 'بديل احتياطي' : 'Fallback';
+    case 'closed':
+      return isAr ? 'مغلق' : 'Closed';
     case 'unavailable':
     default:
       return isAr ? 'غير متاح' : 'Unavailable';
@@ -249,8 +251,11 @@ export function updateTicker(data = {}) {
       isFallback: data.isFallback ?? null,
       isFresh: data.isFresh ?? null,
     });
-    bar.setAttribute('data-freshness', fresh.key);
-    const label = freshnessLabel(fresh.key, _currentLang);
+    // Market-closed overlay: never surface "Live" for a closed market (per
+    // docs/freshness-contract.md). getLiveFreshness stays pure data-freshness.
+    const key = applyMarketClosedOverlay(fresh.key);
+    bar.setAttribute('data-freshness', key);
+    const label = freshnessLabel(key, _currentLang);
     const statusEl = bar.querySelector('[data-ticker-status]');
     const labelEl = bar.querySelector('[data-ticker-status-label]');
     if (labelEl) labelEl.textContent = label;

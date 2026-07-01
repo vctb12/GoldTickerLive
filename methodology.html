@@ -248,7 +248,8 @@
             slow down. Static fallbacks (mintedmetal, committed JSON, recent cache) use slower
             cadences. <strong>Server-side:</strong> GitHub Actions still commits hourly updates to
             <code>data/gold_price.json</code> during market hours. Every visible price carries a
-            freshness label (<em>live · delayed · cached · stale · fallback · unavailable</em>) with
+            freshness label (<em>live · delayed · cached · stale · fallback · closed · unavailable</em>)
+            with
             source and timestamp — we never present stale or cached values as live without that
             label.
           </p>
@@ -265,9 +266,10 @@
           <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
           <p id="gold-data-freshness-p">
             A live countdown timer and "last updated" timestamp are displayed throughout the site.
-            If a live fetch fails, the UI labels the value as "Cached". If the gold timestamp is
-            older than <strong>12 minutes</strong>, the UI labels the value as "Stale" (so the site
-            never implies a value is live when it is multiple server refresh windows old).
+            If a live fetch fails, the UI labels the value as "Cached". Once the gold timestamp is
+            older than <strong>30 minutes</strong> the UI labels the value as "Delayed", and after
+            <strong>75 minutes</strong> as "Stale" (so the site never implies a value is live when it
+            is multiple server refresh windows old).
           </p>
 
           <div class="method-warning" id="gold-data-warning">
@@ -577,7 +579,8 @@
             <li><span class="badge badge--delayed">Delayed</span> Provider lag (often FX)</li>
             <li><span class="badge badge--stale">Stale</span> Older than our stale threshold</li>
             <li><span class="badge badge--fallback">Fallback</span> Last known value after failure</li>
-            <li><span class="badge badge--unavailable">Unavailable</span> Every provider failed — no price is shown, only a clear error state</li>
+            <li><span class="badge badge--closed">Closed</span> Market in its scheduled closed window — recent data is still labelled closed</li>
+            <li><span class="badge badge--unavailable">Unavailable</span> Timestamp missing or unreadable</li>
           </ul>
         </section>
 

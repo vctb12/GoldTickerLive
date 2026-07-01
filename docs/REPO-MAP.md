@@ -413,8 +413,11 @@ with a section above.
 
 - Base adapter → `scripts/python/gold_providers/base.py` — HTTP client, error categorization
   (rate-limit, quota-exhausted, network, parse), circuit-breaker utilities. Constants:
-  `DEFAULT_AED_PEG = 3.6725`, `TROY_OUNCE_GRAMS = 31.1035`, `DEFAULT_MAX_FRESHNESS_SECONDS = 900`
-  (15 min).
+  `DEFAULT_AED_PEG = 3.6725`, `TROY_OUNCE_GRAMS = 31.1034768`, `DEFAULT_MAX_FRESHNESS_SECONDS = 900`
+  (15 min). NB: the Python ingest uses the exact troy ounce `31.1034768`; the browser/runtime
+  canonical used for **displayed** prices is `src/config/constants.js` `TROY_OZ_GRAMS = 31.1035`.
+  The two are intentionally not yet single-sourced — see the constants-drift follow-up before
+  targeting either value.
 - Normalizer → `scripts/python/gold_providers/normalize.py` (lines 1–113): Converts raw provider
   quotes to canonical schema. Computes `aed_per_gram_24k = usd_per_gram_24k * aed_peg` (line 38).
   Freshness: `is_fresh = freshness_seconds <= max_fresh` (line 51). Outputs all six top-level keys:

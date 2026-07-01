@@ -1,7 +1,7 @@
 // tracker/freshness.js — live freshness models and badges
 import { _state, tx } from './_ctx.js';
 import { el, setText } from '../lib/safe-dom.js';
-import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
+import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 
 export const TRACKER_BADGE_CLASSES = [
@@ -38,8 +38,7 @@ export function getFreshnessModel() {
     isFallback: _state.live?.isFallback ?? null,
     isFresh: _state.live?.isFresh ?? null,
   });
-  const market = getMarketStatus();
-  const effectiveKey = market.isOpen ? freshness.key : 'closed';
+  const effectiveKey = applyMarketClosedOverlay(freshness.key);
   const statusLabel = tx(`source.${effectiveKey}`);
   const providerLabel = formatProviderLabel(
     _state.live?.providerId || _state.live?.source || 'primary-provider'

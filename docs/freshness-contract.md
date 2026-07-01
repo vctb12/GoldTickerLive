@@ -9,6 +9,12 @@
 - `fallback`
 - `closed`
 
+The user-visible label layer (`getLiveFreshness` / `getFXFreshness` in `src/lib/live-status.js`)
+additionally emits two age/availability states that carry the cautionary (`fallback`-tone) styling:
+
+- `stale` — data older than the stale threshold (gold: 75 min; FX: 26 h).
+- `unavailable` — timestamp missing or unparseable.
+
 ## Mandatory UI disclosure
 
 Every freshness-capable block must show:

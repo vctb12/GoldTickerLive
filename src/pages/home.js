@@ -17,7 +17,7 @@ import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
-import { getMarketStatus, getLiveFreshness } from '../lib/live-status.js';
+import { getMarketStatus, getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
 import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
 import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
@@ -75,6 +75,7 @@ const SOURCE_TX_KEY = {
   stale: 'sourceStale',
   fallback: 'sourceFallback',
   unavailable: 'sourceUnavailable',
+  closed: 'sourceClosed',
 };
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -300,13 +301,18 @@ function getFreshnessMeta() {
     isFallback: goldIsFallback,
     isFresh: goldIsFresh,
   });
-  const statusText = tx(SOURCE_TX_KEY[freshness.key] || 'sourceCached');
+  // Market-closed overlay (mirrors src/tracker/freshness.js): the surfaced state
+  // must read "closed" even for recent data when the market is closed, per
+  // docs/freshness-contract.md. Prevents the hero from pulsing "Live" while the
+  // separate market pill says "Closed".
+  const key = applyMarketClosedOverlay(freshness.key);
+  const statusText = tx(SOURCE_TX_KEY[key] || 'sourceCached');
   const sourceText = formatProviderLabel(goldProviderId);
   return {
     freshnessTime: freshness.timeText,
     ageText: freshness.ageText,
-    isLive: freshness.key === 'live',
-    key: freshness.key,
+    isLive: key === 'live',
+    key,
     statusText,
     sourceText,
   };
