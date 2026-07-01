@@ -68,6 +68,22 @@ function build() {
     '$1../$2"'
   );
 
+  // 6b. Same depth fix for `srcset` (comma-separated "url descriptor" candidates).
+  html = html.replace(/(srcset=")([^"]*)"/gi, (_match, prefix, value) => {
+    const rewritten = value
+      .split(',')
+      .map((candidate) => {
+        const trimmed = candidate.trim();
+        if (!trimmed) return trimmed;
+        const [url, descriptor] = trimmed.split(/\s+/, 2);
+        const isAbsolute = /^[a-z][a-z0-9+.-]*:|^\/\//i.test(url) || url.startsWith('/');
+        const rewrittenUrl = isAbsolute ? url : `../${url}`;
+        return descriptor ? `${rewrittenUrl} ${descriptor}` : rewrittenUrl;
+      })
+      .join(', ');
+    return `${prefix}${rewritten}"`;
+  });
+
   // 7. Provenance marker.
   html = html.replace(
     '<head>',

@@ -18,46 +18,52 @@ does-not-supersede:
 guardrails_reviewed: true
 ```
 
-**User goal:** One coordinated **20-phase** program covering **design**, **functionality**, **HTML page-count hygiene**, and **dead-code removal** — without breaking public URLs, pricing trust, EN/AR parity, or CI gates.
+**User goal:** One coordinated **20-phase** program covering **design**, **functionality**, **HTML
+page-count hygiene**, and **dead-code removal** — without breaking public URLs, pricing trust, EN/AR
+parity, or CI gates.
 
-**Execution rule:** **One phase = one PR.** Each PR ends green: `npm run lint && npm test && npm run validate && npm run build`. Record before/after counts in the PR Proof section.
+**Execution rule:** **One phase = one PR.** Each PR ends green:
+`npm run lint && npm test && npm run validate && npm run build`. Record before/after counts in the
+PR Proof section.
 
 ---
 
 ## 0. Baseline (locked 2026-07-01)
 
-| Metric | Count | Notes |
-| --- | ---: | --- |
-| **Total `*.html` in repo** | **390** | Excludes `node_modules/`, `dist/` |
-| Root flagship pages | 18 | `index.html`, `tracker.html`, `calculator.html`, … |
-| `countries/` | 263 | 69 `gold-rate/`, 69 `gold-shops/`, 96 city hubs, 21 country hubs, 8 other |
-| `content/` | 50 | Guides, tools, FAQ, landing pages |
-| `admin/` | 16 | Operational back office |
-| `ar/` mirror | 7 | Arabic path mirrors |
-| **Phantom internal stubs** | **30** | `src/`, `server/`, `scripts/`, `styles/`, `config/`, `data/`, `supabase/`, `docs/` — all `noindex,nofollow` directory guards |
-| Prior inventory (2026-05) | 659 | `reports/baseline-2026-05/page-inventory.json` — **−269** HTML files already removed/consolidated |
-| Sitemap URLs (`public/sitemap.xml`) | ~252 indexable | Regenerated — never hand-edit |
+| Metric                              |          Count | Notes                                                                                                                        |
+| ----------------------------------- | -------------: | ---------------------------------------------------------------------------------------------------------------------------- |
+| **Total `*.html` in repo**          |        **390** | Excludes `node_modules/`, `dist/`                                                                                            |
+| Root flagship pages                 |             18 | `index.html`, `tracker.html`, `calculator.html`, …                                                                           |
+| `countries/`                        |            263 | 69 `gold-rate/`, 69 `gold-shops/`, 96 city hubs, 21 country hubs, 8 other                                                    |
+| `content/`                          |             50 | Guides, tools, FAQ, landing pages                                                                                            |
+| `admin/`                            |             16 | Operational back office                                                                                                      |
+| `ar/` mirror                        |              7 | Arabic path mirrors                                                                                                          |
+| **Phantom internal stubs**          |         **30** | `src/`, `server/`, `scripts/`, `styles/`, `config/`, `data/`, `supabase/`, `docs/` — all `noindex,nofollow` directory guards |
+| Prior inventory (2026-05)           |            659 | `reports/baseline-2026-05/page-inventory.json` — **−269** HTML files already removed/consolidated                            |
+| Sitemap URLs (`public/sitemap.xml`) | ~252 indexable | Regenerated — never hand-edit                                                                                                |
 
 ### Page-count targets (end of Phase 20)
 
-| Bucket | Current | Target | Strategy |
-| --- | ---: | ---: | --- |
-| Phantom internal stubs | 30 | **1 shared template** or **0** (server `_headers` deny) | Consolidate generator; no duplicate 30-file copies |
-| Country city hubs (`noindex`) | 96 | **≤ 96** (keep navigation stubs) | No deletion without 301; improve shared CSS only |
-| Thin / duplicate karat URLs | TBD audit | **noindex + canonical** or **301** | Report-first; owner sign-off per `REVAMP_PLAN.md` NEXT_PR_SEQUENCE PR 2 |
-| Dead JS modules | TBD audit | **0 confirmed orphans** | Reachability graph + one module per PR |
-| Dead CSS selectors | TBD report | **−10% lines** in `tracker-pro.css` | Report-first; protect motion/freshness primitives |
+| Bucket                        |    Current |                                                  Target | Strategy                                                                |
+| ----------------------------- | ---------: | ------------------------------------------------------: | ----------------------------------------------------------------------- |
+| Phantom internal stubs        |         30 | **1 shared template** or **0** (server `_headers` deny) | Consolidate generator; no duplicate 30-file copies                      |
+| Country city hubs (`noindex`) |         96 |                        **≤ 96** (keep navigation stubs) | No deletion without 301; improve shared CSS only                        |
+| Thin / duplicate karat URLs   |  TBD audit |                      **noindex + canonical** or **301** | Report-first; owner sign-off per `REVAMP_PLAN.md` NEXT_PR_SEQUENCE PR 2 |
+| Dead JS modules               |  TBD audit |                                 **0 confirmed orphans** | Reachability graph + one module per PR                                  |
+| Dead CSS selectors            | TBD report |                     **−10% lines** in `tracker-pro.css` | Report-first; protect motion/freshness primitives                       |
 
 ---
 
 ## 1. Non-negotiables (`AGENTS.md`)
 
 1. **Reference price ≠ retail quote** — design must not blur the distinction.
-2. **Freshness labels stay visible** — never strip pills/disclaimers/methodology links for aesthetics.
+2. **Freshness labels stay visible** — never strip pills/disclaimers/methodology links for
+   aesthetics.
 3. **EN/AR semantic parity** — all user-visible strings in `src/config/translations.js`.
 4. **Static multi-page architecture** — no SPA/framework migration.
 5. **DOM safety** — no new `innerHTML` sinks; use `src/lib/safe-dom.js`.
-6. **Production-critical files** need owner approval: `post_gold.yml`, `gold-price-fetch.yml`, `data/gold_price.json`, `sw.js`, `src/config/constants.js`.
+6. **Production-critical files** need owner approval: `post_gold.yml`, `gold-price-fetch.yml`,
+   `data/gold_price.json`, `sw.js`, `src/config/constants.js`.
 7. **Never delete public HTML** without redirect + sitemap migration note.
 8. **AED peg `3.6725`** and karat factors from `src/config/karats.js` only.
 
@@ -67,29 +73,29 @@ guardrails_reviewed: true
 
 Phases are ordered: **audit → page hygiene → dead code → design → functionality → ship gate**.
 
-| Phase | Title | Primary outcome | Key paths | Gate |
-| ---: | --- | --- | --- | --- |
-| **0** | Baseline lock & metrics | Commit `reports/baseline-2026-07/page-inventory.json` + `html-count-summary.md` | `scripts/node/generate-baseline-inventory.js` | Audit-only PR |
-| **1** | HTML taxonomy & orphan report | Classify every HTML file: `indexable` / `noindex-nav` / `phantom` / `admin` / `deprecated-candidate` | `reports/cleanup-audit/HTML_TAXONOMY.md` | Owner reviews candidates |
-| **2** | Phantom stub consolidation | Replace 30 duplicate `index.html` stubs with **one generator** + shared partial; or document `_headers` deny-list alternative | `src/`, `server/`, `scripts/`, `styles/` | HTML count −29 or equivalent |
-| **3** | Country URL policy enforcement | Align city hubs (`noindex,follow`) + `gold-rate/` as sole indexable commercial URL per city | `countries/`, `patch-city-stub-pages.js` | SEO governance green |
-| **4** | Stub karat / thin page plan | Inventory stub `gold-price/*/index.html` + legacy karat paths; **noindex** or **301** per owner matrix | `gold-price/`, `ar/gold-price/`, `_redirects` | No URL deletion in this PR |
-| **5** | Content orphan linking pass | Fix pages with `inboundLinkCount === 0` in inventory; wire RelatedGuides + footer | `content/`, `src/lib/related-guides.js` | Internal-link audit ↑ |
-| **6** | Sitemap ↔ HTML parity CI | Extend `seo-governance.js` / `seo-audit.js` to fail on indexable HTML missing from sitemap | `scripts/node/seo-governance.js`, `public/sitemap.xml` | CI gate tightened |
-| **7** | Dead JS module audit | Reachability graph: HTML→JS imports, test refs, workflow refs → `CANDIDATES.md` Bucket B | `reports/cleanup-audit/CANDIDATES.md` | Audit-only; owner sign-off |
-| **8** | Dead JS removal (wave 1) | Remove **confirmed** orphan modules (max 1 subsystem / PR, ≤50 files) | `src/lib/`, `src/pages/` | `npm test` green |
-| **9** | Dead exports trim | Remove unused exports inside live files (knip/eslint report) | `src/tracker/`, `src/lib/` | No behavior change |
-| **10** | CSS dead-rule report | purgecss/report-only on `tracker-pro.css`, `global.css`; protect freshness/motion classes | `styles/` | Report committed |
-| **11** | CSS dead-rule prune (wave 1) | Remove confirmed dead selectors; start `tracker-pro.css` section split | `styles/pages/tracker-pro.css` | Visual smoke home/tracker |
-| **12** | Design tokens sweep | Replace hand-picked hex with `styles/tokens.css` on flagship surfaces | `styles/tokens.css`, `styles/global.css` | Contrast AA pass |
-| **13** | Shared shell design pass | Nav, footer, spot-bar, drawer — ink-first, RTL-safe, 360px | `src/components/nav.js`, `styles/global.css` | RTL screenshot |
-| **14** | Flagship page design | Home + tracker hero/trust framing alignment (presentation only) | `index.html`, `tracker.html`, page CSS | Freshness pills visible |
-| **15** | Tools design pass | Calculator + shops card rhythm, empty states, copy feedback | `calculator.html`, `shops.html` | EN+AR parity |
-| **16** | Country template design | Shared country/city hero + karat table polish via `page-hydrator` | `src/lib/page-hydrator.js`, `countries/` CSS | One country visual smoke |
-| **17** | Cross-page functionality (WB-102) | Complete karat→tracker, calculator→shops, methodology deep links | `src/lib/cross-page-links.js` | `tests/cross-page-links.test.js` |
-| **18** | Tracker functionality slice | Partial DOM update on hero path (defer full 50-phase tracker work) | `src/tracker/hero.js`, `src/pages/tracker-pro.js` | No pricing math change |
-| **19** | Calculator + shops functionality | Shops handoff, filter counts, reference-vs-retail panel honesty | `src/pages/calculator/`, `src/pages/shops.js` | Trust copy intact |
-| **20** | Ship gate & inventory regen | Full validation + regen baseline + update `PLAN.md` / this file checklists | all | All CI green |
+|  Phase | Title                             | Primary outcome                                                                                                               | Key paths                                              | Gate                             |
+| -----: | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | -------------------------------- |
+|  **0** | Baseline lock & metrics           | Commit `reports/baseline-2026-07/page-inventory.json` + `html-count-summary.md`                                               | `scripts/node/generate-baseline-inventory.js`          | Audit-only PR                    |
+|  **1** | HTML taxonomy & orphan report     | Classify every HTML file: `indexable` / `noindex-nav` / `phantom` / `admin` / `deprecated-candidate`                          | `reports/cleanup-audit/HTML_TAXONOMY.md`               | Owner reviews candidates         |
+|  **2** | Phantom stub consolidation        | Replace 30 duplicate `index.html` stubs with **one generator** + shared partial; or document `_headers` deny-list alternative | `src/`, `server/`, `scripts/`, `styles/`               | HTML count −29 or equivalent     |
+|  **3** | Country URL policy enforcement    | Align city hubs (`noindex,follow`) + `gold-rate/` as sole indexable commercial URL per city                                   | `countries/`, `patch-city-stub-pages.js`               | SEO governance green             |
+|  **4** | Stub karat / thin page plan       | Inventory stub `gold-price/*/index.html` + legacy karat paths; **noindex** or **301** per owner matrix                        | `gold-price/`, `ar/gold-price/`, `_redirects`          | No URL deletion in this PR       |
+|  **5** | Content orphan linking pass       | Fix pages with `inboundLinkCount === 0` in inventory; wire RelatedGuides + footer                                             | `content/`, `src/lib/related-guides.js`                | Internal-link audit ↑            |
+|  **6** | Sitemap ↔ HTML parity CI          | Extend `seo-governance.js` / `seo-audit.js` to fail on indexable HTML missing from sitemap                                    | `scripts/node/seo-governance.js`, `public/sitemap.xml` | CI gate tightened                |
+|  **7** | Dead JS module audit              | Reachability graph: HTML→JS imports, test refs, workflow refs → `CANDIDATES.md` Bucket B                                      | `reports/cleanup-audit/CANDIDATES.md`                  | Audit-only; owner sign-off       |
+|  **8** | Dead JS removal (wave 1)          | Remove **confirmed** orphan modules (max 1 subsystem / PR, ≤50 files)                                                         | `src/lib/`, `src/pages/`                               | `npm test` green                 |
+|  **9** | Dead exports trim                 | Remove unused exports inside live files (knip/eslint report)                                                                  | `src/tracker/`, `src/lib/`                             | No behavior change               |
+| **10** | CSS dead-rule report              | purgecss/report-only on `tracker-pro.css`, `global.css`; protect freshness/motion classes                                     | `styles/`                                              | Report committed                 |
+| **11** | CSS dead-rule prune (wave 1)      | Remove confirmed dead selectors; start `tracker-pro.css` section split                                                        | `styles/pages/tracker-pro.css`                         | Visual smoke home/tracker        |
+| **12** | Design tokens sweep               | Replace hand-picked hex with `styles/tokens.css` on flagship surfaces                                                         | `styles/tokens.css`, `styles/global.css`               | Contrast AA pass                 |
+| **13** | Shared shell design pass          | Nav, footer, spot-bar, drawer — ink-first, RTL-safe, 360px                                                                    | `src/components/nav.js`, `styles/global.css`           | RTL screenshot                   |
+| **14** | Flagship page design              | Home + tracker hero/trust framing alignment (presentation only)                                                               | `index.html`, `tracker.html`, page CSS                 | Freshness pills visible          |
+| **15** | Tools design pass                 | Calculator + shops card rhythm, empty states, copy feedback                                                                   | `calculator.html`, `shops.html`                        | EN+AR parity                     |
+| **16** | Country template design           | Shared country/city hero + karat table polish via `page-hydrator`                                                             | `src/lib/page-hydrator.js`, `countries/` CSS           | One country visual smoke         |
+| **17** | Cross-page functionality (WB-102) | Complete karat→tracker, calculator→shops, methodology deep links                                                              | `src/lib/cross-page-links.js`                          | `tests/cross-page-links.test.js` |
+| **18** | Tracker functionality slice       | Partial DOM update on hero path (defer full 50-phase tracker work)                                                            | `src/tracker/hero.js`, `src/pages/tracker-pro.js`      | No pricing math change           |
+| **19** | Calculator + shops functionality  | Shops handoff, filter counts, reference-vs-retail panel honesty                                                               | `src/pages/calculator/`, `src/pages/shops.js`          | Trust copy intact                |
+| **20** | Ship gate & inventory regen       | Full validation + regen baseline + update `PLAN.md` / this file checklists                                                    | all                                                    | All CI green                     |
 
 ---
 
@@ -97,7 +103,8 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 
 ### Phase 0 — Baseline lock
 
-- [ ] Run `node scripts/node/generate-baseline-inventory.js` (update output dir to `reports/baseline-2026-07/`).
+- [ ] Run `node scripts/node/generate-baseline-inventory.js` (update output dir to
+      `reports/baseline-2026-07/`).
 - [ ] Add `reports/baseline-2026-07/html-count-summary.md` with bucket table (§0 above).
 - [ ] PR title: `chore: baseline lock 2026-07 page inventory (phase 0)`.
 
@@ -110,7 +117,8 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 ### Phase 2 — Phantom stub consolidation
 
 - [ ] Today: 30 near-identical `noindex` stubs under internal dirs.
-- [ ] Target: single generator script `scripts/node/generate-internal-index-stubs.js` OR documented server deny.
+- [ ] Target: single generator script `scripts/node/generate-internal-index-stubs.js` OR documented
+      server deny.
 - [ ] If keeping stubs: one shared HTML template; regenerate on `npm run build`.
 - [ ] **Do not** remove protection — internal dirs must not expose raw listings on GitHub Pages.
 
@@ -128,7 +136,8 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 
 ### Phase 5 — Content orphan linking
 
-- [ ] Fix zero-inbound pages from Phase 0 inventory (e.g. `content/dubai-gold-rate-guide/`, `content/gold-making-charges-guide/`).
+- [ ] Fix zero-inbound pages from Phase 0 inventory (e.g. `content/dubai-gold-rate-guide/`,
+      `content/gold-making-charges-guide/`).
 - [ ] Each content page: ≥1 inbound from nav, footer, or RelatedGuides.
 
 ### Phase 6 — Sitemap parity CI
@@ -144,7 +153,8 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 
 ### Phase 10–11 — Dead code (CSS)
 
-- [ ] Protected classes: `data-freshness-pulse`, `flash-up`, `flash-down`, `pulse-dot`, `data-reveal`, `hover-lift`, `drawer-slide-in`.
+- [ ] Protected classes: `data-freshness-pulse`, `flash-up`, `flash-down`, `pulse-dot`,
+      `data-reveal`, `hover-lift`, `drawer-slide-in`.
 - [ ] Phase 11 max ~200 selectors removed per PR with visual smoke.
 
 ### Phase 12–16 — Design revamp
@@ -170,12 +180,12 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 
 ## 4. What this plan does **not** include
 
-| Item | Owner plan |
-| --- | --- |
-| Tracker 50-phase depth (modes, i18n batches 2–6, IA redesign) | `docs/plans/2026-06-26_tracker-html-50-phase-revamp.md` |
-| Real-time SLO / Motion Universe phases 5–20 | `docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md` |
-| Platform upgrade (CodeQL, Lighthouse budgets, secondary gold) | `docs/plans/2026-06-09_platform-upgrade-program.md` |
-| Bulk country page **deletion** (~345 removed 2026-05-29) | Already done — only noindex/redirect from here |
+| Item                                                          | Owner plan                                                         |
+| ------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Tracker 50-phase depth (modes, i18n batches 2–6, IA redesign) | `docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`            |
+| Real-time SLO / Motion Universe phases 5–20                   | `docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md` |
+| Platform upgrade (CodeQL, Lighthouse budgets, secondary gold) | `docs/plans/2026-06-09_platform-upgrade-program.md`                |
+| Bulk country page **deletion** (~345 removed 2026-05-29)      | Already done — only noindex/redirect from here                     |
 
 ---
 
@@ -183,15 +193,19 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 
 ```markdown
 ## What
+
 - Phase N: <title>
 
 ## Why
+
 - <user-visible or maintainability outcome>
 
 ## How
+
 - <files touched; before/after counts>
 
 ## Proof
+
 - [ ] `npm run lint`
 - [ ] `npm test` — X/Y pass (state what you ran)
 - [ ] `npm run validate`
@@ -200,6 +214,7 @@ Phases are ordered: **audit → page hygiene → dead code → design → functi
 - [ ] Dead code rows closed in CANDIDATES.md (if applicable)
 
 ## Risks
+
 - <URL, SEO, pricing, bilingual risks — or "none">
 ```
 
@@ -225,26 +240,26 @@ Update this plan file checkbox + PLAN.md in the same PR.
 
 ## 7. Phase tracker
 
-| Phase | Status | PR | Notes |
-| ---: | --- | --- | --- |
-| 0 | ⬜ | — | |
-| 1 | ⬜ | — | |
-| 2 | ⬜ | — | |
-| 3 | ⬜ | — | |
-| 4 | ⬜ | — | |
-| 5 | ⬜ | — | |
-| 6 | ⬜ | — | |
-| 7 | ⬜ | — | |
-| 8 | ⬜ | — | |
-| 9 | ⬜ | — | |
-| 10 | ⬜ | — | |
-| 11 | ⬜ | — | |
-| 12 | ⬜ | — | |
-| 13 | ⬜ | — | |
-| 14 | ⬜ | — | |
-| 15 | ⬜ | — | |
-| 16 | ⬜ | — | |
-| 17 | ⬜ | — | |
-| 18 | ⬜ | — | |
-| 19 | ⬜ | — | |
-| 20 | ⬜ | — | |
+| Phase | Status | PR                                                   | Notes                                                                                                                                                                                                 |
+| ----: | ------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     0 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     1 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     2 | ✅     | branch `claude/html-reduction-twitter-banner-rekflj` | 30 phantom stubs → 1 generator (`scripts/node/generate-internal-index-stubs.js`), wired into `predev`/`build`/`validate`; tracked HTML 390→360. See `reports/baseline-2026-07/html-count-summary.md`. |
+|     3 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     4 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     5 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     6 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     7 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     8 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|     9 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    10 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    11 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    12 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    13 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    14 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    15 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    16 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    17 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    18 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    19 | ⬜     | —                                                    |                                                                                                                                                                                                       |
+|    20 | ⬜     | —                                                    |                                                                                                                                                                                                       |

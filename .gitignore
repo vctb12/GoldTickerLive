@@ -3,6 +3,39 @@
 *.min.js
 dist/
 
+# Generated internal "not a public page" stubs — see
+# scripts/node/generate-internal-index-stubs.js (predev/build/validate regenerate these)
+/config/index.html
+/config/twitter_bot/index.html
+/data/index.html
+/docs/index.html
+/scripts/index.html
+/scripts/node/index.html
+/scripts/python/index.html
+/scripts/python/utils/index.html
+/server/index.html
+/server/data/index.html
+/server/lib/index.html
+/server/lib/admin/index.html
+/server/repositories/index.html
+/server/routes/index.html
+/server/routes/admin/index.html
+/server/services/index.html
+/src/index.html
+/src/components/index.html
+/src/config/index.html
+/src/lib/index.html
+/src/pages/index.html
+/src/routes/index.html
+/src/search/index.html
+/src/seo/index.html
+/src/social/index.html
+/src/tracker/index.html
+/src/utils/index.html
+/styles/index.html
+/styles/pages/index.html
+/supabase/index.html
+
 # Test and report outputs
 playwright-report/
 test-results/

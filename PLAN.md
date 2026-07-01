@@ -21,11 +21,15 @@ Endless prompts:
 
 Canonical plan:
 [`docs/plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md`](docs/plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md)
-· branch `cursor/20-phase-design-page-cleanup-revamp-6c1b` · cross-cutting revamp: design + functionality +
-HTML page-count hygiene (390 files; 30 phantom stubs) + dead JS/CSS cleanup. One phase per PR.
-Baseline: [`reports/baseline-2026-07/html-count-summary.md`](reports/baseline-2026-07/html-count-summary.md).
+· branch `cursor/20-phase-design-page-cleanup-revamp-6c1b` · cross-cutting revamp: design +
+functionality + HTML page-count hygiene (390 files; 30 phantom stubs) + dead JS/CSS cleanup. One
+phase per PR. Baseline:
+[`reports/baseline-2026-07/html-count-summary.md`](reports/baseline-2026-07/html-count-summary.md).
 
 - [ ] **Phases 0–20** — see plan §7 phase tracker. Start with Phase 0 baseline lock.
+- [x] **Phase 2** — phantom stub consolidation done out-of-sequence on branch
+      `claude/html-reduction-twitter-banner-rekflj`: 30 duplicate `noindex` stubs → 1 generator
+      (`scripts/node/generate-internal-index-stubs.js`), tracked HTML 390→360.
 
 ### Tracker HTML 50-Phase Flagship Revamp (2026-06-26)
 
@@ -122,6 +126,13 @@ Canonical plan:
 
 ## ✅ Recently Completed
 
+- [x] **X follow banner + brand favicon refresh (2026-07-01)** — Higgsfield-generated homepage
+      banner linking to [x.com/GoldTickerLive](https://x.com/GoldTickerLive) at the top of
+      `index.html` (EN/AR parity, `assets/social/x-follow-banner-{960,1920}.webp`); site-wide
+      favicon family regenerated (`favicon.svg` + `assets/favicon-*`, `apple-touch-icon.png`) from a
+      new gold-diamond/ticker/bullion mark, applied automatically across all ~360 pages via the
+      shared filenames. Plus Phase 2 phantom-stub consolidation (see above) — branch
+      `claude/html-reduction-twitter-banner-rekflj`.
 - [x] **Multi-task session 2026-06-30** — T0.3 (SECURITY.md), T2.1 (budget.json +
       lighthouserc.json), T3.1 (tracker/compare JSON-LD), F2b (archival doc banners), Phase 2
       (tracker architecture audit → `docs/audits/2026-06-26_tracker-architecture-audit.md`), Phase 5
