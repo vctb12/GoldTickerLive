@@ -1844,7 +1844,6 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 .nav-search-recent:hover,
 .nav-search-recent:focus-visible {
   background: var(--surface-subtle, rgb(0, 0, 0, 0.04));
-  outline: none;
 }
 .nav-search-result-icon {
   font-size: 1rem;

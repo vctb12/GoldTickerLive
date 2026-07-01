@@ -1100,7 +1100,6 @@
 .shops-clear-btn:focus-visible {
   background: rgb(176 138 62 / 10%);
   border-color: var(--color-gold);
-  outline: none;
 }
 
 .shops-empty-submit {
