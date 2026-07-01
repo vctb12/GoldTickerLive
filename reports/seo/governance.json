@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-30T05:43:04.878Z",
+  "generatedAt": "2026-07-01T14:28:20.660Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -11,7 +11,7 @@
     },
     "totals": {
       "htmlPages": 376,
-      "indexablePages": 239,
+      "indexablePages": 240,
       "thinRiskPages": 152,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
@@ -1010,17 +1010,17 @@
     {
       "path": "ar/index.html",
       "group": "core",
-      "noindex": true,
-      "title": "Gold Ticker Live — العربية",
-      "description": "",
-      "canonical": "https://goldtickerlive.com/",
+      "noindex": false,
+      "title": "أسعار الذهب اليوم في الإمارات والخليج | Gold Ticker Live",
+      "description": "سعر جرام الذهب اليوم في الإمارات بالدرهم — أسعار مرجعية لعيار 24 و22 و21 و18 لدول الخليج وأكثر من 20 دولة عربية، مع تحديث تلقائي ووسم يوضّح حداثة السعر. الأسعار مرجعية وليست أسعار تجزئة.",
+      "canonical": "https://goldtickerlive.com/ar/",
       "hreflangs": [
         "x-default",
         "en",
         "ar"
       ],
-      "hasSchema": false,
-      "wordCount": 14,
+      "hasSchema": true,
+      "wordCount": 1538,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7228,7 +7228,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1530,
+      "wordCount": 1539,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7304,7 +7304,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1950,
+      "wordCount": 1998,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

@@ -56,9 +56,14 @@ function build() {
     'property="og:locale:alternate" content="en_US"'
   );
 
-  // 5. Localized title + meta description.
+  // 5. Localized title + meta description (og:/twitter: mirror the same pair,
+  //    matching the convention used by ar/chart/ and ar/methodology/).
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${AR_TITLE}</title>`);
   html = html.replace(/(name="description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
+  html = html.replace(/(property="og:title"\s+content=")[^"]*(")/, `$1${AR_TITLE}$2`);
+  html = html.replace(/(property="og:description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
+  html = html.replace(/(name="twitter:title"\s+content=")[^"]*(")/, `$1${AR_TITLE}$2`);
+  html = html.replace(/(name="twitter:description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
 
   // 6. This page lives one directory deep (/ar/). Prepend ../ to every RELATIVE
   //    href/src so assets/scripts/links still resolve. Absolute URLs (scheme:,
@@ -67,6 +72,22 @@ function build() {
     /((?:href|src)=")(?![a-z][a-z0-9+.-]*:|\/\/|\/|#)([^"]*)"/gi,
     '$1../$2"'
   );
+
+  // 6b. Same depth fix for `srcset` (comma-separated "url descriptor" candidates).
+  html = html.replace(/(srcset=")([^"]*)"/gi, (_match, prefix, value) => {
+    const rewritten = value
+      .split(',')
+      .map((candidate) => {
+        const trimmed = candidate.trim();
+        if (!trimmed) return trimmed;
+        const [url, descriptor] = trimmed.split(/\s+/, 2);
+        const isAbsolute = /^[a-z][a-z0-9+.-]*:|^\/\//i.test(url) || url.startsWith('/');
+        const rewrittenUrl = isAbsolute ? url : `../${url}`;
+        return descriptor ? `${rewrittenUrl} ${descriptor}` : rewrittenUrl;
+      })
+      .join(', ');
+    return `${prefix}${rewritten}"`;
+  });
 
   // 7. Provenance marker.
   html = html.replace(
