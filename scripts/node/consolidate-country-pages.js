@@ -137,6 +137,7 @@ function buildCityGoldRatePage({ country, city, depth }) {
   <link rel="alternate" hreflang="ar" href="${canonical}/?lang=ar" />
   <title>${title}</title>
   <link rel="preconnect" href="https://open.er-api.com" />
+  <link rel="preload" href="${rel}assets/fonts/source-sans-3/source-sans-3-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="${rel}styles/global.css" />
   <link rel="icon" href="${rel}favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json">
