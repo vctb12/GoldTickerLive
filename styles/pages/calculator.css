@@ -801,7 +801,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   flex-shrink: 0;
-  margin-right: 0.25rem;
+  margin-inline-end: 0.25rem;
 }
 
 .calc-preset-chip {
