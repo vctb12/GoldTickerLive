@@ -99,20 +99,48 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://goldtickerlive.com"
+  "@type": "Organization",
+  "name": "Gold Ticker Live",
+  "url": "https://goldtickerlive.com",
+  "logo": {
+    "@type": "ImageObject",
+    "url": "https://goldtickerlive.com/assets/favicon-512x512.png",
+    "width": 512,
+    "height": 512
+  },
+  "description": "Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels",
+  "sameAs": [
+    "https://twitter.com/goldtickerlive",
+    "https://x.com/GoldTickerLive"
+  ],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "contactType": "Customer Service",
+    "availableLanguage": [
+      "English",
+      "Arabic"
+    ]
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Gold Ticker Live",
+  "url": "https://goldtickerlive.com",
+  "description": "Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://goldtickerlive.com/content/search/?q={search_term_string}"
     },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "العربية",
-      "item": "https://goldtickerlive.com/ar/"
-    }
+    "query-input": "required name=search_term_string"
+  },
+  "inLanguage": [
+    "en",
+    "ar"
   ]
 }
   </script>

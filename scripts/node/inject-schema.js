@@ -384,7 +384,9 @@ function generateBreadcrumbs(urlPath, canonicalUrl = null) {
 function detectPageType(filePath, _content) {
   const relativePath = path.relative(ROOT, filePath);
 
-  if (relativePath === 'index.html') return 'homepage';
+  // 'ar/index.html' is the Arabic homepage mirror (scripts/node/generate-ar-homepage.mjs)
+  // and must carry the same Organization + WebSite schema as the English homepage.
+  if (relativePath === 'index.html' || relativePath === 'ar/index.html') return 'homepage';
   if (relativePath.includes('/gold-price') || relativePath.includes('/gold-rate')) return 'price';
   if (relativePath.includes('/countries/')) return 'country';
   if (
