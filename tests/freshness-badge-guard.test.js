@@ -141,6 +141,11 @@ function containsLiveLabel(text) {
 
 test('guard: spotBar freshness badge never reads "Live" for non-live keys (EN+AR)', async () => {
   const { injectSpotBar, updateSpotBar } = await importModule('src/components/spotBar.js');
+  const { getMarketStatus } = await importModule('src/lib/live-status.js');
+  // When the market is closed, surfaces apply the closed overlay (contract), so
+  // data-freshness reads 'closed' regardless of data age. Keep the assertion
+  // deterministic by deriving the expected key from the same market clock.
+  const marketOpen = getMarketStatus().isOpen;
   for (const lang of ['en', 'ar']) {
     for (const { key, data } of SCENARIOS) {
       const dom = installDom();
@@ -150,7 +155,7 @@ test('guard: spotBar freshness badge never reads "Live" for non-live keys (EN+AR
       assert.ok(bar, `[${lang}/${key}] spot bar should be mounted`);
       assert.equal(
         bar.getAttribute('data-freshness'),
-        key,
+        marketOpen ? key : 'closed',
         `[${lang}/${key}] data-freshness mismatch`
       );
       const tsEl = bar._descendants.find(
@@ -170,6 +175,8 @@ test('guard: spotBar freshness badge never reads "Live" for non-live keys (EN+AR
 
 test('guard: ticker freshness pill never reads "Live" for non-live keys (EN+AR)', async () => {
   const { injectTicker, updateTicker } = await importModule('src/components/ticker.js');
+  const { getMarketStatus } = await importModule('src/lib/live-status.js');
+  const marketOpen = getMarketStatus().isOpen;
   for (const lang of ['en', 'ar']) {
     for (const { key, data } of SCENARIOS) {
       const dom = installDom();
@@ -179,7 +186,7 @@ test('guard: ticker freshness pill never reads "Live" for non-live keys (EN+AR)'
       assert.ok(ticker, `[${lang}/${key}] ticker should be mounted`);
       assert.equal(
         ticker.getAttribute('data-freshness'),
-        key,
+        marketOpen ? key : 'closed',
         `[${lang}/${key}] data-freshness mismatch`
       );
       const statusEl = ticker._descendants.find(
@@ -199,5 +206,24 @@ test('guard: ticker freshness pill never reads "Live" for non-live keys (EN+AR)'
       );
       dom.restore();
     }
+  }
+});
+
+test('applyMarketClosedOverlay forces "closed" when the market is closed (contract)', async () => {
+  const { applyMarketClosedOverlay } = await importModule('src/lib/live-status.js');
+  // 2026-01-03 is a Saturday (UTC) — market closed; 2026-01-07 is a Wednesday — open.
+  const closed = new Date('2026-01-03T12:00:00Z');
+  const open = new Date('2026-01-07T12:00:00Z');
+  for (const key of ['live', 'delayed', 'cached', 'stale', 'fallback', 'unavailable']) {
+    assert.equal(
+      applyMarketClosedOverlay(key, closed),
+      'closed',
+      `${key} → closed when market closed`
+    );
+    assert.equal(
+      applyMarketClosedOverlay(key, open),
+      key,
+      `${key} passes through when market open`
+    );
   }
 });

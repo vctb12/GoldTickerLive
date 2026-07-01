@@ -14,7 +14,7 @@
  *   updateSpotBarLang(lang)    — switch language
  */
 
-import { getLiveFreshness } from '../lib/live-status.js';
+import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 
 let _barEl = null;
 let _prevXauUsd = null;
@@ -144,9 +144,12 @@ export function updateSpotBar(data = {}) {
         isFallback: data.isFallback ?? null,
         isFresh: data.isFresh ?? null,
       });
-      _barEl.setAttribute('data-freshness', fresh.key);
+      // Market-closed overlay: never surface "Live" for a closed market (per
+      // docs/freshness-contract.md). getLiveFreshness stays pure data-freshness.
+      const key = applyMarketClosedOverlay(fresh.key);
+      _barEl.setAttribute('data-freshness', key);
       el.textContent = `${fresh.timeText} · ${fresh.ageText}`;
-      el.setAttribute('title', freshnessLabel(fresh.key, _currentLang));
+      el.setAttribute('title', freshnessLabel(key, _currentLang));
     }
   } else if (data.updatedAt === null) {
     _barEl.setAttribute('data-freshness', 'unavailable');
@@ -168,6 +171,8 @@ function freshnessLabel(key, lang) {
       return isAr ? 'قديم' : 'Stale';
     case 'fallback':
       return isAr ? 'بديل احتياطي' : 'Fallback';
+    case 'closed':
+      return isAr ? 'مغلق' : 'Closed';
     case 'unavailable':
     default:
       return isAr ? 'غير متاح' : 'Unavailable';

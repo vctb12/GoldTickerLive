@@ -861,6 +861,7 @@ export const TRANSLATIONS = {
     'home.sourceStale': 'Stale',
     'home.sourceFallback': 'Fallback',
     'home.sourceUnavailable': 'Unavailable',
+    'home.sourceClosed': 'Closed',
     'home.priceUnavailableApi': 'Live reference price temporarily unavailable — retry shortly',
     'home.priceUnavailableConnection': 'Connection lost — waiting for the next live update',
     'home.liveUnavailableBanner':
@@ -2208,6 +2209,7 @@ export const TRANSLATIONS = {
     'home.sourceStale': 'قديم',
     'home.sourceFallback': 'بديل احتياطي',
     'home.sourceUnavailable': 'غير متاح',
+    'home.sourceClosed': 'مغلق',
     'home.priceUnavailableApi': 'السعر المرجعي المباشر غير متاح مؤقتًا — أعد المحاولة بعد قليل',
     'home.priceUnavailableConnection': 'انقطع الاتصال — بانتظار التحديث المباشر التالي',
     'home.liveUnavailableBanner': 'تعذّر تحميل سعر الذهب المباشر. يُعرض آخر سعر معروف إن وُجد.',

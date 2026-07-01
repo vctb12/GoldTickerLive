@@ -76,6 +76,23 @@ export function getMarketStatus(now = new Date()) {
 }
 
 /**
+ * Apply the market-closed overlay to a data-freshness key.
+ *
+ * Per `docs/freshness-contract.md`, when the gold market is closed the surfaced
+ * state must read `closed` even for recent data. `getLiveFreshness` stays a pure
+ * data-freshness signal (never emits `closed`); presentation surfaces apply this
+ * overlay so a freshly-fetched closed-market quote is never labelled "Live".
+ * Mirrors the tracker's inline overlay (`src/tracker/freshness.js`).
+ *
+ * @param {'live'|'delayed'|'cached'|'stale'|'fallback'|'unavailable'} key
+ * @param {Date} [now]  Reference timestamp (defaults to current time).
+ * @returns {string} `'closed'` when the market is closed, otherwise `key` unchanged.
+ */
+export function applyMarketClosedOverlay(key, now = new Date()) {
+  return getMarketStatus(now).isOpen ? key : 'closed';
+}
+
+/**
  * Return the age of `updatedAt` in milliseconds relative to `now`.
  * Returns `Number.POSITIVE_INFINITY` when `updatedAt` is absent or invalid.
  *
