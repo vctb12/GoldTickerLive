@@ -116,6 +116,9 @@ let karatStripUnit = (() => {
 
 function getLang() {
   try {
+    // The /ar/ path is the canonical Arabic homepage — treat it as Arabic
+    // regardless of query/localStorage so the indexable page renders in AR.
+    if (/^\/ar(\/|$)/.test(window.location.pathname)) return 'ar';
     const urlLang = new URLSearchParams(window.location.search).get('lang');
     if (urlLang === 'ar' || urlLang === 'en') return urlLang;
     const p = JSON.parse(localStorage.getItem(LANG_KEY) || '{}');
@@ -123,6 +126,13 @@ function getLang() {
   } catch {
     return 'en';
   }
+}
+
+// Directory depth from the site root, so the shared shell builds correct
+// relative links. The homepage app serves both `/` (depth 0) and the indexable
+// Arabic homepage `/ar/` (depth 1).
+function getDepth() {
+  return /^\/ar(\/|$)/.test(window.location.pathname) ? 1 : 0;
 }
 
 function saveLang(l) {
@@ -1448,7 +1458,7 @@ async function init() {
   injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
   // Nav + footer + spot bar
-  const shell = mountSharedShell({ lang, depth: 0, withSpotBar: true });
+  const shell = mountSharedShell({ lang, depth: getDepth(), withSpotBar: true });
   initPageEnter('main');
   const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {

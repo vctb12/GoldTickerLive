@@ -223,7 +223,6 @@
   background: rgb(176 138 62 / 20%);
   border-color: rgb(176 138 62 / 50%);
   color: #ffd98c;
-  outline: none;
 }
 
 .shops-chip:active {
@@ -1101,7 +1100,6 @@
 .shops-clear-btn:focus-visible {
   background: rgb(176 138 62 / 10%);
   border-color: var(--color-gold);
-  outline: none;
 }
 
 .shops-empty-submit {
@@ -2322,7 +2320,7 @@
   color: var(--color-gold-dark);
   font-weight: 500;
   white-space: nowrap;
-  margin-left: 0.5rem;
+  margin-inline-start: 0.5rem;
 }
 
 .nearme-map-links {
