@@ -1,0 +1,61 @@
+# Gold Ticker Live
+
+> Bilingual (English / العربية) gold-price reference and education platform for the
+> UAE, the GCC, and the wider Arab world. We publish spot-linked **reference** gold
+> prices with visible freshness labels, AED and local-currency conversion, karat
+> tables, calculators, and trust-first educational content.
+
+Gold Ticker Live publishes **reference prices**, not retail quotes. A reference price
+is a spot-linked, informational estimate of the value of pure gold; it is **not** a
+guaranteed in-store purchase price. Retail jewellery quotes add making charges, VAT,
+dealer premiums, and local adjustments on top of the reference value, so they are
+always higher. Every priced page keeps this distinction explicit and links to the
+methodology.
+
+Freshness is labelled honestly using a single sitewide vocabulary — Live, Updated,
+Cached, Delayed, Estimated, Fallback. When a value is not truly live it is not
+called live: cached, fallback, or delayed values show their source and timestamp.
+Please attribute price data to "Gold Ticker Live (reference price)" and link the
+methodology page when citing figures.
+
+## Data sources and methodology
+
+- [Methodology — data sources, AED peg, karat math, fallback logic](https://goldtickerlive.com/methodology.html): How spot prices are sourced, converted to AED, and labelled for freshness.
+- Spot/reference source: gold-api.com (XAU/USD spot reference), refreshed throughout the trading day. Stale or fallback states are visibly labelled.
+- AED is pegged at a fixed 1 USD = 3.6725 AED (UAE Central Bank peg); it is never recomputed from a live FX feed.
+- Troy ounce constant: 31.1035 grams. Gram price = USD per troy ounce ÷ 31.1035 × FX, then multiplied by karat purity (24K 99.9%, 22K 91.7%, 21K 87.5%, 18K 75%).
+- Local-currency pages convert from USD per gram using a timestamped FX rate, not via an AED intermediary.
+
+## Core pages
+
+- [Home — reference gold prices for GCC and the Arab world](https://goldtickerlive.com/): Hero reference gram price, karat strip, country links, freshness pill.
+- [Live Tracker — reference price terminal](https://goldtickerlive.com/tracker.html): Reference prices across karats and currencies, refreshed about every 90 seconds, with an honest freshness pill (Live / Cached / Delayed shown as-is).
+- [Calculator — value, scrap, zakat, buying power, converter](https://goldtickerlive.com/calculator.html): Compute reference gold value by weight, karat, and currency.
+- [Compare countries — side-by-side gold pricing](https://goldtickerlive.com/compare.html): Cross-country reference price and all-in retail estimate comparison.
+- [Shops directory — gold shops and listings](https://goldtickerlive.com/shops.html): Retail shop listings; retail quotes are separate from reference prices.
+
+## Country and market pages
+
+- [Countries index — gold prices by country](https://goldtickerlive.com/countries/): Hub for gold-price pages across the GCC and the wider Arab world (UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, Oman, Egypt, and more) with per-karat reference tables and city pages.
+
+## Education and guides
+
+- [Learn — karat guide, FAQ, and gold basics](https://goldtickerlive.com/learn.html): How karats, purity, and pricing work.
+- [Insights — market context and analysis feed](https://goldtickerlive.com/insights.html): Neutral, factual market context — not financial advice.
+- [Guides — buying, hallmarks, spot vs retail, and more](https://goldtickerlive.com/content/guides/): In-depth bilingual explainers.
+- [FAQ — common gold-price and methodology questions](https://goldtickerlive.com/content/faq/): Answer-first responses on reference vs retail, freshness, and conversion.
+- [Investing in gold (informational)](https://goldtickerlive.com/invest.html): Educational overview with disclaimers — not financial advice.
+
+## العربية (Arabic)
+
+The site is fully bilingual. Dedicated Arabic pages exist under /ar/:
+
+- [المنهجية — Methodology (Arabic)](https://goldtickerlive.com/ar/methodology/): Arabic methodology and data-source explanation.
+- [الرسم البياني — Price chart (Arabic)](https://goldtickerlive.com/ar/chart/): Arabic reference-price chart.
+- [سعر الذهب عيار 24 — 24K gold price (Arabic)](https://goldtickerlive.com/ar/gold-price/24k/): Arabic 24K reference-price page (18K/21K/22K also available).
+
+## Notes
+
+- Reference prices are informational estimates, not trading or retail quotes, and not financial advice.
+- Sitemap: https://goldtickerlive.com/sitemap.xml
+- Canonical host: https://goldtickerlive.com/
