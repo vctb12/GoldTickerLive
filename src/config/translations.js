@@ -27,7 +27,7 @@ export const TRANSLATIONS = {
     'karat.col.usd': 'USD',
     'karat.col.aed': 'AED (Fixed Peg)',
     'karat.disclaimer':
-      'Estimated bullion-equivalent values. Retail and jewelry prices may differ.',
+      'Estimated bullion-equivalent values. Retail and jewelry prices may differ. Not financial advice.',
     'unit.gram': 'Per Gram',
     'unit.oz': 'Per Ounce',
     'countries.title': 'Global Gold Estimates',
@@ -1379,7 +1379,8 @@ export const TRANSLATIONS = {
     'karat.col.karat': 'العيار',
     'karat.col.usd': 'دولار (USD)',
     'karat.col.aed': 'درهم (AED) ربط ثابت',
-    'karat.disclaimer': 'قيم تقديرية مكافئة للسبيكة. قد تختلف أسعار التجزئة والمجوهرات.',
+    'karat.disclaimer':
+      'قيم تقديرية مكافئة للسبيكة. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.',
     'unit.gram': 'لكل غرام',
     'unit.oz': 'لكل أوقية',
     'countries.title': 'تقديرات الذهب العالمية',
