@@ -12,9 +12,11 @@ dealer premiums, and local adjustments on top of the reference value, so they ar
 always higher. Every priced page keeps this distinction explicit and links to the
 methodology.
 
-Freshness is labelled honestly using a single sitewide vocabulary — Live, Updated,
-Cached, Delayed, Estimated, Fallback. When a value is not truly live it is not
-called live: cached, fallback, or delayed values show their source and timestamp.
+Freshness is labelled honestly using a single sitewide vocabulary — Live, Cached,
+Delayed, Estimated, Fallback, Stale, Unavailable, and Closed (market closed). When a
+value is not truly live it is not called live: cached, fallback, delayed, and stale
+values show their source and timestamp, and the visible state always takes precedence
+over refresh cadence (a closed market is labelled Closed even when the data is recent).
 Please attribute price data to "Gold Ticker Live (reference price)" and link the
 methodology page when citing figures.
 
@@ -23,7 +25,7 @@ methodology page when citing figures.
 - [Methodology — data sources, AED peg, karat math, fallback logic](https://goldtickerlive.com/methodology.html): How spot prices are sourced, converted to AED, and labelled for freshness.
 - Spot/reference source: gold-api.com (XAU/USD spot reference), refreshed throughout the trading day. Stale or fallback states are visibly labelled.
 - AED is pegged at a fixed 1 USD = 3.6725 AED (UAE Central Bank peg); it is never recomputed from a live FX feed.
-- Troy ounce constant: 31.1035 grams. Gram price = USD per troy ounce ÷ 31.1035 × FX, then multiplied by karat purity (24K 99.9%, 22K 91.7%, 21K 87.5%, 18K 75%).
+- Troy ounce constant: 31.1035 grams. Pure (24K) gram price = (USD per troy ounce ÷ 31.1035) × FX; the karat price applies a karat ÷ 24 factor — 24K = 1.0, 22K = 22/24 ≈ 0.9167, 21K = 0.875, 18K = 0.75 — matching the calculator and tracker output.
 - Local-currency pages convert from USD per gram using a timestamped FX rate, not via an AED intermediary.
 
 ## Core pages
@@ -48,11 +50,15 @@ methodology page when citing figures.
 
 ## العربية (Arabic)
 
-The site is fully bilingual. Dedicated Arabic pages exist under /ar/:
+The site is bilingual (English / العربية), and the trust contract applies identically in both languages:
 
-- [المنهجية — Methodology (Arabic)](https://goldtickerlive.com/ar/methodology/): Arabic methodology and data-source explanation.
-- [الرسم البياني — Price chart (Arabic)](https://goldtickerlive.com/ar/chart/): Arabic reference-price chart.
-- [سعر الذهب عيار 24 — 24K gold price (Arabic)](https://goldtickerlive.com/ar/gold-price/24k/): Arabic 24K reference-price page (18K/21K/22K also available).
+تنشر Gold Ticker Live **أسعاراً مرجعية** وليست أسعار تجزئة: السعر المرجعي تقدير معلوماتي مرتبط بالسعر الفوري، وليس سعر شراء مضموناً في المحل. تضيف عروض المجوهرات المصنعية وضريبة القيمة المضافة وهوامش التاجر فوق القيمة المرجعية. تُوسَم حداثة البيانات بوضوح — مباشر، مخزن مؤقتاً، متأخر قليلاً، تقدير مرجعي، بديل احتياطي، قديم، غير متاح، مغلق — ولا يُوصف السعر بأنه «مباشر» إلا عندما يكون كذلك فعلاً. يُرجى نسب البيانات إلى «Gold Ticker Live (سعر مرجعي)» مع رابط صفحة المنهجية عند الاقتباس.
+
+Dedicated Arabic pages under /ar/:
+
+- [كيف تُحسب أسعار الذهب في الإمارات — How UAE gold prices are calculated (Arabic)](https://goldtickerlive.com/ar/methodology/): Arabic methodology and data-source explanation.
+- [مخطط سعر الذهب في الإمارات — UAE gold price chart (Arabic)](https://goldtickerlive.com/ar/chart/): Arabic reference-price chart with historical prices.
+- [سعر ذهب 24 قيراط في الإمارات — 24K gold price (Arabic)](https://goldtickerlive.com/ar/gold-price/24k/): Arabic 24K reference-price page (18K/21K/22K also available).
 
 ## Notes
 
