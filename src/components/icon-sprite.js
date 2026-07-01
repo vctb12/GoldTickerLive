@@ -145,6 +145,116 @@ const SYMBOLS = [
     'f-tr',
     '<rect width="24" height="24" fill="#e30a17"/><circle cx="10" cy="12" r="5.2" fill="#ffffff"/><circle cx="11.9" cy="12" r="4.1" fill="#e30a17"/><path d="M16.4 12l1.55.5-.96 1.32.01-1.64-1.56-.5 1.56-.5-.01-1.64z" fill="#ffffff"/>',
   ],
+  // ── V1-VISUAL additions: UI symbols (monoline, currentColor) ──────────────
+  ['i-refresh', '<path d="M19 12a7 7 0 1 1-2.05-4.95"/><path d="M19.2 3.8v3.4h-3.4"/>'],
+  ['i-close', '<path d="M6 6l12 12M18 6 6 18"/>'],
+  ['i-star', '<path d="M12 4.5l2.2 4.6 5 .7-3.6 3.5.9 5-4.5-2.4-4.5 2.4.9-5-3.6-3.5 5-.7Z"/>'],
+  ['i-external', '<path d="M10 5H5v14h14v-5"/><path d="M14 4h6v6"/><path d="M20 4l-9 9"/>'],
+  ['i-check', '<path d="M5 12.5l4.5 4.5L19 7.5"/>'],
+  ['i-camera', '<path d="M4 8h3.2l1.6-2.2h6.4L16.8 8H20v11H4Z"/><circle cx="12" cy="13" r="3.2"/>'],
+  ['i-clock', '<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 2"/>'],
+  [
+    'i-archive',
+    '<rect x="4" y="4" width="16" height="5" rx="1"/><path d="M6 9v10h12V9"/><path d="M10 13h4"/>',
+  ],
+  [
+    'i-wire',
+    '<circle cx="12" cy="12" r="2"/><path d="M8.5 15.5a5 5 0 0 1 0-7M15.5 8.5a5 5 0 0 1 0 7"/><path d="M6 18a8.5 8.5 0 0 1 0-12M18 6a8.5 8.5 0 0 1 0 12"/>',
+  ],
+  ['i-list', '<path d="M9 6h11M9 12h11M9 18h11"/><path d="M4.5 6h.01M4.5 12h.01M4.5 18h.01"/>'],
+  [
+    'i-phone',
+    '<path d="M7 3h4l1.5 4.5-2.2 1.8a12 12 0 0 0 4.4 4.4l1.8-2.2L21 13v4a2 2 0 0 1-2 2A16 16 0 0 1 5 5a2 2 0 0 1 2-2Z"/>',
+  ],
+  ['i-warning', '<path d="M12 4 2.8 19.5h18.4Z"/><path d="M12 10v4.5M12 17.2h.01"/>'],
+  ['i-up', '<path d="M12 19V6"/><path d="M6.5 11.5 12 6l5.5 5.5"/>'],
+  ['i-down', '<path d="M12 5v13"/><path d="M6.5 12.5 12 18l5.5-5.5"/>'],
+  ['i-flat', '<circle cx="12" cy="12" r="1.6"/><path d="M4.5 12h5M14.5 12h5"/>'],
+  [
+    'i-share',
+    '<circle cx="6.5" cy="12" r="2.2"/><circle cx="17" cy="6.5" r="2.2"/><circle cx="17" cy="17.5" r="2.2"/><path d="M8.6 11 15 7.4M8.6 13 15 16.6"/>',
+  ],
+  [
+    'i-help',
+    '<circle cx="12" cy="12" r="9"/><path d="M9.4 9.4a2.6 2.6 0 1 1 3.7 2.3c-.8.4-1.1 1-1.1 1.8v.4"/><path d="M12 17h.01"/>',
+  ],
+  // ── V1-VISUAL additions: SVG flags for every countries.js market ──────────
+  [
+    'f-om',
+    '<rect width="24" height="24" fill="#ffffff"/><rect y="8" width="24" height="8" fill="#db161b"/><rect y="16" width="24" height="8" fill="#008040"/><rect width="7" height="24" fill="#db161b"/>',
+  ],
+  [
+    'f-lb',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="6" fill="#ee161f"/><rect y="18" width="24" height="6" fill="#ee161f"/><path d="M12 7.5l4.2 7.3h-3v2.2h-2.4v-2.2h-3Z" fill="#00a651"/>',
+  ],
+  [
+    'f-iq',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#ce1126"/><rect y="16" width="24" height="8" fill="#000000"/><rect x="7" y="11" width="10" height="2" rx="1" fill="#007a3d"/>',
+  ],
+  [
+    'f-sy',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#007a3d"/><rect y="16" width="24" height="8" fill="#000000"/><circle cx="6" cy="12" r="1.4" fill="#ce1126"/><circle cx="12" cy="12" r="1.4" fill="#ce1126"/><circle cx="18" cy="12" r="1.4" fill="#ce1126"/>',
+  ],
+  [
+    'f-ps',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#000000"/><rect y="16" width="24" height="8" fill="#007a3d"/><path d="M0 0 11 12 0 24Z" fill="#ce1126"/>',
+  ],
+  [
+    'f-ye',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#ce1126"/><rect y="16" width="24" height="8" fill="#000000"/>',
+  ],
+  [
+    'f-ly',
+    '<rect width="24" height="24" fill="#000000"/><rect width="24" height="6" fill="#e70013"/><rect y="18" width="24" height="6" fill="#239e46"/><circle cx="11" cy="12" r="3" fill="#ffffff"/><circle cx="12.3" cy="12" r="2.4" fill="#000000"/><path d="M15.4 12l1.9.6-1.2 1.6.01-2-1.9-.6 1.9-.6-.01-2 1.2 1.6Z" fill="#ffffff"/>',
+  ],
+  [
+    'f-tn',
+    '<rect width="24" height="24" fill="#e70013"/><circle cx="12" cy="12" r="6" fill="#ffffff"/><circle cx="11.3" cy="12" r="3.6" fill="#e70013"/><circle cx="12.5" cy="12" r="2.9" fill="#ffffff"/><path d="M13 12l3.4 1.1-2.1 -2.9v3.6l2.1-2.9Z" fill="#e70013"/>',
+  ],
+  [
+    'f-dz',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="12" height="24" fill="#006233"/><circle cx="12" cy="12" r="4.2" fill="#d21034"/><circle cx="13.5" cy="12" r="3.4" fill="#ffffff"/><path d="M14.2 12l2.8.9-1.7-2.4v3l1.7-2.4Z" fill="#d21034"/>',
+  ],
+  [
+    'f-sd',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#d21034"/><rect y="16" width="24" height="8" fill="#000000"/><path d="M0 0 10 12 0 24Z" fill="#007229"/>',
+  ],
+  [
+    'f-so',
+    '<rect width="24" height="24" fill="#4189dd"/><path d="M12 6.5l1.7 4.1 4.4.35-3.35 2.9 1.05 4.3L12 15.8l-3.8 2.35 1.05-4.3-3.35-2.9 4.4-.35Z" fill="#ffffff"/>',
+  ],
+  [
+    'f-mr',
+    '<rect width="24" height="24" fill="#006233"/><rect width="24" height="3.5" fill="#cd2a3e"/><rect y="20.5" width="24" height="3.5" fill="#cd2a3e"/><circle cx="12" cy="10.8" r="4.5" fill="#ffc400"/><circle cx="12" cy="9" r="4.1" fill="#006233"/><path d="M12 12.6l.7 1.8h1.9l-1.5 1.2.55 1.8-1.65-1.1-1.65 1.1.55-1.8-1.5-1.2h1.9Z" fill="#ffc400"/>',
+  ],
+  [
+    'f-dj',
+    '<rect width="24" height="24" fill="#6ab2e7"/><rect y="12" width="24" height="12" fill="#12ad2b"/><path d="M0 0 12 12 0 24Z" fill="#ffffff"/><path d="M4.2 9.6l.6 1.85h1.95L5.2 12.6l.6 1.85-1.6-1.15-1.6 1.15.6-1.85-1.55-1.15h1.95Z" fill="#d7141a"/>',
+  ],
+  [
+    'f-km',
+    '<rect width="24" height="6" fill="#ffc61e"/><rect y="6" width="24" height="6" fill="#ffffff"/><rect y="12" width="24" height="6" fill="#ce1126"/><rect y="18" width="24" height="6" fill="#3a75c4"/><path d="M0 0 12 12 0 24Z" fill="#3d8e33"/><circle cx="5" cy="12" r="3" fill="#ffffff"/><circle cx="6.2" cy="12" r="2.5" fill="#3d8e33"/>',
+  ],
+  [
+    'f-pk',
+    '<rect width="24" height="24" fill="#01411c"/><rect width="6" height="24" fill="#ffffff"/><circle cx="14.5" cy="12" r="4.5" fill="#ffffff"/><circle cx="15.9" cy="10.9" r="3.9" fill="#01411c"/><path d="M17.4 8.6l.5 1.55h1.6l-1.3.95.5 1.55-1.3-.95-1.3.95.5-1.55-1.3-.95h1.6Z" fill="#ffffff"/>',
+  ],
+  [
+    'f-us',
+    '<rect width="24" height="24" fill="#ffffff"/><path d="M0 0h24v3.4H0Zm0 6.9h24v3.4H0Zm0 6.8h24v3.4H0Zm0 6.9h24v3.4H0Z" fill="#b22234"/><rect width="10" height="10.3" fill="#3c3b6e"/>',
+  ],
+  [
+    'f-gb',
+    '<rect width="24" height="24" fill="#012169"/><path d="M0 0l24 24M24 0 0 24" stroke="#ffffff" stroke-width="4"/><path d="M12 0v24M0 12h24" stroke="#ffffff" stroke-width="7"/><path d="M12 0v24M0 12h24" stroke="#c8102e" stroke-width="4"/>',
+  ],
+  [
+    'f-eu',
+    '<rect width="24" height="24" fill="#003399"/><circle cx="12" cy="6.5" r="1.1" fill="#ffcc00"/><circle cx="16.9" cy="8.6" r="1.1" fill="#ffcc00"/><circle cx="17.5" cy="13.8" r="1.1" fill="#ffcc00"/><circle cx="14" cy="17.5" r="1.1" fill="#ffcc00"/><circle cx="10" cy="17.5" r="1.1" fill="#ffcc00"/><circle cx="6.5" cy="13.8" r="1.1" fill="#ffcc00"/><circle cx="7.1" cy="8.6" r="1.1" fill="#ffcc00"/>',
+  ],
+  [
+    'f-in',
+    '<rect width="24" height="24" fill="#ffffff"/><rect width="24" height="8" fill="#ff9933"/><rect y="16" width="24" height="8" fill="#138808"/><circle cx="12" cy="12" r="2.6" fill="none" stroke="#000080" stroke-width="1"/><circle cx="12" cy="12" r="0.7" fill="#000080"/>',
+  ],
 ];
 
 /** Set of valid symbol ids — used to sanitise any id before it reaches markup. */
@@ -191,6 +301,25 @@ export const NAV_ICONS = {
   MA: 'f-ma',
   TR: 'f-tr',
   UAE: 'f-ae',
+  OM: 'f-om',
+  LB: 'f-lb',
+  IQ: 'f-iq',
+  SY: 'f-sy',
+  PS: 'f-ps',
+  YE: 'f-ye',
+  LY: 'f-ly',
+  TN: 'f-tn',
+  DZ: 'f-dz',
+  SD: 'f-sd',
+  SO: 'f-so',
+  MR: 'f-mr',
+  DJ: 'f-dj',
+  KM: 'f-km',
+  PK: 'f-pk',
+  US: 'f-us',
+  GB: 'f-gb',
+  EU: 'f-eu',
+  IN: 'f-in',
   // Karat guides (product categories, never prices → a coin glyph, not a numeral)
   '22K': 'i-coins',
   '24K': 'i-coins',
@@ -220,6 +349,19 @@ export function navIconSymbol(key) {
   if (!key) return null;
   if (ICON_SYMBOL_IDS.has(key)) return key; // already a symbol id
   return NAV_ICONS[key] || 'i-pin';
+}
+
+/**
+ * Resolve an ISO country code (as used in src/config/countries.js) to its flag
+ * symbol id, or null when no flag symbol exists. Callers should fall back to
+ * text-only rendering — never to flag emoji (Windows renders those as "AE"
+ * letter pairs).
+ * @param {string} code  e.g. 'AE', 'OM'
+ * @returns {string | null}
+ */
+export function flagSymbolForCountry(code) {
+  const id = `f-${String(code || '').toLowerCase()}`;
+  return ICON_SYMBOL_IDS.has(id) ? id : null;
 }
 
 /** Keep only characters valid in our symbol ids — defence in depth before markup. */
