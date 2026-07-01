@@ -66,7 +66,7 @@ function getOrganizationSchema() {
     '@type': 'Organization',
     name: SITE_NAME,
     url: SITE_URL,
-    logo: `${SITE_URL}/assets/logo.png`,
+    logo: `${SITE_URL}/assets/favicon-512x512.png`,
     description: SITE_DESCRIPTION,
     sameAs: ['https://twitter.com/goldtickerlive', 'https://x.com/GoldTickerLive'],
     contactPoint: {
@@ -140,7 +140,9 @@ function getArticleSchema(options) {
       name: SITE_NAME,
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/assets/logo.png`,
+        url: `${SITE_URL}/assets/favicon-512x512.png`,
+        width: 512,
+        height: 512,
       },
     },
     inLanguage,
