@@ -38,10 +38,12 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts" / "python"))
 from gold_providers import fetch_provider, list_known_providers  # noqa: E402
 from gold_providers.base import (  # noqa: E402
     env_bool,
+    env_float,
     env_int,
     env_str,
     iso_z,
     parse_timestamp,
+    price_jump_pct,
     utc_now_dt,
 )
 from gold_providers.normalize import normalize_quote  # noqa: E402
@@ -150,6 +152,28 @@ def _atomic_write_json(path: Path, payload: Dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     tmp.replace(path)
+
+
+def _read_previous_price(path: Path) -> Optional[float]:
+    """Return ``xau_usd_per_oz`` from the existing committed snapshot, or None.
+
+    Baseline for the spike guard. The committed ``gold_price.json`` always
+    carries ``xau_usd_per_oz`` (unlike ``last_gold_price.json``, which is the
+    X-post state file: ``{price, posted_at_utc, content_hash}``).
+    """
+    if not path.exists():
+        return None
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(raw, dict):
+        return None
+    try:
+        val = float(raw.get("xau_usd_per_oz"))
+    except (TypeError, ValueError):
+        return None
+    return val if val > 0 else None
 
 
 def _emit_actions_outputs(outputs: Dict[str, Any]) -> None:
@@ -276,6 +300,28 @@ def main(argv: Optional[List[str]] = None) -> int:
         chosen_provider = first_stale_provider
         is_fallback = True
         notes.append(f"accepted_stale_from={first_stale_provider}")
+
+    # Optional spike guard (default OFF). When MAX_PRICE_JUMP_PCT > 0, reject a
+    # fresh quote that deviates from the last committed snapshot by more than the
+    # threshold. A plausible-but-wrong provider value (e.g. $2000 when spot is
+    # ~$4030) clears the absolute [500,10000] sanity range but not this delta
+    # check. Soft + self-preserving: on rejection the quote is dropped so the
+    # previous good file is left untouched and the run reports fresh=false /
+    # should_post=false — it never hard-fails the workflow. Tune per market via
+    # MAX_PRICE_JUMP_PCT; 0 (the default) disables the guard entirely.
+    max_jump_pct = env_float("MAX_PRICE_JUMP_PCT", 0.0)
+    if chosen is not None and max_jump_pct > 0:
+        prev_price = _read_previous_price(GOLD_PRICE_FILE)
+        new_price = chosen.get("xau_usd_per_oz")
+        jump = price_jump_pct(prev_price, new_price)
+        if jump is not None and jump > max_jump_pct:
+            notes.append(
+                f"spike_rejected(prev={prev_price},new={new_price},"
+                f"jump={jump:.2f}pct>{max_jump_pct:.2f}pct)"
+            )
+            chosen = None
+            chosen_provider = None
+            is_fallback = False
 
     if not args.dry_run:
         _save_state(state)

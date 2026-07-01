@@ -196,6 +196,24 @@ def sanity_check_price(price: float) -> bool:
     return lo <= price <= hi
 
 
+def price_jump_pct(prev: Optional[float], new: Optional[float]) -> Optional[float]:
+    """Absolute percent change between ``prev`` and ``new`` spot prices.
+
+    Returns ``None`` when either value is missing / non-positive (i.e. not
+    comparable), so callers can distinguish "no baseline" from "0% change".
+    Used by the optional spike guard to reject a plausible-but-wrong quote that
+    clears the absolute sanity range but jumps too far from the last snapshot.
+    """
+    try:
+        prev_f = float(prev)
+        new_f = float(new)
+    except (TypeError, ValueError):
+        return None
+    if prev_f <= 0 or new_f <= 0:
+        return None
+    return abs(new_f - prev_f) / prev_f * 100.0
+
+
 # ── Structured error result ──────────────────────────────────────────────────
 
 def make_error(

@@ -201,3 +201,19 @@ def test_gold_api_com_success_note_matches_current_wording(monkeypatch):
     assert result["success"] is True
     assert result["provider"] == "gold_api_com"
     assert result["notes"] == "gold-api.com spot/reference price. Monitored with provider fallback."
+
+
+# ── price_jump_pct (optional spike-guard helper) ─────────────────────────────
+def test_price_jump_pct_basic():
+    assert base.price_jump_pct(4000.0, 4040.0) == 1.0
+    assert base.price_jump_pct(4000.0, 2000.0) == 50.0
+    assert base.price_jump_pct(4000.0, 4000.0) == 0.0
+
+
+def test_price_jump_pct_uncomparable_returns_none():
+    # Missing / non-positive / non-numeric baselines are "not comparable".
+    assert base.price_jump_pct(None, 4000.0) is None
+    assert base.price_jump_pct(4000.0, None) is None
+    assert base.price_jump_pct(0, 4000.0) is None
+    assert base.price_jump_pct(-1, 4000.0) is None
+    assert base.price_jump_pct("x", 4000.0) is None
