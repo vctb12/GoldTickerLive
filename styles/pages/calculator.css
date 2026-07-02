@@ -1250,3 +1250,89 @@
   outline: 2px solid var(--color-gold);
   outline-offset: -2px;
 }
+
+/* Premium calculator layer: clearer tools, quieter proof surfaces. */
+.calc-hero {
+  background: var(--surface-canvas);
+}
+
+.calc-hero::before {
+  display: none;
+}
+
+.calc-hero::after {
+  opacity: 0.35;
+}
+
+.calc-live-badge {
+  background: color-mix(in srgb, var(--color-gold) 9%, var(--surface-primary));
+  border-color: color-mix(in srgb, var(--color-gold) 30%, var(--border-subtle));
+  box-shadow: none;
+}
+
+.calc-hero-title,
+.calc-result-label,
+.calc-field label {
+  letter-spacing: 0;
+}
+
+.calc-nav-tabs {
+  background: var(--surface-primary);
+  border-block: 1px solid var(--border-subtle);
+  box-shadow: none;
+}
+
+.calc-tab.active {
+  background: color-mix(in srgb, var(--color-gold) 6%, transparent);
+}
+
+.calc-card,
+.calc-tracker-handoff,
+.calc-share-card,
+.calc-related-card {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.calc-related-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}
+
+.calc-result {
+  background: color-mix(in srgb, var(--color-gold) 7%, var(--surface-primary));
+  border-color: color-mix(in srgb, var(--color-gold) 32%, var(--border-subtle));
+  box-shadow: var(--shadow-xs);
+}
+
+.calc-result-value {
+  color: var(--color-ink-data);
+  letter-spacing: 0;
+}
+
+.calc-result-breakdown,
+.calc-result-secondary,
+.calc-share-card {
+  background: color-mix(in srgb, var(--surface-secondary) 74%, var(--surface-primary));
+}
+
+.calc-result-note {
+  background: color-mix(in srgb, var(--color-gold) 5%, var(--surface-primary));
+}
+
+@media (width <= 640px) {
+  .calc-panel {
+    margin-block: var(--space-4);
+    padding-inline: var(--space-4);
+  }
+
+  .calc-card {
+    padding: var(--space-4);
+  }
+
+  .calc-nav-tabs {
+    justify-content: start;
+  }
+}
