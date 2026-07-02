@@ -21,3 +21,9 @@ test('city hub stubs are sitemap exempt', () => {
     'city navigation stubs should not require sitemap entries'
   );
 });
+
+test('stub karat hubs and AR mirrors are sitemap exempt', () => {
+  assert.ok(parity.isExempt('gold-price/24k/index.html'));
+  assert.ok(parity.isExempt('ar/index.html'));
+  assert.ok(parity.isExempt('account.html'));
+});

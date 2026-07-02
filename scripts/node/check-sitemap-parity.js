@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
  * Phase 6 — Sitemap ↔ indexable HTML parity check.
- * Indexable pages (no noindex) should appear in public/sitemap.xml unless exempt.
+ * Indexable pages (no noindex) should appear in repo-root sitemap.xml unless exempt.
+ *
+ * Canonical sitemap: `sitemap.xml` at repo root (build output + robots.txt).
+ * `public/sitemap.xml` is a stale auxiliary copy — do not use for parity.
  *
  * Usage: node scripts/node/check-sitemap-parity.js [--fail-on-error]
  */
@@ -13,7 +16,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '../..');
 const FAIL = process.argv.includes('--fail-on-error');
-const SITEMAP = path.join(ROOT, 'public', 'sitemap.xml');
+const SITEMAP = path.join(ROOT, 'sitemap.xml');
 const BASE = 'https://goldtickerlive.com/';
 
 const SKIP_DIRS = new Set([
@@ -38,7 +41,22 @@ const EXEMPT = [
   /^developer\.html$/,
   /^embed\.html$/,
   /^pricing\.html$/,
+  /^account\.html$/,
   /^countries\/[^/]+\/[^/]+\/index\.html$/, // city nav stubs — noindex
+  /^gold-price\/[^/]+\/index\.html$/, // stub karat hubs — canonical elsewhere
+  /^ar\/gold-price\/[^/]+\/index\.html$/,
+  /^ar\/.*\.html$/, // AR mirrors use ?lang=ar on EN canonical URLs
+  /^ar\/.*\/index\.html$/,
+  /^chart\/index\.html$/,
+  /^ar\/chart\/index\.html$/,
+  /^content\/search\/index\.html$/,
+  /^content\/markets\/index\.html$/,
+  /^content\/tools\/.*\.html$/,
+  /^countries\/index\.html$/,
+  /^countries\/[^/]+\/cities\/[^/]+\.html$/, // legacy city HTML — hubs are indexable
+  /^countries\/[^/]+\/markets\/[^/]+\.html$/,
+  /^methodology\/index\.html$/, // canonical is methodology.html
+  /^ar\/methodology\/index\.html$/,
 ];
 
 function walkHtml(dir, base = '', out = []) {
@@ -62,12 +80,13 @@ function parseSitemap() {
   return urls;
 }
 
-/** Flagship pages where sitemap uses trailing-slash directory URLs. */
+/** Sitemap URL → repo HTML file when loc shape differs from on-disk path. */
 const SITEMAP_ALIASES = {
+  'https://goldtickerlive.com/': 'index.html',
   'https://goldtickerlive.com/calculator/': 'calculator.html',
   'https://goldtickerlive.com/shops/': 'shops.html',
-  'https://goldtickerlive.com/ar/calculator/': 'ar/calculator.html',
-  'https://goldtickerlive.com/ar/shops/': 'ar/shops.html',
+  'https://goldtickerlive.com/methodology/': 'methodology.html',
+  'https://goldtickerlive.com/methodology.html': 'methodology.html',
 };
 
 function sitemapUrlToFile(url) {

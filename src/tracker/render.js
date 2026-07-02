@@ -4,7 +4,7 @@ import { tx, _currentSpot, _el, _priceFor, _setCtx, _state } from './_ctx.js';
 import { updateShellTickerFromState } from './ui-shell.js';
 import { getFreshnessModel } from './freshness.js';
 import { renderChart } from './chart.js';
-import { renderHero, renderKaratTable, renderMiniStrip } from './hero.js';
+import { renderHero, renderKaratTable, renderMiniStrip, patchHeroLiveTick } from './hero.js';
 import { renderAlerts, renderAlertsSummary } from './alerts.js';
 import { renderWatchlist } from './watchlist.js';
 import { renderComparisonWorkspace } from './compare.js';
@@ -79,6 +79,16 @@ export function renderQuickCalculator() {
       source: getFreshnessModel().sourceLabel,
     })
   );
+}
+
+/** Phase 18 — lightweight live-tick refresh (hero + dependent live-mode panels). */
+export function renderLiveTick() {
+  patchHeroLiveTick();
+  if (_state.mode === 'live') {
+    renderMiniStrip();
+    renderKaratTable();
+    updateShellTickerFromState(_state, _currentSpot(), _priceFor);
+  }
 }
 
 export function renderAll() {
