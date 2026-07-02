@@ -772,3 +772,75 @@
   outline: 2px solid var(--color-gold);
   outline-offset: 3px;
 }
+
+/* Premium compare layer: scan-friendly country market surfaces. */
+.compare-hero {
+  background: var(--surface-canvas);
+}
+
+.compare-hero::after {
+  opacity: 0.35;
+}
+
+.compare-hero-title,
+.compare-select-label,
+.compare-detail-label,
+.compare-table th {
+  letter-spacing: 0;
+}
+
+.compare-spot-badge,
+.compare-karat,
+.compare-select-block,
+.compare-card,
+.compare-table-wrap,
+.compare-detail-card,
+.compare-alert {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.compare-spot-badge {
+  box-shadow: none;
+}
+
+.compare-karat-btn.is-active {
+  background: var(--color-gold-dark);
+  box-shadow: var(--shadow-xs);
+}
+
+.compare-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}
+
+.compare-chip,
+.compare-add-select,
+.compare-table thead,
+.compare-table th {
+  background: color-mix(in srgb, var(--surface-secondary) 76%, var(--surface-primary));
+}
+
+.compare-chip--ref,
+.compare-detail-card--ref {
+  background: color-mix(in srgb, var(--color-gold) 7%, var(--surface-primary));
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-subtle));
+}
+
+@media (width <= 640px) {
+  .compare-controls,
+  .compare-table-section,
+  .compare-detail-grid {
+    padding-inline: var(--space-4);
+  }
+
+  .compare-add {
+    align-items: stretch;
+  }
+
+  .compare-add-select {
+    inline-size: 100%;
+  }
+}

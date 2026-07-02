@@ -228,3 +228,63 @@
 #chart-freshness .freshness-chip {
   margin-block-end: 0;
 }
+
+/* Premium chart layer: quieter market analysis workspace. */
+.chart-page {
+  gap: var(--space-6);
+}
+
+.chart-page h1,
+.chart-controls__label {
+  letter-spacing: 0;
+}
+
+.chart-panel,
+.chart-faq,
+.chart-stat {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.chart-panel:hover {
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-chip {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.chart-chip:hover,
+.chart-chip.is-active {
+  background: color-mix(in srgb, var(--color-gold) 8%, var(--surface-primary));
+  border-color: color-mix(in srgb, var(--color-gold) 38%, var(--border-default));
+  box-shadow: var(--shadow-xs);
+}
+
+#chart-canvas {
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--surface-secondary) 74%, var(--surface-primary));
+}
+
+.chart-stat__value {
+  font-family: var(--font-numeric);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-ink-data);
+}
+
+.chart-empty,
+.chart-faq details {
+  background: color-mix(in srgb, var(--surface-secondary) 74%, var(--surface-primary));
+  border-color: var(--border-subtle);
+}
+
+@media (width <= 640px) {
+  #chart-canvas {
+    min-height: 260px;
+    height: 44vh;
+  }
+}
