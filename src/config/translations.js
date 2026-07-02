@@ -1060,6 +1060,7 @@ export const TRANSLATIONS = {
     'home.mktImgKuwaitAlt': 'Wooden-roofed walkway of Souq Al-Mubarakiya in Kuwait City',
     'home.mktImgCairoAlt': 'Brass lanterns glowing at a stall in Khan el-Khalili, Cairo',
     'home.mktPhotoCreditsLead': 'Photography via Wikimedia Commons:',
+    'home.ogImageAlt': 'Gold Ticker Live — reference gold prices for the UAE, GCC and Arab world',
     'home.countrySearchPlaceholder': 'Filter countries…',
     'home.countrySearchEmpty': 'No countries match your search. Try UAE, Saudi Arabia, or Kuwait.',
     'home.countrySearchEmptyQuery':
@@ -2418,6 +2419,7 @@ export const TRANSLATIONS = {
     'home.mktImgKuwaitAlt': 'ممر سوق المباركية المسقوف بالخشب في مدينة الكويت',
     'home.mktImgCairoAlt': 'فوانيس نحاسية مضيئة في أحد أكشاك خان الخليلي بالقاهرة',
     'home.mktPhotoCreditsLead': 'الصور عبر ويكيميديا كومنز:',
+    'home.ogImageAlt': 'Gold Ticker Live — أسعار ذهب مرجعية للإمارات والخليج والعالم العربي',
     'home.countrySearchPlaceholder': 'تصفية الدول…',
     'home.countrySearchEmpty': 'لا توجد دول مطابقة. جرّب الإمارات أو السعودية أو الكويت.',
     'home.countrySearchEmptyQuery':

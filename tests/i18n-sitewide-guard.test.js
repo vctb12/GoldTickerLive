@@ -125,7 +125,11 @@ test('i18n: every data-i18n attribute key resolves in EN and AR', async () => {
   const { en, ar } = TRANSLATIONS;
   // Map each HTML file that uses data-i18n to the namespace its hydrator prepends
   // (tracker.html → trackerTx → tracker.*; index.html → home tx → home.*).
-  const htmlNamespaces = { 'tracker.html': 'tracker.', 'index.html': 'home.' };
+  const htmlNamespaces = {
+    'tracker.html': 'tracker.',
+    'index.html': 'home.',
+    'ar/index.html': 'home.',
+  };
   const re = /\bdata-i18n(?:-placeholder|-aria-label|-title|-alt)?="([^"]+)"/g;
   const missing = [];
   for (const [rel, ns] of Object.entries(htmlNamespaces)) {
