@@ -27,6 +27,7 @@ import {
   buildShopsHref as buildShopsHandoffHref,
   buildMethodologyHref,
 } from './cross-page-links.js';
+import { syncHeroMediaAlts } from './hero-media-alts.js';
 
 const _modUrl = new URL(import.meta.url);
 const _pageUrl = new URL(location.href);
@@ -980,16 +981,6 @@ async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
   };
 
   await refresh();
-}
-
-// Hero media band (hubs on this hydrator, e.g. Turkey): the EN alt ships in
-// the markup, the AR alt rides in data-alt-ar; swap with the active language.
-// Independent of price data so the alt is right even when fetch/cache fail.
-function syncHeroMediaAlts(lang) {
-  document.querySelectorAll('.cp-hero-media img[data-alt-ar]').forEach((img) => {
-    if (!img.dataset.altEn) img.dataset.altEn = img.getAttribute('alt') || '';
-    img.setAttribute('alt', lang === 'ar' ? img.dataset.altAr : img.dataset.altEn);
-  });
 }
 
 async function hydrate() {
