@@ -19,6 +19,7 @@ import {
   isAuthenticated as isAccountAuthenticated,
   redirectToAccount,
 } from '../lib/public-account-client.js';
+import { iconSvg, iconUseElement } from '../components/icon-sprite.js';
 import { initShopsMap, updateMapMarkers, invalidateMapSize } from '../components/shops-map.js';
 import {
   initCompare,
@@ -208,7 +209,7 @@ const TXT = {
     quickActionsCalc: 'Calculate Value',
     quickActionsRates: 'Live Rates',
     quickActionsUAE: 'UAE Market',
-    nearmeTitle: '📍 Find Gold Souqs Near You',
+    nearmeTitle: 'Find Gold Souqs Near You',
     nearmeLead:
       'Allow location access to discover which listed gold markets and souqs are closest to your current position. No account required.',
     nearmeButton: 'Find shops near me',
@@ -361,7 +362,7 @@ const TXT = {
     quickActionsCalc: 'احسب القيمة',
     quickActionsRates: 'الأسعار المباشرة',
     quickActionsUAE: 'سوق الإمارات',
-    nearmeTitle: '📍 ابحث عن أسواق الذهب القريبة',
+    nearmeTitle: 'ابحث عن أسواق الذهب القريبة',
     nearmeLead:
       'اسمح بالوصول إلى الموقع لمعرفة أقرب أسواق ومحلات الذهب المدرجة إلى موقعك الحالي. لا تحتاج إلى حساب.',
     nearmeButton: 'ابحث عن محلات قريبة',
@@ -693,7 +694,7 @@ async function copyShopDetails(shop, button = null) {
     errorMessage: t('genericError'),
   });
   if (ok && iconEl) {
-    iconEl.textContent = '✓';
+    iconEl.replaceChildren(iconUseElement('i-check', 'shops-ico'));
     window.setTimeout(() => {
       iconEl.textContent = originalIcon || '⎘';
     }, 1500);
@@ -798,21 +799,20 @@ function openModal(shop) {
     <div class="modal-actions">
       <button class="modal-action-btn modal-action-btn--shortlist ${inList ? 'is-saved' : ''}" 
               type="button" data-shop-id="${esc(shop.id)}" aria-label="${inList ? t('removeFromShortlist') : t('saveToShortlist')}">
-        <span class="modal-action-icon">${inList ? '✓' : '+'}</span>
+        <span class="modal-action-icon">${inList ? iconSvg('i-check', { className: 'shops-ico' }) : '+'}</span>
         <span class="modal-action-label">${inList ? t('saved') : t('saveToShortlist')}</span>
       </button>
       <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
-        <span class="modal-action-icon">↗</span>
+        <span class="modal-action-icon">${iconSvg('i-share', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('shareShop')}</span>
       </button>
       <button class="modal-action-btn modal-action-btn--account" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('saveToAccount')}">
-        <span class="modal-action-icon">☁</span>
         <span class="modal-action-label">${t('saveToAccount')}</span>
       </button>
       ${
         shop.phone
           ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
-        <span class="modal-action-icon">📞</span>
+        <span class="modal-action-icon">${iconSvg('i-phone', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('callShop')}</span>
       </a>`
           : ''
@@ -820,7 +820,6 @@ function openModal(shop) {
       ${
         whatsappNumber
           ? `<a href="https://wa.me/${esc(whatsappNumber)}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--whatsapp" aria-label="${t('whatsApp')}">
-        <span class="modal-action-icon">💬</span>
         <span class="modal-action-label">${t('whatsApp')}</span>
       </a>`
           : ''
@@ -828,13 +827,13 @@ function openModal(shop) {
       ${
         safeUrl(shop.website)
           ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
-        <span class="modal-action-icon">🌐</span>
+        <span class="modal-action-icon">${iconSvg('i-globe', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
       </a>`
           : ''
       }
       <button class="modal-action-btn modal-action-btn--share" type="button" data-claim-shop-id="${esc(shop.id)}" aria-label="${t('claimListing')}">
-        <span class="modal-action-icon">🛡️</span>
+        <span class="modal-action-icon">${iconSvg('i-lock', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('claimListing')}</span>
       </button>
     </div>
@@ -864,7 +863,7 @@ function openModal(shop) {
         ${listingTypeBadge}
         ${confidenceBadgeHTML}
         <span class="modal-details-badge modal-details-${esc(shop.detailsAvailability)}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability)}</span>
-        ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
+        ${shop.featured ? `<span class="modal-featured-badge">${iconSvg('i-star', { className: 'shops-ico' })} ${t('featured')}</span>` : ''}
       </div>
     </div>
 
@@ -1359,25 +1358,24 @@ function buildShopCardMarkup(shop) {
   const whatsappNumber = formatPhoneForWhatsApp(shop.phone);
   const phoneAction = shop.phone
     ? `<a href="tel:${esc(safeTel(shop.phone))}" class="shop-action-btn shop-action-btn--call" aria-label="${t('callShop')}">
-            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-icon">${iconSvg('i-phone', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('callShop')}</span>
           </a>`
     : `<button class="shop-action-btn shop-action-btn--disabled" type="button" disabled aria-label="${t('phone')}: ${t('notAvailable')}">
-            <span class="shop-action-icon">📞</span>
+            <span class="shop-action-icon">${iconSvg('i-phone', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('notAvailable')}</span>
           </button>`;
   const websiteAction = safeUrl(shop.website)
     ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--website" aria-label="${t('visitWebsite')}">
-            <span class="shop-action-icon">🌐</span>
+            <span class="shop-action-icon">${iconSvg('i-globe', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('visitWebsite')}</span>
           </a>`
     : `<button class="shop-action-btn shop-action-btn--disabled" type="button" disabled aria-label="${t('website')}: ${t('notAvailable')}">
-            <span class="shop-action-icon">🌐</span>
+            <span class="shop-action-icon">${iconSvg('i-globe', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('notAvailable')}</span>
           </button>`;
   const whatsappAction = whatsappNumber
     ? `<a href="https://wa.me/${whatsappNumber}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--whatsapp" aria-label="${t('whatsApp')}">
-            <span class="shop-action-icon">💬</span>
             <span class="shop-action-label">${t('whatsApp')}</span>
           </a>`
     : '';
@@ -1402,7 +1400,7 @@ function buildShopCardMarkup(shop) {
             <div class="shop-card-badges">
               ${clusterBadge}
               ${listingTypeBadge}
-              ${shop.featured ? `<span class="shop-featured">${t('featured')}</span>` : ''}
+              ${shop.featured ? `<span class="shop-featured">${iconSvg('i-star', { className: 'shops-ico' })}${t('featured')}</span>` : ''}
             </div>
           </div>
         </header>
@@ -1453,7 +1451,7 @@ function buildShopCardMarkup(shop) {
           ${
             isCluster
               ? `<a href="${esc(areaGuideUrl)}" class="shop-action-btn shop-action-btn--guide" aria-label="${t('areaGuide')}: ${esc(shop.market)}">
-            <span class="shop-action-icon">🧭</span>
+            <span class="shop-action-icon">${iconSvg('i-map', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('areaGuide')}</span>
           </a>`
               : ''
@@ -1464,7 +1462,7 @@ function buildShopCardMarkup(shop) {
           ${
             !isCluster
               ? `<a href="${esc(directionsUrl)}" target="_blank" rel="noopener" class="shop-action-btn shop-action-btn--directions" aria-label="${t('directions')}">
-            <span class="shop-action-icon">🧭</span>
+            <span class="shop-action-icon">${iconSvg('i-map', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('directions')}</span>
           </a>`
               : ''
@@ -1472,7 +1470,7 @@ function buildShopCardMarkup(shop) {
           ${
             countryUrl
               ? `<a href="${countryUrl}" class="shop-action-btn shop-action-btn--country" aria-label="${t('viewCountryPage')}: ${countryName(country)}">
-            <span class="shop-action-icon">📄</span>
+            <span class="shop-action-icon">${iconSvg('i-receipt', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${countryName(country)}</span>
           </a>`
               : ''
@@ -1480,7 +1478,7 @@ function buildShopCardMarkup(shop) {
           ${
             goldRateUrl
               ? `<a href="${esc(goldRateUrl)}" class="shop-action-btn shop-action-btn--rates" aria-label="${t('viewGoldRate')}: ${esc(shop.city)}">
-            <span class="shop-action-icon">📈</span>
+            <span class="shop-action-icon">${iconSvg('i-chart', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('viewGoldRate')}</span>
           </a>`
               : ''
@@ -1490,12 +1488,12 @@ function buildShopCardMarkup(shop) {
         <div class="shop-actions-row shop-actions-row--secondary">
           <button class="shop-action-btn shop-action-btn--save ${inShortlist ? 'is-saved' : ''}" 
                   type="button" data-shop-id="${esc(shop.id)}" aria-label="${inShortlist ? t('removeFromShortlist') : t('saveToShortlist')}">
-            <span class="shop-action-icon">${inShortlist ? '✓' : '+'}</span>
+            <span class="shop-action-icon">${inShortlist ? iconSvg('i-check', { className: 'shops-ico' }) : '+'}</span>
             <span class="shop-action-label">${inShortlist ? t('saved') : t('saveToShortlist')}</span>
           </button>
           <button class="shop-compare-toggle ${inCompare ? 'is-compared' : ''}" 
                   type="button" data-compare-shop-id="${esc(shop.id)}" aria-label="${inCompare ? t('compareRemove') : t('compareAdd')}: ${esc(shop.name)}" aria-pressed="${inCompare ? 'true' : 'false'}">
-            <span class="shop-action-icon">${inCompare ? '✓' : '⇌'}</span>
+            <span class="shop-action-icon">${inCompare ? iconSvg('i-check', { className: 'shops-ico' }) : iconSvg('i-exchange', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${inCompare ? t('compareRemove') : t('compareAdd')}</span>
           </button>
           <button class="shop-action-btn shop-action-btn--copy" type="button" data-copy-shop-id="${esc(shop.id)}" aria-label="${t('copyDetails')}">
@@ -1503,15 +1501,14 @@ function buildShopCardMarkup(shop) {
             <span class="shop-action-label">${t('copyDetails')}</span>
           </button>
           <button class="shop-action-btn shop-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
-            <span class="shop-action-icon">↗</span>
+            <span class="shop-action-icon">${iconSvg('i-share', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('shareShop')}</span>
           </button>
           <button class="shop-action-btn shop-action-btn--account" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('saveToAccount')}">
-            <span class="shop-action-icon">☁</span>
             <span class="shop-action-label">${t('saveToAccount')}</span>
           </button>
           <button class="shop-action-btn shop-action-btn--share shop-action-btn--claim" type="button" data-claim-shop-id="${esc(shop.id)}" aria-label="${t('claimListing')}">
-            <span class="shop-action-icon">🛡️</span>
+            <span class="shop-action-icon">${iconSvg('i-lock', { className: 'shops-ico' })}</span>
             <span class="shop-action-label">${t('claimListing')}</span>
           </button>
         </div>
@@ -1666,7 +1663,10 @@ function bindShopCardHandlers() {
       btn.classList.toggle('is-compared', isInCompareList(shopId));
       const icon = btn.querySelector('.shop-action-icon');
       const label = btn.querySelector('.shop-action-label');
-      if (icon) icon.textContent = isInCompareList(shopId) ? '✓' : '⇌';
+      if (icon)
+        icon.replaceChildren(
+          iconUseElement(isInCompareList(shopId) ? 'i-check' : 'i-exchange', 'shops-ico')
+        );
       if (label) label.textContent = isInCompareList(shopId) ? t('compareRemove') : t('compareAdd');
       btn.setAttribute('aria-pressed', String(isInCompareList(shopId)));
     });
@@ -2560,10 +2560,10 @@ init();
         <p>We couldn't identify a specific market in our directory for your location, but you can search for nearby gold shops on the map.</p>
         <div class="nearme-map-links">
           <a href="${osmUrl}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
-            🗺️ View on OpenStreetMap
+            ${iconSvg('i-map', { className: 'shops-ico' })} View on OpenStreetMap
           </a>
           <a href="${googleUrl}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
-            📍 Search on Google Maps
+            ${iconSvg('i-pin', { className: 'shops-ico' })} Search on Google Maps
           </a>
         </div>
       </div>
@@ -2622,7 +2622,7 @@ init();
       </ul>
       <div class="nearme-map-links" style="margin-top:0.75rem">
         <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}#map=13/${lat}/${lng}" target="_blank" rel="noopener noreferrer" class="nearme-map-btn">
-          🗺️ Open my location on map
+          ${iconSvg('i-map', { className: 'shops-ico' })} Open my location on map
         </a>
       </div>
     `;

@@ -5151,3 +5151,19 @@ td.tracker-chg-flat {
 .tp-overlay .tracker-inline-calc .tracker-panel-head {
   margin-block-end: var(--space-3);
 }
+
+.tp-overlay .tracker-inline-calc .tracker-panel-head h3 {
+  font-size: var(--text-md);
+  margin: 0;
+}
+
+.tp-overlay .tracker-calc-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+
+.tp-overlay .tracker-calc-result {
+  inline-size: 100%;
+}

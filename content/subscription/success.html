@@ -43,9 +43,14 @@
         padding: var(--space-8) var(--space-4);
       }
       .success-icon {
-        font-size: 4rem;
         margin-block-end: var(--space-4);
         line-height: 1;
+      }
+      .success-icon .success-check {
+        inline-size: 4rem;
+        block-size: 4rem;
+        stroke-width: 1.6;
+        color: var(--color-gold);
       }
       .success-heading {
         font-size: var(--text-3xl);
@@ -169,7 +174,7 @@
         ? `Your ${tierLabel} features are now active.`
         : 'Your new features are now active.';
       container.innerHTML = `
-        <div class="success-icon" aria-hidden="true">✅</div>
+        <div class="success-icon" aria-hidden="true"><svg class="success-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-check"/></svg></div>
         <h1 class="success-heading">${tierHeading}</h1>
         <p class="success-subtext">
           Your free trial has started. No charge until the trial ends.

@@ -241,12 +241,10 @@
   position: relative;
 }
 
-.pricing-features li::before {
-  content: '✓';
+.pricing-features li > .plan-tick {
   position: absolute;
   inset-inline-start: 0;
-  color: var(--color-live);
-  font-weight: var(--weight-bold);
+  inset-block-start: 1rem;
 }
 
 [dir='rtl'] .pricing-features li {
@@ -576,4 +574,19 @@
 
 .comparison-table tbody tr:hover {
   background: var(--color-gold-tint);
+}
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.plan-tick {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: -0.12em;
+  color: var(--color-live);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.plan-tick--no {
+  color: var(--text-secondary);
 }

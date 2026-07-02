@@ -115,7 +115,7 @@ function showToast(lang) {
   const dismissBtn = document.createElement('button');
   dismissBtn.className = 'sw-toast-dismiss';
   dismissBtn.setAttribute('aria-label', dismissLabel);
-  dismissBtn.textContent = '✕';
+  dismissBtn.textContent = '×';
   dismissBtn.addEventListener('click', () => dismiss(toast));
 
   toast.appendChild(msg);

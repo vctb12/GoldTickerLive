@@ -718,3 +718,13 @@
   border-color: rgb(196 144 46 / 30%);
   background: linear-gradient(145deg, var(--color-gold-tint), var(--gradient-card));
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.related-tool-link .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

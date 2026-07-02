@@ -15,6 +15,7 @@ import { injectFooter } from '../components/footer.js';
 import { injectSpotBar, updateSpotBar, updateSpotBarLang } from '../components/spotBar.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { el, safeHref, clear, setText } from './safe-dom.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 import { skeletonNode } from '../components/skeleton.js';
 import { renderPriceFetchError } from '../components/price-fetch-error.js';
 import { track, EVENTS } from './analytics.js';
@@ -275,7 +276,7 @@ function wireKaratCardCopy(button, text, lang) {
       errorMessage: tx(lang, 'copyFailed'),
     });
     if (ok && icon) {
-      icon.textContent = '✓';
+      icon.replaceChildren(iconUseElement('i-check'));
       window.setTimeout(() => {
         icon.textContent = original;
       }, 1500);
@@ -808,7 +809,7 @@ function renderFreshnessBadgeLegacy(updatedAt) {
   ) {
     fragment.appendChild(
       el('div', { class: 'ph-freshness-banner', role: 'alert' }, [
-        '⚠️ Prices may be delayed. Last known data shown. ',
+        'Prices may be delayed. Last known data shown. ',
         el(
           'a',
           { href: safeHref(withBase('methodology.html')), class: 'ph-freshness-link' },
@@ -849,7 +850,6 @@ function renderDisclaimerLegacy(country, pageUrl) {
   const waUrl = `https://wa.me/?text=${waText}`;
   return el('div', { class: 'ph-disclaimer' }, [
     el('span', null, [
-      '⚠️ ',
       el('strong', null, ['Reference rates only.']),
       ' Actual retail prices vary. ',
       el(
@@ -866,7 +866,7 @@ function renderDisclaimerLegacy(country, pageUrl) {
         rel: 'noopener noreferrer',
         class: 'ph-disclaimer-share',
       },
-      '📲 Share on WhatsApp'
+      'Share on WhatsApp'
     ),
   ]);
 }

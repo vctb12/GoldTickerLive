@@ -4,6 +4,7 @@
  */
 
 import { escape as esc, safeHref as safeUrl, safeTel } from '../../lib/safe-dom.js';
+import { iconSvg } from '../../components/icon-sprite.js';
 import {
   countryByCode,
   countryName,
@@ -26,17 +27,17 @@ export function openModal(shop, STATE, SHOPS, t, isInShortlist, toggleShortlist,
     <div class="modal-actions">
       <button class="modal-action-btn modal-action-btn--shortlist ${inList ? 'is-saved' : ''}"
               type="button" data-shop-id="${esc(shop.id)}" aria-label="${inList ? t('removeFromShortlist') : t('saveToShortlist')}">
-        <span class="modal-action-icon">${inList ? '✓' : '+'}</span>
+        <span class="modal-action-icon">${inList ? iconSvg('i-check', { className: 'shops-ico' }) : '+'}</span>
         <span class="modal-action-label">${inList ? t('saved') : t('saveToShortlist')}</span>
       </button>
       <button class="modal-action-btn modal-action-btn--share" type="button" data-shop-id="${esc(shop.id)}" aria-label="${t('shareShop')}">
-        <span class="modal-action-icon">↗</span>
+        <span class="modal-action-icon">${iconSvg('i-share', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('shareShop')}</span>
       </button>
       ${
         shop.phone
           ? `<a href="tel:${esc(safeTel(shop.phone))}" class="modal-action-btn modal-action-btn--call" aria-label="${t('callShop')}">
-        <span class="modal-action-icon">📞</span>
+        <span class="modal-action-icon">${iconSvg('i-phone', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('callShop')}</span>
       </a>`
           : ''
@@ -44,7 +45,7 @@ export function openModal(shop, STATE, SHOPS, t, isInShortlist, toggleShortlist,
       ${
         safeUrl(shop.website)
           ? `<a href="${esc(safeUrl(shop.website))}" target="_blank" rel="noopener" class="modal-action-btn modal-action-btn--website" aria-label="${t('visitWebsite')}">
-        <span class="modal-action-icon">🌐</span>
+        <span class="modal-action-icon">${iconSvg('i-globe', { className: 'shops-ico' })}</span>
         <span class="modal-action-label">${t('visitWebsite')}</span>
       </a>`
           : ''
@@ -76,7 +77,7 @@ export function openModal(shop, STATE, SHOPS, t, isInShortlist, toggleShortlist,
         ${listingTypeBadge}
         ${confidenceBadgeHTML}
         <span class="modal-details-badge modal-details-${esc(shop.detailsAvailability)}">${t('detailsSignal')}: ${detailsAvailabilityLabel(shop.detailsAvailability, t)}</span>
-        ${shop.featured ? `<span class="modal-featured-badge">★ ${t('featured')}</span>` : ''}
+        ${shop.featured ? `<span class="modal-featured-badge">${iconSvg('i-star', { className: 'shops-ico' })} ${t('featured')}</span>` : ''}
       </div>
     </div>
 

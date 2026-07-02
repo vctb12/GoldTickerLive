@@ -464,3 +464,35 @@
   letter-spacing: var(--tracking-tight);
   margin-bottom: 1rem;
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.mkt-link-btn .mk-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mkt-related-card-name .mk-name-ico {
+  display: inline-block;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.2em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mkt-trust-note .mk-note-ico {
+  display: inline-block;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.25em;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

@@ -117,7 +117,7 @@
         <div id="cp-hero-price">
           <div class="cp-hero-main">
             <div class="cp-hero-row">
-              <span class="cp-hero-flag">🇦🇪</span>
+              <span class="cp-hero-flag"><svg class="nav-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg></span>
               <div class="cp-hero-labels">
                 <h1 class="cp-hero-title">Reference Gold Price — United Arab Emirates</h1>
               </div>
@@ -146,11 +146,11 @@
 
       <section class="cp-section">
         <div class="cp-tools-row">
-          <a href="/calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
-          <a href="/tracker.html" class="related-tool-link">📈 Compare All Countries</a>
-          <a href="/content/gcc-gold-price-comparison/" class="related-tool-link">🌍 Compare GCC Countries</a>
-          <a href="/learn.html" class="related-tool-link">📚 What is 22K Gold?</a>
-          <a href="/methodology.html" class="related-tool-link">🔬 Data Methodology</a>
+          <a href="/calculator.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg> Gold Calculator</a>
+          <a href="/tracker.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg> Compare All Countries</a>
+          <a href="/content/gcc-gold-price-comparison/" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg> Compare GCC Countries</a>
+          <a href="/learn.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg> What is 22K Gold?</a>
+          <a href="/methodology.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-beaker"/></svg> Data Methodology</a>
         </div>
       </section>
 
@@ -169,19 +169,18 @@
       initCountryPage({
         countryCode: 'AE',
         currency: 'AED',
-        flag: '🇦🇪',
         nameEn: 'United Arab Emirates',
         nameAr: 'الإمارات العربية المتحدة',
         fixedPeg: true,
         decimals: 2,
         timezone: 'Asia/Dubai',
         relatedCountries: [
-          { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', flag: '🇸🇦' },
-          { file: 'kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', flag: '🇰🇼' },
-          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', flag: '🇶🇦' },
-          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', flag: '🇧🇭' },
-          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', flag: '🇴🇲' },
-          { file: 'india.html', nameEn: 'India', nameAr: 'الهند', flag: '🇮🇳' },
+          { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', code: 'SA' },
+          { file: 'kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', code: 'KW' },
+          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', code: 'QA' },
+          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', code: 'BH' },
+          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', code: 'OM' },
+          { file: 'india.html', nameEn: 'India', nameAr: 'الهند', code: 'IN' },
         ],
         faqEn: [
           {

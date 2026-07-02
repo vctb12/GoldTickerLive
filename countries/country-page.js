@@ -4,9 +4,8 @@
  *
  * CONFIG shape:
  * {
- *   countryCode: 'AE',
+ *   countryCode: 'AE',       // also selects the hero/market-intel SVG flag symbol
  *   currency: 'AED',
- *   flag: '🇦🇪',
  *   nameEn: 'United Arab Emirates',
  *   nameAr: 'الإمارات العربية المتحدة',
  *   fixedPeg: true,          // AED only
@@ -14,7 +13,8 @@
  *   timezone: 'Asia/Dubai',
  *   relatedCountries: [      // links at bottom
  *     // Use page-relative URLs (city pages: '../../uae.html', country pages: 'uae.html')
- *     { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', flag: '🇸🇦' },
+ *     // `code` maps to the sprite flag symbol (f-sa) — never flag emoji.
+ *     { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', code: 'SA' },
  *     ...
  *   ],
  *   faqEn: [ { q, a }, ... ],
@@ -30,10 +30,24 @@ import { usdPerGram, usdPerOz } from '../src/lib/price-calculator.js';
 import { formatPrice } from '../src/lib/formatter.js';
 import { countUp } from '../src/lib/count-up.js';
 import { injectNav, updateNavLang } from '../src/components/nav.js';
+import { iconSvg, flagSymbolForCountry } from '../src/components/icon-sprite.js';
 import { injectFooter } from '../src/components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
 import { renderBreadcrumbs } from '../src/components/breadcrumbs.js';
 import { renderPriceFetchError } from '../src/components/price-fetch-error.js';
+
+/**
+ * Inline-SVG flag markup for an ISO country code (sprite `f-*` symbols injected
+ * by the shared nav). Returns '' when no symbol exists — callers fall back to
+ * text-only rendering, never to flag emoji (Windows renders those as letter
+ * pairs). Feeds existing trusted templates only; ids are sanitised by iconSvg.
+ * @param {string} code e.g. 'AE'
+ * @returns {string}
+ */
+function flagHtml(code) {
+  const symbol = flagSymbolForCountry(code);
+  return symbol ? iconSvg(symbol) : '';
+}
 
 // Minimal shared STATE for country pages
 const STATE = {
@@ -202,7 +216,7 @@ function renderHero(cfg) {
   heroEl.innerHTML = `
     <div class="cp-hero-main${staleClass} price-hero price-hero--reference">
       <div class="cp-hero-row">
-        <span class="cp-hero-flag">${cfg.flag}</span>
+        <span class="cp-hero-flag">${flagHtml(cfg.countryCode)}</span>
         <div class="cp-hero-labels">
           <h1 class="cp-hero-title">${t('livePrice')} — ${STATE.lang === 'ar' ? cfg.nameAr : cfg.nameEn}</h1>
           <div class="cp-hero-badges">${staleHtml}${pegHtml}</div>
@@ -375,7 +389,7 @@ function buyIndicatorHtml() {
   if (!price || avg === null || days < 3) {
     return `
       <div class="cp-mi-buy cp-mi-buy--pending">
-        <span class="cp-mi-buy-dot" aria-hidden="true">⚪</span>
+        <span class="cp-mi-buy-dot" aria-hidden="true">${iconSvg('i-clock', 'cp-mi-buy-ico')}</span>
         <div class="cp-mi-buy-body">
           <p class="cp-mi-buy-title">${t('buyTitle')}</p>
           <p class="cp-mi-buy-status">${t('buyNeedData')}</p>
@@ -385,21 +399,21 @@ function buyIndicatorHtml() {
 
   const deviation = ((price - avg) / avg) * 100;
   let tone = 'normal';
-  let dot = '⚪';
+  let dotIcon = 'i-flat';
   let label = t('buyNormal');
   if (deviation <= -0.5) {
     tone = 'favorable';
-    dot = '🟢';
+    dotIcon = 'i-down';
     label = t('buyFavorable');
   } else if (deviation >= 0.5) {
     tone = 'elevated';
-    dot = '🔴';
+    dotIcon = 'i-up';
     label = t('buyElevated');
   }
 
   return `
     <div class="cp-mi-buy cp-mi-buy--${tone}">
-      <span class="cp-mi-buy-dot" aria-hidden="true">${dot}</span>
+      <span class="cp-mi-buy-dot" aria-hidden="true">${iconSvg(dotIcon, 'cp-mi-buy-ico')}</span>
       <div class="cp-mi-buy-body">
         <p class="cp-mi-buy-title">${t('buyTitle')}</p>
         <p class="cp-mi-buy-status">${label}</p>
@@ -467,7 +481,7 @@ function renderMarketIntel(cfg) {
   el.innerHTML = `
     <div class="cp-mi-card" aria-label="${t('marketIntel')}">
       <div class="cp-mi-header">
-        <h2 class="cp-mi-title">${cfg.flag} ${t('marketIntel')}</h2>
+        <h2 class="cp-mi-title">${flagHtml(cfg.countryCode)} ${t('marketIntel')}</h2>
         <p class="cp-mi-sub">${t('miSub')}</p>
       </div>
 
@@ -561,7 +575,7 @@ function renderRelated(cfg) {
     .map(
       (c) => `
     <a href="${normalizeRelatedCountryUrl(c.file)}" class="cp-related-card">
-      <span class="cp-related-flag">${c.flag}</span>
+      <span class="cp-related-flag">${flagHtml(c.code)}</span>
       <span class="cp-related-name">${STATE.lang === 'ar' ? c.nameAr : c.nameEn}</span>
     </a>`
     )

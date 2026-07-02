@@ -4,6 +4,7 @@
 
 import { TRANSLATIONS } from '../config/translations.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { iconUseElement } from './icon-sprite.js';
 
 function tx(lang, key) {
   return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
@@ -19,7 +20,8 @@ export function renderPriceFetchError(container, { lang = 'en', onRetry } = {}) 
   container.classList.add('price-fetch-error');
   container.hidden = false;
 
-  const icon = el('span', { class: 'price-fetch-error__icon', 'aria-hidden': 'true' }, '⚠');
+  const icon = el('span', { class: 'price-fetch-error__icon', 'aria-hidden': 'true' });
+  icon.append(iconUseElement('i-warning'));
   const message = el('p', { class: 'price-fetch-error__message' }, tx(lang, 'status.noData'));
 
   container.append(icon, message);

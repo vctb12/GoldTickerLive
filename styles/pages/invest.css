@@ -1001,3 +1001,23 @@ body.invest-page {
 [dir='rtl'] .invest-mini-chip {
   text-align: center;
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.invest-goal-icon .invest-goal-ico {
+  display: block;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.invest-guide-ico {
+  inline-size: 1.1em;
+  block-size: 1.1em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.2em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

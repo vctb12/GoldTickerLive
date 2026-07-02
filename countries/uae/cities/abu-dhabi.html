@@ -123,7 +123,7 @@
         <div id="cp-hero-price">
           <div class="cp-hero-main">
             <div class="cp-hero-row">
-              <span class="cp-hero-flag">🇦🇪</span>
+              <span class="cp-hero-flag"><svg class="nav-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg></span>
               <div class="cp-hero-labels">
                 <h1 class="cp-hero-title">Live Gold Price — Abu Dhabi, UAE</h1>
               </div>
@@ -148,7 +148,7 @@
 
       <section class="cp-section">
         <div class="cp-trust-note">
-          ⚠ Spot-linked estimates only — retail prices include making charges. AED is pegged at 1
+          <svg class="cp-note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-warning"/></svg> Spot-linked estimates only — retail prices include making charges. AED is pegged at 1
           USD = 3.6725 AED (fixed by UAE Central Bank). Abu Dhabi gold prices are identical to Dubai
           gold prices; the AED peg applies equally across the UAE.
         </div>
@@ -157,11 +157,11 @@
 
       <section class="cp-section">
         <div class="cp-tools-row">
-          <a href="/calculator.html" class="related-tool-link">🧮 Gold Calculator</a>
-          <a href="/tracker.html" class="related-tool-link">📈 Compare All Countries</a>
-          <a href="/shops.html" class="related-tool-link">🏪 Find Gold Shops</a>
-          <a href="/content/guides/buying-guide.html" class="related-tool-link">📖 Buying Guide</a>
-          <a href="./dubai.html" class="related-tool-link">🏙 Dubai Gold Price</a>
+          <a href="/calculator.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg> Gold Calculator</a>
+          <a href="/tracker.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg> Compare All Countries</a>
+          <a href="/shops.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-shop"/></svg> Find Gold Shops</a>
+          <a href="/content/guides/buying-guide.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg> Buying Guide</a>
+          <a href="./dubai.html" class="related-tool-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-skyline"/></svg> Dubai Gold Price</a>
         </div>
       </section>
 
@@ -302,10 +302,10 @@
           </div>
           <div class="city-cta-buttons">
             <a href="/tracker.html" class="city-cta-btn city-cta-btn-primary"
-              >📈 Live Tracker</a
+              ><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg> Live Tracker</a
             >
             <a href="/calculator.html" class="city-cta-btn city-cta-btn-secondary"
-              >🧮 Calculator</a
+              ><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg> Calculator</a
             >
           </div>
         </div>
@@ -318,9 +318,9 @@
             <h2>Other UAE Cities</h2>
           </div>
           <div class="city-related-cities">
-            <a href="./dubai.html" class="city-related-link">🏙 Dubai</a>
-            <a href="/countries/uae/" class="city-related-link">🇦🇪 UAE Overview</a>
-            <a href="/shops.html?country=AE" class="city-related-link">🏪 UAE Shops</a>
+            <a href="./dubai.html" class="city-related-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-skyline"/></svg> Dubai</a>
+            <a href="/countries/uae/" class="city-related-link"><svg class="nav-flag rt-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg> UAE Overview</a>
+            <a href="/shops.html?country=AE" class="city-related-link"><svg class="rt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-shop"/></svg> UAE Shops</a>
           </div>
         </div>
       </section>
@@ -338,7 +338,6 @@
         breadcrumbParent: { label: 'UAE Gold', url: '../../uae.html' },
         countryCode: 'AE',
         currency: 'AED',
-        flag: '🇦🇪',
         nameEn: 'Abu Dhabi, UAE',
         nameAr: 'أبوظبي، الإمارات',
         fixedPeg: true,
@@ -349,17 +348,17 @@
             file: '../../uae.html',
             nameEn: 'UAE Overview',
             nameAr: 'نظرة عامة — الإمارات',
-            flag: '🇦🇪',
+            code: 'AE',
           },
           {
             file: '../../saudi-arabia.html',
             nameEn: 'Saudi Arabia',
             nameAr: 'السعودية',
-            flag: '🇸🇦',
+            code: 'SA',
           },
-          { file: '../../qatar.html', nameEn: 'Qatar', nameAr: 'قطر', flag: '🇶🇦' },
-          { file: '../../kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', flag: '🇰🇼' },
-          { file: '../../oman.html', nameEn: 'Oman', nameAr: 'عُمان', flag: '🇴🇲' },
+          { file: '../../qatar.html', nameEn: 'Qatar', nameAr: 'قطر', code: 'QA' },
+          { file: '../../kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', code: 'KW' },
+          { file: '../../oman.html', nameEn: 'Oman', nameAr: 'عُمان', code: 'OM' },
         ],
         faqEn: [
           {

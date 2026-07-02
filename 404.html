@@ -87,11 +87,6 @@
         color: var(--color-amber, #f59e0b);
       }
 
-      .nf-price-pill-age[data-freshness-key='cached']::before,
-      .nf-price-pill-age[data-freshness-key='stale']::before {
-        content: '⚠ ';
-      }
-
       .nf-price-pill-age[data-freshness-key='unavailable'] {
         color: var(--color-danger, #dc2626);
       }
@@ -203,9 +198,27 @@
       }
 
       .notfound-link-icon {
-        font-size: 1.25rem;
         flex-shrink: 0;
         line-height: 1.3;
+      }
+
+      /* V1-VISUAL: sprite icons (injected shared-nav sprite) replacing emoji glyphs */
+      .notfound-link-icon .notfound-link-ico {
+        display: block;
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .notfound-link .notfound-chip-ico {
+        inline-size: 1.05em;
+        block-size: 1.05em;
+        flex: 0 0 auto;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
       }
 
       .notfound-link-body {
@@ -391,7 +404,7 @@
           data-tx-aria-label="notfound.nav.primary.label"
         >
           <a href="/tracker.html" class="notfound-link notfound-link--primary">
-            <span class="notfound-link-icon" aria-hidden="true">📈</span>
+            <span class="notfound-link-icon" aria-hidden="true"><svg class="notfound-link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></span>
             <span class="notfound-link-body">
               <strong data-tx="notfound.link.tracker">Live Price Tracker</strong>
               <span class="notfound-link-desc" data-tx="notfound.link.tracker.desc"
@@ -400,7 +413,7 @@
             </span>
           </a>
           <a href="/calculator.html" class="notfound-link notfound-link--primary">
-            <span class="notfound-link-icon" aria-hidden="true">🧮</span>
+            <span class="notfound-link-icon" aria-hidden="true"><svg class="notfound-link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg></span>
             <span class="notfound-link-body">
               <strong data-tx="notfound.link.calculator">Gold Calculator</strong>
               <span class="notfound-link-desc" data-tx="notfound.link.calculator.desc"
@@ -409,7 +422,7 @@
             </span>
           </a>
           <a href="/countries/index.html" class="notfound-link notfound-link--primary">
-            <span class="notfound-link-icon" aria-hidden="true">🗺️</span>
+            <span class="notfound-link-icon" aria-hidden="true"><svg class="notfound-link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg></span>
             <span class="notfound-link-body">
               <strong data-tx="notfound.link.countries">Browse Countries</strong>
               <span class="notfound-link-desc" data-tx="notfound.link.countries.desc"
@@ -418,7 +431,7 @@
             </span>
           </a>
           <a href="/content/search/" class="notfound-link notfound-link--primary">
-            <span class="notfound-link-icon" aria-hidden="true">🔍</span>
+            <span class="notfound-link-icon" aria-hidden="true"><svg class="notfound-link-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></span>
             <span class="notfound-link-body">
               <strong data-tx="notfound.link.search">Search the site</strong>
               <span class="notfound-link-desc" data-tx="notfound.link.search.desc"
@@ -434,20 +447,18 @@
           aria-label="More pages"
           data-tx-aria-label="notfound.nav.secondary.label"
         >
-          <a href="/" class="notfound-link">
-            <span aria-hidden="true">🏠</span> Home
-          </a>
+          <a href="/" class="notfound-link">Home</a>
           <a href="/countries/uae/" class="notfound-link">
-            <span aria-hidden="true">🇦🇪</span> UAE Prices
+            <svg class="nav-flag notfound-chip-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg> UAE Prices
           </a>
           <a href="/shops.html" class="notfound-link">
-            <span aria-hidden="true">🏪</span> Shops
+            <svg class="notfound-chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-shop"/></svg> Shops
           </a>
           <a href="/learn.html" class="notfound-link">
-            <span aria-hidden="true">📚</span> Learn
+            <svg class="notfound-chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg> Learn
           </a>
           <a href="/methodology.html" class="notfound-link">
-            <span aria-hidden="true">🧭</span> Methodology
+            <svg class="notfound-chip-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-beaker"/></svg> Methodology
           </a>
         </nav>
       </div>

@@ -449,7 +449,7 @@ ${spriteMarkupIfAbsent()}
               type="button"
               aria-label="${escapeHtml(data.closeMenu)}"
       >
-        <span aria-hidden="true">✕</span>
+        ${iconSvg('i-close')}
         <span>${escapeHtml(data.closeMenu)}</span>
       </button>
 

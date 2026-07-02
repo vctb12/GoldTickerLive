@@ -13,6 +13,7 @@ import {
   getKaratCountLabel,
   getKaratRangeLabel,
 } from '../config/index.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
@@ -906,8 +907,13 @@ function renderGCCGrid() {
     const name = lang === 'ar' ? c.nameAr : c.nameEn;
     const slug = COUNTRY_SLUGS[c.code] ?? null;
 
+    const flagSym = flagSymbolForCountry(c.code);
     const headerChildren = [
-      el('span', { class: 'gcc-flag', 'aria-hidden': 'true' }, c.flag),
+      el(
+        'span',
+        { class: 'gcc-flag', 'aria-hidden': 'true' },
+        flagSym ? iconUseElement(flagSym, 'nav-flag') : null
+      ),
       el('div', { class: 'gcc-meta' }, [
         el('span', { class: 'gcc-name' }, name),
         el('span', { class: 'gcc-currency' }, c.currency),
