@@ -122,6 +122,13 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
         level: 'intermediate',
       },
       {
+        href: 'content/dubai-gold-rate-guide/',
+        titleKey: 'learn.card.dubaiGuideTitle',
+        descKey: 'learn.card.dubaiGuideDesc',
+        readMin: 8,
+        level: 'beginner',
+      },
+      {
         href: 'content/guides/aed-peg-explained.html',
         titleKey: 'learn.card.pegTitle',
         descKey: 'learn.card.pegDesc',

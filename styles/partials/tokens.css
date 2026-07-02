@@ -34,6 +34,7 @@
   --color-gold-tint: #f8f2dc;
   --color-gold-glow: rgb(196 144 46 / 16%);
   --color-gold-dim: #4a3c10; /* muted gold for borders on dark-surface elements */
+  --color-gold-muted: #c9a14d; /* secondary gold accent on dark tracker surfaces */
 
   /* ── Status / semantic colours ── */
   --color-live: #1a7a32;

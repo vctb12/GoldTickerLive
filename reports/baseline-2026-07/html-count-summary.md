@@ -62,6 +62,12 @@ Internal directory guards — not user-facing product pages:
 ## Regeneration
 
 ```bash
-node scripts/node/generate-baseline-inventory.js
-# TODO Phase 0: point output to reports/baseline-2026-07/
+npm run baseline:inventory
+# or: node scripts/node/generate-baseline-inventory.js
 ```
+
+## Phase 0 lock (2026-07-02)
+
+- `reports/baseline-2026-07/page-inventory.json` — **344** HTML files on disk (gitignored stubs
+  excluded from walk)
+- `reports/baseline-2026-07/click-inventory.json` — interactive element inventory

@@ -242,46 +242,7 @@ export function renderHero() {
   }
 
   if (_el.heroStats && spot) {
-    const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot });
-    const aed22 = _priceFor({ currency: 'AED', karat: '22', unit: 'gram', spot });
-    const usd24g =
-      (spot / CONSTANTS.TROY_OZ_GRAMS) * (KARATS.find((k) => k.code === '24')?.purity ?? 1);
-
-    let spotSubText = tx('heroStatSpotSub', { source: freshness.sourceLabel });
-    if (dayOpenSpot && dayOpenSpot > 0) {
-      const pct = ((spot - dayOpenSpot) / dayOpenSpot) * 100;
-      const dir = classifyDelta(pct); // classify on the displayed percent
-      const dayChangeText =
-        dir === 'flat'
-          ? tx('heroStatDayChangeFlat')
-          : tx('heroStatDayChange', { sign: DIRECTION_GLYPH[dir], pct: Math.abs(pct).toFixed(2) });
-      spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${dayChangeText}`;
-    }
-
-    const statDefs = [
-      { key: 'xau', label: 'XAU/USD', value: spot, sub: spotSubText, format: (n) => formatUsd(n) },
-      {
-        key: 'aed24',
-        label: 'UAE 24K',
-        value: aed24,
-        sub: tx('heroStatGramSub'),
-        format: (n) => `AED ${n.toFixed(2)}`,
-      },
-      {
-        key: 'aed22',
-        label: 'UAE 22K',
-        value: aed22,
-        sub: tx('heroStatGramSub'),
-        format: (n) => `AED ${n.toFixed(2)}`,
-      },
-      {
-        key: 'usd24g',
-        label: 'USD/g 24K',
-        value: usd24g,
-        sub: tx('heroStatGramSub'),
-        format: (n) => formatUsd(n, 3),
-      },
-    ];
+    const statDefs = buildHeroStatDefs(spot, freshness);
 
     const isFirst = !_el.heroStats.querySelector('[data-stat-key]');
     if (isFirst) {
@@ -302,27 +263,10 @@ export function renderHero() {
         );
         _el.heroStats.append(card);
       });
+      patchHeroStatValues(spot, freshness, statDefs);
     } else {
-      statDefs.forEach((def) => {
-        const subEl = _el.heroStats.querySelector(`[data-stat-sub="${def.key}"]`);
-        if (subEl) setText(subEl, def.sub);
-      });
+      patchHeroStatValues(spot, freshness, statDefs);
     }
-
-    statDefs.forEach((def) => {
-      const valueEl = _el.heroStats.querySelector(`[data-stat-value="${def.key}"]`);
-      if (!valueEl) return;
-      if (!Number.isFinite(def.value)) {
-        setText(valueEl, '—');
-        return;
-      }
-      countUp(valueEl, def.value, {
-        decimals: def.key === 'usd24g' ? 3 : 2,
-        format: def.format,
-        pulse: true,
-        pulseTarget: valueEl.closest('.tracker-hero-stat'),
-      });
-    });
   } else if (_el.heroStats && !spot) {
     clear(_el.heroStats);
     _el.heroStats.setAttribute('aria-busy', 'true');
@@ -441,6 +385,105 @@ export function renderHero() {
     document.getElementById('tp-mobile-updated-note'),
     spot ? freshness.timeText : tx('liveUnavailable')
   );
+}
+
+/**
+ * Phase 18 — partial hero stat value update (no card DOM rebuild).
+ */
+function patchHeroStatValues(spot, freshness, statDefs) {
+  if (!_el.heroStats || !spot || !statDefs?.length) return;
+  statDefs.forEach((def) => {
+    const subEl = _el.heroStats.querySelector(`[data-stat-sub="${def.key}"]`);
+    if (subEl) setText(subEl, def.sub);
+    const valueEl = _el.heroStats.querySelector(`[data-stat-value="${def.key}"]`);
+    if (!valueEl) return;
+    if (!Number.isFinite(def.value)) {
+      setText(valueEl, '—');
+      return;
+    }
+    countUp(valueEl, def.value, {
+      decimals: def.key === 'usd24g' ? 3 : 2,
+      format: def.format,
+      pulse: true,
+      pulseTarget: valueEl.closest('.tracker-hero-stat'),
+    });
+  });
+}
+
+function buildHeroStatDefs(spot, freshness) {
+  const dayOpenSpot = getDayOpenPrice();
+  const aed24 = _priceFor({ currency: 'AED', karat: '24', unit: 'gram', spot });
+  const aed22 = _priceFor({ currency: 'AED', karat: '22', unit: 'gram', spot });
+  const usd24g =
+    (spot / CONSTANTS.TROY_OZ_GRAMS) * (KARATS.find((k) => k.code === '24')?.purity ?? 1);
+
+  let spotSubText = tx('heroStatSpotSub', { source: freshness.sourceLabel });
+  if (dayOpenSpot && dayOpenSpot > 0) {
+    const pct = ((spot - dayOpenSpot) / dayOpenSpot) * 100;
+    const dir = classifyDelta(pct);
+    const dayChangeText =
+      dir === 'flat'
+        ? tx('heroStatDayChangeFlat')
+        : tx('heroStatDayChange', { sign: DIRECTION_GLYPH[dir], pct: Math.abs(pct).toFixed(2) });
+    spotSubText = `${tx('heroStatSpotSub', { source: freshness.sourceLabel })} ${dayChangeText}`;
+  }
+
+  return [
+    { key: 'xau', label: 'XAU/USD', value: spot, sub: spotSubText, format: (n) => formatUsd(n) },
+    {
+      key: 'aed24',
+      label: 'UAE 24K',
+      value: aed24,
+      sub: tx('heroStatGramSub'),
+      format: (n) => `AED ${n.toFixed(2)}`,
+    },
+    {
+      key: 'aed22',
+      label: 'UAE 22K',
+      value: aed22,
+      sub: tx('heroStatGramSub'),
+      format: (n) => `AED ${n.toFixed(2)}`,
+    },
+    {
+      key: 'usd24g',
+      label: 'USD/g 24K',
+      value: usd24g,
+      sub: tx('heroStatGramSub'),
+      format: (n) => formatUsd(n, 3),
+    },
+  ];
+}
+
+/**
+ * Phase 18 — partial hero update on live tick (spot headline + stat values only).
+ */
+export function patchHeroLiveTick() {
+  const spot = _currentSpot();
+  const freshness = getFreshnessModel();
+  const heroWrap = document.querySelector('.tracker-hero-wrap.spot-terminal');
+
+  if (_el.xauUsdValue && spot) {
+    const prevSpot = parseFloat(String(_el.xauUsdValue.textContent || '').replace(/[^0-9.-]/g, ''));
+    const direction =
+      Number.isFinite(prevSpot) && prevSpot !== spot ? (spot > prevSpot ? 'up' : 'down') : null;
+    animatePrice(_el.xauUsdValue, spot, {
+      decimals: 2,
+      format: (n) => formatUsd(n),
+      pulse: true,
+      pulseTarget: _el.xauUsdValue?.closest('.tracker-hero-price, .tracker-metric'),
+      terminalRoot: heroWrap,
+      direction,
+    });
+    if (heroWrap) {
+      pulseSpotTerminal(heroWrap, { direction, isLive: freshness.effectiveKey === 'live' });
+    }
+  }
+
+  if (_el.heroStats && spot) {
+    const dayOpenSpot = getDayOpenPrice();
+    renderPriceChangeStrip(spot, dayOpenSpot);
+    patchHeroStatValues(spot, freshness, buildHeroStatDefs(spot, freshness));
+  }
 }
 
 export function renderMiniStrip() {

@@ -55,6 +55,7 @@ let renderAdSlot;
 // Render helpers are lazy-loaded inside init() to reduce initial module parse
 let initRender,
   renderAll,
+  renderLiveTick,
   renderChart,
   renderMarkets,
   renderComparisonWorkspace,
@@ -1402,7 +1403,11 @@ function applyRealtimeSnapshot(snapshot) {
   maybeTrackRealtimeSlo(snapshot, 'tracker');
   startCountdown();
   syncHeroReadout();
-  renderAll?.();
+  if (typeof renderLiveTick === 'function' && el.xauUsdValue) {
+    renderLiveTick();
+  } else {
+    renderAll?.();
+  }
   renderTrackerAddonPanels();
 
   // Run alert engine check after every price update
@@ -1599,6 +1604,7 @@ async function init() {
   ({
     initRender,
     renderAll,
+    renderLiveTick,
     renderChart,
     renderMarkets,
     renderComparisonWorkspace,

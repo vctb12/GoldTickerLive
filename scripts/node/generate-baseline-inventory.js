@@ -5,8 +5,8 @@
  * Phase 0 baseline capture for the Full Site Revamp.
  *
  * Produces:
- *   reports/baseline-2026-05/page-inventory.json
- *   reports/baseline-2026-05/click-inventory.json
+ *   reports/baseline-2026-07/page-inventory.json
+ *   reports/baseline-2026-07/click-inventory.json
  *
  * page-inventory.json  — public HTML surfaces in this repo (excludes
  *                        server/admin/docs/tests/build artifacts): path,
@@ -26,7 +26,8 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '../..');
-const OUT_DIR = path.join(ROOT, 'reports', 'baseline-2026-05');
+const OUT_ARG = process.argv.find((a) => a.startsWith('--out='))?.slice(6);
+const OUT_DIR = path.join(ROOT, 'reports', OUT_ARG || 'baseline-2026-07');
 
 const SKIP_DIRS = new Set([
   'dist',
@@ -265,7 +266,7 @@ const BASE_URL = 'https://goldtickerlive.com/';
 const pageInventory = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
-  phase: 'Phase 0 — baseline lock 2026-05',
+  phase: 'Phase 0 — baseline lock 2026-07',
   totalHtmlFiles: htmlFiles.length,
   records: [],
 };
@@ -310,7 +311,7 @@ console.log(`✅ page-inventory.json written (${pageInventory.records.length} pa
 const clickInventory = {
   schemaVersion: 1,
   generatedAt: new Date().toISOString(),
-  phase: 'Phase 0 — baseline lock 2026-05',
+  phase: 'Phase 0 — baseline lock 2026-07',
   totalElements: 0,
   totalWithAnalytics: 0,
   totalWithoutAnalytics: 0,

@@ -823,7 +823,7 @@ body.tracker-pro-page {
 
 .tracker-hero-wrap .btn.btn-outline:hover {
   border-color: rgb(196 154 68 / 60%);
-  color: #c9a14d;
+  color: var(--color-gold-muted, #c9a14d);
 }
 
 .tracker-hero-wrap .btn.btn-ghost {
@@ -864,7 +864,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hint-text .tracker-inline-link:hover {
-  color: #c9a14d;
+  color: var(--color-gold-muted, #c9a14d);
 }
 
 .tracker-hint-keyboard {
@@ -1254,7 +1254,6 @@ body.tracker-workspace-basic .tracker-advanced-only {
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .tracker-panel,
-.tracker-hero-card,
 .tracker-toolbar-card,
 .tracker-wire-card,
 .tracker-subpanel,
@@ -2432,13 +2431,6 @@ td.tracker-chg-flat {
 }
 
 /* ── Result cards (planners, archive) ────────────────────────────────────── */
-
-/* Planner tool grid — matches result-grid layout */
-.tracker-planner-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.85rem;
-}
 
 /* Range notes rendered by JS below the range pills */
 .tracker-range-notes {
@@ -3717,7 +3709,6 @@ td.tracker-chg-flat {
   .tracker-control-grid,
   .tracker-result-grid,
   .tracker-method-grid,
-  .tracker-planner-grid,
   .tracker-form-grid,
   .tracker-two-up,
   .tracker-utility-grid {
@@ -3743,11 +3734,6 @@ td.tracker-chg-flat {
   .tracker-mini-strip {
     flex-direction: column;
     justify-content: flex-start;
-  }
-
-  .tracker-mini-item {
-    width: 100%;
-    min-width: unset;
   }
 
   .tracker-hero-controls {
@@ -4237,7 +4223,6 @@ td.tracker-chg-flat {
 
 /* Panels — subtle gradient border upgrade */
 .tracker-panel,
-.tracker-hero-card,
 .tracker-toolbar-card,
 .tracker-wire-card,
 .tracker-subpanel,
@@ -4765,10 +4750,6 @@ td.tracker-chg-flat {
 #tp-overlay-planner .tracker-result-item strong {
   font-family: var(--font-numeric);
   color: var(--text-accent);
-}
-
-.tracker-planner-grid .tracker-subpanel {
-  min-height: 100%;
 }
 
 /* Phase 24: Exports mode */

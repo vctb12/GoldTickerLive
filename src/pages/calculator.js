@@ -28,6 +28,7 @@ import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculat
 import {
   buildShopsHref,
   buildTrackerHashHref,
+  buildMethodologyHref,
   countryForCurrency,
 } from '../lib/cross-page-links.js';
 import '../lib/reveal.js';
@@ -1055,7 +1056,9 @@ function applyLang() {
       `${t('trust_note')} `,
       el('a', { href: './content/spot-vs-retail-gold-price/' }, [`${t('trust_spot_link')} →`]),
       ' · ',
-      el('a', { href: './methodology.html' }, [`${t('trust_method_link')} →`])
+      el('a', { href: `./${buildMethodologyHref({ lang: STATE.lang })}` }, [
+        `${t('trust_method_link')} →`,
+      ])
     );
     if (explicitCountry) {
       trustNote.append(
