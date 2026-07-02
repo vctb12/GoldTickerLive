@@ -1,0 +1,2760 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-02T06:25:02.928Z",
+  "phase": "Phase 0 — baseline lock 2026-07",
+  "totalHtmlFiles": 344,
+  "records": [
+    {
+      "path": "404.html",
+      "bytes": 14908,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/404.html"
+    },
+    {
+      "path": "account.html",
+      "bytes": 7117,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/account.html"
+    },
+    {
+      "path": "ar/chart/index.html",
+      "bytes": 7439,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/chart/"
+    },
+    {
+      "path": "ar/gold-price/18k/index.html",
+      "bytes": 8470,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/gold-price/18k/"
+    },
+    {
+      "path": "ar/gold-price/21k/index.html",
+      "bytes": 8470,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/gold-price/21k/"
+    },
+    {
+      "path": "ar/gold-price/22k/index.html",
+      "bytes": 8470,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/gold-price/22k/"
+    },
+    {
+      "path": "ar/gold-price/24k/index.html",
+      "bytes": 8470,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/gold-price/24k/"
+    },
+    {
+      "path": "ar/index.html",
+      "bytes": 74203,
+      "lastCommitSha": "ffebdab65ee913562a1bae3bf73e16bb92d31b6e",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/"
+    },
+    {
+      "path": "ar/methodology/index.html",
+      "bytes": 5938,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/ar/methodology/"
+    },
+    {
+      "path": "calculator.html",
+      "bytes": 38663,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 93,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/calculator.html"
+    },
+    {
+      "path": "chart/index.html",
+      "bytes": 6709,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/chart/"
+    },
+    {
+      "path": "compare.html",
+      "bytes": 8998,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/compare.html"
+    },
+    {
+      "path": "content/dubai-gold-rate-guide/index.html",
+      "bytes": 8847,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/dubai-gold-rate-guide/"
+    },
+    {
+      "path": "content/embed/gold-ticker.html",
+      "bytes": 12397,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/embed/gold-ticker.html"
+    },
+    {
+      "path": "content/faq/index.html",
+      "bytes": 10220,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 2,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/faq/"
+    },
+    {
+      "path": "content/gcc-gold-price-comparison/index.html",
+      "bytes": 8708,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/gcc-gold-price-comparison/"
+    },
+    {
+      "path": "content/gold-making-charges-guide/index.html",
+      "bytes": 8664,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/gold-making-charges-guide/"
+    },
+    {
+      "path": "content/gold-price-history/index.html",
+      "bytes": 36353,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/gold-price-history/"
+    },
+    {
+      "path": "content/guides/24k-vs-22k-vs-18k-gold/index.html",
+      "bytes": 14186,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/24k-vs-22k-vs-18k-gold/"
+    },
+    {
+      "path": "content/guides/24k-vs-22k.html",
+      "bytes": 23764,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 3,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/24k-vs-22k.html"
+    },
+    {
+      "path": "content/guides/aed-peg-explained.html",
+      "bytes": 22181,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 3,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/aed-peg-explained.html"
+    },
+    {
+      "path": "content/guides/ar/24k-vs-22k-vs-18k-gold/index.html",
+      "bytes": 22321,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/24k-vs-22k-vs-18k-gold/"
+    },
+    {
+      "path": "content/guides/ar/best-time-to-buy-gold/index.html",
+      "bytes": 22438,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/best-time-to-buy-gold/"
+    },
+    {
+      "path": "content/guides/ar/buying-gold-online-vs-in-store/index.html",
+      "bytes": 22703,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/buying-gold-online-vs-in-store/"
+    },
+    {
+      "path": "content/guides/ar/gold-as-inflation-hedge/index.html",
+      "bytes": 22504,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/gold-as-inflation-hedge/"
+    },
+    {
+      "path": "content/guides/ar/gold-bars-vs-coins/index.html",
+      "bytes": 22389,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/gold-bars-vs-coins/"
+    },
+    {
+      "path": "content/guides/ar/gold-hallmarks-explained/index.html",
+      "bytes": 22428,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/gold-hallmarks-explained/"
+    },
+    {
+      "path": "content/guides/ar/gold-investment-for-beginners/index.html",
+      "bytes": 22520,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 2,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/gold-investment-for-beginners/"
+    },
+    {
+      "path": "content/guides/ar/gold-savings-plans-gcc/index.html",
+      "bytes": 22560,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/gold-savings-plans-gcc/"
+    },
+    {
+      "path": "content/guides/ar/how-to-spot-fake-gold/index.html",
+      "bytes": 24048,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/how-to-spot-fake-gold/"
+    },
+    {
+      "path": "content/guides/ar/index.html",
+      "bytes": 10284,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/"
+    },
+    {
+      "path": "content/guides/ar/uae-vs-saudi-vs-kuwait-gold-prices/index.html",
+      "bytes": 22696,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/ar/uae-vs-saudi-vs-kuwait-gold-prices/"
+    },
+    {
+      "path": "content/guides/best-time-to-buy-gold/index.html",
+      "bytes": 13803,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/best-time-to-buy-gold/"
+    },
+    {
+      "path": "content/guides/buying-gold-online-vs-in-store/index.html",
+      "bytes": 12910,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/buying-gold-online-vs-in-store/"
+    },
+    {
+      "path": "content/guides/buying-guide.html",
+      "bytes": 35057,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 15,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/buying-guide.html"
+    },
+    {
+      "path": "content/guides/gcc-market-hours.html",
+      "bytes": 22318,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gcc-market-hours.html"
+    },
+    {
+      "path": "content/guides/gold-as-inflation-hedge/index.html",
+      "bytes": 13457,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-as-inflation-hedge/"
+    },
+    {
+      "path": "content/guides/gold-bars-vs-coins/index.html",
+      "bytes": 12632,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-bars-vs-coins/"
+    },
+    {
+      "path": "content/guides/gold-hallmarks-explained/index.html",
+      "bytes": 13946,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-hallmarks-explained/"
+    },
+    {
+      "path": "content/guides/gold-investment-for-beginners/index.html",
+      "bytes": 12799,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 2,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-investment-for-beginners/"
+    },
+    {
+      "path": "content/guides/gold-karat-comparison.html",
+      "bytes": 24502,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-karat-comparison.html"
+    },
+    {
+      "path": "content/guides/gold-savings-plans-gcc/index.html",
+      "bytes": 17933,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/gold-savings-plans-gcc/"
+    },
+    {
+      "path": "content/guides/how-to-spot-fake-gold/index.html",
+      "bytes": 17346,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/how-to-spot-fake-gold/"
+    },
+    {
+      "path": "content/guides/index.html",
+      "bytes": 8781,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/"
+    },
+    {
+      "path": "content/guides/invest-in-gold-gcc.html",
+      "bytes": 29181,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/invest-in-gold-gcc.html"
+    },
+    {
+      "path": "content/guides/uae-vs-saudi-vs-kuwait-gold-prices/index.html",
+      "bytes": 18046,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/uae-vs-saudi-vs-kuwait-gold-prices/"
+    },
+    {
+      "path": "content/guides/zakat-gold-guide.html",
+      "bytes": 28027,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 3,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/guides/zakat-gold-guide.html"
+    },
+    {
+      "path": "content/markets/index.html",
+      "bytes": 10821,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/markets/"
+    },
+    {
+      "path": "content/order-gold/index.html",
+      "bytes": 15365,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/order-gold/"
+    },
+    {
+      "path": "content/search/index.html",
+      "bytes": 23204,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/search/"
+    },
+    {
+      "path": "content/social/x-post-generator.html",
+      "bytes": 26461,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/social/x-post-generator.html"
+    },
+    {
+      "path": "content/spot-vs-retail-gold-price/index.html",
+      "bytes": 8459,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 24,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/spot-vs-retail-gold-price/"
+    },
+    {
+      "path": "content/submit-shop/index.html",
+      "bytes": 17838,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/submit-shop/"
+    },
+    {
+      "path": "content/subscription/success.html",
+      "bytes": 7129,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/subscription/success.html"
+    },
+    {
+      "path": "content/tools/ar/investment-calculator.html",
+      "bytes": 19704,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/ar/investment-calculator.html"
+    },
+    {
+      "path": "content/tools/ar/scrap-calculator.html",
+      "bytes": 17314,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/ar/scrap-calculator.html"
+    },
+    {
+      "path": "content/tools/investment-calculator.html",
+      "bytes": 17306,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/investment-calculator.html"
+    },
+    {
+      "path": "content/tools/investment-return.html",
+      "bytes": 27023,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/investment-return.html"
+    },
+    {
+      "path": "content/tools/scrap-calculator.html",
+      "bytes": 15495,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/scrap-calculator.html"
+    },
+    {
+      "path": "content/tools/weight-converter.html",
+      "bytes": 17007,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/weight-converter.html"
+    },
+    {
+      "path": "content/tools/zakat-calculator.html",
+      "bytes": 25793,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/content/tools/zakat-calculator.html"
+    },
+    {
+      "path": "content/uae-gold-buying-guide/index.html",
+      "bytes": 8790,
+      "lastCommitSha": "b46d27cc96b1fb3624f791f592ef8fe32425230c",
+      "inboundLinkCount": 0,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/content/uae-gold-buying-guide/"
+    },
+    {
+      "path": "countries/algeria/algiers/gold-rate/index.html",
+      "bytes": 6369,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/algiers/gold-rate/"
+    },
+    {
+      "path": "countries/algeria/algiers/gold-shops/index.html",
+      "bytes": 6195,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/algiers/gold-shops/"
+    },
+    {
+      "path": "countries/algeria/algiers/index.html",
+      "bytes": 5161,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/algiers/"
+    },
+    {
+      "path": "countries/algeria/constantine/gold-rate/index.html",
+      "bytes": 6445,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/constantine/gold-rate/"
+    },
+    {
+      "path": "countries/algeria/constantine/gold-shops/index.html",
+      "bytes": 6319,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/constantine/gold-shops/"
+    },
+    {
+      "path": "countries/algeria/constantine/index.html",
+      "bytes": 5245,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/constantine/"
+    },
+    {
+      "path": "countries/algeria/gold-price/index.html",
+      "bytes": 12197,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/gold-price/"
+    },
+    {
+      "path": "countries/algeria/index.html",
+      "bytes": 11554,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/"
+    },
+    {
+      "path": "countries/algeria/oran/gold-rate/index.html",
+      "bytes": 6296,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/oran/gold-rate/"
+    },
+    {
+      "path": "countries/algeria/oran/gold-shops/index.html",
+      "bytes": 6138,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/oran/gold-shops/"
+    },
+    {
+      "path": "countries/algeria/oran/index.html",
+      "bytes": 5094,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/algeria/oran/"
+    },
+    {
+      "path": "countries/bahrain/gold-price/index.html",
+      "bytes": 12188,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/gold-price/"
+    },
+    {
+      "path": "countries/bahrain/index.html",
+      "bytes": 11114,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/"
+    },
+    {
+      "path": "countries/bahrain/manama/gold-rate/index.html",
+      "bytes": 6328,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/manama/gold-rate/"
+    },
+    {
+      "path": "countries/bahrain/manama/gold-shops/index.html",
+      "bytes": 6176,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/manama/gold-shops/"
+    },
+    {
+      "path": "countries/bahrain/manama/index.html",
+      "bytes": 5140,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/manama/"
+    },
+    {
+      "path": "countries/bahrain/muharraq/gold-rate/index.html",
+      "bytes": 6382,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/muharraq/gold-rate/"
+    },
+    {
+      "path": "countries/bahrain/muharraq/gold-shops/index.html",
+      "bytes": 6246,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/muharraq/gold-shops/"
+    },
+    {
+      "path": "countries/bahrain/muharraq/index.html",
+      "bytes": 5180,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/muharraq/"
+    },
+    {
+      "path": "countries/bahrain/rifaa/gold-rate/index.html",
+      "bytes": 6309,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/rifaa/gold-rate/"
+    },
+    {
+      "path": "countries/bahrain/rifaa/gold-shops/index.html",
+      "bytes": 6157,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/rifaa/gold-shops/"
+    },
+    {
+      "path": "countries/bahrain/rifaa/index.html",
+      "bytes": 5117,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/bahrain/rifaa/"
+    },
+    {
+      "path": "countries/egypt/alexandria/gold-rate/index.html",
+      "bytes": 6380,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/alexandria/gold-rate/"
+    },
+    {
+      "path": "countries/egypt/alexandria/gold-shops/index.html",
+      "bytes": 6266,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/alexandria/gold-shops/"
+    },
+    {
+      "path": "countries/egypt/alexandria/index.html",
+      "bytes": 5180,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/alexandria/"
+    },
+    {
+      "path": "countries/egypt/cairo/gold-rate/index.html",
+      "bytes": 11293,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/cairo/gold-rate/"
+    },
+    {
+      "path": "countries/egypt/cairo/gold-shops/index.html",
+      "bytes": 6107,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/cairo/gold-shops/"
+    },
+    {
+      "path": "countries/egypt/cairo/index.html",
+      "bytes": 5069,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/cairo/"
+    },
+    {
+      "path": "countries/egypt/cities/cairo.html",
+      "bytes": 20243,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/cities/cairo.html"
+    },
+    {
+      "path": "countries/egypt/cities/index.html",
+      "bytes": 4764,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/cities/"
+    },
+    {
+      "path": "countries/egypt/giza/gold-rate/index.html",
+      "bytes": 6234,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/giza/gold-rate/"
+    },
+    {
+      "path": "countries/egypt/giza/gold-shops/index.html",
+      "bytes": 6088,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/giza/gold-shops/"
+    },
+    {
+      "path": "countries/egypt/giza/index.html",
+      "bytes": 5046,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/giza/"
+    },
+    {
+      "path": "countries/egypt/gold-price/index.html",
+      "bytes": 12139,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/gold-price/"
+    },
+    {
+      "path": "countries/egypt/index.html",
+      "bytes": 11711,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 12,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/"
+    },
+    {
+      "path": "countries/egypt/markets/index.html",
+      "bytes": 4695,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/markets/"
+    },
+    {
+      "path": "countries/egypt/markets/khan-el-khalili-cairo.html",
+      "bytes": 19748,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/egypt/markets/khan-el-khalili-cairo.html"
+    },
+    {
+      "path": "countries/index.html",
+      "bytes": 12290,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 11,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/"
+    },
+    {
+      "path": "countries/india/chennai/gold-rate/index.html",
+      "bytes": 6305,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/chennai/gold-rate/"
+    },
+    {
+      "path": "countries/india/chennai/gold-shops/index.html",
+      "bytes": 6161,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/chennai/gold-shops/"
+    },
+    {
+      "path": "countries/india/chennai/index.html",
+      "bytes": 5113,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/chennai/"
+    },
+    {
+      "path": "countries/india/delhi/gold-rate/index.html",
+      "bytes": 6267,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/delhi/gold-rate/"
+    },
+    {
+      "path": "countries/india/delhi/gold-shops/index.html",
+      "bytes": 6107,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/delhi/gold-shops/"
+    },
+    {
+      "path": "countries/india/delhi/index.html",
+      "bytes": 5067,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/delhi/"
+    },
+    {
+      "path": "countries/india/gold-price/index.html",
+      "bytes": 12116,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/gold-price/"
+    },
+    {
+      "path": "countries/india/index.html",
+      "bytes": 13166,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/"
+    },
+    {
+      "path": "countries/india/mumbai/gold-rate/index.html",
+      "bytes": 6286,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/mumbai/gold-rate/"
+    },
+    {
+      "path": "countries/india/mumbai/gold-shops/index.html",
+      "bytes": 6142,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/mumbai/gold-shops/"
+    },
+    {
+      "path": "countries/india/mumbai/index.html",
+      "bytes": 5092,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/india/mumbai/"
+    },
+    {
+      "path": "countries/iraq/baghdad/gold-rate/index.html",
+      "bytes": 11015,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/baghdad/gold-rate/"
+    },
+    {
+      "path": "countries/iraq/baghdad/gold-shops/index.html",
+      "bytes": 6657,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/baghdad/gold-shops/"
+    },
+    {
+      "path": "countries/iraq/baghdad/index.html",
+      "bytes": 5092,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/baghdad/"
+    },
+    {
+      "path": "countries/iraq/basra/gold-rate/index.html",
+      "bytes": 10812,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/basra/gold-rate/"
+    },
+    {
+      "path": "countries/iraq/basra/gold-shops/index.html",
+      "bytes": 6597,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/basra/gold-shops/"
+    },
+    {
+      "path": "countries/iraq/basra/index.html",
+      "bytes": 5052,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/basra/"
+    },
+    {
+      "path": "countries/iraq/erbil/gold-rate/index.html",
+      "bytes": 10881,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/erbil/gold-rate/"
+    },
+    {
+      "path": "countries/iraq/erbil/gold-shops/index.html",
+      "bytes": 6597,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/erbil/gold-shops/"
+    },
+    {
+      "path": "countries/iraq/erbil/index.html",
+      "bytes": 5050,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/erbil/"
+    },
+    {
+      "path": "countries/iraq/gold-price/index.html",
+      "bytes": 12112,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/gold-price/"
+    },
+    {
+      "path": "countries/iraq/index.html",
+      "bytes": 10282,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/iraq/"
+    },
+    {
+      "path": "countries/jordan/amman/gold-rate/index.html",
+      "bytes": 6281,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/amman/gold-rate/"
+    },
+    {
+      "path": "countries/jordan/amman/gold-shops/index.html",
+      "bytes": 6140,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/amman/gold-shops/"
+    },
+    {
+      "path": "countries/jordan/amman/index.html",
+      "bytes": 5092,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/amman/"
+    },
+    {
+      "path": "countries/jordan/gold-price/index.html",
+      "bytes": 12162,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/gold-price/"
+    },
+    {
+      "path": "countries/jordan/index.html",
+      "bytes": 11362,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 7,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/"
+    },
+    {
+      "path": "countries/jordan/irbid/gold-rate/index.html",
+      "bytes": 6281,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/irbid/gold-rate/"
+    },
+    {
+      "path": "countries/jordan/irbid/gold-shops/index.html",
+      "bytes": 6140,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/irbid/gold-shops/"
+    },
+    {
+      "path": "countries/jordan/irbid/index.html",
+      "bytes": 5090,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/irbid/"
+    },
+    {
+      "path": "countries/jordan/zarqa/gold-rate/index.html",
+      "bytes": 6281,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/zarqa/gold-rate/"
+    },
+    {
+      "path": "countries/jordan/zarqa/gold-shops/index.html",
+      "bytes": 6140,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/zarqa/gold-shops/"
+    },
+    {
+      "path": "countries/jordan/zarqa/index.html",
+      "bytes": 5096,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/jordan/zarqa/"
+    },
+    {
+      "path": "countries/kuwait/gold-price/index.html",
+      "bytes": 12161,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 22,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/gold-price/"
+    },
+    {
+      "path": "countries/kuwait/hawalli/gold-rate/index.html",
+      "bytes": 6339,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/hawalli/gold-rate/"
+    },
+    {
+      "path": "countries/kuwait/hawalli/gold-shops/index.html",
+      "bytes": 6178,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/hawalli/gold-shops/"
+    },
+    {
+      "path": "countries/kuwait/hawalli/index.html",
+      "bytes": 5132,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/hawalli/"
+    },
+    {
+      "path": "countries/kuwait/index.html",
+      "bytes": 11164,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/"
+    },
+    {
+      "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
+      "bytes": 6431,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/kuwait-city/gold-rate/"
+    },
+    {
+      "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
+      "bytes": 6302,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/kuwait-city/gold-shops/"
+    },
+    {
+      "path": "countries/kuwait/kuwait-city/index.html",
+      "bytes": 5231,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/kuwait-city/"
+    },
+    {
+      "path": "countries/kuwait/salmiya/gold-rate/index.html",
+      "bytes": 6339,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/salmiya/gold-rate/"
+    },
+    {
+      "path": "countries/kuwait/salmiya/gold-shops/index.html",
+      "bytes": 6178,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/salmiya/gold-shops/"
+    },
+    {
+      "path": "countries/kuwait/salmiya/index.html",
+      "bytes": 5140,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/kuwait/salmiya/"
+    },
+    {
+      "path": "countries/lebanon/beirut/gold-rate/index.html",
+      "bytes": 6326,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/beirut/gold-rate/"
+    },
+    {
+      "path": "countries/lebanon/beirut/gold-shops/index.html",
+      "bytes": 6176,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/beirut/gold-shops/"
+    },
+    {
+      "path": "countries/lebanon/beirut/index.html",
+      "bytes": 5132,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/beirut/"
+    },
+    {
+      "path": "countries/lebanon/gold-price/index.html",
+      "bytes": 12185,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/gold-price/"
+    },
+    {
+      "path": "countries/lebanon/index.html",
+      "bytes": 11370,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/"
+    },
+    {
+      "path": "countries/lebanon/sidon/gold-rate/index.html",
+      "bytes": 6307,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/sidon/gold-rate/"
+    },
+    {
+      "path": "countries/lebanon/sidon/gold-shops/index.html",
+      "bytes": 6157,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/sidon/gold-shops/"
+    },
+    {
+      "path": "countries/lebanon/sidon/index.html",
+      "bytes": 5109,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/sidon/"
+    },
+    {
+      "path": "countries/lebanon/tripoli/gold-rate/index.html",
+      "bytes": 6361,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/tripoli/gold-rate/"
+    },
+    {
+      "path": "countries/lebanon/tripoli/gold-shops/index.html",
+      "bytes": 6222,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/tripoli/gold-shops/"
+    },
+    {
+      "path": "countries/lebanon/tripoli/index.html",
+      "bytes": 5155,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/lebanon/tripoli/"
+    },
+    {
+      "path": "countries/libya/benghazi/gold-rate/index.html",
+      "bytes": 6332,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/benghazi/gold-rate/"
+    },
+    {
+      "path": "countries/libya/benghazi/gold-shops/index.html",
+      "bytes": 6196,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/benghazi/gold-shops/"
+    },
+    {
+      "path": "countries/libya/benghazi/index.html",
+      "bytes": 5134,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/benghazi/"
+    },
+    {
+      "path": "countries/libya/gold-price/index.html",
+      "bytes": 12143,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/gold-price/"
+    },
+    {
+      "path": "countries/libya/index.html",
+      "bytes": 11487,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/"
+    },
+    {
+      "path": "countries/libya/misrata/gold-rate/index.html",
+      "bytes": 6313,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/misrata/gold-rate/"
+    },
+    {
+      "path": "countries/libya/misrata/gold-shops/index.html",
+      "bytes": 6161,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/misrata/gold-shops/"
+    },
+    {
+      "path": "countries/libya/misrata/index.html",
+      "bytes": 5113,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/misrata/"
+    },
+    {
+      "path": "countries/libya/tripoli/gold-rate/index.html",
+      "bytes": 6313,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/tripoli/gold-rate/"
+    },
+    {
+      "path": "countries/libya/tripoli/gold-shops/index.html",
+      "bytes": 6182,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/tripoli/gold-shops/"
+    },
+    {
+      "path": "countries/libya/tripoli/index.html",
+      "bytes": 5113,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/libya/tripoli/"
+    },
+    {
+      "path": "countries/morocco/casablanca/gold-rate/index.html",
+      "bytes": 6430,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/casablanca/gold-rate/"
+    },
+    {
+      "path": "countries/morocco/casablanca/gold-shops/index.html",
+      "bytes": 6300,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/casablanca/gold-shops/"
+    },
+    {
+      "path": "countries/morocco/casablanca/index.html",
+      "bytes": 5233,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/casablanca/"
+    },
+    {
+      "path": "countries/morocco/gold-price/index.html",
+      "bytes": 12195,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/gold-price/"
+    },
+    {
+      "path": "countries/morocco/index.html",
+      "bytes": 11697,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/"
+    },
+    {
+      "path": "countries/morocco/marrakech/gold-rate/index.html",
+      "bytes": 6411,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/marrakech/gold-rate/"
+    },
+    {
+      "path": "countries/morocco/marrakech/gold-shops/index.html",
+      "bytes": 6281,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/marrakech/gold-shops/"
+    },
+    {
+      "path": "countries/morocco/marrakech/index.html",
+      "bytes": 5197,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/marrakech/"
+    },
+    {
+      "path": "countries/morocco/rabat/gold-rate/index.html",
+      "bytes": 6319,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/rabat/gold-rate/"
+    },
+    {
+      "path": "countries/morocco/rabat/gold-shops/index.html",
+      "bytes": 6157,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/rabat/gold-shops/"
+    },
+    {
+      "path": "countries/morocco/rabat/index.html",
+      "bytes": 5115,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/morocco/rabat/"
+    },
+    {
+      "path": "countries/oman/gold-price/index.html",
+      "bytes": 12109,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/gold-price/"
+    },
+    {
+      "path": "countries/oman/index.html",
+      "bytes": 11190,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/"
+    },
+    {
+      "path": "countries/oman/muscat/gold-rate/index.html",
+      "bytes": 6266,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/muscat/gold-rate/"
+    },
+    {
+      "path": "countries/oman/muscat/gold-shops/index.html",
+      "bytes": 6109,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/muscat/gold-shops/"
+    },
+    {
+      "path": "countries/oman/muscat/index.html",
+      "bytes": 5067,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/muscat/"
+    },
+    {
+      "path": "countries/oman/salalah/gold-rate/index.html",
+      "bytes": 6285,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/salalah/gold-rate/"
+    },
+    {
+      "path": "countries/oman/salalah/gold-shops/index.html",
+      "bytes": 6144,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/salalah/gold-shops/"
+    },
+    {
+      "path": "countries/oman/salalah/index.html",
+      "bytes": 5090,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/salalah/"
+    },
+    {
+      "path": "countries/oman/sohar/gold-rate/index.html",
+      "bytes": 6231,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/sohar/gold-rate/"
+    },
+    {
+      "path": "countries/oman/sohar/gold-shops/index.html",
+      "bytes": 6090,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/sohar/gold-shops/"
+    },
+    {
+      "path": "countries/oman/sohar/index.html",
+      "bytes": 5046,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/oman/sohar/"
+    },
+    {
+      "path": "countries/pakistan/gold-price/index.html",
+      "bytes": 12195,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/gold-price/"
+    },
+    {
+      "path": "countries/pakistan/index.html",
+      "bytes": 10362,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/"
+    },
+    {
+      "path": "countries/pakistan/islamabad/gold-rate/index.html",
+      "bytes": 10792,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/islamabad/gold-rate/"
+    },
+    {
+      "path": "countries/pakistan/islamabad/gold-shops/index.html",
+      "bytes": 6793,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/islamabad/gold-shops/"
+    },
+    {
+      "path": "countries/pakistan/islamabad/index.html",
+      "bytes": 5229,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/islamabad/"
+    },
+    {
+      "path": "countries/pakistan/karachi/gold-rate/index.html",
+      "bytes": 11034,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/karachi/gold-rate/"
+    },
+    {
+      "path": "countries/pakistan/karachi/gold-shops/index.html",
+      "bytes": 6749,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/karachi/gold-shops/"
+    },
+    {
+      "path": "countries/pakistan/karachi/index.html",
+      "bytes": 5180,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/karachi/"
+    },
+    {
+      "path": "countries/pakistan/lahore/gold-rate/index.html",
+      "bytes": 10746,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/lahore/gold-rate/"
+    },
+    {
+      "path": "countries/pakistan/lahore/gold-shops/index.html",
+      "bytes": 6727,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/lahore/gold-shops/"
+    },
+    {
+      "path": "countries/pakistan/lahore/index.html",
+      "bytes": 5157,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/pakistan/lahore/"
+    },
+    {
+      "path": "countries/palestine/gaza/gold-rate/index.html",
+      "bytes": 10641,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/gaza/gold-rate/"
+    },
+    {
+      "path": "countries/palestine/gaza/gold-shops/index.html",
+      "bytes": 6706,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/gaza/gold-shops/"
+    },
+    {
+      "path": "countries/palestine/gaza/index.html",
+      "bytes": 5130,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/gaza/"
+    },
+    {
+      "path": "countries/palestine/gold-price/index.html",
+      "bytes": 12237,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/gold-price/"
+    },
+    {
+      "path": "countries/palestine/index.html",
+      "bytes": 10397,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/"
+    },
+    {
+      "path": "countries/palestine/nablus/gold-rate/index.html",
+      "bytes": 10791,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/nablus/gold-rate/"
+    },
+    {
+      "path": "countries/palestine/nablus/gold-shops/index.html",
+      "bytes": 6750,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/nablus/gold-shops/"
+    },
+    {
+      "path": "countries/palestine/nablus/index.html",
+      "bytes": 5176,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/nablus/"
+    },
+    {
+      "path": "countries/palestine/ramallah/gold-rate/index.html",
+      "bytes": 10795,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/ramallah/gold-rate/"
+    },
+    {
+      "path": "countries/palestine/ramallah/gold-shops/index.html",
+      "bytes": 6794,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/ramallah/gold-shops/"
+    },
+    {
+      "path": "countries/palestine/ramallah/index.html",
+      "bytes": 5223,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/palestine/ramallah/"
+    },
+    {
+      "path": "countries/qatar/al-rayyan/gold-rate/index.html",
+      "bytes": 6367,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-rayyan/gold-rate/"
+    },
+    {
+      "path": "countries/qatar/al-rayyan/gold-shops/index.html",
+      "bytes": 6231,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-rayyan/gold-shops/"
+    },
+    {
+      "path": "countries/qatar/al-rayyan/index.html",
+      "bytes": 5151,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-rayyan/"
+    },
+    {
+      "path": "countries/qatar/al-wakrah/gold-rate/index.html",
+      "bytes": 6367,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-wakrah/gold-rate/"
+    },
+    {
+      "path": "countries/qatar/al-wakrah/gold-shops/index.html",
+      "bytes": 6231,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-wakrah/gold-shops/"
+    },
+    {
+      "path": "countries/qatar/al-wakrah/index.html",
+      "bytes": 5151,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/al-wakrah/"
+    },
+    {
+      "path": "countries/qatar/cities/doha.html",
+      "bytes": 19095,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/cities/doha.html"
+    },
+    {
+      "path": "countries/qatar/cities/index.html",
+      "bytes": 4773,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/cities/"
+    },
+    {
+      "path": "countries/qatar/doha/gold-rate/index.html",
+      "bytes": 11293,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/doha/gold-rate/"
+    },
+    {
+      "path": "countries/qatar/doha/gold-shops/index.html",
+      "bytes": 6088,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/doha/gold-shops/"
+    },
+    {
+      "path": "countries/qatar/doha/index.html",
+      "bytes": 5046,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/doha/"
+    },
+    {
+      "path": "countries/qatar/gold-price/index.html",
+      "bytes": 12130,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/gold-price/"
+    },
+    {
+      "path": "countries/qatar/index.html",
+      "bytes": 10803,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 9,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/qatar/"
+    },
+    {
+      "path": "countries/saudi-arabia/cities/index.html",
+      "bytes": 5183,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/cities/"
+    },
+    {
+      "path": "countries/saudi-arabia/cities/riyadh.html",
+      "bytes": 19489,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/cities/riyadh.html"
+    },
+    {
+      "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
+      "bytes": 6694,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/dammam/gold-rate/"
+    },
+    {
+      "path": "countries/saudi-arabia/dammam/gold-shops/index.html",
+      "bytes": 6277,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/dammam/gold-shops/"
+    },
+    {
+      "path": "countries/saudi-arabia/dammam/index.html",
+      "bytes": 5275,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/dammam/"
+    },
+    {
+      "path": "countries/saudi-arabia/gold-price/index.html",
+      "bytes": 12345,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 22,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/gold-price/"
+    },
+    {
+      "path": "countries/saudi-arabia/index.html",
+      "bytes": 12007,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 13,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/"
+    },
+    {
+      "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
+      "bytes": 6694,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/gold-rate/"
+    },
+    {
+      "path": "countries/saudi-arabia/jeddah/gold-shops/index.html",
+      "bytes": 6277,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/gold-shops/"
+    },
+    {
+      "path": "countries/saudi-arabia/jeddah/index.html",
+      "bytes": 5269,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/jeddah/"
+    },
+    {
+      "path": "countries/saudi-arabia/mecca/gold-rate/index.html",
+      "bytes": 6675,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/mecca/gold-rate/"
+    },
+    {
+      "path": "countries/saudi-arabia/mecca/gold-shops/index.html",
+      "bytes": 6258,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/mecca/gold-shops/"
+    },
+    {
+      "path": "countries/saudi-arabia/mecca/index.html",
+      "bytes": 5263,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/mecca/"
+    },
+    {
+      "path": "countries/saudi-arabia/medina/gold-rate/index.html",
+      "bytes": 6694,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/medina/gold-rate/"
+    },
+    {
+      "path": "countries/saudi-arabia/medina/gold-shops/index.html",
+      "bytes": 6277,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/medina/gold-shops/"
+    },
+    {
+      "path": "countries/saudi-arabia/medina/index.html",
+      "bytes": 5292,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/medina/"
+    },
+    {
+      "path": "countries/saudi-arabia/riyadh/gold-rate/index.html",
+      "bytes": 11786,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/gold-rate/"
+    },
+    {
+      "path": "countries/saudi-arabia/riyadh/gold-shops/index.html",
+      "bytes": 6277,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/gold-shops/"
+    },
+    {
+      "path": "countries/saudi-arabia/riyadh/index.html",
+      "bytes": 5275,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/"
+    },
+    {
+      "path": "countries/sudan/gold-price/index.html",
+      "bytes": 12147,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/gold-price/"
+    },
+    {
+      "path": "countries/sudan/index.html",
+      "bytes": 11560,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/"
+    },
+    {
+      "path": "countries/sudan/khartoum/gold-rate/index.html",
+      "bytes": 6340,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/khartoum/gold-rate/"
+    },
+    {
+      "path": "countries/sudan/khartoum/gold-shops/index.html",
+      "bytes": 6196,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/khartoum/gold-shops/"
+    },
+    {
+      "path": "countries/sudan/khartoum/index.html",
+      "bytes": 5140,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/khartoum/"
+    },
+    {
+      "path": "countries/sudan/omdurman/gold-rate/index.html",
+      "bytes": 6340,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/omdurman/gold-rate/"
+    },
+    {
+      "path": "countries/sudan/omdurman/gold-shops/index.html",
+      "bytes": 6196,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/omdurman/gold-shops/"
+    },
+    {
+      "path": "countries/sudan/omdurman/index.html",
+      "bytes": 5141,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/omdurman/"
+    },
+    {
+      "path": "countries/sudan/port-sudan/gold-rate/index.html",
+      "bytes": 6394,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/port-sudan/gold-rate/"
+    },
+    {
+      "path": "countries/sudan/port-sudan/gold-shops/index.html",
+      "bytes": 6266,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/port-sudan/gold-shops/"
+    },
+    {
+      "path": "countries/sudan/port-sudan/index.html",
+      "bytes": 5186,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/sudan/port-sudan/"
+    },
+    {
+      "path": "countries/syria/aleppo/gold-rate/index.html",
+      "bytes": 10708,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/aleppo/gold-rate/"
+    },
+    {
+      "path": "countries/syria/aleppo/gold-shops/index.html",
+      "bytes": 6658,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/aleppo/gold-shops/"
+    },
+    {
+      "path": "countries/syria/aleppo/index.html",
+      "bytes": 5086,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/aleppo/"
+    },
+    {
+      "path": "countries/syria/damascus/gold-rate/index.html",
+      "bytes": 10841,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/damascus/gold-rate/"
+    },
+    {
+      "path": "countries/syria/damascus/gold-shops/index.html",
+      "bytes": 6702,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/damascus/gold-shops/"
+    },
+    {
+      "path": "countries/syria/damascus/index.html",
+      "bytes": 5130,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/damascus/"
+    },
+    {
+      "path": "countries/syria/gold-price/index.html",
+      "bytes": 12135,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/gold-price/"
+    },
+    {
+      "path": "countries/syria/homs/gold-rate/index.html",
+      "bytes": 10549,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/homs/gold-rate/"
+    },
+    {
+      "path": "countries/syria/homs/gold-shops/index.html",
+      "bytes": 6598,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/homs/gold-shops/"
+    },
+    {
+      "path": "countries/syria/homs/index.html",
+      "bytes": 5044,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/homs/"
+    },
+    {
+      "path": "countries/syria/index.html",
+      "bytes": 10303,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/syria/"
+    },
+    {
+      "path": "countries/tunisia/gold-price/index.html",
+      "bytes": 12191,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/gold-price/"
+    },
+    {
+      "path": "countries/tunisia/index.html",
+      "bytes": 11222,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/"
+    },
+    {
+      "path": "countries/tunisia/sfax/gold-rate/index.html",
+      "bytes": 6282,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sfax/gold-rate/"
+    },
+    {
+      "path": "countries/tunisia/sfax/gold-shops/index.html",
+      "bytes": 6138,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sfax/gold-shops/"
+    },
+    {
+      "path": "countries/tunisia/sfax/index.html",
+      "bytes": 5088,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sfax/"
+    },
+    {
+      "path": "countries/tunisia/sousse/gold-rate/index.html",
+      "bytes": 6320,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sousse/gold-rate/"
+    },
+    {
+      "path": "countries/tunisia/sousse/gold-shops/index.html",
+      "bytes": 6176,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sousse/gold-shops/"
+    },
+    {
+      "path": "countries/tunisia/sousse/index.html",
+      "bytes": 5128,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/sousse/"
+    },
+    {
+      "path": "countries/tunisia/tunis/gold-rate/index.html",
+      "bytes": 6301,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/tunis/gold-rate/"
+    },
+    {
+      "path": "countries/tunisia/tunis/gold-shops/index.html",
+      "bytes": 6157,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/tunis/gold-shops/"
+    },
+    {
+      "path": "countries/tunisia/tunis/index.html",
+      "bytes": 5107,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/tunisia/tunis/"
+    },
+    {
+      "path": "countries/turkey/ankara/gold-rate/index.html",
+      "bytes": 10627,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/ankara/gold-rate/"
+    },
+    {
+      "path": "countries/turkey/ankara/gold-shops/index.html",
+      "bytes": 6683,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/ankara/gold-shops/"
+    },
+    {
+      "path": "countries/turkey/ankara/index.html",
+      "bytes": 5111,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/ankara/"
+    },
+    {
+      "path": "countries/turkey/gold-price/index.html",
+      "bytes": 12141,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/gold-price/"
+    },
+    {
+      "path": "countries/turkey/index.html",
+      "bytes": 10312,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/"
+    },
+    {
+      "path": "countries/turkey/istanbul/gold-rate/index.html",
+      "bytes": 11086,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/istanbul/gold-rate/"
+    },
+    {
+      "path": "countries/turkey/istanbul/gold-shops/index.html",
+      "bytes": 6727,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/istanbul/gold-shops/"
+    },
+    {
+      "path": "countries/turkey/istanbul/index.html",
+      "bytes": 5157,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/istanbul/"
+    },
+    {
+      "path": "countries/turkey/izmir/gold-rate/index.html",
+      "bytes": 10598,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/izmir/gold-rate/"
+    },
+    {
+      "path": "countries/turkey/izmir/gold-shops/index.html",
+      "bytes": 6661,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/izmir/gold-shops/"
+    },
+    {
+      "path": "countries/turkey/izmir/index.html",
+      "bytes": 5090,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/turkey/izmir/"
+    },
+    {
+      "path": "countries/uae/abu-dhabi/gold-rate/index.html",
+      "bytes": 6661,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/abu-dhabi/gold-rate/"
+    },
+    {
+      "path": "countries/uae/abu-dhabi/gold-shops/index.html",
+      "bytes": 6282,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/abu-dhabi/gold-shops/"
+    },
+    {
+      "path": "countries/uae/abu-dhabi/index.html",
+      "bytes": 5285,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/abu-dhabi/"
+    },
+    {
+      "path": "countries/uae/ajman/gold-rate/index.html",
+      "bytes": 6569,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ajman/gold-rate/"
+    },
+    {
+      "path": "countries/uae/ajman/gold-shops/index.html",
+      "bytes": 6158,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ajman/gold-shops/"
+    },
+    {
+      "path": "countries/uae/ajman/index.html",
+      "bytes": 5199,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ajman/"
+    },
+    {
+      "path": "countries/uae/cities/abu-dhabi.html",
+      "bytes": 18085,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/cities/abu-dhabi.html"
+    },
+    {
+      "path": "countries/uae/cities/dubai.html",
+      "bytes": 21651,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 3,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/cities/dubai.html"
+    },
+    {
+      "path": "countries/uae/cities/index.html",
+      "bytes": 5466,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/cities/"
+    },
+    {
+      "path": "countries/uae/dubai/gold-rate/index.html",
+      "bytes": 11492,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/dubai/gold-rate/"
+    },
+    {
+      "path": "countries/uae/dubai/gold-shops/index.html",
+      "bytes": 6158,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/dubai/gold-shops/"
+    },
+    {
+      "path": "countries/uae/dubai/index.html",
+      "bytes": 5195,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/dubai/"
+    },
+    {
+      "path": "countries/uae/fujairah/gold-rate/index.html",
+      "bytes": 6630,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/fujairah/gold-rate/"
+    },
+    {
+      "path": "countries/uae/fujairah/gold-shops/index.html",
+      "bytes": 6247,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/fujairah/gold-shops/"
+    },
+    {
+      "path": "countries/uae/fujairah/index.html",
+      "bytes": 5266,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/fujairah/"
+    },
+    {
+      "path": "countries/uae/gold-price/index.html",
+      "bytes": 12341,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 24,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/gold-price/"
+    },
+    {
+      "path": "countries/uae/index.html",
+      "bytes": 12111,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 24,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/"
+    },
+    {
+      "path": "countries/uae/markets/dubai-gold-souk.html",
+      "bytes": 19778,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 6,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/markets/dubai-gold-souk.html"
+    },
+    {
+      "path": "countries/uae/markets/index.html",
+      "bytes": 5397,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/markets/"
+    },
+    {
+      "path": "countries/uae/ras-al-khaimah/gold-rate/index.html",
+      "bytes": 6772,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/gold-rate/"
+    },
+    {
+      "path": "countries/uae/ras-al-khaimah/gold-shops/index.html",
+      "bytes": 6393,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/gold-shops/"
+    },
+    {
+      "path": "countries/uae/ras-al-khaimah/index.html",
+      "bytes": 5397,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/ras-al-khaimah/"
+    },
+    {
+      "path": "countries/uae/sharjah/gold-rate/index.html",
+      "bytes": 6623,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/sharjah/gold-rate/"
+    },
+    {
+      "path": "countries/uae/sharjah/gold-shops/index.html",
+      "bytes": 6196,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/sharjah/gold-shops/"
+    },
+    {
+      "path": "countries/uae/sharjah/index.html",
+      "bytes": 5245,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/sharjah/"
+    },
+    {
+      "path": "countries/uae/umm-al-quwain/gold-rate/index.html",
+      "bytes": 6751,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/umm-al-quwain/gold-rate/"
+    },
+    {
+      "path": "countries/uae/umm-al-quwain/gold-shops/index.html",
+      "bytes": 6374,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/umm-al-quwain/gold-shops/"
+    },
+    {
+      "path": "countries/uae/umm-al-quwain/index.html",
+      "bytes": 5376,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 2,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/uae/umm-al-quwain/"
+    },
+    {
+      "path": "countries/yemen/aden/gold-rate/index.html",
+      "bytes": 10605,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/aden/gold-rate/"
+    },
+    {
+      "path": "countries/yemen/aden/gold-shops/index.html",
+      "bytes": 6598,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/aden/gold-shops/"
+    },
+    {
+      "path": "countries/yemen/aden/index.html",
+      "bytes": 5044,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/aden/"
+    },
+    {
+      "path": "countries/yemen/gold-price/index.html",
+      "bytes": 12135,
+      "lastCommitSha": "15c2796542d2b1bdec797a66bdb9ef49ec1c0cee",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/gold-price/"
+    },
+    {
+      "path": "countries/yemen/index.html",
+      "bytes": 10303,
+      "lastCommitSha": "790043689f29198a7c6ae88b022d32b087145431",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/"
+    },
+    {
+      "path": "countries/yemen/sanaa/gold-rate/index.html",
+      "bytes": 11076,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/sanaa/gold-rate/"
+    },
+    {
+      "path": "countries/yemen/sanaa/gold-shops/index.html",
+      "bytes": 6686,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/sanaa/gold-shops/"
+    },
+    {
+      "path": "countries/yemen/sanaa/index.html",
+      "bytes": 5081,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/sanaa/"
+    },
+    {
+      "path": "countries/yemen/taiz/gold-rate/index.html",
+      "bytes": 10510,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/taiz/gold-rate/"
+    },
+    {
+      "path": "countries/yemen/taiz/gold-shops/index.html",
+      "bytes": 6598,
+      "lastCommitSha": "eda000cbfa6b704dccf2d23388a3877d058f3cc2",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/taiz/gold-shops/"
+    },
+    {
+      "path": "countries/yemen/taiz/index.html",
+      "bytes": 5044,
+      "lastCommitSha": "f0d27e5dbaa2d6228c103c089defc26d66205fc3",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/countries/yemen/taiz/"
+    },
+    {
+      "path": "dashboard.html",
+      "bytes": 7516,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 1,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/dashboard.html"
+    },
+    {
+      "path": "design-lab.html",
+      "bytes": 21746,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/design-lab.html"
+    },
+    {
+      "path": "developer.html",
+      "bytes": 14881,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/developer.html"
+    },
+    {
+      "path": "gold-price/18k/index.html",
+      "bytes": 6980,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/gold-price/18k/"
+    },
+    {
+      "path": "gold-price/21k/index.html",
+      "bytes": 7034,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/gold-price/21k/"
+    },
+    {
+      "path": "gold-price/22k/index.html",
+      "bytes": 7055,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/gold-price/22k/"
+    },
+    {
+      "path": "gold-price/24k/index.html",
+      "bytes": 7022,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/gold-price/24k/"
+    },
+    {
+      "path": "index.html",
+      "bytes": 73294,
+      "lastCommitSha": "7e7840b4992d106accedb4c95e95750d34663a9a",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/"
+    },
+    {
+      "path": "insights.html",
+      "bytes": 16357,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 6,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/insights.html"
+    },
+    {
+      "path": "invest.html",
+      "bytes": 24653,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 1,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/invest.html"
+    },
+    {
+      "path": "learn.html",
+      "bytes": 30595,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 47,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/learn.html"
+    },
+    {
+      "path": "methodology.html",
+      "bytes": 33664,
+      "lastCommitSha": "e1643985286cebf788e44980c02d04b6f0853a27",
+      "inboundLinkCount": 126,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/methodology.html"
+    },
+    {
+      "path": "methodology/index.html",
+      "bytes": 5345,
+      "lastCommitSha": "6ec6cfa2c85417c77c2393b09ad4ae11e62de123",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/methodology/"
+    },
+    {
+      "path": "offline.html",
+      "bytes": 12796,
+      "lastCommitSha": "6d0f822b273677141f656c814a2a80d890cd7398",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/offline.html"
+    },
+    {
+      "path": "pricing.html",
+      "bytes": 22827,
+      "lastCommitSha": "7005210cf82672a12c9d73a334b87a215c8db5c1",
+      "inboundLinkCount": 0,
+      "inSitemap": false,
+      "canonicalUrl": "https://goldtickerlive.com/pricing.html"
+    },
+    {
+      "path": "privacy.html",
+      "bytes": 19308,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 4,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/privacy.html"
+    },
+    {
+      "path": "shops.html",
+      "bytes": 37426,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 94,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/shops.html"
+    },
+    {
+      "path": "terms.html",
+      "bytes": 16008,
+      "lastCommitSha": "a8d1e22599231e033fdb1fbde4699151dd6bf844",
+      "inboundLinkCount": 4,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/terms.html"
+    },
+    {
+      "path": "tracker.html",
+      "bytes": 93824,
+      "lastCommitSha": "c0223f5e8d15db7e6137c39f9fa9e6801a99bf6c",
+      "inboundLinkCount": 124,
+      "inSitemap": true,
+      "canonicalUrl": "https://goldtickerlive.com/tracker.html"
+    }
+  ]
+}

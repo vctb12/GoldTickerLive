@@ -1057,7 +1057,7 @@
   margin-top: 0.5rem;
   padding: 2.5rem 1.5rem;
   border-radius: var(--radius-lg);
-  border: 1px dashed rgb(176 138 62 / 20%);
+  border: 1px dashed var(--border-accent, rgb(176 138 62 / 20%));
   background: var(--surface-primary);
   display: grid;
   gap: 0.5rem;

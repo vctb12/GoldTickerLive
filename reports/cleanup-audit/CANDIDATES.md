@@ -85,11 +85,15 @@ PR._
 
 ### Bucket B
 
-| ☐   | Path                                  | Size | Last touched          | Reason                                                               |
-| --- | ------------------------------------- | ---: | --------------------- | -------------------------------------------------------------------- |
-| ☐   | `scripts/node/cleanup-audit.js`       | 20KB | (unknown)             | not reachable from any entrypoint; no grep hits for basename or stem |
-| ☐   | `scripts/node/generate-newsletter.js` | 11KB | 2026-04-22 `851d4d09` | not reachable from any entrypoint; no grep hits for basename or stem |
-| ☐   | `src/seo/seoHead.js`                  |  9KB | 2026-04-16 `7f3ee446` | not reachable from any entrypoint; no grep hits for basename or stem |
+_Re-verified 2026-07-02. Prior Bucket B rows are **not** removal candidates:_
+
+| Prior path                            | Status                                                                                |
+| ------------------------------------- | ------------------------------------------------------------------------------------- |
+| `scripts/node/cleanup-audit.js`       | **Archived** at `scripts/archive/cleanup-audit.js` — already removed from active tree |
+| `scripts/node/generate-newsletter.js` | **Live** — required by `scripts/node/send-newsletter.js`                              |
+| `src/seo/seoHead.js`                  | **Archived** at `scripts/archive/seoHead.js` — already removed from active tree       |
+
+**Wave 1 (Phase 8):** No confirmed orphan modules to delete. Bucket B is empty for this wave.
 
 ## Bucket C — Human review required (NOT removal candidates)
 
