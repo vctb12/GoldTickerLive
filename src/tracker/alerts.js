@@ -36,10 +36,10 @@ export function renderAlerts() {
     if (spot) {
       const pct = (Math.abs(spot - a.target) / a.target) * 100;
       if (pct < 1) {
-        proximityText = '⚡ very close';
+        proximityText = tx('alerts.proximityImminent');
         proximityClass = 'is-alert-imminent';
       } else if (pct < 3) {
-        proximityText = '● nearby';
+        proximityText = tx('alerts.proximityNear');
         proximityClass = 'is-alert-close';
       }
     }
@@ -49,7 +49,7 @@ export function renderAlerts() {
     const labelChildren = [
       `${a.scope} ${a.direction} `,
       el('strong', null, `$${a.target}`),
-      ...(hit ? [' ✓ triggered'] : []),
+      ...(hit ? [` · ${tx('alerts.triggeredLabel')}`] : []),
     ];
     const bodyChildren = [el('span', null, labelChildren)];
     if (proximityText)

@@ -37,7 +37,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-live',
     panelId: 'mode-live',
     workspace: 'basic',
-    label: { en: '📡 Live', ar: '📡 مباشر' },
+    label: { en: 'Live', ar: 'مباشر' },
     shortcut: 'h',
   },
   {
@@ -46,7 +46,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-compare',
     panelId: 'mode-compare',
     workspace: 'basic',
-    label: { en: '🌍 Compare', ar: '🌍 مقارنة' },
+    label: { en: 'Compare', ar: 'مقارنة' },
     shortcut: 'c',
   },
   {
@@ -55,7 +55,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-archive',
     panelId: 'mode-archive',
     workspace: 'advanced',
-    label: { en: '🗂 Archive', ar: '🗂 الأرشيف' },
+    label: { en: 'Archive', ar: 'الأرشيف' },
   },
   {
     kind: 'panel',
@@ -63,7 +63,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-alerts',
     panelId: 'tp-overlay-alerts',
     workspace: 'basic',
-    label: { en: '🔔 Alerts', ar: '🔔 تنبيهات' },
+    label: { en: 'Alerts', ar: 'تنبيهات' },
     shortcut: 'a',
   },
   {
@@ -72,7 +72,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-planner',
     panelId: 'tp-overlay-planner',
     workspace: 'basic',
-    label: { en: '📋 Planner', ar: '📋 المخطط' },
+    label: { en: 'Planner', ar: 'المخطط' },
     shortcut: 'p',
   },
   {
@@ -81,7 +81,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-exports',
     panelId: 'mode-exports',
     workspace: 'advanced',
-    label: { en: '⬇ Exports', ar: '⬇ تصدير' },
+    label: { en: 'Exports', ar: 'تصدير' },
   },
   {
     kind: 'mode',
@@ -89,7 +89,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-method',
     panelId: 'mode-method',
     workspace: 'advanced',
-    label: { en: '📖 Method', ar: '📖 المنهجية' },
+    label: { en: 'Method', ar: 'المنهجية' },
   },
 ]);
 

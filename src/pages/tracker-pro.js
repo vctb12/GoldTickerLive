@@ -17,6 +17,7 @@ import { createInitialState, persistState } from '../tracker/state.js';
 import { getFreshnessModel } from '../tracker/freshness.js';
 import { deriveLiveRowFreshness } from '../tracker/chart.js';
 import { el as safeEl } from '../lib/safe-dom.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getBaselineRange } from '../lib/historical-data.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
@@ -58,7 +59,6 @@ let initRender,
   renderMarkets,
   renderComparisonWorkspace,
   renderAlerts,
-  renderQuickCalculator,
   renderPresets,
   renderPlanners,
   renderArchive;
@@ -101,10 +101,14 @@ function setButtonCopy(button, label, icon = null) {
   if (!button) return;
   const children = [];
   if (icon) {
-    const iconSpan = document.createElement('span');
-    iconSpan.setAttribute('aria-hidden', 'true');
-    iconSpan.textContent = icon;
-    children.push(iconSpan, ' ');
+    if (/^i-[a-z0-9-]+$/.test(icon)) {
+      children.push(iconUseElement(icon, 'tracker-inline-ico'), ' ');
+    } else {
+      const iconSpan = document.createElement('span');
+      iconSpan.setAttribute('aria-hidden', 'true');
+      iconSpan.textContent = icon;
+      children.push(iconSpan, ' ');
+    }
   }
   children.push(label);
   button.replaceChildren(...children);
@@ -118,17 +122,16 @@ function setNodeText(id, text) {
 function syncCurrentCountryPageLink() {
   const link = document.getElementById('tp-country-page-link');
   if (!link) return;
+  const label = document.getElementById('tp-country-page-link-label') || link;
   const selectedCountry = COUNTRIES.find((country) => country.currency === state.selectedCurrency);
   if (!selectedCountry?.slug) {
     link.href = 'countries/index.html';
-    link.textContent = trackerTx('quickToolsCountries');
+    label.textContent = trackerTx('quickToolsCountries');
     return;
   }
   link.href = `countries/${selectedCountry.slug}/gold-price/`;
-  link.textContent =
-    state.lang === 'ar'
-      ? `📄 ${selectedCountry.nameAr || selectedCountry.nameEn}`
-      : `📄 ${selectedCountry.nameEn}`;
+  label.textContent =
+    state.lang === 'ar' ? selectedCountry.nameAr || selectedCountry.nameEn : selectedCountry.nameEn;
 }
 
 // Generic declarative hydrator for static tracker copy. Any element tagged
@@ -270,7 +273,7 @@ function localizeStaticTrackerCopy() {
     trackerTx('heroCopyLink')
   );
 
-  setButtonCopy(el.refreshBtn, trackerTx('actions.refresh'), '↻');
+  setButtonCopy(el.refreshBtn, trackerTx('actions.refresh'), 'i-refresh');
   if (el.refreshBtn) el.refreshBtn.setAttribute('aria-label', trackerTx('actions.refreshLabel'));
   setButtonCopy(el.shareBtn, trackerTx('actions.copyBrief'));
   if (el.shareBtn) el.shareBtn.setAttribute('aria-label', trackerTx('actions.copyBriefLabel'));
@@ -299,9 +302,7 @@ function localizeStaticTrackerCopy() {
 
   const referenceHint = document.querySelector('.tracker-hero-footer .tracker-hint-text');
   if (referenceHint) {
-    const icon = document.createElement('span');
-    icon.setAttribute('aria-hidden', 'true');
-    icon.textContent = '⚠';
+    const icon = iconUseElement('i-warning', 'tracker-inline-ico');
     const link = document.createElement('a');
     link.href = 'methodology.html';
     link.className = 'tracker-inline-link';
@@ -318,7 +319,7 @@ function localizeStaticTrackerCopy() {
   if (quickToolsHeading) quickToolsHeading.textContent = trackerTx('quickToolsTitle');
 
   const quickToolLinks = document.querySelectorAll(
-    '.tracker-side-card--links a, .tracker-side-card--links button'
+    '.tracker-side-card--links a .tracker-side-label, .tracker-side-card--links button .tracker-side-label'
   );
   const quickToolLabels = [
     trackerTx('quickToolsCalculator'),
@@ -383,7 +384,6 @@ function localizeStaticTrackerCopy() {
   setNodeText('tp-mobile-cue-tools-title', trackerTx('mobileCueToolsTitle'));
   setNodeText('tp-mobile-cue-tools-copy', trackerTx('mobileCueToolsCopy'));
   setNodeText('tp-chart-source-note', trackerTx('chartSourceNote'));
-  setNodeText('tp-chart-history-source', trackerTx('historySource.preparing'));
   setNodeText('tp-karat-heading', trackerTx('karatSectionTitle'));
   setNodeText('tp-karat-source-note', trackerTx('karatSectionNote'));
   setNodeText('tp-alerts-watchlist-title', trackerTx('alertsWatchlistTitle'));
@@ -393,15 +393,6 @@ function localizeStaticTrackerCopy() {
     document.getElementById('tp-open-alerts-inline'),
     trackerTx('actions.openAlertsPanel')
   );
-  setNodeText('tp-quick-calc-title', trackerTx('quickCalc.title'));
-  setNodeText('tp-quick-calc-copy', trackerTx('quickCalc.copy'));
-  setNodeText('tp-quick-calc-weight-label', trackerTx('quickCalc.weightLabel'));
-  setNodeText('tp-quick-calc-karat-label', trackerTx('quickCalc.karatLabel'));
-  setNodeText('tp-quick-calc-currency-label', trackerTx('quickCalc.currencyLabel'));
-  setNodeText('tp-quick-calc-result-label', trackerTx('quickCalc.resultLabel'));
-  setNodeText('tp-quick-calc-meta', trackerTx('quickCalc.meta'));
-  setNodeText('tp-quick-calc-open-full', trackerTx('quickCalc.openFull'));
-  setNodeText('tp-quick-calc-method-link', trackerTx('quickCalc.methodLink'));
   setNodeText('tp-export-command-title', trackerTx('exportCommand.title'));
   setNodeText('tp-export-command-copy', trackerTx('exportCommand.copy'));
   setNodeText('tp-export-readiness-pill', trackerTx('exportReadiness.checking'));
@@ -428,7 +419,6 @@ function localizeStaticTrackerCopy() {
     'methodology.html',
     trackerTx('referenceBannerLink')
   );
-  setNodeText('tp-history-caption', trackerTx('historyCaptionLoading'));
   setNodeText('tp-market-scroll-hint', trackerTx('marketScrollHint'));
   setNodeText('tp-archive-scroll-hint', trackerTx('archiveScrollHint'));
   setNodeText('tp-compare-builder-title', trackerTx('compare.builderTitle'));
@@ -683,11 +673,7 @@ function ui() {
     exportCompare2: document.getElementById('tp-export-compare-2'),
     exportWatchlist: document.getElementById('tp-export-watchlist'),
     saveWatchlistAccount: document.getElementById('tp-save-watchlist-account'),
-    quickCalcWeight: document.getElementById('tp-quick-calc-weight'),
-    quickCalcKarat: document.getElementById('tp-quick-calc-karat'),
-    quickCalcCurrency: document.getElementById('tp-quick-calc-currency'),
-    quickCalcResult: document.getElementById('tp-quick-calc-result'),
-    quickCalcMeta: document.getElementById('tp-quick-calc-meta'),
+    chartEmpty: document.getElementById('tp-chart-empty'),
     openExportsInline: document.getElementById('tp-open-exports-inline'),
     shareInline: document.getElementById('tp-share-inline'),
     downloadJson: document.getElementById('tp-download-json'),
@@ -897,11 +883,6 @@ function priceFor({ currency, karat, unit, spot }) {
   if (unit === 'tola') return local * TOLA_GRAMS;
   if (unit === 'kg') return local * KG_GRAMS;
   return local;
-}
-
-function flagForCurrency(code) {
-  const country = COUNTRIES.find((c) => c.currency === code);
-  return country?.flag ? `${country.flag} ` : '';
 }
 
 function formatReadoutPrice(value, currency) {
@@ -1296,7 +1277,7 @@ function populateSelects() {
     const currencies = [...new Set(COUNTRIES.map((c) => c.currency))].sort();
     const frag = document.createDocumentFragment();
     currencies.forEach((c) => {
-      const opt = safeEl('option', { value: c }, [`${flagForCurrency(c)}${c}`]);
+      const opt = safeEl('option', { value: c }, [c]);
       if (c === state.selectedCurrency) opt.selected = true;
       frag.appendChild(opt);
     });
@@ -1362,10 +1343,7 @@ function populateSelects() {
   if (el.compareCountrySelects?.length) {
     const options = COUNTRIES.map((country) => ({
       value: country.code,
-      label:
-        state.lang === 'ar'
-          ? `${country.flag ?? ''} ${country.nameAr || country.nameEn}`.trim()
-          : `${country.flag ?? ''} ${country.nameEn}`.trim(),
+      label: state.lang === 'ar' ? country.nameAr || country.nameEn : country.nameEn,
     }));
     el.compareCountrySelects.forEach((select, index) => {
       if (!select) return;
@@ -1632,7 +1610,6 @@ async function init() {
     renderMarkets,
     renderComparisonWorkspace,
     renderAlerts,
-    renderQuickCalculator,
     renderPresets,
     renderPlanners,
     renderArchive,
@@ -1757,9 +1734,6 @@ async function init() {
   el.shareInline?.addEventListener('click', (event) => {
     event.preventDefault();
     el.shareBtn?.click();
-  });
-  [el.quickCalcWeight, el.quickCalcKarat, el.quickCalcCurrency].forEach((field) => {
-    field?.addEventListener('input', () => renderQuickCalculator());
   });
   el.saveWatchlistAccount?.addEventListener('click', () => {
     saveWatchlistToAccount().catch(() => {
@@ -1915,7 +1889,7 @@ function initShareButtons() {
       .then(() => {
         if (!btn) return;
         const orig = btn.textContent;
-        btn.textContent = '✓ Copied!';
+        btn.textContent = txGlobal('card.copied');
         setTimeout(() => {
           btn.textContent = orig;
         }, 2000);

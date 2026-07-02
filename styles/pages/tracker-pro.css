@@ -5009,3 +5009,145 @@ td.tracker-chg-flat {
     -webkit-backdrop-filter: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   V1-VISUAL — Command Center polish (2026-07-01)
+   Hierarchy: the milled live readout is the hero (design-language §4);
+   the h1 masthead and badge strip step back. Sprite icons replace emoji.
+   All new rules use logical properties + tokens only.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Sprite icon primitives ─────────────────────────────────────────── */
+.tracker-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracker-inline-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tp-tab-icon .tracker-ico {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  vertical-align: -0.2rem;
+}
+
+.tracker-trust-icon .tracker-ico {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.tracker-side-ico {
+  display: inline-block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  flex: 0 0 auto;
+  vertical-align: -0.2rem;
+  margin-inline-end: 0.45rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+
+/* Flags rendered inside market/compare/watchlist rows (smaller than nav) */
+.tracker-row-flag {
+  display: inline-block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  vertical-align: -0.2rem;
+  margin-inline-end: 0.4rem;
+}
+
+/* Favorite star: monoline at rest, filled when armed */
+.tracker-star-ico {
+  display: block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracker-icon-btn.is-favorite .tracker-star-ico {
+  fill: currentcolor;
+}
+
+/* ── Hero hierarchy — one bold element (the readout), everything quieter ── */
+.tracker-hero-readout {
+  border-radius: var(--readout-radius);
+  border-color: color-mix(in srgb, var(--color-gold) 32%, transparent);
+  box-shadow: var(--rim-inset), var(--readout-chrome);
+}
+
+.tracker-hero-title {
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  margin-block-end: var(--space-1);
+}
+
+.tracker-hero-kicker {
+  font-size: 0.65rem;
+  opacity: 0.75;
+}
+
+.tracker-hero-title-sub {
+  margin-block-start: 0;
+  font-size: var(--text-sm);
+}
+
+.tracker-hero-description {
+  font-size: var(--text-sm);
+  margin-block-end: var(--space-4);
+  line-height: var(--leading-normal);
+}
+
+.tracker-badge-row {
+  font-size: 0.92em;
+}
+
+/* Countdown hint reads as part of the live readout context */
+.tracker-hint-countdown {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Side rail tool links ───────────────────────────────────────────── */
+.tracker-side-ul a,
+.tracker-side-link-btn {
+  display: flex;
+  align-items: center;
+}
+
+.tracker-side-label {
+  min-inline-size: 0;
+}
+
+/* ── Quick calculator inside the Planner overlay ────────────────────── */
+.tp-overlay .tracker-inline-calc {
+  padding: var(--space-4);
+}
+
+.tp-overlay .tracker-inline-calc .tracker-panel-head {
+  margin-block-end: var(--space-3);
+}

@@ -422,8 +422,9 @@ export function iconUseElement(symbol, className) {
   const ref = '#' + safeSymbolId(symbol);
   use.setAttribute('href', ref);
   // Legacy attribute for older engines that ignore plain `href` on <use>.
-  use.setAttributeNS(XLINK, 'xlink:href', ref);
-  svg.appendChild(use);
+  // Guarded: bare-bones DOM shims in tests implement setAttribute only.
+  if (typeof use.setAttributeNS === 'function') use.setAttributeNS(XLINK, 'xlink:href', ref);
+  svg.append(use);
   return svg;
 }
 
