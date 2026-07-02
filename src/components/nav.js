@@ -251,7 +251,6 @@ function buildPrimaryLink(item, depth) {
   const ariaCurrent = isActive ? ' aria-current="page"' : '';
   return `<a href="${href}"
      class="${classes.join(' ')}"
-     role="listitem"
      data-nav-primary="${escapeHtml(item.key)}"
      ${ariaCurrent}
   >${escapeHtml(item.label)}</a>`;
@@ -380,7 +379,7 @@ ${spriteMarkupIfAbsent()}
     </a>
 
     <!-- Desktop links -->
-    <div class="nav-links" role="list">
+    <div class="nav-links">
       ${desktopPrimaryLinksHtml}
       ${desktopDropdownsHtml}
     </div>
