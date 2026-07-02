@@ -2,7 +2,7 @@
 import { _currentSpot, _priceFor, _setCtx, _state } from './_ctx.js';
 import { updateShellTickerFromState } from './ui-shell.js';
 import { renderChart } from './chart.js';
-import { renderHero, renderKaratTable, renderMiniStrip } from './hero.js';
+import { renderHero, renderKaratTable, renderMiniStrip, patchHeroLiveTick } from './hero.js';
 import { renderAlerts, renderAlertsSummary } from './alerts.js';
 import { renderWatchlist } from './watchlist.js';
 import { renderComparisonWorkspace } from './compare.js';
@@ -16,7 +16,7 @@ import { localizeTrustBanner, localizeWelcomeStrip } from './onboarding.js';
 export { applyExportReadiness, getExportReadinessState } from './export.js';
 export { getFreshnessModel, applyStatusBadge, buildSourceBadge } from './freshness.js';
 export { getSelectedRangeLabel, getVisibleHistoryRows, renderChart } from './chart.js';
-export { renderHero, renderKaratTable, renderMiniStrip } from './hero.js';
+export { renderHero, renderKaratTable, renderMiniStrip, patchHeroLiveTick } from './hero.js';
 export { renderAlerts, renderAlertsSummary } from './alerts.js';
 export { renderWatchlist } from './watchlist.js';
 export { renderComparisonWorkspace } from './compare.js';
@@ -27,6 +27,16 @@ export { renderPlanners, renderPresets } from './planner.js';
 
 export function initRender({ state, el, priceFor, currentSpot, showToast }) {
   _setCtx({ state, el, priceFor, currentSpot, showToast });
+}
+
+/** Phase 18 — lightweight live-tick refresh (hero + dependent live-mode panels). */
+export function renderLiveTick() {
+  patchHeroLiveTick();
+  if (_state.mode === 'live') {
+    renderMiniStrip();
+    renderKaratTable();
+    updateShellTickerFromState(_state, _currentSpot(), _priceFor);
+  }
 }
 
 export function renderAll() {

@@ -23,7 +23,10 @@ import '../lib/reveal.js';
 import { initPageEnter } from './page-enter.js';
 import { countUp } from './count-up.js';
 import { copyWithToast } from './copy-toast.js';
-import { buildShopsHref as buildShopsHandoffHref } from './cross-page-links.js';
+import {
+  buildShopsHref as buildShopsHandoffHref,
+  buildMethodologyHref,
+} from './cross-page-links.js';
 
 const _modUrl = new URL(import.meta.url);
 const _pageUrl = new URL(location.href);
@@ -813,7 +816,10 @@ function renderFreshnessBadgeLegacy(updatedAt, lang = 'en') {
         ` ${tx(lang, 'freshnessDelayedBanner')} `,
         el(
           'a',
-          { href: safeHref(withBase('methodology.html')), class: 'ph-freshness-link' },
+          {
+            href: safeHref(withBase(buildMethodologyHref({ lang }))),
+            class: 'ph-freshness-link',
+          },
           tx(lang, 'freshnessLearnMore')
         ),
       ])
@@ -855,7 +861,14 @@ function renderDisclaimerLegacy(country, pageUrl) {
       ' Actual retail prices vary. ',
       el(
         'a',
-        { href: safeHref(withBase('methodology.html')), class: 'ph-disclaimer-link' },
+        {
+          href: safeHref(
+            withBase(
+              buildMethodologyHref({ lang: document.documentElement.lang === 'ar' ? 'ar' : 'en' })
+            )
+          ),
+          class: 'ph-disclaimer-link',
+        },
         'Methodology'
       ),
     ]),

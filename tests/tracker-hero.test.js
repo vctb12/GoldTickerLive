@@ -231,4 +231,8 @@ describe('tracker hero module', () => {
     assert.doesNotThrow(() => mod.renderKaratTable());
     assert.ok(karatTable.children.length > 0);
   });
+
+  it('patchHeroLiveTick is safe with sparse hero DOM', () => {
+    assert.doesNotThrow(() => mod.patchHeroLiveTick());
+  });
 });

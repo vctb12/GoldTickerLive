@@ -33,6 +33,15 @@ export function renderLocationGuideSection({ lang = 'en', t = (key) => key, clas
         el('a', { href: 'tracker.html' }, t('locationGuides.linkTracker')),
         el('a', { href: 'calculator.html' }, t('locationGuides.linkCalculator')),
         el('a', { href: 'methodology.html' }, t('locationGuides.linkMethodology')),
+        ...(guide.slug === 'uae-dubai'
+          ? [
+              el(
+                'a',
+                { href: 'content/dubai-gold-rate-guide/' },
+                t('locationGuides.linkDubaiGuide')
+              ),
+            ]
+          : []),
       ]),
     ]);
   });
