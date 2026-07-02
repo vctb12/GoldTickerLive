@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-02T00:00:00.000Z",
+  "phase": "Motion revamp Phase 1 — SLO instrumentation baseline (report-only)",
+  "plan": "docs/plans/2026-06-09_realtime-tracker-motion-revamp-20-phase.md",
+  "targets": {
+    "liveMaxAgeMs": 5000,
+    "pollIntervalMs": 1000,
+    "backoffCapMs": 5000,
+    "hiddenPollMs": 5000
+  },
+  "notes": "Populate p50/p95 from ?debugSlo=1 sessions before changing provider wiring."
+}
