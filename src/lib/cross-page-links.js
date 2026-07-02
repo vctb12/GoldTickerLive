@@ -15,6 +15,51 @@ const ALLOWED_CURRENCIES = {
 };
 const ALLOWED_RANGES = new Set(['24H', '7D', '30D', '90D', '1Y', '3Y', '5Y', 'ALL']);
 const ISO_COUNTRY_CODE = /^[A-Za-z]{2}$/;
+const METHODOLOGY_FRAGMENTS = new Set([
+  '',
+  'spot-vs-retail',
+  'formula',
+  'sources',
+  'freshness',
+  'karats',
+]);
+
+/**
+ * @param {{ fragment?: string, lang?: 'en'|'ar', base?: string }} [options]
+ * @returns {string}
+ */
+export function buildMethodologyHref({ fragment, lang, base = 'methodology.html' } = {}) {
+  const safeLang = ALLOWED_LANG.has(String(lang)) ? String(lang) : null;
+  const frag = String(fragment || '').replace(/^#/, '');
+  const safeFrag = METHODOLOGY_FRAGMENTS.has(frag) ? frag : '';
+  const params = new URLSearchParams();
+  if (safeLang === 'ar') params.set('lang', 'ar');
+  const qs = params.toString();
+  const hash = safeFrag ? `#${safeFrag}` : '';
+  return qs ? `${base}?${qs}${hash}` : `${base}${hash}`;
+}
+
+/**
+ * @param {{ karat?: string, countryCode?: string, lang?: 'en'|'ar', tab?: string, base?: string }} [options]
+ * @returns {string}
+ */
+export function buildCalculatorHref({
+  karat,
+  countryCode,
+  lang,
+  tab,
+  base = 'calculator.html',
+} = {}) {
+  const params = new URLSearchParams();
+  const safeK = TRACKER_KARATS.has(String(karat)) ? String(karat) : null;
+  if (safeK) params.set('k', safeK);
+  const code = String(countryCode || '').trim();
+  if (code && ISO_COUNTRY_CODE.test(code)) params.set('country', code.toUpperCase());
+  if (ALLOWED_LANG.has(String(lang))) params.set('lang', String(lang));
+  if (tab) params.set('tab', String(tab));
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+}
 
 /**
  * @param {string} currency

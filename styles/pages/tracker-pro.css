@@ -823,7 +823,7 @@ body.tracker-pro-page {
 
 .tracker-hero-wrap .btn.btn-outline:hover {
   border-color: rgb(196 154 68 / 60%);
-  color: #c9a14d;
+  color: var(--color-gold-muted, #c9a14d);
 }
 
 .tracker-hero-wrap .btn.btn-ghost {
@@ -864,7 +864,7 @@ body.tracker-pro-page {
 }
 
 .tracker-hint-text .tracker-inline-link:hover {
-  color: #c9a14d;
+  color: var(--color-gold-muted, #c9a14d);
 }
 
 .tracker-hint-keyboard {

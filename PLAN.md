@@ -26,7 +26,8 @@ functionality + HTML page-count hygiene (390 files; 30 phantom stubs) + dead JS/
 phase per PR. Baseline:
 [`reports/baseline-2026-07/html-count-summary.md`](reports/baseline-2026-07/html-count-summary.md).
 
-- [ ] **Phases 0–20** — see plan §7 phase tracker. Start with Phase 0 baseline lock.
+- [ ] **Phases 0–20** — see plan §7 phase tracker. **Phases 0–7, 10, 12–20 done** on branch
+      `cursor/20-phase-design-page-cleanup-revamp-db3b` (2026-07-02). Remaining: 8–9, 11.
 - [x] **Phase 2** — phantom stub consolidation done out-of-sequence on branch
       `claude/html-reduction-twitter-banner-rekflj`: 30 duplicate `noindex` stubs → 1 generator
       (`scripts/node/generate-internal-index-stubs.js`), tracked HTML 390→360.

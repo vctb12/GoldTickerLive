@@ -78,3 +78,22 @@ test('buildShopsHref rejects invalid country codes', async () => {
   assert.equal(mod.buildShopsHref({ countryCode: 'javascript:' }), 'shops.html');
   assert.equal(mod.buildShopsHref({ countryCode: 'AE' }), 'shops.html?country=AE');
 });
+
+test('buildMethodologyHref supports fragment and lang', async () => {
+  const mod = await loadModule();
+  assert.equal(mod.buildMethodologyHref(), 'methodology.html');
+  assert.equal(
+    mod.buildMethodologyHref({ fragment: 'spot-vs-retail', lang: 'ar' }),
+    'methodology.html?lang=ar#spot-vs-retail'
+  );
+  assert.equal(mod.buildMethodologyHref({ fragment: 'bogus' }), 'methodology.html');
+});
+
+test('buildCalculatorHref encodes karat country and tab', async () => {
+  const mod = await loadModule();
+  assert.equal(
+    mod.buildCalculatorHref({ karat: '22', countryCode: 'AE', lang: 'ar', tab: 'value' }),
+    'calculator.html?k=22&country=AE&lang=ar&tab=value'
+  );
+  assert.equal(mod.buildCalculatorHref({ karat: '99' }), 'calculator.html');
+});

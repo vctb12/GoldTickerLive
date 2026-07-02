@@ -18,7 +18,7 @@ import { localizeTrustBanner, localizeWelcomeStrip } from './onboarding.js';
 export { applyExportReadiness, getExportReadinessState } from './export.js';
 export { getFreshnessModel, applyStatusBadge, buildSourceBadge } from './freshness.js';
 export { getSelectedRangeLabel, getVisibleHistoryRows, renderChart } from './chart.js';
-export { renderHero, renderKaratTable, renderMiniStrip } from './hero.js';
+export { renderHero, renderKaratTable, renderMiniStrip, patchHeroLiveTick } from './hero.js';
 export { renderAlerts, renderAlertsSummary } from './alerts.js';
 export { renderWatchlist } from './watchlist.js';
 export { renderComparisonWorkspace } from './compare.js';
