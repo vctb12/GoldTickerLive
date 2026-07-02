@@ -646,6 +646,12 @@ function renderAll(cfg) {
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
   const skip = document.querySelector('a.skip-link');
   if (skip) skip.textContent = t('skipLink');
+  // Hero media band: the EN alt ships in the markup, the AR alt rides in
+  // data-alt-ar; swap them with the active language on every render.
+  document.querySelectorAll('.cp-hero-media img[data-alt-ar]').forEach((img) => {
+    if (!img.dataset.altEn) img.dataset.altEn = img.getAttribute('alt') || '';
+    img.setAttribute('alt', STATE.lang === 'ar' ? img.dataset.altAr : img.dataset.altEn);
+  });
 }
 
 // ── Live data fetch ──────────────────────────────────────────────────────────

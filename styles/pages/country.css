@@ -737,3 +737,44 @@
   background: linear-gradient(180deg, var(--color-gold-tint), var(--surface-secondary));
   color: var(--color-gold-dark);
 }
+
+/* ── Hero media band (V1-VISUAL wave 2) ─────────────────
+   Same .cp-hero-media contract as styles/country-page.css —
+   this copy serves legacy-template hubs (e.g. Turkey) that
+   load styles/pages/country.css instead. Keep in sync. */
+.cp-hero-media {
+  max-width: min(100%, 920px);
+  margin: var(--space-5, 1.5rem) auto 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.cp-hero-media picture,
+.cp-hero-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.cp-hero-media-credit {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.7rem;
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted);
+  text-align: end;
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.cp-hero-media-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cp-hero-media-credit a:hover,
+.cp-hero-media-credit a:focus-visible {
+  text-decoration: underline;
+}
