@@ -188,6 +188,9 @@ function localizeStaticTrackerCopy() {
   const heroTitle = document.getElementById('tp-hero-title');
   if (heroTitle) heroTitle.textContent = trackerTx('heroTitle');
 
+  const heroStats = document.getElementById('tp-hero-stats');
+  if (heroStats) heroStats.setAttribute('aria-label', trackerTx('heroStats.ariaLabel'));
+
   // Workspace tab labels — text only (the emoji lives in a separate aria-hidden
   // .tp-tab-icon). Previously static English, so AR users saw English tabs.
   for (const id of ['live', 'compare', 'archive', 'alerts', 'planner', 'exports', 'method']) {
@@ -1016,10 +1019,16 @@ function checkAlerts() {
   state.alerts.forEach((a) => {
     const hit = a.direction === 'above' ? spot > a.target : spot < a.target;
     if (hit) {
-      triggered.push(`${a.scope} ${a.direction} $${a.target}`);
+      const directionLabel = trackerTx(
+        a.direction === 'above' ? 'alerts.directionAbove' : 'alerts.directionBelow'
+      );
+      triggered.push(`${a.scope} · ${directionLabel} $${a.target}`);
       if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('Gold Price Alert', {
-          body: `XAU/USD ${a.direction} ${a.target}: now $${spot.toFixed(2)}`,
+        new Notification(trackerTx('alerts.notificationTitle'), {
+          body: trackerTx('alerts.liveRegionTriggered', {
+            alerts: `${a.scope} · ${directionLabel} $${a.target}`,
+            spot: spot.toFixed(2),
+          }),
         });
       }
     }
@@ -1028,7 +1037,10 @@ function checkAlerts() {
   if (triggered.length) {
     const liveRegion = document.getElementById('tp-alert-live-region');
     if (liveRegion) {
-      liveRegion.textContent = `Alert triggered: ${triggered.join(', ')} — current price $${spot.toFixed(2)}`;
+      liveRegion.textContent = trackerTx('alerts.liveRegionTriggered', {
+        alerts: triggered.join(', '),
+        spot: spot.toFixed(2),
+      });
     }
   }
 }
@@ -1305,25 +1317,6 @@ function populateSelects() {
     el.unit.replaceChildren(frag);
   }
   if (el.language) el.language.value = state.lang;
-  if (el.quickCalcKarat) {
-    const frag = document.createDocumentFragment();
-    KARATS.forEach((k) => {
-      const opt = safeEl('option', { value: k.code }, [`${k.code}K`]);
-      if (k.code === state.selectedKarat) opt.selected = true;
-      frag.appendChild(opt);
-    });
-    el.quickCalcKarat.replaceChildren(frag);
-  }
-  if (el.quickCalcCurrency) {
-    const currencies = [...new Set(COUNTRIES.map((c) => c.currency))].sort();
-    const frag = document.createDocumentFragment();
-    currencies.forEach((c) => {
-      const opt = safeEl('option', { value: c }, [c]);
-      if (c === state.selectedCurrency) opt.selected = true;
-      frag.appendChild(opt);
-    });
-    el.quickCalcCurrency.replaceChildren(frag);
-  }
   if (el.historyMonth) el.historyMonth.value = state.historyMonth || '';
   // Sync range pills with persisted state (HTML default is 24H; state default is 30D).
   if (el.rangePills?.length) {

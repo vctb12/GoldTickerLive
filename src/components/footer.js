@@ -130,7 +130,7 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-bottom-row">
         <p class="footer-disclaimer">${
           isAr
-            ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
+            ? 'تقديرات مرجعية مرتبطة بالسعر الفوري فقط. قد تتضمن أسعار التجزئة والمجوهرات المصنعية والعلاوات والضريبة. ليست نصيحة مالية.'
             : 'Spot-linked reference estimates only. Retail and jewellery prices may include making charges, premiums, and tax. Not financial advice.'
         }</p>
         <p class="footer-copy">© ${year} Gold Ticker Live · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">·</span></p>

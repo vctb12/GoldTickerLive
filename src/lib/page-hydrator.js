@@ -788,8 +788,8 @@ function renderKaratCardsLegacy(spot, fxRate, currency, karatFilter = null) {
   return fragment;
 }
 
-function renderFreshnessBadgeLegacy(updatedAt) {
-  const freshness = getLiveFreshness({ updatedAt, hasLiveFailure: false, lang: 'en' });
+function renderFreshnessBadgeLegacy(updatedAt, lang = 'en') {
+  const freshness = getLiveFreshness({ updatedAt, hasLiveFailure: false, lang });
   const colorMap = {
     live: 'var(--color-live, #10b981)',
     delayed: 'var(--color-warning)',
@@ -809,11 +809,12 @@ function renderFreshnessBadgeLegacy(updatedAt) {
   ) {
     fragment.appendChild(
       el('div', { class: 'ph-freshness-banner', role: 'alert' }, [
-        'Prices may be delayed. Last known data shown. ',
+        iconUseElement('i-warning', 'ph-freshness-warning-ico'),
+        ` ${tx(lang, 'freshnessDelayedBanner')} `,
         el(
           'a',
           { href: safeHref(withBase('methodology.html')), class: 'ph-freshness-link' },
-          'Learn more'
+          tx(lang, 'freshnessLearnMore')
         ),
       ])
     );
@@ -829,7 +830,7 @@ function renderFreshnessBadgeLegacy(updatedAt) {
       [
         el('span', { class: 'ph-freshness-dot', style: { background: color } }),
         freshness.key === 'unavailable' ? 'Unavailable' : `${freshness.ageText}`,
-        el('span', { class: 'ph-freshness-suffix' }, ['· spot-linked estimate']),
+        el('span', { class: 'ph-freshness-suffix' }, [tx(lang, 'freshnessSpotSuffix')]),
       ]
     )
   );
@@ -871,7 +872,7 @@ function renderDisclaimerLegacy(country, pageUrl) {
   ]);
 }
 
-function renderLegacyFromCache(country, karatSlug) {
+function renderLegacyFromCache(country, karatSlug, lang = 'en') {
   const cachedGold = cache.getFallbackGoldPrice();
   const cachedFx = cache.getFallbackFXRates();
   if (!cachedGold?.price) return false;
@@ -889,10 +890,10 @@ function renderLegacyFromCache(country, karatSlug) {
       }
     : { rates: {}, source: 'unavailable' };
 
-  return applyLegacyPriceRender({ country, karatSlug, gold, fx });
+  return applyLegacyPriceRender({ country, karatSlug, gold, fx, lang });
 }
 
-function applyLegacyPriceRender({ country, karatSlug, gold, fx }) {
+function applyLegacyPriceRender({ country, karatSlug, gold, fx, lang = 'en' }) {
   const loadingEl = document.getElementById('price-loading');
   const displayEl = document.getElementById('price-display');
   const karatsEl = document.getElementById('karat-cards');
@@ -906,7 +907,7 @@ function applyLegacyPriceRender({ country, karatSlug, gold, fx }) {
     karatsEl.replaceChildren(
       renderKaratCardsLegacy(gold.price, rate, country.currency, karatSlug || null)
     );
-  if (freshEl) freshEl.replaceChildren(renderFreshnessBadgeLegacy(gold.updatedAt));
+  if (freshEl) freshEl.replaceChildren(renderFreshnessBadgeLegacy(gold.updatedAt, lang));
   if (disclaimerEl) disclaimerEl.replaceChildren(renderDisclaimerLegacy(country, location.href));
 
   const aed24g = (gold.price / TROY_OZ_GRAMS) * AED_PEG;
@@ -930,7 +931,7 @@ async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
   const displayEl = document.getElementById('price-display');
 
   renderLegacyLoadingSkeleton(loadingEl);
-  renderLegacyFromCache(country, karatSlug);
+  renderLegacyFromCache(country, karatSlug, lang);
 
   const refresh = async () => {
     const { gold, fx } = await fetchPrices();
@@ -951,7 +952,7 @@ async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
       return;
     }
 
-    if (!applyLegacyPriceRender({ country, karatSlug, gold, fx })) {
+    if (!applyLegacyPriceRender({ country, karatSlug, gold, fx, lang })) {
       if (loadingEl) {
         setText(
           loadingEl,

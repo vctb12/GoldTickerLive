@@ -701,6 +701,8 @@ export const TRANSLATIONS = {
     'tracker.alerts.proximityImminent': 'Very close to target',
     'tracker.alerts.proximityNear': 'Approaching target',
     'tracker.alerts.triggeredLabel': 'Triggered',
+    'tracker.alerts.notificationTitle': 'Gold price alert',
+    'tracker.liveCalcCta': 'Gold calculator (reference estimate) →',
     'tracker.alerts.deleteAriaLabel': 'Delete alert',
     'tracker.alerts.deliveryLabel': 'Delivery',
     'tracker.alerts.deliveryLocal': 'Browser notification (local)',
@@ -1285,6 +1287,9 @@ export const TRANSLATIONS = {
     'country.freshness.unavailable': 'Unavailable',
     'country.freshness.fixed': 'AED fixed peg',
     'country.copySuccess': 'Price copied',
+    'country.freshnessDelayedBanner': 'Prices may be delayed. Last known data shown.',
+    'country.freshnessLearnMore': 'Learn more',
+    'country.freshnessSpotSuffix': '· spot-linked estimate',
     'country.copyFailed': 'Could not copy',
 
     // Learn hub catalog
@@ -1735,8 +1740,8 @@ export const TRANSLATIONS = {
     'tracker.heroCopy':
       'تابع الأسعار المرجعية عبر أكثر من 24 سوقًا وسبعة عيارات (14–24) مع حالات حداثة واضحة قبل مقارنة عروض المحلات.',
     'tracker.heroCopyLink': 'كيف نحسب الأسعار ←',
-    'tracker.welcome.chip1Bold': 'وضع مباشر',
-    'tracker.welcome.chip1Rest': '— أسعار فورية لأكثر من 24 دولة',
+    'tracker.welcome.chip1Bold': 'مباشر',
+    'tracker.welcome.chip1Rest': '— أسعار حالية لأكثر من 24 دولة',
     'tracker.welcome.chip2Bold': 'مقارنة',
     'tracker.welcome.chip2Rest': '— قارن بين المناطق جنبًا إلى جنب',
     'tracker.welcome.chip3Bold': 'المخطط',
@@ -2065,6 +2070,8 @@ export const TRANSLATIONS = {
     'tracker.alerts.proximityImminent': 'قريب جداً من الهدف',
     'tracker.alerts.proximityNear': 'يقترب من الهدف',
     'tracker.alerts.triggeredLabel': 'تم التفعيل',
+    'tracker.alerts.notificationTitle': 'تنبيه سعر الذهب',
+    'tracker.liveCalcCta': 'حاسبة الذهب (تقدير مرجعي) ←',
     'tracker.alerts.deleteAriaLabel': 'حذف التنبيه',
     'tracker.alerts.deliveryLabel': 'قناة التنبيه',
     'tracker.alerts.deliveryLocal': 'تنبيه المتصفح (محلي)',
@@ -2639,6 +2646,9 @@ export const TRANSLATIONS = {
     'country.freshness.unavailable': 'غير متاح',
     'country.freshness.fixed': 'ربط الدرهم الثابت',
     'country.copySuccess': 'تم نسخ السعر',
+    'country.freshnessDelayedBanner': 'قد تتأخر الأسعار. تُعرض آخر بيانات معروفة.',
+    'country.freshnessLearnMore': 'اعرف المزيد',
+    'country.freshnessSpotSuffix': '· تقدير مرتبط بالسعر الفوري',
     'country.copyFailed': 'تعذّر النسخ',
 
     // Learn hub catalog
