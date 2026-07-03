@@ -575,3 +575,13 @@
   color: var(--color-gold-dark);
   box-shadow: var(--shadow-gold);
 }
+
+/* Sprite icons inside manager buttons (replaced the ✕ / 💬 / ↻ text glyphs) */
+.alert-mgr-btn-ico {
+  inline-size: 1em;
+  block-size: 1em;
+  stroke-width: 1.7;
+  display: inline-block;
+  vertical-align: -0.12em;
+  pointer-events: none;
+}

@@ -61,6 +61,10 @@
   --tp-hero-bg-accent: #121830;
   --tp-hero-text: rgb(242 238 221 / 97%);
   --tp-hero-muted: rgb(242 238 221 / 68%);
+
+  /* Small (<18.66px) copy on the dark panel needs >=4.5:1 - 68% lands ~4.2:1
+     against the note-card surface; 86% clears AA with margin. */
+  --tp-hero-muted-strong: rgb(242 238 221 / 86%);
   --tp-hero-faint: rgb(242 238 221 / 42%);
   --tp-hero-border: color-mix(in srgb, var(--color-gold) 28%, transparent);
   --tp-hero-surface: color-mix(in srgb, var(--color-gold) 7%, rgb(255 255 255 / 4%));
@@ -961,8 +965,17 @@ body.tracker-pro-page {
   padding: 0.65rem 0.75rem;
   background: rgb(255 255 255 / 5%);
   border: 1px solid rgb(255 255 255 / 8%);
-  color: var(--tp-hero-muted);
+  color: var(--tp-hero-muted-strong);
   line-height: 1.58;
+}
+
+/* Note items sit on LIGHT subpanel cards, not the dark hero panel — the
+   shared hero tint above rendered them parchment-on-white (axe serious,
+   ~1.14:1). Restate them in surface tokens so both themes pass AA. */
+.tracker-subpanel .tracker-note-item {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   font-size: 0.82rem;
 }
 
@@ -1058,6 +1071,17 @@ body.tracker-pro-page {
   max-width: 1360px;
   margin: 0 auto;
   padding: 0.4rem var(--page-gutter);
+}
+
+/* The overlay-launcher group sits OUTSIDE the tablist nav (axe
+   aria-required-children) but shares the same strip; on narrow screens the
+   strip wraps so the launchers and workspace badge stay reachable while the
+   tab nav keeps its own horizontal scroll. */
+@media (width <= 768px) {
+  .tracker-modes-wrap {
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+  }
 }
 
 .tracker-modes {

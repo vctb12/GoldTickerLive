@@ -468,35 +468,6 @@
               </button>
             </div>
 
-            <!-- Divider -->
-            <div class="tracker-modes-divider" aria-hidden="true"></div>
-
-            <!-- Overlay panels -->
-            <div class="tracker-modes-overlays">
-              <button
-                class="tracker-mode-tab tracker-overlay-btn"
-                type="button"
-                id="tab-alerts"
-                data-overlay="alerts"
-                aria-expanded="false"
-                aria-controls="tp-overlay-alerts"
-              >
-                <span class="tp-tab-icon" aria-hidden="true"><svg class="tracker-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-bell"/></svg></span>
-                <span class="tp-tab-label">Alerts</span>
-              </button>
-              <button
-                class="tracker-mode-tab tracker-overlay-btn"
-                type="button"
-                id="tab-planner"
-                data-overlay="planner"
-                aria-expanded="false"
-                aria-controls="tp-overlay-planner"
-              >
-                <span class="tp-tab-icon" aria-hidden="true"><svg class="tracker-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg></span>
-                <span class="tp-tab-label">Planner</span>
-              </button>
-            </div>
-
             <!-- Advanced modes (hidden in basic workspace) -->
             <div class="tracker-modes-advanced tracker-advanced-only">
               <button
@@ -523,6 +494,41 @@
               </button>
             </div>
           </nav>
+
+          <div class="tracker-modes-divider" aria-hidden="true"></div>
+
+          <!-- Overlay launchers — outside the tablist: a tablist may only own
+               role="tab" children (axe aria-required-children); these open
+               modal overlays and are registered after the mode tabs. -->
+          <div
+            class="tracker-modes-overlays"
+            role="group"
+            aria-label="Alerts and planner tools"
+            data-i18n-aria-label="modes.overlayGroupAriaLabel"
+          >
+              <button
+                class="tracker-mode-tab tracker-overlay-btn"
+                type="button"
+                id="tab-alerts"
+                data-overlay="alerts"
+                aria-expanded="false"
+                aria-controls="tp-overlay-alerts"
+              >
+                <span class="tp-tab-icon" aria-hidden="true"><svg class="tracker-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-bell"/></svg></span>
+                <span class="tp-tab-label">Alerts</span>
+              </button>
+              <button
+                class="tracker-mode-tab tracker-overlay-btn"
+                type="button"
+                id="tab-planner"
+                data-overlay="planner"
+                aria-expanded="false"
+                aria-controls="tp-overlay-planner"
+              >
+                <span class="tp-tab-icon" aria-hidden="true"><svg class="tracker-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg></span>
+                <span class="tp-tab-label">Planner</span>
+              </button>
+          </div>
 
           <button
             class="tracker-workspace-badge"

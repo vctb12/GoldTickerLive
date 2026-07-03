@@ -43,6 +43,16 @@ const SWEPT = [
   'src/lib/sw-update-toast.js',
   'src/lib/alert-engine.js',
   'src/lib/safe-dom.js',
+  'src/components/alert-manager.js',
+  'src/pages/chart/chart-page.js',
+  'learn.html',
+  'chart/index.html',
+  'ar/chart/index.html',
+  'scripts/node/render-learn-static-fallback.mjs',
+  ...fs
+    .readdirSync(path.join(ROOT, 'src', 'learn-hub'))
+    .filter((f) => f.endsWith('.js'))
+    .map((f) => `src/learn-hub/${f}`),
   ...fs
     .readdirSync(path.join(ROOT, 'src', 'tracker'))
     .filter((f) => f.endsWith('.js'))
