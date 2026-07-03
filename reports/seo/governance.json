@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-02T05:29:07.098Z",
+  "generatedAt": "2026-07-03T06:41:04.579Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -1020,7 +1020,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1549,
+      "wordCount": 1546,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7285,7 +7285,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1476,
+      "wordCount": 1490,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7628,7 +7628,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1872,
+      "wordCount": 1875,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
