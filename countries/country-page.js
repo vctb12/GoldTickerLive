@@ -35,6 +35,7 @@ import { injectFooter } from '../src/components/footer.js';
 import { injectTicker, updateTicker, updateTickerLang } from '../src/components/ticker.js';
 import { renderBreadcrumbs } from '../src/components/breadcrumbs.js';
 import { renderPriceFetchError } from '../src/components/price-fetch-error.js';
+import { syncHeroMediaAlts } from '../src/lib/hero-media-alts.js';
 
 /**
  * Inline-SVG flag markup for an ISO country code (sprite `f-*` symbols injected
@@ -646,6 +647,7 @@ function renderAll(cfg) {
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
   const skip = document.querySelector('a.skip-link');
   if (skip) skip.textContent = t('skipLink');
+  syncHeroMediaAlts(STATE.lang);
 }
 
 // ── Live data fetch ──────────────────────────────────────────────────────────

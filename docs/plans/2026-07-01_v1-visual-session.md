@@ -123,3 +123,22 @@ emoji grep proof · legacy deep-link spot-checks (`#alerts`, `#mode=alerts`,
 - learn-hub fallback icon is generator-owned (`render-learn-static-fallback.mjs`) — needs a
   coordinated learn-hub renderer+generator change.
 - `offline.html` still references Google Fonts (pre-existing; out of scope).
+
+## Wave 2 — country-hub hero photography (2026-07-02)
+
+Extends Workstream A to the 11 country hubs. Each hub hero now carries a licensed market photograph
+(`.cp-hero-media` band, 3:2, AVIF/WebP/JPEG × 480/768/960, lazy-loaded, visible credit link, EN alt
+in markup + AR alt via `data-alt-ar`).
+
+- **Assets:** 7 new photo sets (Qatar, Bahrain, Oman, Jordan, Morocco, Turkey, India) built by
+  `scripts/images/build-images.py` (per-shot quality overrides + `--only` filter added); every 960px
+  rung ≤120 KB; license rows in `assets/MANIFEST.md` (2× CC0/PD-adjacent, 5× CC BY-SA — graded
+  derivatives shared alike). Jordan is a 1953 archival photo and is labelled as such in alt +
+  caption. Bahrain/Morocco depict the souq district / metalwork souk honestly, not a gold souq.
+- **Templates:** 10 hubs use the `cp-hero` template (alt swap in
+  `countries/country-page.js#renderAll`); Turkey is the legacy `country-hero` template (alt swap via
+  `syncHeroMediaAlts()` in `src/lib/page-hydrator.js#hydrate`, price-data-independent).
+  `.cp-hero-media` CSS mirrored in `styles/country-page.css` + `styles/pages/country.css`.
+- **Gate evidence:** suite 1624/1624, eslint, validate (incl. basic-a11y + seo-governance refresh),
+  build green; EN/AR alt swap verified in-browser both templates
+  (`docs/plans/evidence/2026-07-01-v1-visual/hub-{qatar,turkey}-{en,ar}-1366.webp`).

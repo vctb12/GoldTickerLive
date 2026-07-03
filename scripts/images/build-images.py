@@ -66,6 +66,53 @@ SHOTS = [
         # lantern-detail image; drop JPEG quality to hold the budget
         'quality': {'jpg': 66},
     },
+    # ── Country-hub hero bands (V2 wave — wider 3:2 crop, 1200 top width) ──
+    {
+        'slug': 'markets/qatar-souq-waqif-gold-souk',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/c/cc/Gold_souq_near_Souq_Waqif_Doha.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+    },
+    {
+        'slug': 'markets/bahrain-manama-souq',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Manama_Bab_al-Bahrain_Souq_1.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+        # lantern-detail image is entropy-heavy; drop quality to hold the ≤120KB budget
+        'quality': {'avif': 42, 'webp': 50, 'jpg': 56},
+    },
+    {
+        'slug': 'markets/oman-muttrah-souq',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/3/35/Oman%2C_Muscat%2C_Muttrah_Souq.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+    },
+    {
+        'slug': 'markets/jordan-amman-gold-souq-1953',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/e/ee/Straatbeeld_Amman_met_de_puien_van_juwelier_winkels%2C_Bestanddeelnr_255-5035.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+    },
+    {
+        'slug': 'markets/morocco-marrakech-souk',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Oriental_hanging_lanterns._Souk_Haddadine%2C_Marrakech_Medina_%28%D8%B3%D9%88%D9%82_%D8%A7%D9%84%D8%AD%D8%AF%D8%A7%D8%AF%D9%8A%D9%86_%D9%85%D8%B1%D8%A7%D9%83%D8%B4%29.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+        # lantern-detail image is entropy-heavy; drop quality to hold the ≤120KB budget
+        'quality': {'avif': 38, 'webp': 34, 'jpg': 45},
+    },
+    {
+        'slug': 'markets/turkey-grand-bazaar',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/4/4b/Gold_jewellery_at_Grand_Bazaar%2C_Istanbul.jpg',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+    },
+    {
+        'slug': 'markets/india-manek-chowk',
+        'source': 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Manekchowk_-_Zaveri_Bazaar.JPG',
+        'aspect': (3, 2),
+        'widths': (480, 768, 960),
+    },
 ]
 
 # Per-format quality tuned for warm low-detail-shadow market photography.
