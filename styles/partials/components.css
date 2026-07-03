@@ -4628,3 +4628,18 @@ button,
   line-height: var(--leading-relaxed, 1.7);
   color: var(--color-text-muted);
 }
+
+/* ── Guilloche ornament rule (V1-VISUAL wave 3) ─────────────
+   Procedurally generated engraved band (scripts/images/generate-brand-art.py,
+   owned artwork — assets/MANIFEST.md). Decorative only: pair with
+   aria-hidden="true" in markup. */
+.gtl-guilloche-rule {
+  block-size: 52px;
+  border-block: 1px solid var(--border-subtle);
+  background: url('../../assets/brand/guilloche-band-light-1600.webp') center / cover no-repeat;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .gtl-guilloche-rule {
+  background-image: url('../../assets/brand/guilloche-band-dark-1600.webp');
+}
