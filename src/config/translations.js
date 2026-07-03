@@ -339,6 +339,7 @@ export const TRANSLATIONS = {
 
     /* ── Tracker · wire / keyboard / misc ── */
     'tracker.wire.ariaLabel': 'Market wire',
+    'tracker.modes.overlayGroupAriaLabel': 'Alerts and planner tools',
     'tracker.wire.label': 'Market wire',
     'tracker.wire.metaPrefix': 'Live headlines ·',
     'tracker.wire.metaWaiting': 'waiting…',
@@ -1712,6 +1713,7 @@ export const TRANSLATIONS = {
 
     /* ── Tracker · wire / keyboard / misc ── */
     'tracker.wire.ariaLabel': 'شريط أخبار السوق',
+    'tracker.modes.overlayGroupAriaLabel': 'أدوات التنبيهات والمخطط',
     'tracker.wire.label': 'شريط أخبار السوق',
     'tracker.wire.metaPrefix': 'عناوين مباشرة ·',
     'tracker.wire.metaWaiting': 'بانتظار…',

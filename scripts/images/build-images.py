@@ -14,7 +14,7 @@ Every emitted asset MUST have a matching entry in assets/MANIFEST.md
 (source, author, license). Run from the repo root:
 
     python3 scripts/images/build-images.py                  # build all
-    python3 scripts/images/build-images.py --check          # verify outputs exist
+    python3 scripts/images/build-images.py --check          # verify outputs exist + budget
     python3 scripts/images/build-images.py --only <substr>  # rebuild matching slugs
 
 Dependencies: Pillow + pillow-avif-plugin (pip install pillow pillow-avif-plugin).
@@ -55,12 +55,16 @@ SHOTS = [
         'source': 'https://upload.wikimedia.org/wikipedia/commons/8/8a/Kuwait_City_Souq_al-Mubarakeya_1.jpg',
         'aspect': (4, 3),
         'widths': (480, 768, 960),
+        # detail-heavy walkway; drop fallback quality to hold the budget
+        'quality': {'webp': 58, 'jpg': 54},
     },
     {
         'slug': 'markets/cairo-khan-el-khalili',
         'source': 'https://upload.wikimedia.org/wikipedia/commons/c/c2/Khan_el-Khalili_2019.jpg',
         'aspect': (4, 3),
         'widths': (480, 768, 960),
+        # lantern-detail image; drop JPEG quality to hold the budget
+        'quality': {'jpg': 66},
     },
     # ── Country-hub hero bands (V2 wave — wider 3:2 crop, 1200 top width) ──
     {
@@ -113,6 +117,11 @@ SHOTS = [
 
 # Per-format quality tuned for warm low-detail-shadow market photography.
 QUALITY = {'avif': 52, 'webp': 68, 'jpg': 72}
+
+# Hard weight ceiling per emitted file (session budget; enforced again in CI
+# by tests/asset-manifest-guard.test.js). `_headers` freezes image URLs in
+# caches for a year, so an oversized file must never land.
+BUDGET_KB = 120
 
 
 def fetch(url: str, dest: Path) -> None:
@@ -202,6 +211,7 @@ def main() -> int:
     check = '--check' in sys.argv
     only = sys.argv[sys.argv.index('--only') + 1] if '--only' in sys.argv else None
     missing = []
+    over_budget = []
     total = 0
     for shot in SHOTS:
         if only and not check and only not in shot['slug']:
@@ -211,18 +221,27 @@ def main() -> int:
         ]
         if check:
             missing += [p for p in expected if not p.exists()]
+            over_budget += [
+                p for p in expected if p.exists() and p.stat().st_size > BUDGET_KB * 1024
+            ]
             continue
         for p in build(shot):
             kb = p.stat().st_size / 1024
             total += kb
-            print(f'  {p.relative_to(REPO)}  {kb:.1f} KB')
+            flag = f'  ⚠ over {BUDGET_KB} KB budget' if kb > BUDGET_KB else ''
+            print(f'  {p.relative_to(REPO)}  {kb:.1f} KB{flag}')
     if check:
         if missing:
             print('[build-images] missing outputs:')
             for p in missing:
                 print('  -', p.relative_to(REPO))
+        if over_budget:
+            print(f'[build-images] outputs above the {BUDGET_KB} KB budget (lower per-shot quality):')
+            for p in over_budget:
+                print(f'  - {p.relative_to(REPO)}  {p.stat().st_size / 1024:.1f} KB')
+        if missing or over_budget:
             return 1
-        print('[build-images] all expected outputs present.')
+        print('[build-images] all expected outputs present and within budget.')
         return 0
     print(f'[build-images] done — {total:.0f} KB emitted.')
     return 0

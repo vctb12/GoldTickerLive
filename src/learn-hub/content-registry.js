@@ -19,7 +19,7 @@ const ARTICLE_SUMMARIES = Object.freeze([
     id: 'methodology',
     titleKey: 'method-h1',
     subtitleKey: 'method-sub',
-    icon: '🔬',
+    icon: 'i-beaker',
     metadata: {
       readTime: 10,
       lastUpdated: '2026-05-25',
@@ -31,7 +31,7 @@ const ARTICLE_SUMMARIES = Object.freeze([
     id: 'insights',
     titleKey: 'insights-h1',
     subtitleKey: 'insights-sub',
-    icon: '📊',
+    icon: 'i-chart',
     metadata: {
       readTime: 6,
       lastUpdated: '2026-05-25',

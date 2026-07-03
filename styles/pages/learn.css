@@ -728,3 +728,10 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* Sprite icon inside the article-header badge (replaced the emoji glyph) */
+.learn-hub-article-ico {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  stroke-width: 1.7;
+}

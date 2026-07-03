@@ -35,8 +35,8 @@ const T = {
     title: 'Gold Price Chart — UAE Historical Prices',
     noData: 'Collecting data since {date}. Check back soon.',
     stats: { high: 'High', low: 'Low', avg: 'Average', change: 'Change', changePct: 'Change %' },
-    csv: '⬇ Download CSV',
-    share: '🔗 Share',
+    csv: 'Download CSV',
+    share: 'Copy chart link',
     copied: 'Copied',
     source: 'Source',
     updated: 'Updated',
@@ -51,8 +51,8 @@ const T = {
       change: 'التغير',
       changePct: 'نسبة التغير',
     },
-    csv: '⬇ تنزيل CSV',
-    share: '🔗 مشاركة',
+    csv: 'تنزيل CSV',
+    share: 'نسخ رابط الرسم البياني',
     copied: 'تم النسخ',
     source: 'المصدر',
     updated: 'آخر تحديث',
@@ -197,15 +197,8 @@ function setupPage() {
     hero.hidden = false;
     clear(hero);
     const refLabel = lang === 'ar' ? 'سعر مرجعي' : 'Reference';
-    const unitLabel =
-      lang === 'ar'
-        ? `/غرام · ${state.karat}K`
-        : `/gram · ${state.karat}K`;
-    const formatted = formatPrice(
-      latest.value,
-      state.currency,
-      state.currency === 'AED' ? 2 : 3
-    );
+    const unitLabel = lang === 'ar' ? `/غرام · ${state.karat}K` : `/gram · ${state.karat}K`;
+    const formatted = formatPrice(latest.value, state.currency, state.currency === 'AED' ? 2 : 3);
     hero.appendChild(
       el('div', { class: 'chart-hero__inner price-hero price-hero--reference' }, [
         el('span', { class: 'price-kind price-kind--reference' }, [refLabel]),
