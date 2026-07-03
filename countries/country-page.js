@@ -588,14 +588,14 @@ function renderRelated(cfg) {
 }
 
 // ── FAQ JSON-LD schema injection ─────────────────────────────────────────────
-function injectFaqSchema(faqEn) {
-  if (!faqEn?.length) return;
+function injectFaqSchema(faqItems) {
+  if (!faqItems?.length) return;
   const existing = document.getElementById('faq-schema-ld');
   if (existing) existing.remove();
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqEn.map((item) => ({
+    mainEntity: faqItems.map((item) => ({
       '@type': 'Question',
       name: item.q,
       acceptedAnswer: { '@type': 'Answer', text: item.a },
@@ -616,7 +616,7 @@ function renderFaq(cfg) {
   const faqList = STATE.lang === 'ar' ? cfg.faqAr : cfg.faqEn;
   if (!faqList?.length) return;
 
-  injectFaqSchema(cfg.faqEn);
+  injectFaqSchema(faqList);
 
   el.innerHTML = `
     <h2>${t('faq')}</h2>

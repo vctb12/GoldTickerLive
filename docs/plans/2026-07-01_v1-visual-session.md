@@ -142,3 +142,15 @@ in markup + AR alt via `data-alt-ar`).
 - **Gate evidence:** suite 1624/1624, eslint, validate (incl. basic-a11y + seo-governance refresh),
   build green; EN/AR alt swap verified in-browser both templates
   (`docs/plans/evidence/2026-07-01-v1-visual/hub-{qatar,turkey}-{en,ar}-1366.webp`).
+
+## Review follow-up - PR #488/#490 (2026-07-03)
+
+- Rechecked unresolved review threads after PR #490 merged into `claude/v1-tracker-redesign`.
+- Confirmed already-fixed items still present on the stack: pricing "Reference gold prices" copy,
+  localized legacy freshness banner + methodology link, tracker hero-stats aria-label hydration,
+  welcome-chip fallback alignment, and country-hub featured-market captions.
+- Fixed the remaining country-hub AR schema gap: `renderFaq()` now injects FAQPage JSON-LD from the
+  active visible FAQ list, so AR mode emits Arabic questions/answers and EN mode emits English.
+- Left broader backlog items (generic OG imagery, city/country intent copy, credit localization,
+  thin static copy) as follow-up scope because they are either documented existing debt or larger than
+  the unresolved inline review fix.
