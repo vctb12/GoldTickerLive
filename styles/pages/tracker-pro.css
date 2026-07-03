@@ -5172,3 +5172,86 @@ td.tracker-chg-flat {
 .tp-overlay .tracker-calc-result {
   inline-size: 100%;
 }
+
+/* ═══════════════ V1-VISUAL wave 3 — command-center refinement ═══════════════ */
+
+/* 1. Panels that live INSIDE the always-dark hero glass must pin hero ink —
+   they previously inherited theme tokens and went invisible in light mode
+   (quote-metadata title/labels/values rendered dark-on-dark). */
+.tracker-command-meta-card .tracker-addon-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--tp-hero-muted-strong);
+}
+
+.tracker-command-meta-card .quote-meta-panel__label {
+  color: var(--tp-hero-muted);
+}
+
+.tracker-command-meta-card .quote-meta-panel__value {
+  color: var(--tp-hero-text);
+}
+
+.tracker-command-meta-card .realtime-sla-panel__metric {
+  color: var(--tp-hero-muted);
+}
+
+.tracker-command-meta-card .realtime-sla-panel__metric-value {
+  color: var(--tp-hero-text);
+}
+
+/* 2. Milled heading kickers — a foil tick before section headings gives the
+   light panels the same engraved rhythm as the readout. */
+.tracker-panel-head h2,
+.tracker-panel-head .h2,
+.tracker-subpanel-head h3,
+.tracker-subpanel-head .h3 {
+  position: relative;
+  padding-inline-start: 0.7rem;
+}
+
+.tracker-panel-head h2::before,
+.tracker-panel-head .h2::before,
+.tracker-subpanel-head h3::before,
+.tracker-subpanel-head .h3::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0.16em;
+  inline-size: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--color-gold),
+    color-mix(in srgb, var(--color-gold) 45%, transparent)
+  );
+}
+
+/* 3. Card chrome — warmer hairline and a whisper of depth on light panels,
+   a lifted surface in dark mode, so boxes read as instrument plates. */
+.tracker-panel,
+.tracker-subpanel {
+  border: 1px solid color-mix(in srgb, var(--color-gold) 9%, var(--tp-border));
+  box-shadow: 0 1px 2px rgb(21 17 10 / 4%);
+}
+
+[data-theme='dark'] .tracker-panel,
+[data-theme='dark'] .tracker-subpanel {
+  background: color-mix(in srgb, var(--surface-secondary) 88%, rgb(255 255 255 / 4%));
+  border-color: color-mix(in srgb, var(--color-gold) 14%, var(--tp-border));
+  box-shadow: none;
+}
+
+/* 4. Consistent gold focus ring on the tracker's interactive chrome. */
+.tracker-mode-tab:focus-visible,
+.tracker-overlay-btn:focus-visible,
+.tracker-workspace-badge:focus-visible,
+.tracker-panel button:focus-visible,
+.tracker-panel select:focus-visible,
+.tracker-panel input:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-gold) 75%, transparent);
+  outline-offset: 2px;
+}
