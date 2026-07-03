@@ -122,7 +122,7 @@
         <div id="cp-hero-price">
           <div class="cp-hero-main">
             <div class="cp-hero-row">
-              <span class="cp-hero-flag">🇰🇼</span>
+              <span class="cp-hero-flag"><svg class="nav-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-kw"/></svg></span>
               <div class="cp-hero-labels">
                 <h1 class="cp-hero-title">Reference Gold Price — Kuwait</h1>
               </div>
@@ -143,6 +143,20 @@
             </div>
           </div>
         </div>
+      
+        <figure class="cp-hero-media">
+          <picture>
+            <source type="image/avif" srcset="/assets/images/markets/kuwait-mubarakiya-480.avif 480w, /assets/images/markets/kuwait-mubarakiya-768.avif 768w, /assets/images/markets/kuwait-mubarakiya-960.avif 960w" sizes="(max-width: 960px) 100vw, 920px" />
+            <source type="image/webp" srcset="/assets/images/markets/kuwait-mubarakiya-480.webp 480w, /assets/images/markets/kuwait-mubarakiya-768.webp 768w, /assets/images/markets/kuwait-mubarakiya-960.webp 960w" sizes="(max-width: 960px) 100vw, 920px" />
+            <img src="/assets/images/markets/kuwait-mubarakiya-768.jpg" srcset="/assets/images/markets/kuwait-mubarakiya-480.jpg 480w, /assets/images/markets/kuwait-mubarakiya-768.jpg 768w, /assets/images/markets/kuwait-mubarakiya-960.jpg 960w" sizes="(max-width: 960px) 100vw, 920px" width="768" height="576" loading="lazy" decoding="async" alt="Wooden-roofed walkway of Souq Al-Mubarakiya in Kuwait City" data-alt-ar="ممر سوق المباركية المسقوف بالخشب في مدينة الكويت" />
+          </picture>
+          <figcaption class="cp-hero-media-credit">
+            <span class="cp-hero-media-label"><a href="kuwait-city/" data-label-ar="السوق المميّز: سوق المباركية في مدينة الكويت">Featured market: Souq Al-Mubarakiya, Kuwait City</a></span>
+            <a href="https://commons.wikimedia.org/wiki/File:Kuwait_City_Souq_al-Mubarakeya_1.jpg" target="_blank" rel="noopener nofollow">Zairon · CC BY 4.0</a>
+          </figcaption>
+        </figure>
+
+        <p class="cp-hero-context" data-copy-ar="تُسعَّر الأسعار الكويتية بالدينار (KWD)، وهو من أعلى العملات قيمةً في العالم، لذا تبدو أسعار الغرام أقل من دول الخليج المجاورة عند سعر الفوري نفسه. يتركز شراء المجوهرات على عيارَي 22 و21، ولا تطبق الكويت حالياً ضريبة قيمة مضافة على الذهب. ويبقى سوق المباركية المركز التقليدي لتجارة الذهب؛ وتضيف أسعاره المصنعية فوق الأسعار المرجعية في هذه الصفحة.">Kuwaiti prices are quoted in dinars (KWD), among the world's highest-value currencies, so per-gram figures look smaller than Gulf neighbours at the same spot rate. Jewellery buying centres on 22K and 21K, and Kuwait currently applies no VAT on gold. Souq Al-Mubarakiya remains the traditional gold trading hub; its retail quotes add making charges above this page's reference prices.</p>
       </section>
 
       <section class="cp-section">
@@ -164,19 +178,18 @@
       initCountryPage({
         countryCode: 'KW',
         currency: 'KWD',
-        flag: '🇰🇼',
         nameEn: 'Kuwait',
         nameAr: 'الكويت',
         fixedPeg: false,
         decimals: 3,
         timezone: 'Asia/Kuwait',
         relatedCountries: [
-          { file: 'uae.html', nameEn: 'UAE', nameAr: 'الإمارات', flag: '🇦🇪' },
-          { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', flag: '🇸🇦' },
-          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', flag: '🇶🇦' },
-          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', flag: '🇧🇭' },
-          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', flag: '🇴🇲' },
-          { file: 'egypt.html', nameEn: 'Egypt', nameAr: 'مصر', flag: '🇪🇬' },
+          { file: 'uae.html', nameEn: 'UAE', nameAr: 'الإمارات', code: 'AE' },
+          { file: 'saudi-arabia.html', nameEn: 'Saudi Arabia', nameAr: 'السعودية', code: 'SA' },
+          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', code: 'QA' },
+          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', code: 'BH' },
+          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', code: 'OM' },
+          { file: 'egypt.html', nameEn: 'Egypt', nameAr: 'مصر', code: 'EG' },
         ],
         faqEn: [
           {

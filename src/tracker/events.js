@@ -3,6 +3,7 @@ import { persistState } from './state.js';
 import { el } from '../lib/safe-dom.js';
 import { tx } from './_ctx.js';
 import { track, EVENTS } from '../lib/analytics.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 
 let _state, _el, _cb;
 
@@ -45,7 +46,11 @@ export function bindCoreEvents() {
       _cb.renderAll();
     } finally {
       _el.refreshBtn.disabled = false;
-      _el.refreshBtn.textContent = `↻ ${_cb.tx('actions.refresh')}`;
+      // Same shape tracker-pro.js#setButtonCopy renders at boot: sprite + label.
+      _el.refreshBtn.replaceChildren(
+        iconUseElement('i-refresh', 'tracker-inline-ico'),
+        ` ${_cb.tx('actions.refresh')}`
+      );
     }
   });
 

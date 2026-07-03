@@ -408,3 +408,14 @@
   color: var(--text-primary);
   letter-spacing: var(--tracking-tight);
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.city-related-link .rt-ico,
+.city-cta-btn .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

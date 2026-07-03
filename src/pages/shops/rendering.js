@@ -12,6 +12,7 @@
  */
 
 import { el, clear, safeHref as safeUrl, safeTel } from '../../lib/safe-dom.js';
+import { iconUseElement } from '../../components/icon-sprite.js';
 import {
   countryByCode,
   countryName,
@@ -39,7 +40,10 @@ function renderBadges(shop, isCluster, t) {
     )
   );
   if (shop.featured) {
-    badges.appendChild(el('span', { class: 'shop-featured' }, [t('featured')]));
+    const featuredBadge = el('span', { class: 'shop-featured' }, [t('featured')]);
+    // Sprite icons are appended directly: `el()` only accepts nodes it created.
+    featuredBadge.prepend(iconUseElement('i-star', 'shops-ico'));
+    badges.appendChild(featuredBadge);
   }
   return badges;
 }
@@ -117,10 +121,11 @@ function renderActionLink({ href, className, icon, label, ariaLabel, external = 
     attrs.target = '_blank';
     attrs.rel = 'noopener';
   }
-  return el('a', attrs, [
-    el('span', { class: 'shop-action-icon' }, [icon]),
-    el('span', { class: 'shop-action-label' }, [label]),
-  ]);
+  // `icon` is a sprite symbol id (e.g. 'i-map'); the SVG is appended directly
+  // because `el()` only accepts nodes it created itself.
+  const iconSpan = el('span', { class: 'shop-action-icon' });
+  iconSpan.appendChild(iconUseElement(icon, 'shops-ico'));
+  return el('a', attrs, [iconSpan, el('span', { class: 'shop-action-label' }, [label])]);
 }
 
 function renderPrimaryActions(shop, country, STATE, t) {
@@ -135,7 +140,7 @@ function renderPrimaryActions(shop, country, STATE, t) {
       renderActionLink({
         href: areaGuideUrl,
         className: 'shop-action-btn shop-action-btn--guide',
-        icon: '🧭',
+        icon: 'i-map',
         label: t('areaGuide'),
         ariaLabel: `${t('areaGuide')}: ${shop.market}`,
       })
@@ -148,7 +153,7 @@ function renderPrimaryActions(shop, country, STATE, t) {
       renderActionLink({
         href: `tel:${tel}`,
         className: 'shop-action-btn shop-action-btn--call',
-        icon: '📞',
+        icon: 'i-phone',
         label: t('callShop'),
       })
     );
@@ -160,7 +165,7 @@ function renderPrimaryActions(shop, country, STATE, t) {
       renderActionLink({
         href: website,
         className: 'shop-action-btn shop-action-btn--website',
-        icon: '🌐',
+        icon: 'i-globe',
         label: t('visitWebsite'),
         external: true,
       })
@@ -175,7 +180,7 @@ function renderPrimaryActions(shop, country, STATE, t) {
       renderActionLink({
         href: directionsUrl,
         className: 'shop-action-btn shop-action-btn--directions',
-        icon: '🧭',
+        icon: 'i-map',
         label: t('directions'),
         external: true,
       })
@@ -188,7 +193,7 @@ function renderPrimaryActions(shop, country, STATE, t) {
       renderActionLink({
         href: `countries/${country.slug}/gold-price/`,
         className: 'shop-action-btn shop-action-btn--country',
-        icon: '📄',
+        icon: 'i-receipt',
         label: name,
         ariaLabel: `${t('viewCountryPage')}: ${name}`,
       })
@@ -199,6 +204,11 @@ function renderPrimaryActions(shop, country, STATE, t) {
 }
 
 function renderSecondaryActions(shop, inShortlist, t) {
+  // Saved state shows a sprite check icon; unsaved keeps the '+' text glyph.
+  const saveIcon = el('span', { class: 'shop-action-icon' }, inShortlist ? [] : ['+']);
+  if (inShortlist) saveIcon.appendChild(iconUseElement('i-check', 'shops-ico'));
+  const shareIcon = el('span', { class: 'shop-action-icon' });
+  shareIcon.appendChild(iconUseElement('i-share', 'shops-ico'));
   return el('div', { class: 'shop-actions-row shop-actions-row--secondary' }, [
     el(
       'button',
@@ -209,7 +219,7 @@ function renderSecondaryActions(shop, inShortlist, t) {
         'aria-label': inShortlist ? t('removeFromShortlist') : t('saveToShortlist'),
       },
       [
-        el('span', { class: 'shop-action-icon' }, [inShortlist ? '✓' : '+']),
+        saveIcon,
         el('span', { class: 'shop-action-label' }, [
           inShortlist ? t('saved') : t('saveToShortlist'),
         ]),
@@ -223,10 +233,7 @@ function renderSecondaryActions(shop, inShortlist, t) {
         dataset: { shopId: shop.id },
         'aria-label': t('shareShop'),
       },
-      [
-        el('span', { class: 'shop-action-icon' }, ['↗']),
-        el('span', { class: 'shop-action-label' }, [t('shareShop')]),
-      ]
+      [shareIcon, el('span', { class: 'shop-action-label' }, [t('shareShop')])]
     ),
   ]);
 }

@@ -1251,6 +1251,35 @@
   outline-offset: -2px;
 }
 
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.calc-bd-ico {
+  inline-size: 0.95em;
+  block-size: 0.95em;
+  flex: 0 0 auto;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.calc-btn-ico {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.15em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.calc-related-icon .calc-related-ico {
+  display: block;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 /* Premium calculator layer: clearer tools, quieter proof surfaces. */
 .calc-hero {
   background: var(--surface-canvas);

@@ -368,6 +368,27 @@
         border-color: #b08a3e;
         box-shadow: 0 2px 12px rgba(176, 138, 62, 0.1);
       }
+      .ir-related-icon .tool-ico {
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        stroke-width: 1.7;
+      }
+      .ir-compute-btn .tool-btn-ico {
+        display: inline-block;
+        inline-size: 1.05em;
+        block-size: 1.05em;
+        vertical-align: -0.15em;
+        margin-inline-end: 0.3em;
+        stroke-width: 1.9;
+      }
+      .ir-disclaimer .tool-note-ico {
+        display: inline-block;
+        inline-size: 1.05em;
+        block-size: 1.05em;
+        vertical-align: -0.15em;
+        margin-inline-end: 0.2em;
+        stroke-width: 1.8;
+      }
       .ir-related-icon {
         font-size: 1.6rem;
         flex-shrink: 0;
@@ -578,7 +599,7 @@
       <!-- Hero -->
       <section class="ir-hero">
         <div class="ir-hero-inner">
-          <h1>📈 Gold Investment Return Calculator</h1>
+          <h1>Gold Investment Return Calculator</h1>
           <p>
             See how much your gold investment would have grown — based on historical spot prices.
           </p>
@@ -641,7 +662,7 @@
 
         <!-- Compute button -->
         <div class="ir-actions">
-          <button class="ir-compute-btn" id="ir-compute" type="button">📊 Calculate Return</button>
+          <button class="ir-compute-btn" id="ir-compute" type="button"><svg class="tool-btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-bars"/></svg> Calculate Return</button>
         </div>
 
         <!-- Results -->
@@ -674,7 +695,7 @@
           <div class="ir-verdict" id="ir-verdict"></div>
 
           <div class="ir-disclaimer">
-            ⚠️ <strong>Estimates only.</strong> These figures are based on approximate historical
+            <svg class="tool-note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-warning"/></svg> <strong>Estimates only.</strong> These figures are based on approximate historical
             gold spot prices (USD per troy ounce) and do not account for dealer premiums, making
             charges, storage fees, taxes, or bid-ask spreads. Actual returns may differ. Past
             performance does not guarantee future results.
@@ -730,21 +751,21 @@
       <section class="ir-related" aria-label="Related tools">
         <div class="ir-related-inner">
           <a href="/calculator.html" class="ir-related-card">
-            <div class="ir-related-icon" aria-hidden="true">🧮</div>
+            <div class="ir-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg></div>
             <div>
               <div class="ir-related-title">Gold Calculator</div>
               <div class="ir-related-desc">Calculate gold value by weight &amp; karat</div>
             </div>
           </a>
           <a href="/tracker.html" class="ir-related-card">
-            <div class="ir-related-icon" aria-hidden="true">📈</div>
+            <div class="ir-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></div>
             <div>
               <div class="ir-related-title">Live Tracker</div>
               <div class="ir-related-desc">Prices for 24+ countries, 7 karats</div>
             </div>
           </a>
           <a href="weight-converter.html" class="ir-related-card">
-            <div class="ir-related-icon" aria-hidden="true">⚖️</div>
+            <div class="ir-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-scale"/></svg></div>
             <div>
               <div class="ir-related-title">Weight Converter</div>
               <div class="ir-related-desc">Grams, troy oz, tola, baht &amp; more</div>

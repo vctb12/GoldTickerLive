@@ -13,6 +13,7 @@ import {
   getKaratCountLabel,
   getKaratRangeLabel,
 } from '../config/index.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
@@ -257,9 +258,15 @@ function updateKaratStripSelection() {
     const isSelectable = ['24', '22', '21', '18', '14'].includes(karat);
     const selected = isSelectable && karat === homeTrackerKarat;
     item.classList.toggle('is-selected', selected);
-    item.setAttribute('aria-pressed', selected ? 'true' : 'false');
-    if (isSelectable) {
-      item.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
+    // The toggle role lives on the karat label span, not the tile: the tile
+    // also contains the copy button, and a button inside a button is a
+    // nested-interactive a11y violation.
+    const toggle = item.querySelector('.karat-strip-k');
+    if (toggle) {
+      toggle.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      if (isSelectable) {
+        toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
+      }
     }
   });
 }
@@ -268,9 +275,12 @@ function bindKaratStripSelection() {
   document.querySelectorAll('.karat-strip-item').forEach((item) => {
     const karat = item.id?.replace('kstrip-', '');
     if (!['24', '22', '21', '18', '14'].includes(karat)) return;
-    item.setAttribute('role', 'button');
-    item.setAttribute('tabindex', '0');
-    item.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
+    const toggle = item.querySelector('.karat-strip-k');
+    if (toggle) {
+      toggle.setAttribute('role', 'button');
+      toggle.setAttribute('tabindex', '0');
+      toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
+    }
     const selectKarat = (event) => {
       if (event.target.closest('.kstrip-copy-btn')) return;
       homeTrackerKarat = karat;
@@ -278,8 +288,10 @@ function bindKaratStripSelection() {
       updateKaratStripSelection();
       syncCrossPageLinks();
     };
+    // Whole-tile click stays for pointer users; keyboard activation lives on
+    // the labelled karat toggle span (see updateKaratStripSelection).
     item.addEventListener('click', selectKarat);
-    item.addEventListener('keydown', (event) => {
+    toggle?.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         selectKarat(event);
@@ -906,8 +918,13 @@ function renderGCCGrid() {
     const name = lang === 'ar' ? c.nameAr : c.nameEn;
     const slug = COUNTRY_SLUGS[c.code] ?? null;
 
+    const flagSym = flagSymbolForCountry(c.code);
     const headerChildren = [
-      el('span', { class: 'gcc-flag', 'aria-hidden': 'true' }, c.flag),
+      el(
+        'span',
+        { class: 'gcc-flag', 'aria-hidden': 'true' },
+        flagSym ? iconUseElement(flagSym, 'nav-flag') : null
+      ),
       el('div', { class: 'gcc-meta' }, [
         el('span', { class: 'gcc-name' }, name),
         el('span', { class: 'gcc-currency' }, c.currency),

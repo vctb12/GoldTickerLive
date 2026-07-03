@@ -249,6 +249,19 @@
         border-color: #b08a3e;
         box-shadow: 0 2px 12px rgba(176, 138, 62, 0.1);
       }
+      .wc-related-icon .tool-ico {
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        stroke-width: 1.7;
+      }
+      .wc-reset-btn .tool-btn-ico {
+        display: inline-block;
+        inline-size: 1.05em;
+        block-size: 1.05em;
+        vertical-align: -0.15em;
+        margin-inline-end: 0.25em;
+        stroke-width: 1.9;
+      }
       .wc-related-icon {
         font-size: 1.6rem;
         flex-shrink: 0;
@@ -421,7 +434,7 @@
       <!-- Hero -->
       <section class="wc-hero">
         <div class="wc-hero-inner">
-          <h1>⚖️ Gold Weight Converter</h1>
+          <h1>Gold Weight Converter</h1>
           <p>Convert between grams, troy ounces, tola, baht, mithqal, and more — instantly.</p>
         </div>
       </section>
@@ -433,7 +446,7 @@
         </div>
         <div class="wc-actions">
           <button class="wc-reset-btn" id="wc-reset" type="button" aria-label="Reset all fields">
-            ↺ Reset
+            <svg class="tool-btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-refresh"/></svg> Reset
           </button>
         </div>
       </section>
@@ -459,21 +472,21 @@
       <section class="wc-related" aria-label="Related tools">
         <div class="wc-related-inner">
           <a href="/calculator.html" class="wc-related-card">
-            <div class="wc-related-icon" aria-hidden="true">🧮</div>
+            <div class="wc-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg></div>
             <div>
               <div class="wc-related-title">Gold Calculator</div>
               <div class="wc-related-desc">Calculate gold value by weight &amp; karat</div>
             </div>
           </a>
           <a href="/tracker.html" class="wc-related-card">
-            <div class="wc-related-icon" aria-hidden="true">📈</div>
+            <div class="wc-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg></div>
             <div>
               <div class="wc-related-title">Live Tracker</div>
               <div class="wc-related-desc">Prices for 24+ countries, 7 karats</div>
             </div>
           </a>
           <a href="/learn.html" class="wc-related-card">
-            <div class="wc-related-icon" aria-hidden="true">📚</div>
+            <div class="wc-related-icon" aria-hidden="true"><svg class="tool-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg></div>
             <div>
               <div class="wc-related-title">Learn About Gold</div>
               <div class="wc-related-desc">Karats, purity, and buying tips</div>

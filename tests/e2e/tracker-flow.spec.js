@@ -111,9 +111,13 @@ test.describe('Tracker page — live mode & navigation', () => {
     await expect(page.locator('#tp-live-badge-text')).toBeVisible();
     await expect(page.locator('#tp-karat-table')).toBeVisible();
     await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
-    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
     await expect(page.locator('#tp-open-alerts-inline')).toBeVisible();
     await expect(page.locator('#tp-export-command-panel')).toBeVisible();
+    // The quick calculator is consolidated into the Planner overlay (V1-VISUAL).
+    await page.click('#tab-planner');
+    await expect(page.locator('#tp-overlay-planner #tracker-inline-calc')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#tp-overlay-planner')).toBeHidden();
     await expect(page.locator('#tp-export-readiness-pill')).toBeVisible();
     await expect(page.locator('#tp-export-readiness-pill')).toHaveAttribute(
       'data-state',
@@ -216,7 +220,6 @@ test.describe('Tracker page — live mode & navigation', () => {
       `tracker at 360px overflows: ${metrics.scrollWidth}px > ${metrics.viewportWidth}px`
     ).toBeTruthy();
 
-    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
     await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
     await expect(page.locator('#tp-chart-history-source')).toBeVisible();
   });
@@ -228,7 +231,6 @@ test.describe('Tracker page — live mode & navigation', () => {
 
     await expect(page.locator('#tp-karat-table')).toBeVisible();
     await expect(page.locator('#tp-alerts-watchlist-panel')).toBeVisible();
-    await expect(page.locator('#tp-quick-calc-panel')).toBeVisible();
     await expect(page.locator('#tp-export-readiness-pill')).toBeVisible();
     await expect(page.locator('#tp-chart-history-source')).toBeVisible();
   });

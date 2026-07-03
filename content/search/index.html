@@ -126,6 +126,30 @@
       .search-clear:hover {
         color: #64748b;
       }
+      /* V1-VISUAL: sprite icon sizing (emoji replaced by icon-sprite symbols) */
+      .search-ui-ico {
+        display: block;
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .result-icon .nav-ico,
+      .result-icon .nav-flag {
+        inline-size: 1.4rem;
+        block-size: 1.4rem;
+        margin-inline: auto;
+      }
+      .search-empty .empty-ico {
+        display: block;
+        inline-size: 3rem;
+        block-size: 3rem;
+        margin: 0 auto 1rem;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
 
       .search-filters {
         display: flex;
@@ -395,8 +419,8 @@
           aria-autocomplete="list"
           aria-controls="search-results"
         />
-        <button class="search-clear" id="clear-btn" aria-label="Clear search">✕</button>
-        <span class="search-icon" aria-hidden="true">🔍</span>
+        <button class="search-clear" id="clear-btn" aria-label="Clear search"><svg class="search-ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></button>
+        <span class="search-icon" aria-hidden="true"><svg class="search-ui-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-search"/></svg></span>
       </div>
 
       <!-- Filter chips -->
@@ -476,6 +500,7 @@
     <script type="module">
       import { search } from '../../src/search/searchEngine.js';
       import { bootContentPage } from '../../src/lib/content-page-boot.js';
+      import { iconSvg } from '../../src/components/icon-sprite.js';
 
       const BASE = 'https://goldtickerlive.com';
 
@@ -539,7 +564,7 @@
         if (!results.length) {
           resultsEl.innerHTML = `
           <div class="search-empty">
-            <div class="empty-icon">🔍</div>
+            <div class="empty-icon">${iconSvg('i-search', 'empty-ico')}</div>
             <p>${isAr ? 'لا توجد نتائج. جرّب كلمة أخرى.' : 'No results found. Try a different search term.'}</p>
           </div>`;
           countEl.textContent = '';
@@ -555,7 +580,7 @@
             const label = isAr ? r.labelAr || r.label : r.label;
             const sublabel = resolveUrl(r.url).replace(BASE, '');
             return `<a href="${resolveUrl(r.url)}" class="result-card" role="option">
-          <span class="result-icon" aria-hidden="true">${r.icon || '🔗'}</span>
+          <span class="result-icon" aria-hidden="true">${iconSvg(r.icon || 'i-pin')}</span>
           <span class="result-body">
             <span class="result-label">${label}</span>
             <span class="result-sublabel">${sublabel}</span>

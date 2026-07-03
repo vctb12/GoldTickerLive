@@ -16,6 +16,7 @@ import { renderAdSlot } from '../components/adSlot.js';
 import { renderFreshnessBadge } from '../components/FreshnessBadge.js';
 import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import {
@@ -614,10 +615,10 @@ function updateNisabIndicator(weightGrams, purity) {
   if (grams24k >= 85) {
     indicator.textContent =
       STATE.lang === 'ar'
-        ? '✓ هذا يتجاوز حد نصاب الزكاة (85غ عيار 24)'
-        : '✓ This exceeds the Zakat nisab threshold (85g 24K)';
+        ? 'هذا يتجاوز حد نصاب الزكاة (85غ عيار 24)'
+        : 'This exceeds the Zakat nisab threshold (85g 24K)';
   } else {
-    indicator.textContent = STATE.lang === 'ar' ? '✗ أقل من حد النصاب' : '✗ Below nisab threshold';
+    indicator.textContent = STATE.lang === 'ar' ? 'أقل من حد النصاب' : 'Below nisab threshold';
   }
 }
 
@@ -1183,24 +1184,27 @@ function applyLang() {
     btn.setAttribute('aria-label', label);
   });
   set('calc-copy-link-btn', STATE.lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
-  set('calc-copy-image-btn', STATE.lang === 'ar' ? '📸 نسخ كصورة' : '📸 Copy as image');
+  const copyImageBtn = document.getElementById('calc-copy-image-btn');
+  if (copyImageBtn) {
+    copyImageBtn.replaceChildren(
+      iconUseElement('i-camera', 'calc-btn-ico'),
+      ` ${STATE.lang === 'ar' ? 'نسخ كصورة' : 'Copy as image'}`
+    );
+  }
 
   // Static parity strings (skip link, hero breakdown, related cards, dealer label).
   set('calc-skip-link', t('skip_to_main'));
   set('calc-aed-label', t('aed_label'));
   set('calc-presets-label', t('presets_label'));
-  for (const [id, marker, key] of [
-    ['calc-hero-bd-1', '✓', 'hero_bd_reference'],
-    ['calc-hero-bd-2', '✓', 'hero_bd_karats'],
-    ['calc-hero-bd-3', '✓', 'hero_bd_peg'],
-    ['calc-hero-bd-4', '✗', 'hero_bd_excludes'],
+  for (const [id, symbol, key] of [
+    ['calc-hero-bd-1', 'i-check', 'hero_bd_reference'],
+    ['calc-hero-bd-2', 'i-check', 'hero_bd_karats'],
+    ['calc-hero-bd-3', 'i-check', 'hero_bd_peg'],
+    ['calc-hero-bd-4', 'i-close', 'hero_bd_excludes'],
   ]) {
     const item = document.getElementById(id);
     if (item) {
-      const m = document.createElement('span');
-      m.setAttribute('aria-hidden', 'true');
-      m.textContent = marker;
-      item.replaceChildren(m, ` ${t(key)}`);
+      item.replaceChildren(iconUseElement(symbol, 'calc-bd-ico'), ` ${t(key)}`);
     }
   }
   for (const [id, key] of [
@@ -1575,7 +1579,7 @@ function initCopyBtn() {
     if (!text || text === '—') return;
     const done = () => {
       const orig = b.textContent;
-      b.textContent = `✓ ${t('copied_result')}`;
+      b.textContent = t('copied_result');
       b.setAttribute('aria-label', t('copied_result'));
       track(EVENTS.COPY_CLICK, { surface: 'calculator', value_type: 'result' });
       track(EVENTS.CALCULATOR_SHARE, {
@@ -1668,7 +1672,7 @@ function initCopyBtn() {
     try {
       await createSavedCalculation(payload);
       const original = button.textContent;
-      button.textContent = `✓ ${t('saved_result')}`;
+      button.textContent = t('saved_result');
       button.setAttribute('aria-label', t('saved_result'));
       setTimeout(() => {
         button.textContent = original || t('save_result');

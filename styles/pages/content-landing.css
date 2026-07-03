@@ -457,3 +457,12 @@
     transition: none;
   }
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.content-panel-icon .panel-ico {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

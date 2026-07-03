@@ -779,3 +779,12 @@
 .order-hero-title {
   font-weight: var(--weight-extrabold);
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.order-partner-logo .op-ico {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

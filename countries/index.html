@@ -181,6 +181,27 @@
       [dir='rtl'] .tools-row a {
         flex-direction: row-reverse;
       }
+
+      /* V1-VISUAL: sprite icon sizing (emoji replaced by icon-sprite symbols) */
+      .city-tile .ct-ico,
+      .tools-row .ct-ico {
+        inline-size: 1.1em;
+        block-size: 1.1em;
+        flex: 0 0 auto;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .countries-trust-note .ct-note-ico {
+        display: inline-block;
+        inline-size: 1.05em;
+        block-size: 1.05em;
+        vertical-align: -0.15em;
+        margin-inline-end: 0.25em;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
     </style>
   <script type="application/ld+json">
 {
@@ -222,37 +243,39 @@
           </div>
 
           <div class="countries-trust-note">
-            ⚠ These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices.
+            <svg class="ct-note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-warning"/></svg> These are <strong>spot-linked bullion estimates</strong>, not retail jewelry prices.
             Store prices may include making charges and local premiums.
           </div>
 
+          <div class="gtl-guilloche-rule" aria-hidden="true" style="margin-bottom: 1.4rem"></div>
+
           <h2 class="region-heading">GCC Countries</h2>
           <div class="country-tiles">
-            <a href="uae/" class="country-tile"><span>🇦🇪</span><span>UAE (AED)</span></a>
+            <a href="uae/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg><span>UAE (AED)</span></a>
             <a href="saudi-arabia/" class="country-tile"
-              ><span>🇸🇦</span><span>Saudi Arabia (SAR)</span></a
+              ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg><span>Saudi Arabia (SAR)</span></a
             >
-            <a href="kuwait/" class="country-tile"><span>🇰🇼</span><span>Kuwait (KWD)</span></a>
-            <a href="qatar/" class="country-tile"><span>🇶🇦</span><span>Qatar (QAR)</span></a>
-            <a href="bahrain/" class="country-tile"><span>🇧🇭</span><span>Bahrain (BHD)</span></a>
-            <a href="oman/" class="country-tile"><span>🇴🇲</span><span>Oman (OMR)</span></a>
+            <a href="kuwait/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-kw"/></svg><span>Kuwait (KWD)</span></a>
+            <a href="qatar/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-qa"/></svg><span>Qatar (QAR)</span></a>
+            <a href="bahrain/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-bh"/></svg><span>Bahrain (BHD)</span></a>
+            <a href="oman/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-om"/></svg><span>Oman (OMR)</span></a>
           </div>
 
           <h2 class="region-heading">Levant &amp; North Africa</h2>
           <div class="country-tiles">
-            <a href="egypt/" class="country-tile"><span>🇪🇬</span><span>Egypt (EGP)</span></a>
-            <a href="jordan/" class="country-tile"><span>🇯🇴</span><span>Jordan (JOD)</span></a>
-            <a href="lebanon/" class="country-tile"><span>🇱🇧</span><span>Lebanon (LBP)</span></a>
-            <a href="morocco/" class="country-tile"><span>🇲🇦</span><span>Morocco (MAD)</span></a>
-            <a href="tunisia/" class="country-tile"><span>🇹🇳</span><span>Tunisia (TND)</span></a>
-            <a href="algeria/" class="country-tile"><span>🇩🇿</span><span>Algeria (DZD)</span></a>
-            <a href="libya/" class="country-tile"><span>🇱🇾</span><span>Libya (LYD)</span></a>
-            <a href="sudan/" class="country-tile"><span>🇸🇩</span><span>Sudan (SDG)</span></a>
+            <a href="egypt/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg><span>Egypt (EGP)</span></a>
+            <a href="jordan/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-jo"/></svg><span>Jordan (JOD)</span></a>
+            <a href="lebanon/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-lb"/></svg><span>Lebanon (LBP)</span></a>
+            <a href="morocco/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ma"/></svg><span>Morocco (MAD)</span></a>
+            <a href="tunisia/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-tn"/></svg><span>Tunisia (TND)</span></a>
+            <a href="algeria/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-dz"/></svg><span>Algeria (DZD)</span></a>
+            <a href="libya/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ly"/></svg><span>Libya (LYD)</span></a>
+            <a href="sudan/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sd"/></svg><span>Sudan (SDG)</span></a>
           </div>
 
           <h2 class="region-heading">Global Reference</h2>
           <div class="country-tiles">
-            <a href="india/" class="country-tile"><span>🇮🇳</span><span>India (INR)</span></a>
+            <a href="india/" class="country-tile"><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-in"/></svg><span>India (INR)</span></a>
           </div>
 
           <div class="cities-section">
@@ -261,11 +284,11 @@
               City-level gold price pages with local buying guides and market information.
             </p>
             <div class="city-tiles">
-              <a href="uae/cities/dubai.html" class="city-tile">🇦🇪 Dubai</a>
-              <a href="uae/cities/abu-dhabi.html" class="city-tile">🇦🇪 Abu Dhabi</a>
-              <a href="saudi-arabia/cities/riyadh.html" class="city-tile">🇸🇦 Riyadh</a>
-              <a href="egypt/cities/cairo.html" class="city-tile">🇪🇬 Cairo</a>
-              <a href="qatar/cities/doha.html" class="city-tile">🇶🇦 Doha</a>
+              <a href="uae/cities/dubai.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg> Dubai</a>
+              <a href="uae/cities/abu-dhabi.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg> Abu Dhabi</a>
+              <a href="saudi-arabia/cities/riyadh.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg> Riyadh</a>
+              <a href="egypt/cities/cairo.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg> Cairo</a>
+              <a href="qatar/cities/doha.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-qa"/></svg> Doha</a>
             </div>
           </div>
 
@@ -275,19 +298,19 @@
               Detailed guides to the most well-known gold souks and bazaars.
             </p>
             <div class="city-tiles">
-              <a href="uae/markets/dubai-gold-souk.html" class="city-tile">🇦🇪 Dubai Gold Souk</a>
+              <a href="uae/markets/dubai-gold-souk.html" class="city-tile"><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg> Dubai Gold Souk</a>
               <a href="egypt/markets/khan-el-khalili-cairo.html" class="city-tile"
-                >🇪🇬 Khan el-Khalili, Cairo</a
+                ><svg class="nav-flag ct-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg> Khan el-Khalili, Cairo</a
               >
             </div>
           </div>
 
           <div class="tools-row">
-            <a href="/calculator.html">🧮 Gold Calculator</a>
-            <a href="/tracker.html">📈 Live Tracker</a>
-            <a href="/shops.html">🏪 Gold Shops</a>
-            <a href="/learn.html">📚 Learn About Gold</a>
-            <a href="/content/guides/buying-guide.html">📖 Buying Guide</a>
+            <a href="/calculator.html"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-calc"/></svg> Gold Calculator</a>
+            <a href="/tracker.html"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-chart"/></svg> Live Tracker</a>
+            <a href="/shops.html"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-shop"/></svg> Gold Shops</a>
+            <a href="/learn.html"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg> Learn About Gold</a>
+            <a href="/content/guides/buying-guide.html"><svg class="ct-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-book"/></svg> Buying Guide</a>
           </div>
         </div>
       </section>

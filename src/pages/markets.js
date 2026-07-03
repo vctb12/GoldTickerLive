@@ -6,6 +6,7 @@ import { COUNTRIES, TRANSLATIONS } from '../config/index.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
 
 // ── State ──
@@ -68,8 +69,11 @@ function renderGrid() {
       ...(href ? { href } : {}),
     });
 
+    // SVG flag from the shared sprite — never flag emoji (they render as "AE"
+    // letter pairs on Windows). No symbol → text-only card (name is adjacent).
     const flag = el('span', { class: 'markets-card__flag', 'aria-hidden': 'true' });
-    flag.textContent = country.flag || '🏳️';
+    const flagSymbol = flagSymbolForCountry(country.code);
+    if (flagSymbol) flag.append(iconUseElement(flagSymbol));
 
     const info = el('div', { class: 'markets-card__info' });
     const nameEl = el('span', { class: 'markets-card__name' });
