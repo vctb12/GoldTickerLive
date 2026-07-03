@@ -3043,9 +3043,65 @@
   outline-offset: 2px;
 }
 
-.market-card-flag {
-  font-size: 2rem;
-  line-height: 1;
+/* ── V1-VISUAL: market photography (licensed, graded via scripts/images/) ── */
+.market-card-media {
+  margin: -1.5rem -1.3rem 0;
+  overflow: hidden;
+  border-start-start-radius: calc(var(--radius-lg) - 1.5px);
+  border-start-end-radius: calc(var(--radius-lg) - 1.5px);
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+.market-card-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.market-card:hover .market-card-media img,
+.market-card:focus-visible .market-card-media img {
+  transform: scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market-card-media img,
+  .market-card:hover .market-card-media img,
+  .market-card:focus-visible .market-card-media img {
+    transition: none;
+    transform: none;
+  }
+}
+
+.market-card-flag-svg {
+  display: inline-block;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  vertical-align: -0.2rem;
+  margin-inline-end: 0.35rem;
+}
+
+.market-card-loc {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.markets-note--credits {
+  margin-top: 0.35rem;
+  font-size: 0.7rem;
+}
+
+.markets-note--credits a {
+  color: var(--text-tertiary);
+  text-decoration: underline;
+}
+
+.country-tile-flag {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
 }
 
 .market-card-body {

@@ -16,6 +16,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { TRANSLATIONS } from '../../src/config/translations.js';
+
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SRC = path.join(ROOT, 'index.html');
 const OUT = path.join(ROOT, 'ar', 'index.html');
@@ -65,13 +67,17 @@ function build() {
   html = html.replace(/(name="twitter:title"\s+content=")[^"]*(")/, `$1${AR_TITLE}$2`);
   html = html.replace(/(name="twitter:description"\s+content=")[^"]*(")/, `$1${AR_DESC}$2`);
 
+  // 5b. Arabic og:image:alt (twitter falls back to og where absent).
+  const arOgImageAlt = TRANSLATIONS.ar?.['home.ogImageAlt'];
+  if (arOgImageAlt) {
+    html = html.replace(/(property="og:image:alt"\s+content=")[^"]*(")/, `$1${arOgImageAlt}$2`);
+    html = html.replace(/(name="twitter:image:alt"\s+content=")[^"]*(")/, `$1${arOgImageAlt}$2`);
+  }
+
   // 6. This page lives one directory deep (/ar/). Prepend ../ to every RELATIVE
   //    href/src so assets/scripts/links still resolve. Absolute URLs (scheme:,
   //    //, /), hashes, and the canonical/hreflang URLs above are left untouched.
-  html = html.replace(
-    /((?:href|src)=")(?![a-z][a-z0-9+.-]*:|\/\/|\/|#)([^"]*)"/gi,
-    '$1../$2"'
-  );
+  html = html.replace(/((?:href|src)=")(?![a-z][a-z0-9+.-]*:|\/\/|\/|#)([^"]*)"/gi, '$1../$2"');
 
   // 6b. Same depth fix for `srcset` (comma-separated "url descriptor" candidates).
   html = html.replace(/(srcset=")([^"]*)"/gi, (_match, prefix, value) => {
@@ -89,6 +95,35 @@ function build() {
     return `${prefix}${rewritten}"`;
   });
 
+  // 6c. Localize image alt text statically: any <img> carrying data-i18n-alt
+  //     gets its alt swapped to the Arabic string for that home.* key (the
+  //     runtime hydrator in src/pages/home.js does the same for the EN page's
+  //     ?lang=ar mode). Keys missing from the AR table keep the English alt.
+  html = html.replace(
+    /(<img\b[^>]*\balt=")([^"]*)("[^>]*\bdata-i18n-alt="([^"]+)")/gi,
+    (match, before, _enAlt, after, key) => {
+      const ar = TRANSLATIONS.ar?.[`home.${key}`];
+      return ar ? `${before}${ar}${after}` : match;
+    }
+  );
+
+  // 6d. Localize simple data-i18n text nodes statically (review follow-up on
+  //     PR #487): elements whose entire content is a text node get their EN
+  //     fallback swapped for the Arabic string, mirroring the 6c alt swap, so
+  //     the static /ar/ page reads Arabic before home.js hydrates. Elements
+  //     with nested markup deliberately do not match ([^<]*) and keep their
+  //     runtime-only hydration.
+  const AR_TABLE = TRANSLATIONS.ar || {};
+  html = html.replace(
+    /(<(\w+)\b[^>]*\bdata-i18n="([^"]+)"[^>]*>)([^<]*)(<\/\2>)/g,
+    (match, open, _tag, key, _text, close) => {
+      const ar = AR_TABLE[`home.${key}`];
+      if (typeof ar !== 'string') return match;
+      const escaped = ar.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      return `${open}${escaped}${close}`;
+    }
+  );
+
   // 7. Provenance marker.
   html = html.replace(
     '<head>',
@@ -104,7 +139,9 @@ const existing = fs.existsSync(OUT) ? fs.readFileSync(OUT, 'utf8') : '';
 
 if (check) {
   if (existing.trimEnd() !== out.trimEnd()) {
-    console.error('✖ ar/index.html is out of date. Run: node scripts/node/generate-ar-homepage.mjs');
+    console.error(
+      '✖ ar/index.html is out of date. Run: node scripts/node/generate-ar-homepage.mjs'
+    );
     process.exit(1);
   }
   console.log('✓ ar/index.html is up to date.');

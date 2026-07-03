@@ -1006,6 +1006,9 @@ function hydrateHomeI18n() {
   for (const el of document.querySelectorAll('[data-i18n-aria-label]')) {
     el.setAttribute('aria-label', tx(el.dataset.i18nAriaLabel));
   }
+  for (const el of document.querySelectorAll('[data-i18n-alt]')) {
+    el.setAttribute('alt', tx(el.dataset.i18nAlt));
+  }
 }
 
 function applyLangToPage() {
