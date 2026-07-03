@@ -27,6 +27,7 @@ import {
   buildShopsHref as buildShopsHandoffHref,
   buildMethodologyHref,
 } from './cross-page-links.js';
+import { syncHeroMediaAlts } from './hero-media-alts.js';
 
 const _modUrl = new URL(import.meta.url);
 const _pageUrl = new URL(location.href);
@@ -990,6 +991,7 @@ async function hydrate() {
   const navCtrl = injectNav(lang, depth);
   injectFooter(lang, depth);
   wireLangToggles(navCtrl, lang);
+  syncHeroMediaAlts(lang);
 
   const route = getRouteContext();
   const country = COUNTRIES.find((entry) => entry.slug === route.countrySlug);
