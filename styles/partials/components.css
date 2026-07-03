@@ -260,8 +260,8 @@
   }
 }
 
-/* Hide desktop CTA on mobile (hamburger takes over) */
-@media (width <= 640px) {
+/* Hide desktop CTA once the full desktop nav would crowd the brand/actions. */
+@media (width <= 1080px) {
   .nav-cta {
     display: none;
   }
@@ -481,7 +481,7 @@
 }
 
 /* --- Responsive breakpoints --- */
-@media (width >= 641px) {
+@media (width >= 1081px) {
   .nav-hamburger,
   .nav-drawer,
   .nav-backdrop {
@@ -489,7 +489,7 @@
   }
 }
 
-@media (width <= 640px) {
+@media (width <= 1080px) {
   .nav-links {
     display: none;
   }
@@ -4419,5 +4419,144 @@ button,
 @media (prefers-reduced-motion: reduce) {
   .ds-segmented__btn {
     transition: none;
+  }
+}
+
+/* Premium sitewide layer: calmer market-product surfaces and shell chrome. */
+.card,
+.surface-elevated,
+.surface-subtle,
+.surface-accent,
+.ds-card,
+.spotlight-card,
+.country-card,
+.insight-card,
+.download-card,
+.related-guides-link,
+.related-tool-link,
+.debug-panel,
+.workspace-panel,
+.archive-panel-inner,
+.downloads-panel-inner {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.card:hover,
+.card--elevated:hover,
+.spotlight-card:hover,
+.country-card:hover,
+.insight-card:hover,
+.download-card:hover,
+.related-guides-link:hover,
+.related-tool-link:hover,
+.section-link:hover,
+.retry-btn:hover,
+.copy-btn:hover,
+.status-retry-btn:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover,
+.btn-outline:hover,
+.nav-cta:hover,
+.nav-dropdown-btn:hover,
+.nav-drawer-link:hover,
+.footer-col--links a:hover {
+  transform: none;
+}
+
+.btn-primary:hover,
+.nav-cta:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.btn-outline:hover,
+.btn-ghost:hover,
+.nav-dropdown-btn:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.nav-dropdown-panel,
+.nav-drawer {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-lg);
+}
+
+.nav-drawer {
+  border-inline-start: 1px solid var(--border-subtle);
+}
+
+[dir='rtl'] .nav-drawer {
+  border-inline-start: 0;
+  border-inline-end: 1px solid var(--border-subtle);
+}
+
+.nav-drawer-link:hover {
+  background: color-mix(in srgb, var(--color-gold) 7%, var(--surface-primary));
+  color: var(--text-primary);
+}
+
+.nav-dropdown-panel-header,
+.footer-newsletter {
+  background: color-mix(in srgb, var(--surface-secondary) 72%, var(--surface-primary));
+  border-color: var(--border-subtle);
+}
+
+.site-footer-global {
+  background: color-mix(in srgb, var(--surface-primary) 92%, var(--surface-secondary));
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.footer-newsletter {
+  box-shadow: var(--shadow-xs);
+}
+
+.footer-newsletter-form button:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.table-wrapper,
+.ds-table-wrap {
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+#karat-table thead th,
+.ds-table th {
+  letter-spacing: 0;
+}
+
+#karat-table tbody tr:hover,
+.ds-table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-gold) 5%, var(--surface-primary));
+}
+
+.ds-badge,
+.price-kind,
+.freshness-chip,
+.hlc-updated,
+.cp-update-time,
+.order-price-refresh {
+  letter-spacing: 0;
+}
+
+@media (width <= 640px) {
+  .nav-dropdown-panel,
+  .nav-drawer {
+    box-shadow: var(--shadow-md);
+  }
+
+  .card,
+  .ds-card,
+  .spotlight-card,
+  .country-card,
+  .insight-card,
+  .download-card {
+    border-radius: var(--radius-lg);
   }
 }

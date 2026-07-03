@@ -590,3 +590,73 @@
 .plan-tick--no {
   color: var(--text-secondary);
 }
+
+/* Premium pricing layer: trust-first conversion cards. */
+.pricing-card,
+.comparison-table-wrapper,
+.pricing-faq .faq-item {
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.pricing-card,
+.pricing-card-featured,
+.pricing-card-featured:hover {
+  transform: none;
+}
+
+.pricing-card:hover,
+.pricing-card-featured:hover {
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}
+
+.pricing-card-featured {
+  border-color: color-mix(in srgb, var(--color-gold) 46%, var(--border-default));
+}
+
+.pricing-badge {
+  background: var(--color-gold-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.pricing-hero-content h1,
+.pricing-card-header h2,
+.pricing-badge,
+.comparison-table th {
+  letter-spacing: 0;
+}
+
+.pricing-cta-pro,
+.pricing-cta-api {
+  box-shadow: var(--shadow-xs);
+}
+
+.pricing-cta-pro:hover,
+.pricing-cta-api:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+  filter: none;
+}
+
+.comparison-table th {
+  background: var(--surface-secondary);
+  color: var(--text-secondary);
+}
+
+.comparison-table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-gold) 5%, var(--surface-primary));
+}
+
+@media (width <= 768px) {
+  .pricing-section {
+    transform: none;
+    padding-block-start: var(--space-5);
+  }
+
+  .pricing-tier-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}
