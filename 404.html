@@ -33,7 +33,26 @@
 <link rel="stylesheet" href="/styles/critical.css" />
     <link rel="stylesheet" href="/styles/global.css" />
     <style>
+      /* Guilloche rosette ornament — owned generated artwork
+         (scripts/images/generate-brand-art.py, assets/MANIFEST.md) */
+      .notfound-wrap::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 8px;
+        inset-inline-end: 8px;
+        inline-size: 200px;
+        block-size: 200px;
+        background: url('/assets/brand/guilloche-rosette-light-360.webp') center / contain no-repeat;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+
+      [data-theme='dark'] .notfound-wrap::before {
+        background-image: url('/assets/brand/guilloche-rosette-dark-360.webp');
+      }
+
       .notfound-wrap {
+        position: relative;
         display: flex;
         flex-direction: column;
         align-items: center;

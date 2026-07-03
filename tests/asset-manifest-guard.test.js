@@ -28,6 +28,7 @@ const path = require('node:path');
 
 const ROOT = path.resolve(__dirname, '..');
 const IMAGES_DIR = path.join(ROOT, 'assets', 'images');
+const BRAND_DIR = path.join(ROOT, 'assets', 'brand');
 const MANIFEST = path.join(ROOT, 'assets', 'MANIFEST.md');
 
 const BUDGET_KB = 120;
@@ -63,7 +64,11 @@ function manifestAssetPatterns() {
 }
 
 test('assets: every shipped image is registered in assets/MANIFEST.md', () => {
-  const files = listImageFiles(IMAGES_DIR);
+  const files = [
+    ...listImageFiles(IMAGES_DIR),
+    // generated brand artwork is registered with full repo paths
+    ...listImageFiles(BRAND_DIR).map((f) => `assets/brand/${f}`),
+  ];
   assert.ok(files.length > 0, 'expected committed images under assets/images/');
 
   const covered = new Set(
@@ -91,9 +96,14 @@ test('assets: manifest photography rows do not reference missing files', () => {
 
 test(`assets: every shipped image holds the ${BUDGET_KB} KB budget`, () => {
   const over = [];
-  for (const rel of listImageFiles(IMAGES_DIR)) {
-    const kb = fs.statSync(path.join(IMAGES_DIR, rel)).size / 1024;
-    if (kb > BUDGET_KB) over.push(`${rel} (${kb.toFixed(1)} KB)`);
+  for (const [dir, prefix] of [
+    [IMAGES_DIR, ''],
+    [BRAND_DIR, 'assets/brand/'],
+  ]) {
+    for (const rel of listImageFiles(dir)) {
+      const kb = fs.statSync(path.join(dir, rel)).size / 1024;
+      if (kb > BUDGET_KB) over.push(`${prefix}${rel} (${kb.toFixed(1)} KB)`);
+    }
   }
   assert.deepEqual(
     over,

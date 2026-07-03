@@ -23,6 +23,22 @@ async function loadTranslations() {
 
 // Keys that must be present in both EN and AR (bilingual parity).
 const REQUIRED_KEYS = [
+  // 'From the markets' photo strip (V1-VISUAL wave 3.5)
+  'home.mktStripTitle',
+  'home.mktStripQa',
+  'home.mktStripQaAlt',
+  'home.mktStripBh',
+  'home.mktStripBhAlt',
+  'home.mktStripOm',
+  'home.mktStripOmAlt',
+  'home.mktStripJo',
+  'home.mktStripJoAlt',
+  'home.mktStripMa',
+  'home.mktStripMaAlt',
+  'home.mktStripTr',
+  'home.mktStripTrAlt',
+  'home.mktStripIn',
+  'home.mktStripInAlt',
   // Karat strip unit toggle
   'home.unitGram',
   'home.unitTola',
