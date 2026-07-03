@@ -10,7 +10,7 @@ const recorderScript = path.join(repoRoot, 'scripts', 'python', 'record_price_hi
 
 test('record_price_history dry-run reads the checked-out normalized price snapshot', (t) => {
   const pythonVersion = spawnSync('python3', ['--version'], { encoding: 'utf8' });
-  if (pythonVersion.error) {
+  if (pythonVersion.error || pythonVersion.status !== 0) {
     t.skip('python3 is not available in this environment');
     return;
   }
