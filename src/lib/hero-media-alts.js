@@ -18,4 +18,10 @@ export function syncHeroMediaAlts(lang) {
     if (!node.dataset.labelEn) node.dataset.labelEn = node.textContent;
     node.textContent = lang === 'ar' ? node.dataset.labelAr : node.dataset.labelEn;
   });
+  // Static hub context copy (EN in markup, AR in data-copy-ar) rides the same
+  // mechanism so crawlers see real copy and readers see their language.
+  document.querySelectorAll('.cp-hero-context[data-copy-ar]').forEach((node) => {
+    if (!node.dataset.copyEn) node.dataset.copyEn = node.textContent;
+    node.textContent = lang === 'ar' ? node.dataset.copyAr : node.dataset.copyEn;
+  });
 }
