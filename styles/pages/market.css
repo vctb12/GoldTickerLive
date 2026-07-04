@@ -18,6 +18,21 @@ html[lang='ar'] [data-lang-block='en'] {
   display: none;
 }
 
+/* .mkt-jump sets display:flex, which has equal specificity to the generic
+   [data-lang-block] toggle above and would win by source order (un-hiding the
+   inactive-language nav). Scope the toggle to .mkt-jump so it stays correct. */
+.mkt-jump[data-lang-block='ar'] {
+  display: none;
+}
+
+html[lang='ar'] .mkt-jump[data-lang-block='ar'] {
+  display: flex;
+}
+
+html[lang='ar'] .mkt-jump[data-lang-block='en'] {
+  display: none;
+}
+
 /* ── Hero ─────────────────────────────────────────────────────────────── */
 .mkt-hero {
   padding-block: var(--space-6) var(--space-4);
