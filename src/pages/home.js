@@ -1069,6 +1069,9 @@ function applyLangToPage() {
   setTextById('home-action-learn-kicker', tx('actionLearnKicker'));
   setTextById('home-action-learn-label', tx('actionLearnLabel'));
   setTextById('home-action-learn-desc', tx('actionLearnDesc'));
+  setTextById('home-action-market-kicker', tx('actionMarketKicker'));
+  setTextById('home-action-market-label', tx('actionMarketLabel'));
+  setTextById('home-action-market-desc', tx('actionMarketDesc'));
   setTextById('hlc-tracker-link', tx('trackerLink'));
   setTextById('hlc-title', tx('spotTitle'));
   setTextById('hlc-sub', tx('perOz'));
