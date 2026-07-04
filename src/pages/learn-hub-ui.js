@@ -21,14 +21,29 @@ function t(lang, key, vars = {}) {
 function renderGuideCard(guide, lang) {
   const href = guide.href.startsWith('/') ? guide.href : `/${guide.href}`;
   const read = getLearnProgress().includes(guide.href);
-  return el('a', { href, class: `card card--bordered learn-guide-card card-interactive${read ? ' learn-guide-card--read' : ''}` }, [
-    el('div', { class: 'learn-guide-card__meta' }, [
-      el('span', { class: `badge badge--${guide.level === 'beginner' ? 'info' : 'neutral'}` }, t(lang, `learn.level.${guide.level}`)),
-      el('span', { class: 'learn-guide-card__time' }, t(lang, 'learn.readMin', { n: guide.readMin })),
-    ]),
-    el('h3', { class: 'learn-guide-card__title' }, t(lang, guide.titleKey)),
-    el('p', { class: 'learn-guide-card__desc' }, t(lang, guide.descKey)),
-  ]);
+  return el(
+    'a',
+    {
+      href,
+      class: `card card--bordered learn-guide-card card-interactive${read ? ' learn-guide-card--read' : ''}`,
+    },
+    [
+      el('div', { class: 'learn-guide-card__meta' }, [
+        el(
+          'span',
+          { class: `badge badge--${guide.level === 'beginner' ? 'info' : 'neutral'}` },
+          t(lang, `learn.level.${guide.level}`)
+        ),
+        el(
+          'span',
+          { class: 'learn-guide-card__time' },
+          t(lang, 'learn.readMin', { n: guide.readMin })
+        ),
+      ]),
+      el('h3', { class: 'learn-guide-card__title' }, t(lang, guide.titleKey)),
+      el('p', { class: 'learn-guide-card__desc' }, t(lang, guide.descKey)),
+    ]
+  );
 }
 
 /**
@@ -47,7 +62,11 @@ export function mountLearnHubCatalog(options) {
     LEARN_GUIDE_CATEGORIES.some((c) => c.guides.some((g) => g.href === h))
   ).length;
 
-  const progress = el('p', { class: 'learn-hub-progress', 'aria-live': 'polite' }, t(lang, 'learn.progress', { read: readCount, total }));
+  const progress = el(
+    'p',
+    { class: 'learn-hub-progress', 'aria-live': 'polite' },
+    t(lang, 'learn.progress', { read: readCount, total })
+  );
 
   const filter = el('input', {
     type: 'search',
@@ -90,14 +109,28 @@ export function mountLearnHubCatalog(options) {
   filter.addEventListener('input', () => renderSections(filter.value));
   renderSections();
 
+  // Defensive: never replace the server-rendered static fallback with an empty
+  // guide list. If the catalog somehow resolves to zero cards (e.g. a partial
+  // deploy where a lazily-loaded chunk is stale), keep the static cards that
+  // are already in `root` rather than blanking the "featured guides" area.
+  if (!sectionsHost.children.length || !total) return;
+
   root.replaceChildren(
     el('section', { class: 'learn-hub-catalog card card--bordered' }, [
       progress,
       filter,
       sectionsHost,
       el('div', { class: 'learn-hub-related-row' }, [
-        el('a', { href: 'methodology.html', class: 'related-tool-link' }, t(lang, 'learn.relatedMethod')),
-        el('a', { href: 'calculator.html', class: 'related-tool-link' }, t(lang, 'learn.relatedCalc')),
+        el(
+          'a',
+          { href: 'methodology.html', class: 'related-tool-link' },
+          t(lang, 'learn.relatedMethod')
+        ),
+        el(
+          'a',
+          { href: 'calculator.html', class: 'related-tool-link' },
+          t(lang, 'learn.relatedCalc')
+        ),
       ]),
     ])
   );

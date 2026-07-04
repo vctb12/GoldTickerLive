@@ -17,6 +17,9 @@
   --heatmap-b4: #4a3309;
   --heatmap-land: #e9e4d8;
   --heatmap-nodata: #cfc9bb;
+  --heatmap-ocean: #eef3f7;
+  --heatmap-ocean-edge: #d3dde5;
+  --heatmap-graticule: rgb(90 120 150 / 14%);
   --heatmap-sea: transparent;
   --heatmap-stroke: var(--color-bg);
 }
@@ -29,6 +32,9 @@
   --heatmap-b4: #f2d385;
   --heatmap-land: #1d2027;
   --heatmap-nodata: #343945;
+  --heatmap-ocean: #0b1016;
+  --heatmap-ocean-edge: #223042;
+  --heatmap-graticule: rgb(120 150 190 / 12%);
   --heatmap-stroke: var(--color-bg);
 }
 
@@ -203,7 +209,7 @@
   position: relative;
   border: 1px solid var(--color-border-subtle, var(--color-border));
   border-radius: var(--radius-lg);
-  background: var(--color-surface-1);
+  background: var(--heatmap-ocean);
   padding: var(--space-2);
   overflow: hidden;
 }
@@ -228,16 +234,29 @@
   margin: 0;
 }
 
+/* Ocean sphere + graticule grid, drawn under the land. */
+.heatmap-ocean {
+  fill: var(--heatmap-ocean);
+  stroke: var(--heatmap-ocean-edge);
+  stroke-width: 1;
+}
+
+.heatmap-graticule {
+  stroke: var(--heatmap-graticule);
+  stroke-width: 0.5;
+  fill: none;
+}
+
 .heatmap-land {
   fill: var(--heatmap-land);
   stroke: var(--heatmap-stroke);
-  stroke-width: 0.5;
+  stroke-width: 0.4;
 }
 
 .heatmap-country,
 .heatmap-marker {
   stroke: var(--heatmap-stroke);
-  stroke-width: 0.5;
+  stroke-width: 0.4;
   cursor: pointer;
 }
 

@@ -1427,6 +1427,17 @@ textarea:focus,
   will-change: opacity, transform;
 }
 
+/* Fail-open: the hide above only applies once JS has confirmed it can run — the
+   theme-preinit inline script adds `.js` to <html> before first paint. If
+   JavaScript is disabled (or never boots), `.js` is absent and every
+   [data-reveal] element renders fully visible instead of stranded at opacity:0.
+   Scoped via `:root:not(.js)` so it disappears the moment JS is present and can
+   never fight `.is-in-view` (which only exists while JS is running). */
+:root:not(.js) [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
 [data-reveal][data-reveal-delay='1'] {
   transition-delay: 60ms;
 }
