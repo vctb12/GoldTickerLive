@@ -101,7 +101,7 @@ const TXT = {
     directoryReviewed: 'Directory last reviewed {date}',
     featuredNote:
       'Featured: editorially selected markets for this region. Not a paid placement and not an endorsement of any individual shop inside the market.',
-    statListings: 'Shops &amp; markets',
+    statListings: 'Shops & markets',
     statCountries: 'Countries',
     statRegions: 'Regions',
     popularMarkets: 'Popular markets',
