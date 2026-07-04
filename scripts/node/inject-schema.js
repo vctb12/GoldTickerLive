@@ -83,7 +83,8 @@ function getOrganizationSchema() {
 }
 
 /**
- * WebSite schema with search action for homepage
+ * WebSite schema for homepage.
+ * (The SearchAction was dropped when the /content/search/ page was retired.)
  */
 function getWebSiteSchema() {
   return {
@@ -92,14 +93,6 @@ function getWebSiteSchema() {
     name: SITE_NAME,
     url: SITE_URL,
     description: SITE_DESCRIPTION,
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${SITE_URL}/content/search/?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
     inLanguage: ['en', 'ar'],
   };
 }
