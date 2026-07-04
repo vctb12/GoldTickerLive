@@ -22,7 +22,6 @@ import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import {
   createSavedCalculation,
   isAuthenticated as isAccountAuthenticated,
-  redirectToAccount,
 } from '../lib/public-account-client.js';
 import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculator/url-state.js';
 import {
@@ -1664,10 +1663,11 @@ function initCopyBtn() {
     };
 
     if (!isAccountAuthenticated()) {
+      // Cross-device account sync was retired with the account page — save
+      // locally and confirm on the button instead of prompting a sign-in.
       fallback();
-      if (window.confirm(t('save_requires_auth'))) {
-        redirectToAccount();
-      }
+      button.textContent = t('saved_result');
+      button.setAttribute('aria-label', t('saved_result'));
       return;
     }
 

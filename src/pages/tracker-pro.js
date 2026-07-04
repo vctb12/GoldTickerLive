@@ -44,7 +44,6 @@ import {
   createWatchlistItem,
   getMe,
   isAuthenticated as isAccountAuthenticated,
-  redirectToAccount,
 } from '../lib/public-account-client.js';
 // Lazy-load heavy UI modules (ui-shell, events, wire, adSlot) inside init()
 let mountShell;
@@ -814,15 +813,9 @@ async function syncAlertToAccount({ condition, target }) {
 
 async function saveWatchlistToAccount() {
   if (!isAccountAuthenticated()) {
-    if (
-      window.confirm(
-        state.lang === 'ar'
-          ? 'سجّل الدخول لمزامنة قائمة المراقبة عبر الأجهزة.'
-          : 'Sign in to sync watchlist across devices.'
-      )
-    ) {
-      redirectToAccount();
-    }
+    // Cross-device sync was retired with the account page — the watchlist
+    // already persists locally, so just confirm that honestly.
+    showToast(trackerTx('toast.watchlistSavedLocal'));
     return;
   }
 

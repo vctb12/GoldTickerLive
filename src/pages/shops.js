@@ -17,7 +17,6 @@ import { observeReveal } from '../lib/reveal.js';
 import {
   createSavedShop,
   isAuthenticated as isAccountAuthenticated,
-  redirectToAccount,
 } from '../lib/public-account-client.js';
 import { iconSvg, iconUseElement } from '../components/icon-sprite.js';
 import { initShopsMap, updateMapMarkers, invalidateMapSize } from '../components/shops-map.js';
@@ -160,6 +159,7 @@ const TXT = {
     removeFromShortlist: 'Remove from shortlist',
     saveToAccount: 'Save to account',
     savedToAccount: 'Saved to account',
+    savedToShortlist: 'Saved to your shortlist on this device.',
     saveToAccountAuthPrompt: 'Sign in to save this shop to your account?',
     saved: 'Saved',
     shortlistCount: (n) => `${n} saved`,
@@ -315,6 +315,7 @@ const TXT = {
     removeFromShortlist: 'إزالة من القائمة',
     saveToAccount: 'حفظ في الحساب',
     savedToAccount: 'تم الحفظ في الحساب',
+    savedToShortlist: 'تم الحفظ في قائمتك على هذا الجهاز.',
     saveToAccountAuthPrompt: 'هل تريد تسجيل الدخول لحفظ هذا المحل في حسابك؟',
     saved: 'محفوظ',
     shortlistCount: (n) => `${n} محفوظة`,
@@ -764,9 +765,10 @@ function announceShopStatus(message) {
 async function saveShopToAccount(shop) {
   if (!shop?.id) return;
   if (!isAccountAuthenticated()) {
-    if (window.confirm(t('saveToAccountAuthPrompt'))) {
-      redirectToAccount();
-    }
+    // Cross-device account sync was retired with the account page — fall back
+    // to the local shortlist so the save still works on this device.
+    if (!isInShortlist(shop.id)) toggleShortlist(shop.id);
+    announceShopStatus(t('savedToShortlist'));
     return;
   }
   await createSavedShop({
