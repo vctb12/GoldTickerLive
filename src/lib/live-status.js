@@ -219,6 +219,16 @@ export function getLiveFreshness({
 
   // Live API path — align UI labels with engine freshness-policy (5 s live budget).
   if (isFresh === true) {
+    // Hard age ceiling first: even an upstream-"fresh" snapshot is no longer
+    // trustworthy once it is older than the refresh window. This matters on the
+    // static deploy, where the committed gold_price.json is frozen with
+    // is_fresh:true and can never flip to false client-side — without this the
+    // label would cap at "delayed" forever during a fetch-workflow gap, and a
+    // 3-hour-old price would read "Delayed" (i.e. "still trustworthy") instead
+    // of "Stale". Keeps this branch consistent with the age-based path below.
+    if (ageMs > staleAfterMs) {
+      return { key: 'stale', ageMs, ageText, timeText, updatedAt, reason: 'age-exceeds-stale' };
+    }
     if (ageMs > FRESHNESS_POLICY.delayedMaxAgeMs) {
       return { key: 'delayed', ageMs, ageText, timeText, updatedAt, reason: 'live-api-delayed' };
     }

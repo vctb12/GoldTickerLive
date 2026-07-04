@@ -126,7 +126,9 @@ export function injectTicker(lang = 'en', depth = 0) {
   const isAr = lang === 'ar';
   const trackerHref = depth === 0 ? 'tracker.html' : '../'.repeat(depth) + 'tracker.html';
   const dismissLabel = isAr ? 'إغلاق الشريط' : 'Dismiss ticker';
-  const ariaLabel = isAr ? 'شريط أسعار الذهب' : 'Live gold price ticker';
+  // No "Live" in the permanent accessible name — it is set once and never updated,
+  // so the visible freshness pill (not the label) carries the real state.
+  const ariaLabel = isAr ? 'شريط أسعار الذهب' : 'Gold price ticker';
   const unavailableLabel = freshnessLabel('unavailable', lang);
 
   // Two identical copies so the animation creates a seamless loop — built via

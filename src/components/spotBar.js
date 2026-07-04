@@ -46,7 +46,10 @@ export function injectSpotBar(lang = 'en', depth = 0) {
   bar.className = 'spot-bar';
   bar.setAttribute('role', 'status');
   bar.setAttribute('aria-live', 'polite');
-  bar.setAttribute('aria-label', isAr ? 'أسعار الذهب الفورية' : 'Live gold spot prices');
+  // No "Live" in the permanent accessible name — the label is set once and never
+  // updated, so claiming "Live" would mislead screen-reader users when the data is
+  // stale / cached / fallback / closed. The visible freshness pill carries the state.
+  bar.setAttribute('aria-label', isAr ? 'أسعار الذهب الفورية' : 'Gold spot prices');
   bar.setAttribute('data-freshness', 'unavailable');
   // Build the inner structure via DOM to eliminate the innerHTML sink.
   function makeSpotLink(spot, label, valueLabel) {
