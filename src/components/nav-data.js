@@ -170,6 +170,12 @@ const RAW_NAV_DATA = {
                 icon: 'ABC',
               },
               {
+                href: '/market.html',
+                label: 'How gold is priced',
+                description: 'Spot to street, step by step',
+                icon: 'PRC',
+              },
+              {
                 href: '/methodology.html',
                 label: 'Methodology',
                 description: 'Sources, formulas and limits',
@@ -344,6 +350,12 @@ const RAW_NAV_DATA = {
                 label: 'مسرد المصطلحات',
                 description: 'شرح المصطلحات الرئيسية',
                 icon: 'ABC',
+              },
+              {
+                href: '/market.html',
+                label: 'كيف يُسعَّر الذهب',
+                description: 'من السوق العالمي إلى المحل',
+                icon: 'PRC',
               },
               {
                 href: '/methodology.html',

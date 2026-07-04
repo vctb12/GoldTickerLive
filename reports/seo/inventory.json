@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-07-04",
   "summary": {
-    "totalHtmlFiles": 14,
-    "withCanonical": 12,
+    "totalHtmlFiles": 15,
+    "withCanonical": 13,
     "withoutCanonical": 2,
-    "withOgImage": 12,
+    "withOgImage": 13,
     "withoutOgImage": 2,
-    "withJsonLd": 12,
+    "withJsonLd": 13,
     "withoutJsonLd": 2,
-    "hreflangEnArPairs": 12,
+    "hreflangEnArPairs": 13,
     "noindexCount": 2
   },
   "records": [
@@ -250,6 +250,42 @@
       ],
       "jsonLdTypes": [
         "Article",
+        "BreadcrumbList"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "market.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "How Gold Is Priced — From the World Market to Your Local Shop | Gold Ticker Live",
+      "metaDescription": "How gold is priced, step by step: the global spot price (XAU/USD), currency conversion and the AED peg, weight and karat, dealer premiums and making charges, VAT — and why retail rarely matches spot. Bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/market.html",
+      "robots": null,
+      "ogTitle": "How Gold Is Priced — Spot to Street | Gold Ticker Live",
+      "ogDescription": "Follow a single global number — the spot price — as it becomes the figure on your local jeweller's counter. The chain, the marketplaces, and why retail rarely matches spot.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/market.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/market.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/market.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/market.html"
+        }
+      ],
+      "jsonLdTypes": [
         "BreadcrumbList"
       ],
       "hasStructuredData": true,

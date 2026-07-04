@@ -39,6 +39,7 @@ const LOCAL_DICTS = [
   ['src/pages/heatmap.js', 'T'],
   ['src/pages/portfolio.js', 'T'],
   ['src/pages/glossary.js', 'T'],
+  ['src/pages/market.js', 'T'],
 ];
 
 const propKey = (p) => (p.key.type === 'Identifier' ? p.key.name : p.key.value);

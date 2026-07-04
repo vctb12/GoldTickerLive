@@ -36,6 +36,7 @@ function getLabels(_extra = {}) {
     compare: tx('nav.compare', 'Compare Countries'),
     heatmap: tx('nav.heatmap', 'World Map'),
     glossary: tx('nav.glossary', 'Glossary'),
+    market: tx('nav.market', 'How Gold Is Priced'),
     portfolio: tx('nav.portfolio', 'Portfolio'),
   };
 }
@@ -139,6 +140,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
     compare: [{ label: labels.compare, url: '/compare.html' }],
     heatmap: [{ label: labels.heatmap, url: '/heatmap.html' }],
     glossary: [{ label: labels.glossary, url: '/glossary.html' }],
+    market: [{ label: labels.market, url: '/market.html' }],
     portfolio: [{ label: labels.portfolio, url: '/portfolio.html' }],
   };
 
