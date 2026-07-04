@@ -66,6 +66,7 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/compare.css" />
+    <link rel="stylesheet" href="./styles/components/edu.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
@@ -182,6 +183,1044 @@
 
       <!-- Side-by-side detail -->
       <section class="compare-detail" id="compare-detail" aria-label="Side-by-side country detail"></section>
+
+      <!-- Gold vs other assets — static educational hub (edu-* system) -->
+      <!-- Gold vs other assets — educational hub (bilingual EN/AR). Append inside <main> on compare.html. -->
+
+      <!-- 1. HERO ============================================================== -->
+      <section class="edu-section" id="gold-vs-assets" aria-labelledby="gold-vs-assets-h gold-vs-assets-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Understand gold</p>
+            <h2 class="edu-heading" id="gold-vs-assets-h">Gold vs other assets</h2>
+            <p class="edu-lede">This hub compares gold with the assets people usually weigh it against — silver, Bitcoin, cash, stocks, real estate and gold-backed funds — so you can see where gold fits in a portfolio and what it does well. Everything here is educational and based on spot-linked reference prices, not a live dealer quote and not a promise of future returns.</p>
+
+            <div class="edu-grid edu-grid--3">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Precious metals &amp; purity</h3>
+                <p class="edu-card-text">How gold compares with silver, how physical bullion differs from gold funds, and what the karat marks on jewelry really mean.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-silver">Gold vs silver</a></li>
+                  <li><a href="#physical-gold-vs-etfs">Physical gold vs gold ETFs</a></li>
+                  <li><a href="#gold-karat-comparison">24K vs 22K vs 21K vs 18K</a></li>
+                </ul>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Money &amp; digital</h3>
+                <p class="edu-card-text">Why gold behaves differently from the cash in your account and from a digital asset with a fixed supply.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-cash">Gold vs cash</a></li>
+                  <li><a href="#gold-vs-bitcoin">Gold vs Bitcoin</a></li>
+                </ul>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Growth &amp; property</h3>
+                <p class="edu-card-text">How gold sits alongside the growth engines of a portfolio — company shares and real estate.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-stocks">Gold vs stocks</a></li>
+                  <li><a href="#gold-vs-real-estate">Gold vs real estate</a></li>
+                </ul>
+              </article>
+            </div>
+
+            <p class="edu-disclaimer">This content is for education only and is not financial advice. Prices across GoldTickerLive are spot-linked reference values, not live dealer quotes, and retail shop prices add making charges and margins on top of the reference.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">افهم الذهب</p>
+            <h2 class="edu-heading" id="gold-vs-assets-h-ar">الذهب مقابل الأصول الأخرى</h2>
+            <p class="edu-lede">يقارن هذا الدليل الذهب بالأصول التي يوازنه بها الناس عادةً — الفضة والبيتكوين والنقد والأسهم والعقارات والصناديق المدعومة بالذهب — لتتبيّن موضع الذهب داخل المحفظة وما يُتقنه. كل ما هنا تعليمي ويستند إلى أسعار مرجعية مرتبطة بالسعر الفوري، لا إلى تسعيرة تاجر لحظية ولا وعدٍ بعوائد مستقبلية.</p>
+
+            <div class="edu-grid edu-grid--3">
+              <article class="edu-card">
+                <h3 class="edu-card-title">المعادن النفيسة والنقاء</h3>
+                <p class="edu-card-text">كيف يُقارَن الذهب بالفضة، وكيف يختلف السبيكة المادية عن صناديق الذهب، وما الذي تعنيه فعلاً أختام العيار على المصوغات.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-silver">الذهب مقابل الفضة</a></li>
+                  <li><a href="#physical-gold-vs-etfs">الذهب المادي مقابل صناديق الذهب المتداولة</a></li>
+                  <li><a href="#gold-karat-comparison">عيار 24 مقابل 22 و21 و18</a></li>
+                </ul>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">النقد والرقمي</h3>
+                <p class="edu-card-text">لماذا يسلك الذهب سلوكاً مختلفاً عن النقد في حسابك وعن أصلٍ رقمي ذي عرضٍ محدود.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-cash">الذهب مقابل النقد</a></li>
+                  <li><a href="#gold-vs-bitcoin">الذهب مقابل البيتكوين</a></li>
+                </ul>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">النمو والعقار</h3>
+                <p class="edu-card-text">كيف يقف الذهب إلى جانب محرّكات النمو في المحفظة — أسهم الشركات والعقارات.</p>
+                <ul class="edu-list">
+                  <li><a href="#gold-vs-stocks">الذهب مقابل الأسهم</a></li>
+                  <li><a href="#gold-vs-real-estate">الذهب مقابل العقارات</a></li>
+                </ul>
+              </article>
+            </div>
+
+            <p class="edu-disclaimer">هذا المحتوى لأغراض تعليمية فقط وليس نصيحة مالية. الأسعار عبر GoldTickerLive قيمٌ مرجعية مرتبطة بالسعر الفوري وليست تسعيرات تجار لحظية، وأسعار المتاجر بالتجزئة تضيف أجور الصياغة وهوامش الربح فوق السعر المرجعي.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 2. GOLD vs SILVER ==================================================== -->
+      <section class="edu-section" id="gold-vs-silver" aria-labelledby="gold-vs-silver-h gold-vs-silver-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Precious metal vs precious metal</p>
+            <h2 class="edu-heading" id="gold-vs-silver-h">Gold vs silver</h2>
+            <p class="edu-lede">Both are precious metals and monetary stores of value, but silver behaves partly like an industrial commodity — cheaper to buy per gram and noticeably sharper in its price swings.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Where gold has the edge</h3>
+                <p class="edu-card-text">Gold is the deeper store of value: central banks hold it, it is far less tied to factory demand, and it tends to hold its price better through recessions. Its higher value per gram also means less bulk to store for the same amount of money.</p>
+                <p class="edu-card-text">Best for <span class="edu-chip">Long-term store of value</span> <span class="edu-chip">Stability</span></p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Where silver has the edge</h3>
+                <p class="edu-card-text">Silver costs far less per gram, so it is easy to start small and to divide for gifting or resale. Roughly half of silver demand is industrial (electronics, solar), which can lift prices in growth cycles but also deepens the falls in slowdowns.</p>
+                <p class="edu-card-text">Best for <span class="edu-chip">Smaller budgets</span> <span class="edu-chip">Higher risk tolerance</span></p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold compared with silver</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Silver</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Primary role</th>
+                    <td>Monetary store of value</td>
+                    <td>Hybrid: store of value plus industrial metal</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Volatility</th>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Industrial demand</th>
+                    <td>Low (~10–15%)</td>
+                    <td>High (~50%)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Liquidity</th>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Typical entry cost</th>
+                    <td>Higher per gram</td>
+                    <td>Much lower per gram</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Choose gold for stability and store of value; choose silver for a lower entry cost and industrial upside — accepting bigger price swings in return.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">معدن نفيس مقابل معدن نفيس</p>
+            <h2 class="edu-heading" id="gold-vs-silver-h-ar">الذهب مقابل الفضة</h2>
+            <p class="edu-lede">كلاهما معدن نفيس ومخزنٌ نقدي للقيمة، لكن الفضة تسلك جزئياً سلوك السلعة الصناعية — أرخص للشراء بالغرام وأكثر حدّةً بوضوح في تقلّبات سعرها.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">أين يتفوّق الذهب</h3>
+                <p class="edu-card-text">الذهب مخزنٌ أعمق للقيمة: تحتفظ به البنوك المركزية، وهو أقل ارتباطاً بكثير بالطلب الصناعي، ويميل إلى الحفاظ على سعره على نحوٍ أفضل خلال الركود. كما تعني قيمته الأعلى للغرام حجماً أقل للتخزين مقابل المبلغ نفسه.</p>
+                <p class="edu-card-text">الأنسب لـ <span class="edu-chip">مخزن قيمة طويل الأمد</span> <span class="edu-chip">الاستقرار</span></p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">أين تتفوّق الفضة</h3>
+                <p class="edu-card-text">تكلفة الفضة أقل بكثير للغرام، فيسهل البدء بمبلغ صغير وتقسيمها للإهداء أو إعادة البيع. ونحو نصف الطلب على الفضة صناعي (الإلكترونيات والطاقة الشمسية)، وهو ما قد يرفع الأسعار في دورات النمو لكنه يعمّق الهبوط في فترات التباطؤ.</p>
+                <p class="edu-card-text">الأنسب لـ <span class="edu-chip">الميزانيات الأصغر</span> <span class="edu-chip">تحمّل مخاطر أعلى</span></p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب بالفضة</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب</th>
+                    <th scope="col">الفضة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">الدور الأساسي</th>
+                    <td>مخزن نقدي للقيمة</td>
+                    <td>مزيج: مخزن قيمة ومعدن صناعي</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التقلّب</th>
+                    <td><span class="edu-tag edu-tag--medium">متوسط</span></td>
+                    <td><span class="edu-tag edu-tag--high">مرتفع</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الطلب الصناعي</th>
+                    <td>منخفض (~10–15%)</td>
+                    <td>مرتفع (~50%)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">السيولة</th>
+                    <td><span class="edu-tag edu-tag--high">مرتفعة</span></td>
+                    <td><span class="edu-tag edu-tag--medium">متوسطة</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">تكلفة الدخول المعتادة</th>
+                    <td>أعلى للغرام</td>
+                    <td>أقل بكثير للغرام</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> اختر الذهب للاستقرار ومخزن القيمة؛ واختر الفضة لتكلفة دخول أقل وإمكان صعودٍ صناعي — مقابل قبول تقلّبات سعرية أكبر.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 3. GOLD vs BITCOIN ================================================== -->
+      <section class="edu-section" id="gold-vs-bitcoin" aria-labelledby="gold-vs-bitcoin-h gold-vs-bitcoin-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Metal vs digital</p>
+            <h2 class="edu-heading" id="gold-vs-bitcoin-h">Gold vs Bitcoin</h2>
+            <p class="edu-lede">Both are often called "hard money" because they are scarce and not printed by any government, but they differ enormously in track record, volatility and how you keep them safe.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Scarcity, told two ways</h3>
+                <p class="edu-card-text">Gold is scarce but not fixed: mining adds roughly 1.5% to the above-ground supply each year. Bitcoin has a hard cap of 21 million coins written into its code — a stricter form of scarcity, but a much younger and untested one.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Different risks to guard against</h3>
+                <p class="edu-card-text">With physical gold the main risks are theft or loss. With Bitcoin the risks are digital: lost private keys, hacks, and exchange failures. Bitcoin also faces evolving, uncertain regulation across countries.</p>
+                <p class="edu-card-text">Roles <span class="edu-chip">Proven safe haven</span> <span class="edu-chip">High-risk digital exposure</span></p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold compared with Bitcoin</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Bitcoin</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Scarcity</th>
+                    <td>Scarce; supply grows ~1.5%/yr from mining</td>
+                    <td>Fixed cap of 21 million coins</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Volatility</th>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Market maturity</th>
+                    <td>Thousands of years as money</td>
+                    <td>About 15 years old</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Custody risk</th>
+                    <td>Physical theft or loss</td>
+                    <td>Lost keys, hacks, exchange failures</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Regulation</th>
+                    <td>Well established, widely accepted</td>
+                    <td>Evolving and uncertain across jurisdictions</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Gold offers a long, proven history and lower volatility; Bitcoin offers a fixed digital supply with far higher risk and price swings — different tools at very different risk levels.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">المعدن مقابل الرقمي</p>
+            <h2 class="edu-heading" id="gold-vs-bitcoin-h-ar">الذهب مقابل البيتكوين</h2>
+            <p class="edu-lede">كثيراً ما يوصفان بـ«المال الصعب» لندرتهما ولأن أي حكومة لا تطبعهما، لكنهما يختلفان اختلافاً هائلاً في السجل التاريخي والتقلّب وطريقة حفظهما بأمان.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">الندرة بروايتين</h3>
+                <p class="edu-card-text">الذهب نادر لكنه غير ثابت: يضيف التعدين نحو 1.5% إلى المعروض فوق الأرض كل عام. أما البيتكوين فله سقف صارم يبلغ 21 مليون وحدة مكتوب في شيفرته — ندرة أكثر صرامة، لكنها أحدث بكثير وغير مُختبَرة.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">مخاطر مختلفة يجب اتقاؤها</h3>
+                <p class="edu-card-text">مع الذهب المادي تكون المخاطر الرئيسية السرقة أو الفقدان. أما مع البيتكوين فالمخاطر رقمية: فقدان المفاتيح الخاصة، والاختراقات، وإخفاق المنصّات. كما يواجه البيتكوين تنظيماً متغيّراً وغير مؤكد بين الدول.</p>
+                <p class="edu-card-text">الأدوار <span class="edu-chip">ملاذ آمن مُثبَت</span> <span class="edu-chip">انكشاف رقمي عالي المخاطر</span></p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب بالبيتكوين</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب</th>
+                    <th scope="col">البيتكوين</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">الندرة</th>
+                    <td>نادر؛ ينمو المعروض ~1.5% سنوياً من التعدين</td>
+                    <td>سقف ثابت عند 21 مليون وحدة</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التقلّب</th>
+                    <td><span class="edu-tag edu-tag--medium">متوسط</span></td>
+                    <td><span class="edu-tag edu-tag--high">مرتفع</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">نضج السوق</th>
+                    <td>آلاف السنين كنقد</td>
+                    <td>نحو 15 عاماً</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">مخاطر الحفظ</th>
+                    <td>السرقة أو الفقدان المادي</td>
+                    <td>فقدان المفاتيح والاختراقات وإخفاق المنصّات</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التنظيم</th>
+                    <td>راسخ ومقبول على نطاق واسع</td>
+                    <td>متغيّر وغير مؤكد بين الولايات القضائية</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> يقدّم الذهب تاريخاً طويلاً مُثبتاً وتقلّباً أقل؛ ويقدّم البيتكوين عرضاً رقمياً ثابتاً بمخاطر وتقلّبات أعلى بكثير — أداتان مختلفتان عند مستويي مخاطرة متباينين جداً.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. GOLD vs CASH ===================================================== -->
+      <section class="edu-section" id="gold-vs-cash" aria-labelledby="gold-vs-cash-h gold-vs-cash-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Metal vs money</p>
+            <h2 class="edu-heading" id="gold-vs-cash-h">Gold vs cash</h2>
+            <p class="edu-lede">Cash is unbeatable for spending today, but its purchasing power erodes with inflation over years, while gold is priced globally and has historically preserved value across currencies.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">What cash does best</h3>
+                <p class="edu-card-text">Cash is instant and accepted everywhere, ideal for daily spending and an emergency reserve. In a bank it can also earn deposit interest — something gold never pays.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">What gold does best</h3>
+                <p class="edu-card-text">Gold tends to hold purchasing power over the long run and is priced in US dollars worldwide, which can cushion a weakening local currency. It pays no yield, so its cost is the interest you forgo.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold compared with cash</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Cash</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Inflation impact</th>
+                    <td>Tends to hold purchasing power long-term</td>
+                    <td>Loses purchasing power as prices rise</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Short-term liquidity</th>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Currency risk</th>
+                    <td>Priced globally in USD; hedges local-currency weakness</td>
+                    <td>Fully exposed to its home currency</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Yield / opportunity cost</th>
+                    <td>No interest or dividend</td>
+                    <td>Can earn deposit interest</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Emergency reserve</th>
+                    <td>Long-term reserve, not for daily spending</td>
+                    <td>Best for immediate needs</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Keep cash for near-term spending and emergencies; hold gold to help protect long-term purchasing power against inflation and currency weakness.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">المعدن مقابل النقد</p>
+            <h2 class="edu-heading" id="gold-vs-cash-h-ar">الذهب مقابل النقد</h2>
+            <p class="edu-lede">النقد لا يُضاهى للإنفاق اليوم، لكن قوته الشرائية تتآكل مع التضخم عبر السنوات، بينما يُسعَّر الذهب عالمياً وحافظ تاريخياً على القيمة عبر العملات.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">ما يُتقنه النقد</h3>
+                <p class="edu-card-text">النقد فوري ومقبول في كل مكان، ومثالي للإنفاق اليومي واحتياطي الطوارئ. وفي البنك قد يكسب فائدة على الوديعة — وهو ما لا يدفعه الذهب أبداً.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">ما يُتقنه الذهب</h3>
+                <p class="edu-card-text">يميل الذهب إلى الحفاظ على القوة الشرائية على المدى الطويل، ويُسعَّر بالدولار الأمريكي حول العالم، وهو ما قد يخفّف أثر ضعف العملة المحلية. ولا يدفع أي عائد، فتكلفته هي الفائدة التي تتنازل عنها.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب بالنقد</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب</th>
+                    <th scope="col">النقد</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">أثر التضخم</th>
+                    <td>يميل إلى الحفاظ على القوة الشرائية طويلاً</td>
+                    <td>يفقد قوته الشرائية مع ارتفاع الأسعار</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">السيولة قصيرة الأجل</th>
+                    <td><span class="edu-tag edu-tag--medium">متوسطة</span></td>
+                    <td><span class="edu-tag edu-tag--high">مرتفعة</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">مخاطر العملة</th>
+                    <td>يُسعَّر عالمياً بالدولار؛ يقي من ضعف العملة المحلية</td>
+                    <td>مكشوف بالكامل لعملته المحلية</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">العائد / كلفة الفرصة</th>
+                    <td>لا فائدة ولا توزيعات</td>
+                    <td>قد يكسب فائدة على الوديعة</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">احتياطي الطوارئ</th>
+                    <td>احتياطي طويل الأجل لا للإنفاق اليومي</td>
+                    <td>الأنسب للاحتياجات الفورية</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> احتفظ بالنقد للإنفاق القريب والطوارئ؛ واحتفظ بالذهب للمساعدة في حماية القوة الشرائية طويلة الأجل من التضخم وضعف العملة.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 5. GOLD vs STOCKS =================================================== -->
+      <section class="edu-section" id="gold-vs-stocks" aria-labelledby="gold-vs-stocks-h gold-vs-stocks-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Safety vs growth</p>
+            <h2 class="edu-heading" id="gold-vs-stocks-h">Gold vs stocks</h2>
+            <p class="edu-lede">Over long periods stocks have delivered higher growth and pay income, while gold produces nothing — yet gold often rises when markets fall, which is exactly why the two are frequently held together.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Stocks: the growth engine</h3>
+                <p class="edu-card-text">Company shares can compound over decades through earnings growth and dividends, giving stocks the highest long-run return potential here — but they can fall hard in downturns.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Gold: the shock absorber</h3>
+                <p class="edu-card-text">Gold has low correlation with equities and often gains when stocks drop, cushioning a portfolio in crises. It pays no dividend, so its job is protection and diversification, not income.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold compared with stocks</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Stocks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Long-run growth potential</th>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Income</th>
+                    <td>None</td>
+                    <td>Dividends and earnings growth</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Crisis behavior</th>
+                    <td>Often rises when markets fall</td>
+                    <td>Usually falls in downturns</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Volatility</th>
+                    <td><span class="edu-tag edu-tag--medium">Medium</span></td>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Diversification role</th>
+                    <td>Low correlation — cushions equity drops</td>
+                    <td>Growth engine of a portfolio</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Stocks drive long-term growth and pay income; gold pays nothing but tends to hold up when stocks fall — which is why many investors hold both rather than choose one.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">الأمان مقابل النمو</p>
+            <h2 class="edu-heading" id="gold-vs-stocks-h-ar">الذهب مقابل الأسهم</h2>
+            <p class="edu-lede">على المدى الطويل حقّقت الأسهم نمواً أعلى وتدفع دخلاً، بينما لا يُنتج الذهب شيئاً — إلا أنه كثيراً ما يرتفع حين تهبط الأسواق، وهذا بالضبط سبب الاحتفاظ بهما معاً في الغالب.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">الأسهم: محرّك النمو</h3>
+                <p class="edu-card-text">يمكن لأسهم الشركات أن تتراكم عبر عقود عبر نمو الأرباح والتوزيعات، ما يمنحها أعلى إمكان عائد طويل الأجل هنا — لكنها قد تهبط بشدة في فترات التراجع.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">الذهب: ماصّ الصدمات</h3>
+                <p class="edu-card-text">ارتباط الذهب بالأسهم منخفض، وكثيراً ما يربح حين تهبط الأسهم، فيخفّف وطأة الأزمات على المحفظة. ولا يدفع توزيعات، فمهمته الحماية والتنويع لا الدخل.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب بالأسهم</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب</th>
+                    <th scope="col">الأسهم</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">إمكان النمو طويل الأجل</th>
+                    <td><span class="edu-tag edu-tag--medium">متوسط</span></td>
+                    <td><span class="edu-tag edu-tag--high">مرتفع</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الدخل</th>
+                    <td>لا يوجد</td>
+                    <td>توزيعات ونمو أرباح</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">السلوك في الأزمات</th>
+                    <td>كثيراً ما يرتفع حين تهبط الأسواق</td>
+                    <td>عادةً يهبط في فترات التراجع</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التقلّب</th>
+                    <td><span class="edu-tag edu-tag--medium">متوسط</span></td>
+                    <td><span class="edu-tag edu-tag--high">مرتفع</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">دور التنويع</th>
+                    <td>ارتباط منخفض — يخفّف هبوط الأسهم</td>
+                    <td>محرّك النمو في المحفظة</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> تقود الأسهم النمو طويل الأجل وتدفع دخلاً؛ ولا يدفع الذهب شيئاً لكنه يميل إلى الصمود حين تهبط الأسهم — ولهذا يحتفظ كثيرون بكليهما بدل الاختيار بينهما.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 6. GOLD vs REAL ESTATE ============================================== -->
+      <section class="edu-section" id="gold-vs-real-estate" aria-labelledby="gold-vs-real-estate-h gold-vs-real-estate-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Liquid vs illiquid</p>
+            <h2 class="edu-heading" id="gold-vs-real-estate-h">Gold vs real estate</h2>
+            <p class="edu-lede">Property can produce rental income and be bought with a mortgage, but gold is far more liquid, cheaper to hold, and accessible from just a few grams rather than a large deposit.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Real estate: income and leverage</h3>
+                <p class="edu-card-text">A property can pay rent and is commonly bought with a mortgage, so a small deposit controls a large asset. In return it is slow to sell and carries maintenance, tax and high transaction costs.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Gold: liquid and low-carry</h3>
+                <p class="edu-card-text">Gold can be sold quickly, costs little to hold beyond storage or insurance, and can be started from a few grams. It produces no rent, so it is a store of value rather than an income asset.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold compared with real estate</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Gold</th>
+                    <th scope="col">Real estate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Liquidity</th>
+                    <td><span class="edu-tag edu-tag--high">High</span></td>
+                    <td><span class="edu-tag edu-tag--low">Low</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Carrying costs</th>
+                    <td>Minimal (storage / insurance)</td>
+                    <td>Maintenance, tax, service charges</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Leverage</th>
+                    <td>Usually bought outright</td>
+                    <td>Commonly bought with a mortgage</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Transaction costs</th>
+                    <td>Low (spread / making charge)</td>
+                    <td>High (fees, agents, taxes)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Accessibility / entry</th>
+                    <td>Start from a few grams</td>
+                    <td>Large upfront capital</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Real estate can generate rental income and use leverage, but gold is far more liquid, cheaper to hold, and open to small budgets.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">سائل مقابل غير سائل</p>
+            <h2 class="edu-heading" id="gold-vs-real-estate-h-ar">الذهب مقابل العقارات</h2>
+            <p class="edu-lede">قد يدرّ العقار دخل إيجار ويمكن شراؤه بتمويل عقاري، لكن الذهب أكثر سيولةً بكثير، وأرخص في الاحتفاظ، ومتاح من بضعة غرامات فقط بدل دفعةٍ كبيرة.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">العقار: دخل ورافعة</h3>
+                <p class="edu-card-text">قد يدفع العقار إيجاراً ويُشترى عادةً بتمويل، فتتحكّم دفعةٌ صغيرة بأصلٍ كبير. في المقابل بيعه بطيء ويحمل صيانةً وضرائب وتكاليف معاملات مرتفعة.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">الذهب: سائل ومنخفض الكلفة</h3>
+                <p class="edu-card-text">يمكن بيع الذهب بسرعة، وتكلفة الاحتفاظ به زهيدة عدا التخزين أو التأمين، ويمكن البدء ببضعة غرامات. ولا يدرّ إيجاراً، فهو مخزن قيمة لا أصل دخل.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب بالعقارات</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب</th>
+                    <th scope="col">العقارات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">السيولة</th>
+                    <td><span class="edu-tag edu-tag--high">مرتفعة</span></td>
+                    <td><span class="edu-tag edu-tag--low">منخفضة</span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">تكاليف الاحتفاظ</th>
+                    <td>ضئيلة (تخزين / تأمين)</td>
+                    <td>صيانة وضرائب ورسوم خدمات</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الرافعة المالية</th>
+                    <td>يُشترى عادةً نقداً بالكامل</td>
+                    <td>يُشترى غالباً بتمويل عقاري</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">تكاليف المعاملات</th>
+                    <td>منخفضة (فرق السعر / أجر الصياغة)</td>
+                    <td>مرتفعة (رسوم ووسطاء وضرائب)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">سهولة الدخول</th>
+                    <td>البدء من بضعة غرامات</td>
+                    <td>رأس مال مبدئي كبير</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> قد يدرّ العقار دخل إيجار ويستخدم الرافعة، لكن الذهب أكثر سيولةً بكثير وأرخص احتفاظاً ومتاح للميزانيات الصغيرة.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 7. PHYSICAL GOLD vs GOLD ETFs ======================================= -->
+      <section class="edu-section" id="physical-gold-vs-etfs" aria-labelledby="physical-gold-vs-etfs-h physical-gold-vs-etfs-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Ownership vs access</p>
+            <h2 class="edu-heading" id="physical-gold-vs-etfs-h">Physical gold vs gold ETFs</h2>
+            <p class="edu-lede">Both give exposure to the gold price, but one is metal you hold and the other is a claim on gold held by a fund — a trade-off between direct ownership and low-cost convenience.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Physical gold</h3>
+                <p class="edu-card-text">You own the metal outright with no counterparty once it is in your hand, and you can hold or gift it directly. In exchange you handle storage and security, and you pay a making charge or a buy/sell spread.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Gold ETFs</h3>
+                <p class="edu-card-text">An ETF lets you trade gold exposure instantly in a brokerage account with tight spreads and a small annual expense ratio. You do not hold metal; you rely on the fund, its custodian and your broker.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Physical gold compared with gold ETFs</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Feature</th>
+                    <th scope="col">Physical gold</th>
+                    <th scope="col">Gold ETF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Ownership</th>
+                    <td>Direct title to the metal</td>
+                    <td>A claim on gold held by a fund</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Storage</th>
+                    <td>Home safe or paid vault</td>
+                    <td>None — the fund custodies it</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Fees</th>
+                    <td>Making charge (jewelry) or dealer margin (bars/coins)</td>
+                    <td>Annual expense ratio (~0.1–0.5%)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Spread</th>
+                    <td>Wider, varies by dealer</td>
+                    <td>Tight on-exchange</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Counterparty risk</th>
+                    <td>None once in hand</td>
+                    <td>Fund, custodian and broker</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Convenience</th>
+                    <td>Physical handling and verification</td>
+                    <td>Trade instantly in a brokerage account</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> Physical gold gives direct, counterparty-free ownership you can hold; ETFs give low-cost, instant exposure without storage — where they are available and suitable for you.</p>
+            <p class="edu-disclaimer">ETF availability, taxation and rules vary by country, and this is not a recommendation of any product. Confirm what applies to you before acting.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">الملكية مقابل الوصول</p>
+            <h2 class="edu-heading" id="physical-gold-vs-etfs-h-ar">الذهب المادي مقابل صناديق الذهب المتداولة</h2>
+            <p class="edu-lede">كلاهما يمنح انكشافاً على سعر الذهب، لكن أحدهما معدنٌ تحوزه والآخر حقٌّ في ذهب يحتفظ به صندوق — مفاضلة بين الملكية المباشرة والراحة المنخفضة الكلفة.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">الذهب المادي</h3>
+                <p class="edu-card-text">تمتلك المعدن بالكامل دون طرفٍ مقابل بمجرد أن يصبح في يدك، ويمكنك حيازته أو إهداؤه مباشرةً. في المقابل تتولّى التخزين والأمان، وتدفع أجر صياغة أو فرقاً بين سعري الشراء والبيع.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">صناديق الذهب المتداولة</h3>
+                <p class="edu-card-text">يتيح الصندوق تداول انكشاف الذهب فوراً عبر حساب وساطة بفروق سعرية ضيقة ونسبة مصاريف سنوية صغيرة. لا تحوز معدناً؛ بل تعتمد على الصندوق وأمين حفظه ووسيطك.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة الذهب المادي بصناديق الذهب المتداولة</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العنصر</th>
+                    <th scope="col">الذهب المادي</th>
+                    <th scope="col">صندوق الذهب المتداول</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">الملكية</th>
+                    <td>ملكية مباشرة للمعدن</td>
+                    <td>حقٌّ في ذهب يحتفظ به صندوق</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التخزين</th>
+                    <td>خزنة منزلية أو خزنة مدفوعة</td>
+                    <td>لا يوجد — الصندوق يتولّى حفظه</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الرسوم</th>
+                    <td>أجر صياغة (مصوغات) أو هامش التاجر (سبائك/عملات)</td>
+                    <td>نسبة مصاريف سنوية (~0.1–0.5%)</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">فرق السعر</th>
+                    <td>أوسع ويختلف حسب التاجر</td>
+                    <td>ضيّق في البورصة</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">مخاطر الطرف المقابل</th>
+                    <td>لا يوجد بمجرد الحيازة</td>
+                    <td>الصندوق وأمين الحفظ والوسيط</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الملاءمة والراحة</th>
+                    <td>مناولة مادية وتحقّق</td>
+                    <td>تداول فوري عبر حساب وساطة</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> يمنحك الذهب المادي ملكيةً مباشرة بلا طرفٍ مقابل يمكنك حيازتها؛ وتمنحك الصناديق انكشافاً فورياً منخفض الكلفة دون تخزين — حيثما كانت متاحة ومناسبة لك.</p>
+            <p class="edu-disclaimer">يختلف توافر الصناديق المتداولة وضرائبها وقواعدها من بلدٍ لآخر، وهذا ليس توصية بأي منتج. تحقّق مما ينطبق عليك قبل التصرّف.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 8. KARAT COMPARISON ================================================= -->
+      <section class="edu-section" id="gold-karat-comparison" aria-labelledby="gold-karat-comparison-h gold-karat-comparison-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Purity choices</p>
+            <h2 class="edu-heading" id="gold-karat-comparison-h">24K vs 22K vs 21K vs 18K</h2>
+            <p class="edu-lede">Karat measures how much of a piece is pure gold: the higher the karat the more gold — and the softer the metal. Purer gold holds more resale value, while lower karats add durability and design freedom. In the GCC, 22K and 21K dominate jewelry, while 24K is the choice for investment.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Purity and value</h3>
+                <p class="edu-card-text">Higher karat means more gold content and a cleaner resale value tied closely to the spot-linked reference price. That is why bars and coins are usually 24K.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Durability and wear</h3>
+                <p class="edu-card-text">Pure gold is soft and scratches easily, so everyday and gem-set jewelry often uses 22K, 21K or 18K to add strength. Regional taste matters too — the Gulf favors 22K and 21K.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">Gold karats compared</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Karat</th>
+                    <th scope="col">Purity</th>
+                    <th scope="col">Best use</th>
+                    <th scope="col">Durability</th>
+                    <th scope="col">Resale &amp; notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">24K</th>
+                    <td>99.9%</td>
+                    <td>Investment bars &amp; coins</td>
+                    <td><span class="edu-tag edu-tag--low">Softest</span></td>
+                    <td>Highest gold content; cleanest resale value</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">22K</th>
+                    <td>91.7%</td>
+                    <td>Everyday &amp; bridal jewelry</td>
+                    <td><span class="edu-tag edu-tag--medium">Moderate</span></td>
+                    <td>Strong resale; favored in the Gulf &amp; South Asia</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">21K</th>
+                    <td>87.5%</td>
+                    <td>Jewelry (very popular in GCC)</td>
+                    <td><span class="edu-tag edu-tag--medium">Moderate</span></td>
+                    <td>Common Gulf standard; balances purity and wear</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">18K</th>
+                    <td>75%</td>
+                    <td>Fashion, gem-set jewelry &amp; watches</td>
+                    <td><span class="edu-tag edu-tag--high">Most durable</span></td>
+                    <td>Lower gold content; more design freedom, lower resale by purity</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>Verdict:</strong> For investment, 24K holds the most gold and the cleanest resale; for jewelry you will wear daily, 22K and 21K balance purity with durability, while 18K trades purity for strength and design.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">خيارات النقاء</p>
+            <h2 class="edu-heading" id="gold-karat-comparison-h-ar">عيار 24 مقابل 22 و21 و18</h2>
+            <p class="edu-lede">يقيس العيار مقدار الذهب الخالص في القطعة: كلما ارتفع العيار زاد الذهب — ولان المعدن أكثر. الذهب الأنقى يحفظ قيمة إعادة بيع أعلى، بينما تضيف الأعيرة الأدنى متانةً وحرية تصميم. وفي الخليج تسود المصوغات عياري 22 و21، بينما العيار 24 هو خيار الاستثمار.</p>
+
+            <div class="edu-grid edu-grid--2">
+              <article class="edu-card">
+                <h3 class="edu-card-title">النقاء والقيمة</h3>
+                <p class="edu-card-text">العيار الأعلى يعني محتوى ذهب أكبر وقيمة إعادة بيع أنظف مرتبطة عن كثب بالسعر المرجعي الفوري. ولهذا تكون السبائك والعملات عيار 24 عادةً.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">المتانة والاستعمال</h3>
+                <p class="edu-card-text">الذهب الخالص لين ويُخدَش بسهولة، فتُصنع المصوغات اليومية والمرصّعة غالباً من عيار 22 أو 21 أو 18 لزيادة المتانة. والذوق الإقليمي مهم أيضاً — يفضّل الخليج عياري 22 و21.</p>
+              </article>
+            </div>
+
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <caption class="edu-table-caption">مقارنة أعيرة الذهب</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">العيار</th>
+                    <th scope="col">النقاء</th>
+                    <th scope="col">الاستعمال الأنسب</th>
+                    <th scope="col">المتانة</th>
+                    <th scope="col">إعادة البيع وملاحظات</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">عيار 24</th>
+                    <td>99.9%</td>
+                    <td>سبائك وعملات استثمارية</td>
+                    <td><span class="edu-tag edu-tag--low">الألين</span></td>
+                    <td>أعلى محتوى ذهب؛ أنظف قيمة إعادة بيع</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">عيار 22</th>
+                    <td>91.7%</td>
+                    <td>مصوغات يومية وعروس</td>
+                    <td><span class="edu-tag edu-tag--medium">متوسطة</span></td>
+                    <td>إعادة بيع قوية؛ مفضّل في الخليج وجنوب آسيا</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">عيار 21</th>
+                    <td>87.5%</td>
+                    <td>مصوغات (شائع جداً في الخليج)</td>
+                    <td><span class="edu-tag edu-tag--medium">متوسطة</span></td>
+                    <td>معيار خليجي شائع؛ يوازن بين النقاء والتحمّل</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">عيار 18</th>
+                    <td>75%</td>
+                    <td>مصوغات عصرية ومرصّعة وساعات</td>
+                    <td><span class="edu-tag edu-tag--high">الأكثر متانة</span></td>
+                    <td>محتوى ذهب أقل؛ حرية تصميم أكبر وقيمة إعادة بيع أدنى بحسب النقاء</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p class="edu-verdict"><strong>الخلاصة:</strong> للاستثمار، يحمل عيار 24 أكبر قدرٍ من الذهب وأنظف إعادة بيع؛ وللمصوغات التي ترتديها يومياً يوازن عيارا 22 و21 بين النقاء والمتانة، بينما يقايض عيار 18 النقاء بالقوة والتصميم.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 9. HOW TO USE + CLOSING DISCLAIMER ================================== -->
+      <section class="edu-section" id="how-to-use-comparison" aria-labelledby="how-to-use-comparison-h how-to-use-comparison-h-ar">
+        <div class="edu-inner">
+
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Before you compare</p>
+            <h2 class="edu-heading" id="how-to-use-comparison-h">How to use this comparison</h2>
+            <p class="edu-lede">These pages are a starting point for understanding gold, not a decision made for you. Read them with your own goals, timeframe and the latest market data in mind.</p>
+
+            <div class="edu-grid edu-grid--3">
+              <article class="edu-card">
+                <h3 class="edu-card-title">Match the tool to the goal</h3>
+                <p class="edu-card-text">Store of value, growth, liquidity and income are different jobs. Decide what you actually need before comparing — no single asset does everything well.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Check today's reference price</h3>
+                <p class="edu-card-text">Prices and the relationships between assets change constantly. Use the latest spot-linked reference data on GoldTickerLive rather than the round numbers in these examples.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">Separate reference from retail</h3>
+                <p class="edu-card-text">The spot-linked reference is the underlying value; a shop price adds making charges and margins. Always compare like with like before you judge a deal.</p>
+              </article>
+            </div>
+
+            <p class="edu-disclaimer">This comparison hub is educational and is not financial, investment or tax advice. Prices, volatility and the relationships between assets change over time, and past behavior does not guarantee future results. Gold figures here are spot-linked reference values, not live dealer quotes; always check the latest market data and consider your own circumstances or a licensed adviser before making any decision.</p>
+          </div>
+
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">قبل أن تقارن</p>
+            <h2 class="edu-heading" id="how-to-use-comparison-h-ar">كيف تستخدم هذه المقارنة</h2>
+            <p class="edu-lede">هذه الصفحات نقطة انطلاق لفهم الذهب، لا قراراً يُتّخذ نيابةً عنك. اقرأها في ضوء أهدافك وأفقك الزمني وأحدث بيانات السوق.</p>
+
+            <div class="edu-grid edu-grid--3">
+              <article class="edu-card">
+                <h3 class="edu-card-title">طابِق الأداة مع الهدف</h3>
+                <p class="edu-card-text">مخزن القيمة والنمو والسيولة والدخل مهامّ مختلفة. حدّد ما تحتاجه فعلاً قبل المقارنة — فلا أصل واحد يتقن كل شيء.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">تحقّق من السعر المرجعي اليوم</h3>
+                <p class="edu-card-text">تتغيّر الأسعار والعلاقات بين الأصول باستمرار. استخدم أحدث البيانات المرجعية المرتبطة بالسعر الفوري على GoldTickerLive بدل الأرقام التقريبية في هذه الأمثلة.</p>
+              </article>
+              <article class="edu-card">
+                <h3 class="edu-card-title">افصل المرجعي عن التجزئة</h3>
+                <p class="edu-card-text">السعر المرجعي المرتبط بالفوري هو القيمة الأساسية؛ أما سعر المتجر فيضيف أجور الصياغة والهوامش. قارن دائماً المثيل بالمثيل قبل أن تحكم على صفقة.</p>
+              </article>
+            </div>
+
+            <p class="edu-disclaimer">دليل المقارنة هذا تعليمي وليس نصيحة مالية أو استثمارية أو ضريبية. تتغيّر الأسعار والتقلّبات والعلاقات بين الأصول مع الوقت، والأداء السابق لا يضمن النتائج المستقبلية. أرقام الذهب هنا قيمٌ مرجعية مرتبطة بالسعر الفوري وليست تسعيرات تجار لحظية؛ تحقّق دائماً من أحدث بيانات السوق وراعِ ظروفك الخاصة أو استشر مختصاً مرخّصاً قبل اتخاذ أي قرار.</p>
+          </div>
+
+        </div>
+      </section>
 
       <p class="compare-disclaimer" id="compare-disclaimer">
         Gold value per gram is globally identical in USD — differences below come from local VAT and
