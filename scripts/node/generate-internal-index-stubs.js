@@ -25,6 +25,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { SNIPPET: THEME_PREINIT } = require('./inject-theme-preinit.js');
+
 const ROOT = path.resolve(__dirname, '../..');
 const CHECK = process.argv.includes('--check');
 
@@ -69,24 +71,7 @@ function renderStub(dir) {
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
-    <script>
-      (function () {
-        try {
-          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
-          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
-          var resolved =
-            mode === 'light' || mode === 'dark'
-              ? mode
-              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light';
-          var el = document.documentElement;
-          el.setAttribute('data-theme', resolved);
-          el.setAttribute('data-theme-mode', mode);
-        } catch (e) {}
-      })();
-    </script>
+${THEME_PREINIT}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
