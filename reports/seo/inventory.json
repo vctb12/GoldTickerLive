@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-07-04",
   "summary": {
-    "totalHtmlFiles": 13,
-    "withCanonical": 11,
+    "totalHtmlFiles": 14,
+    "withCanonical": 12,
     "withoutCanonical": 2,
-    "withOgImage": 11,
+    "withOgImage": 12,
     "withoutOgImage": 2,
-    "withJsonLd": 11,
+    "withJsonLd": 12,
     "withoutJsonLd": 2,
-    "hreflangEnArPairs": 11,
+    "hreflangEnArPairs": 12,
     "noindexCount": 2
   },
   "records": [
@@ -104,6 +104,42 @@
       "jsonLdTypes": [
         "BreadcrumbList",
         "WebApplication"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "glossary.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Glossary — Key Gold Pricing, Purity & Market Terms | Gold Ticker Live",
+      "metaDescription": "A plain-English gold glossary: spot vs reference price, making charges, karat and purity, troy ounce, bullion, XAU/USD, LBMA, the AED peg and more — explained clearly, bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/glossary.html",
+      "robots": null,
+      "ogTitle": "Gold Glossary — Key Terms Explained | Gold Ticker Live",
+      "ogDescription": "Plain-English definitions of gold pricing, purity, product and market terms — spot vs reference price, karat, troy ounce, bullion, XAU/USD, LBMA, AED peg.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/glossary.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/glossary.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/glossary.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/glossary.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null

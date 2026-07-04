@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-04T13:44:29.152Z",
+  "generatedAt": "2026-07-04T17:01:14.559Z",
   "summary": {
     "groups": {
-      "core": 45,
+      "core": 46,
       "countries": 0,
       "cities": 0,
       "markets": 0,
       "content": 0
     },
     "totals": {
-      "htmlPages": 45,
-      "indexablePages": 11,
+      "htmlPages": 46,
+      "indexablePages": 12,
       "thinRiskPages": 1,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
@@ -367,6 +367,25 @@
       "hreflangs": [],
       "hasSchema": false,
       "wordCount": 33,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
+      "path": "glossary.html",
+      "group": "core",
+      "noindex": false,
+      "title": "Gold Glossary — Key Gold Pricing, Purity &amp; Market Terms | Gold Ticker Live",
+      "description": "A plain-English gold glossary: spot vs reference price, making charges, karat and purity, troy ounce, bullion, XAU/USD, LBMA, the AED peg and more — explained clearly, bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/glossary.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 1874,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

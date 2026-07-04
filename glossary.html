@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gold Glossary — Key Gold Pricing, Purity &amp; Market Terms | Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="A plain-English gold glossary: spot vs reference price, making charges, karat and purity, troy ounce, bullion, XAU/USD, LBMA, the AED peg and more — explained clearly, bilingual EN/AR."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/glossary.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/glossary.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/glossary.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/glossary.html?lang=ar" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="Gold Glossary — Key Terms Explained | Gold Ticker Live" />
+    <meta
+      property="og:description"
+      content="Plain-English definitions of gold pricing, purity, product and market terms — spot vs reference price, karat, troy ounce, bullion, XAU/USD, LBMA, AED peg."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/glossary.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gold Glossary — Key Terms Explained | Gold Ticker Live" />
+    <meta
+      name="twitter:description"
+      content="Plain-English definitions of gold pricing, purity, product and market terms."
+    />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:alt" content="Gold Ticker Live — gold terminology glossary" />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/glossary.css" />
+    <link rel="modulepreload" href="./src/pages/glossary.js" />
+    <link rel="modulepreload" href="./src/components/site-shell.js" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/glossary.css" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Glossary",
+      "item": "https://goldtickerlive.com/glossary.html"
+    }
+  ]
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by glossary.js) -->
+    <div class="page-breadcrumbs"></div>
+
+    <main id="main-content">
+      <section class="glossary-hero">
+        <div class="glossary-hero-inner">
+          <h1 class="glossary-hero-title" id="glossary-h1">Gold Glossary</h1>
+          <p class="glossary-hero-sub" id="glossary-sub">
+            Plain-English definitions of the gold pricing, purity, product and market terms used
+            across Gold Ticker Live.
+          </p>
+        </div>
+      </section>
+
+      <nav class="glossary-jump" aria-label="Glossary sections">
+        <span class="glossary-jump-label" id="glossary-jump-label">Jump to a section</span>
+        <a href="#group-pricing">Pricing &amp; value</a>
+        <a href="#group-units">Units &amp; purity</a>
+        <a href="#group-products">Products</a>
+        <a href="#group-markets">Markets &amp; benchmarks</a>
+      </nav>
+
+      <section class="gloss-group" id="group-pricing" aria-labelledby="group-pricing-title-en group-pricing-title-ar">
+        <div class="gloss-inner">
+          <div data-lang-block="en">
+            <h2 class="gloss-group-title" id="group-pricing-title-en">Pricing &amp; value</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term" id="term-spot-price">
+                <dt class="gloss-term-name">Spot price</dt>
+                <dd class="gloss-term-def">The current global market price for one troy ounce of gold for immediate ("on the spot") settlement, quoted in US dollars (XAU/USD). It is the base reference from which most other gold prices are derived. Prices shown on this site are spot-linked reference values, not live dealer quotes.</dd>
+              </div>
+              <div class="gloss-term" id="term-reference-price">
+                <dt class="gloss-term-name">Reference price</dt>
+                <dd class="gloss-term-def">An indicative price derived from the international spot price and standard weight conversions, used for comparison and education. It is not a live, executable quote and may differ from what any specific shop charges at the counter.</dd>
+              </div>
+              <div class="gloss-term" id="term-retail-price">
+                <dt class="gloss-term-name">Retail / shop price</dt>
+                <dd class="gloss-term-def">The actual price a jeweller or dealer charges a customer. It typically adds a making charge, a premium, and any applicable VAT on top of the underlying gold value, so it is usually higher than the spot or reference price.</dd>
+              </div>
+              <div class="gloss-term" id="term-making-charge">
+                <dt class="gloss-term-name">Making charge</dt>
+                <dd class="gloss-term-def">The fee added for crafting jewellery — labour, design and manufacturing. It is charged on top of the gold's metal value and varies by piece, workmanship and shop.</dd>
+              </div>
+              <div class="gloss-term" id="term-premium">
+                <dt class="gloss-term-name">Premium</dt>
+                <dd class="gloss-term-def">The amount charged above the spot or reference value of the metal, covering fabrication, dealer margin, packaging and distribution. Coins and small bars usually carry a higher premium than large bars.</dd>
+              </div>
+              <div class="gloss-term" id="term-spread">
+                <dt class="gloss-term-name">Spread <span class="gloss-term-abbr">(bid/ask)</span></dt>
+                <dd class="gloss-term-def">The difference between the buy (bid) and sell (ask) price. A dealer buys gold from you at the lower bid and sells to you at the higher ask, and the gap between the two is part of their margin.</dd>
+              </div>
+              <div class="gloss-term" id="term-vat">
+                <dt class="gloss-term-name">Value Added Tax on gold <span class="gloss-term-abbr">(VAT)</span></dt>
+                <dd class="gloss-term-def">A consumption tax that may apply to a gold purchase depending on the country and the product. Many jurisdictions exempt investment-grade bullion while taxing jewellery; rules vary, so check the regulations that apply where you buy.</dd>
+              </div>
+              <div class="gloss-term" id="term-fixing">
+                <dt class="gloss-term-name">Fixing <span class="gloss-term-abbr">(LBMA Gold Price)</span></dt>
+                <dd class="gloss-term-def">A twice-daily benchmark price set through an electronic auction administered under LBMA rules in London. It gives the market a standard reference, formerly known as the "London Fix", that is widely used in contracts and valuations.</dd>
+              </div>
+            </dl>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="gloss-group-title" id="group-pricing-title-ar">التسعير والقيمة</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term">
+                <dt class="gloss-term-name">السعر الفوري</dt>
+                <dd class="gloss-term-def">السعر العالمي الحالي للأونصة التروية من الذهب للتسليم الفوري، ويُسعَّر بالدولار الأمريكي (XAU/USD). وهو المرجع الأساسي الذي تُشتق منه معظم أسعار الذهب الأخرى. والأسعار المعروضة على هذا الموقع قيم مرجعية مرتبطة بالسعر الفوري، وليست عروضاً حية من التجار.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">السعر المرجعي</dt>
+                <dd class="gloss-term-def">سعر استرشادي يُشتق من السعر الفوري العالمي وتحويلات الوزن القياسية، يُستخدم للمقارنة والتثقيف. وهو ليس عرضاً حياً قابلاً للتنفيذ، وقد يختلف عمّا يتقاضاه أي متجر بعينه عند الشراء.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">سعر التجزئة / سعر المحل</dt>
+                <dd class="gloss-term-def">السعر الفعلي الذي يتقاضاه الصائغ أو التاجر من الزبون. وعادةً ما يضيف أجور الصياغة والعلاوة وأي ضريبة قيمة مضافة فوق قيمة الذهب الأساسية، لذا يكون أعلى من السعر الفوري أو المرجعي.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">أجور الصياغة</dt>
+                <dd class="gloss-term-def">الرسوم المضافة مقابل تصنيع المجوهرات من عمالة وتصميم وتصنيع. وتُحتسب فوق قيمة الذهب المعدنية، وتختلف حسب القطعة ودقة الصنعة والمتجر.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">العلاوة</dt>
+                <dd class="gloss-term-def">المبلغ المُضاف فوق القيمة الفورية أو المرجعية للمعدن، ويغطي التصنيع وهامش التاجر والتغليف والتوزيع. وتحمل العملات والسبائك الصغيرة عادةً علاوة أعلى من السبائك الكبيرة.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">فرق السعر <span class="gloss-term-abbr">(البيع/الشراء)</span></dt>
+                <dd class="gloss-term-def">الفرق بين سعر الشراء وسعر البيع. فالتاجر يشتري الذهب منك بسعر الشراء الأدنى ويبيعه لك بسعر البيع الأعلى، وهذا الفارق بينهما جزء من هامش ربحه.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">ضريبة القيمة المضافة على الذهب <span class="gloss-term-abbr">(VAT)</span></dt>
+                <dd class="gloss-term-def">ضريبة استهلاك قد تُطبَّق على شراء الذهب تبعاً للدولة ونوع المنتج. وتُعفي دول كثيرة السبائك الاستثمارية بينما تفرض الضريبة على المجوهرات؛ وتختلف القواعد، لذا راجع الأنظمة المعمول بها في مكان الشراء.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">التثبيت <span class="gloss-term-abbr">(LBMA Gold Price)</span></dt>
+                <dd class="gloss-term-def">سعر مرجعي يُحدَّد مرتين يومياً عبر مزاد إلكتروني يُدار وفق قواعد جمعية سوق السبائك في لندن. ويمنح السوق مرجعاً قياسياً كان يُعرف سابقاً بـ"تثبيت لندن"، ويُستخدم على نطاق واسع في العقود والتقييمات.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="gloss-group" id="group-units" aria-labelledby="group-units-title-en group-units-title-ar">
+        <div class="gloss-inner">
+          <div data-lang-block="en">
+            <h2 class="gloss-group-title" id="group-units-title-en">Units &amp; purity</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term" id="term-troy-ounce">
+                <dt class="gloss-term-name">Troy ounce</dt>
+                <dd class="gloss-term-def">The standard unit for weighing precious metals, equal to 31.1035 grams — heavier than the everyday (avoirdupois) ounce. International gold prices are quoted per troy ounce.</dd>
+              </div>
+              <div class="gloss-term" id="term-gram">
+                <dt class="gloss-term-name">Gram</dt>
+                <dd class="gloss-term-def">A metric unit of weight commonly used to price gold at retail in the Gulf and elsewhere. One troy ounce equals 31.1035 grams, so the per-gram price is the ounce price divided by 31.1035.</dd>
+              </div>
+              <div class="gloss-term" id="term-tola">
+                <dt class="gloss-term-name">Tola</dt>
+                <dd class="gloss-term-def">A traditional South Asian unit of weight still used in parts of the Gulf and the Indian subcontinent, equal to about 11.6638 grams. Bars are sometimes cast and sold in tola sizes.</dd>
+              </div>
+              <div class="gloss-term" id="term-karat">
+                <dt class="gloss-term-name">Karat <span class="gloss-term-abbr">(K)</span></dt>
+                <dd class="gloss-term-def">A measure of gold purity in parts out of 24. 24K is (near) pure gold, 22K is about 91.6% gold, 21K about 87.5%, and 18K 75% gold, with the remainder made up of other metals for strength and colour.</dd>
+              </div>
+              <div class="gloss-term" id="term-fineness">
+                <dt class="gloss-term-name">Purity / fineness</dt>
+                <dd class="gloss-term-def">How much pure gold an item contains, often shown as a stamp such as 999 (24K), 916 (22K), 875 (21K) or 750 (18K). Higher numbers mean a greater proportion of pure gold.</dd>
+              </div>
+              <div class="gloss-term" id="term-millesimal-fineness">
+                <dt class="gloss-term-name">Millesimal fineness</dt>
+                <dd class="gloss-term-def">A way of expressing purity in parts per thousand — for example 999.9 means 99.99% pure gold. It is the numeric system behind hallmarks such as 916 or 750.</dd>
+              </div>
+              <div class="gloss-term" id="term-hallmark">
+                <dt class="gloss-term-name">Hallmark</dt>
+                <dd class="gloss-term-def">An official stamp on a gold item certifying its purity, and often its assay office or origin. It helps buyers verify that the metal matches its stated karat or fineness.</dd>
+              </div>
+            </dl>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="gloss-group-title" id="group-units-title-ar">الوحدات والنقاء</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term">
+                <dt class="gloss-term-name">الأونصة التروية</dt>
+                <dd class="gloss-term-def">الوحدة القياسية لوزن المعادن الثمينة، وتساوي 31.1035 جراماً — أثقل من الأونصة الاعتيادية المستخدمة يومياً. وتُسعَّر أسعار الذهب العالمية لكل أونصة تروية.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">الجرام</dt>
+                <dd class="gloss-term-def">وحدة وزن مترية شائعة لتسعير الذهب بالتجزئة في الخليج وغيره. وتساوي الأونصة التروية 31.1035 جراماً، فسعر الجرام هو سعر الأونصة مقسوماً على 31.1035.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">التولة</dt>
+                <dd class="gloss-term-def">وحدة وزن تقليدية من جنوب آسيا لا تزال تُستخدم في أجزاء من الخليج وشبه القارة الهندية، وتساوي نحو 11.6638 جراماً. وتُصبّ بعض السبائك وتُباع بمقاسات التولة.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">القيراط (العيار) <span class="gloss-term-abbr">(K)</span></dt>
+                <dd class="gloss-term-def">مقياس لنقاء الذهب بالأجزاء من أربعة وعشرين. فعيار 24 ذهب نقي أو شبه نقي، وعيار 22 نحو 91.6%، وعيار 21 نحو 87.5%، وعيار 18 نحو 75%، والباقي معادن أخرى تُضاف للمتانة واللون.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">النقاء / العيار</dt>
+                <dd class="gloss-term-def">مقدار الذهب الخالص في القطعة، ويُبيَّن غالباً بختم مثل 999 (عيار 24) أو 916 (عيار 22) أو 875 (عيار 21) أو 750 (عيار 18). وكلما زاد الرقم زادت نسبة الذهب الخالص.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">النقاء بالألف</dt>
+                <dd class="gloss-term-def">طريقة للتعبير عن النقاء بالأجزاء من الألف — فمثلاً 999.9 تعني نقاءً بنسبة 99.99%. وهو النظام الرقمي الكامن وراء أختام مثل 916 أو 750.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">دمغة الذهب</dt>
+                <dd class="gloss-term-def">ختم رسمي على قطعة الذهب يشهد بنقائها، وغالباً بمكتب الفحص أو المنشأ. ويساعد المشترين على التحقق من مطابقة المعدن لعياره أو نقائه المُعلن.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="gloss-group" id="group-products" aria-labelledby="group-products-title-en group-products-title-ar">
+        <div class="gloss-inner">
+          <div data-lang-block="en">
+            <h2 class="gloss-group-title" id="group-products-title-en">Products</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term" id="term-bullion">
+                <dt class="gloss-term-name">Bullion</dt>
+                <dd class="gloss-term-def">Gold in bulk investment form — bars, ingots or coins — valued mainly by weight and purity rather than craftsmanship. It is the standard form for storing value in the metal.</dd>
+              </div>
+              <div class="gloss-term" id="term-gold-bar">
+                <dt class="gloss-term-name">Gold bar</dt>
+                <dd class="gloss-term-def">A rectangular piece of refined gold, either cast or minted, produced in sizes from one gram up to 400-ounce "good delivery" bars. Bars generally carry a lower premium per gram than coins of the same weight.</dd>
+              </div>
+              <div class="gloss-term" id="term-gold-coin">
+                <dt class="gloss-term-name">Gold coin</dt>
+                <dd class="gloss-term-def">A coin minted from gold, either as legal-tender bullion (such as sovereigns and various national mints) or as collectible pieces. Coins usually cost a higher premium over spot than bars of the same weight.</dd>
+              </div>
+              <div class="gloss-term" id="term-jewellery-gold">
+                <dt class="gloss-term-name">Jewellery gold</dt>
+                <dd class="gloss-term-def">Gold alloyed and crafted into ornaments, commonly 22K, 21K or 18K for durability and colour. Its retail price combines the metal value with making charges and any applicable VAT.</dd>
+              </div>
+              <div class="gloss-term" id="term-scrap-gold">
+                <dt class="gloss-term-name">Scrap gold</dt>
+                <dd class="gloss-term-def">Old, broken or unwanted gold items sold for their metal content to be melted and refined. Buyers pay based on weight and purity, typically below the reference price to allow for refining costs and margin.</dd>
+              </div>
+              <div class="gloss-term" id="term-gold-etf">
+                <dt class="gloss-term-name">Gold exchange-traded fund <span class="gloss-term-abbr">(ETF)</span></dt>
+                <dd class="gloss-term-def">A fund traded on a stock exchange that tracks the gold price, letting investors gain exposure without holding physical metal. Availability and rules vary by country; this is general information, not a recommendation.</dd>
+              </div>
+            </dl>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="gloss-group-title" id="group-products-title-ar">المنتجات</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term">
+                <dt class="gloss-term-name">السبائك (البُليون)</dt>
+                <dd class="gloss-term-def">الذهب في صورته الاستثمارية بالجملة — سبائك أو صبّات أو عملات — يُقيَّم أساساً بالوزن والنقاء لا بالصنعة. وهو الشكل القياسي لاختزان القيمة في المعدن.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">سبيكة الذهب</dt>
+                <dd class="gloss-term-def">قطعة مستطيلة من الذهب المكرّر، مصبوبة أو مسكوكة، تُنتَج بأحجام من جرام واحد إلى سبائك "التسليم الجيد" بوزن 400 أونصة. وتحمل السبائك عادةً علاوة أقل لكل جرام من العملات بالوزن نفسه.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">العملة الذهبية</dt>
+                <dd class="gloss-term-def">عملة مسكوكة من الذهب، إما كعملة سبائك قانونية (مثل الجنيهات الذهبية ومختلف دور السك الوطنية) أو كقطع للاقتناء. وتكلف العملات عادةً علاوة أعلى فوق السعر الفوري من السبائك بالوزن نفسه.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">ذهب المجوهرات</dt>
+                <dd class="gloss-term-def">ذهب مخلوط ومصنوع حُلياً، وشائعاً بعيار 22 أو 21 أو 18 لزيادة المتانة واللون. ويجمع سعره بالتجزئة بين قيمة المعدن وأجور الصياغة وأي ضريبة قيمة مضافة مطبَّقة.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">الذهب الكسر (الخردة)</dt>
+                <dd class="gloss-term-def">قطع الذهب القديمة أو المكسورة أو غير المرغوبة التي تُباع بحسب محتواها المعدني لإعادة صهرها وتكريرها. ويدفع المشترون بناءً على الوزن والنقاء، وعادةً دون السعر المرجعي لمراعاة تكاليف التكرير والهامش.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">صندوق الذهب المتداول <span class="gloss-term-abbr">(ETF)</span></dt>
+                <dd class="gloss-term-def">صندوق متداول في البورصة يتتبع سعر الذهب، ويتيح للمستثمرين التعرّض لحركته دون حيازة المعدن المادي. ويختلف توافره وقواعده حسب الدولة؛ وهذه معلومات عامة وليست توصية.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="gloss-group" id="group-markets" aria-labelledby="group-markets-title-en group-markets-title-ar">
+        <div class="gloss-inner">
+          <div data-lang-block="en">
+            <h2 class="gloss-group-title" id="group-markets-title-en">Markets &amp; benchmarks</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term" id="term-xau-usd">
+                <dt class="gloss-term-name">XAU/USD</dt>
+                <dd class="gloss-term-def">The market ticker for the price of one troy ounce of gold ("XAU") in US dollars. It is the primary international quote from which local gold prices are converted, and the basis for the spot-linked reference values shown on this site.</dd>
+              </div>
+              <div class="gloss-term" id="term-lbma">
+                <dt class="gloss-term-name">London Bullion Market Association <span class="gloss-term-abbr">(LBMA)</span></dt>
+                <dd class="gloss-term-def">The body that sets standards for the global wholesale gold and silver market, including "good delivery" bar specifications and the benchmark LBMA Gold Price. Its standards are widely referenced across the industry.</dd>
+              </div>
+              <div class="gloss-term" id="term-central-bank-reserves">
+                <dt class="gloss-term-name">Central bank gold reserves</dt>
+                <dd class="gloss-term-def">Gold held by a country's central bank as part of its official reserves. Large-scale buying or selling by central banks can influence long-term gold demand and market sentiment.</dd>
+              </div>
+              <div class="gloss-term" id="term-aed-peg">
+                <dt class="gloss-term-name">UAE dirham peg <span class="gloss-term-abbr">(AED)</span></dt>
+                <dd class="gloss-term-def">The UAE dirham is fixed to the US dollar at 1 USD = 3.6725 AED. Because gold trades in dollars, this fixed peg keeps dirham gold prices moving closely in line with the international dollar price.</dd>
+              </div>
+              <div class="gloss-term" id="term-safe-haven">
+                <dt class="gloss-term-name">Safe-haven asset</dt>
+                <dd class="gloss-term-def">An asset investors tend to hold when markets are uncertain, aiming to preserve value. Gold is often described this way, though its price still moves and past behaviour does not guarantee future results.</dd>
+              </div>
+            </dl>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="gloss-group-title" id="group-markets-title-ar">الأسواق والمؤشرات المرجعية</h2>
+            <dl class="gloss-list">
+              <div class="gloss-term">
+                <dt class="gloss-term-name">XAU/USD (الذهب مقابل الدولار)</dt>
+                <dd class="gloss-term-def">الرمز السوقي لسعر الأونصة التروية من الذهب ("XAU") بالدولار الأمريكي. وهو التسعيرة العالمية الأساسية التي تُحوَّل منها أسعار الذهب المحلية، وأساس القيم المرجعية المرتبطة بالسعر الفوري المعروضة على هذا الموقع.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">جمعية سوق السبائك في لندن <span class="gloss-term-abbr">(LBMA)</span></dt>
+                <dd class="gloss-term-def">الجهة التي تضع معايير سوق الذهب والفضة العالمي بالجملة، بما في ذلك مواصفات سبائك "التسليم الجيد" والسعر المرجعي LBMA Gold Price. ومعاييرها مرجع واسع الاستخدام في هذا القطاع.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">احتياطيات الذهب لدى البنوك المركزية</dt>
+                <dd class="gloss-term-def">الذهب الذي يحتفظ به البنك المركزي للدولة ضمن احتياطياتها الرسمية. وقد يؤثر شراء البنوك المركزية أو بيعها على نطاق واسع في الطلب طويل الأجل على الذهب وفي معنويات السوق.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">ربط الدرهم الإماراتي <span class="gloss-term-abbr">(AED)</span></dt>
+                <dd class="gloss-term-def">الدرهم الإماراتي مثبَّت بالدولار الأمريكي عند 1 دولار = 3.6725 درهم. ولأن الذهب يُتداول بالدولار، فإن هذا الربط الثابت يبقي أسعار الذهب بالدرهم متحركة على نحو وثيق مع السعر العالمي بالدولار.</dd>
+              </div>
+              <div class="gloss-term">
+                <dt class="gloss-term-name">الأصل الملاذ الآمن</dt>
+                <dd class="gloss-term-def">أصل يميل المستثمرون إلى حيازته عند اضطراب الأسواق سعياً للحفاظ على القيمة. وكثيراً ما يوصف الذهب بذلك، وإن كان سعره يظل متحركاً، ولا يضمن أداؤه السابق نتائج مستقبلية.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <div class="glossary-foot">
+        <p class="glossary-disclaimer">
+          These definitions are for education only and are not financial advice. Prices shown
+          elsewhere on Gold Ticker Live are spot-linked reference estimates, not live dealer quotes;
+          retail and jewellery prices add making charges, premiums and tax on top of the reference.
+        </p>
+        <div class="glossary-related">
+          <a href="learn.html">Learn hub →</a>
+          <a href="methodology.html">How prices work →</a>
+          <a href="compare.html">Compare gold &amp; assets →</a>
+          <a href="calculator.html">Value your gold →</a>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+    <script type="module" src="./src/pages/glossary.js"></script>
+  </body>
+</html>

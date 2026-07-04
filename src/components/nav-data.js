@@ -164,6 +164,12 @@ const RAW_NAV_DATA = {
                 icon: '22K',
               },
               {
+                href: '/glossary.html',
+                label: 'Gold glossary',
+                description: 'Key terms explained',
+                icon: 'ABC',
+              },
+              {
                 href: '/methodology.html',
                 label: 'Methodology',
                 description: 'Sources, formulas and limits',
@@ -332,6 +338,12 @@ const RAW_NAV_DATA = {
                 label: 'دليل العيارات',
                 description: 'النقاء والتسعير والاستخدامات',
                 icon: '22K',
+              },
+              {
+                href: '/glossary.html',
+                label: 'مسرد المصطلحات',
+                description: 'شرح المصطلحات الرئيسية',
+                icon: 'ABC',
               },
               {
                 href: '/methodology.html',
