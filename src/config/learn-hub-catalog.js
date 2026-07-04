@@ -3,6 +3,9 @@
  * User-visible titles/descriptions use translation keys where noted.
  */
 
+// The standalone guide pages under content/ were retired. Each surviving card
+// now deep-links into the matching learn.html hub section (in-page anchor).
+// Cards whose topic had no learn.html section were dropped.
 export const LEARN_GUIDE_CATEGORIES = Object.freeze([
   {
     id: 'start',
@@ -10,21 +13,14 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
     descKey: 'learn.cat.startDesc',
     guides: [
       {
-        href: 'content/guides/buying-guide.html',
-        titleKey: 'learn.card.buyingTitle',
-        descKey: 'learn.card.buyingDesc',
-        readMin: 12,
-        level: 'beginner',
-      },
-      {
-        href: 'content/guides/24k-vs-22k-vs-18k-gold/',
+        href: '/learn.html#karats',
         titleKey: 'learn.card.karatTitle',
         descKey: 'learn.card.karatDesc',
         readMin: 8,
         level: 'beginner',
       },
       {
-        href: 'content/spot-vs-retail-gold-price/',
+        href: '/learn.html#pricing',
         titleKey: 'learn.card.spotRetailTitle',
         descKey: 'learn.card.spotRetailDesc',
         readMin: 6,
@@ -38,28 +34,14 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
     descKey: 'learn.cat.buyingDesc',
     guides: [
       {
-        href: 'content/guides/how-to-spot-fake-gold/',
-        titleKey: 'learn.card.fakeTitle',
-        descKey: 'learn.card.fakeDesc',
-        readMin: 7,
-        level: 'beginner',
-      },
-      {
-        href: 'content/gold-making-charges-guide/',
+        href: '/learn.html#pricing',
         titleKey: 'learn.card.makingTitle',
         descKey: 'learn.card.makingDesc',
         readMin: 6,
         level: 'intermediate',
       },
       {
-        href: 'content/guides/buying-gold-online-vs-in-store/',
-        titleKey: 'learn.card.onlineTitle',
-        descKey: 'learn.card.onlineDesc',
-        readMin: 7,
-        level: 'intermediate',
-      },
-      {
-        href: 'content/guides/gold-hallmarks-explained/',
+        href: '/learn.html#hallmark',
         titleKey: 'learn.card.hallmarksTitle',
         descKey: 'learn.card.hallmarksDesc',
         readMin: 6,
@@ -73,38 +55,17 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
     descKey: 'learn.cat.investDesc',
     guides: [
       {
-        href: 'content/guides/gold-investment-for-beginners/',
+        href: '/learn.html#invest',
         titleKey: 'learn.card.investTitle',
         descKey: 'learn.card.investDesc',
         readMin: 10,
         level: 'beginner',
       },
       {
-        href: 'content/guides/gold-bars-vs-coins/',
-        titleKey: 'learn.card.barsTitle',
-        descKey: 'learn.card.barsDesc',
-        readMin: 6,
-        level: 'intermediate',
-      },
-      {
-        href: 'content/guides/gold-as-inflation-hedge/',
-        titleKey: 'learn.card.inflationTitle',
-        descKey: 'learn.card.inflationDesc',
-        readMin: 8,
-        level: 'intermediate',
-      },
-      {
-        href: 'content/guides/gold-savings-plans-gcc/',
+        href: '/learn.html#planner',
         titleKey: 'learn.card.savingsTitle',
         descKey: 'learn.card.savingsDesc',
         readMin: 9,
-        level: 'intermediate',
-      },
-      {
-        href: 'content/guides/best-time-to-buy-gold/',
-        titleKey: 'learn.card.bestTimeTitle',
-        descKey: 'learn.card.bestTimeDesc',
-        readMin: 7,
         level: 'intermediate',
       },
     ],
@@ -115,28 +76,21 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
     descKey: 'learn.cat.gccDesc',
     guides: [
       {
-        href: 'content/guides/uae-vs-saudi-vs-kuwait-gold-prices/',
+        href: '/learn.html#compare',
         titleKey: 'learn.card.gccCompareTitle',
         descKey: 'learn.card.gccCompareDesc',
         readMin: 7,
         level: 'intermediate',
       },
       {
-        href: 'content/dubai-gold-rate-guide/',
-        titleKey: 'learn.card.dubaiGuideTitle',
-        descKey: 'learn.card.dubaiGuideDesc',
-        readMin: 8,
-        level: 'beginner',
-      },
-      {
-        href: 'content/guides/aed-peg-explained.html',
+        href: '/learn.html#aed-peg',
         titleKey: 'learn.card.pegTitle',
         descKey: 'learn.card.pegDesc',
         readMin: 5,
         level: 'beginner',
       },
       {
-        href: 'content/guides/gcc-market-hours.html',
+        href: '/learn.html#markets',
         titleKey: 'learn.card.hoursTitle',
         descKey: 'learn.card.hoursDesc',
         readMin: 5,

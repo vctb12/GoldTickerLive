@@ -33,10 +33,14 @@ test('wrapper delegates to the canonical walk generator and mirrors to public/',
   assert.match(xml, /<urlset[\s\S]*<\/urlset>/);
 });
 
-test('mirrored sitemap has substantial coverage (not the stale 18-URL list)', () => {
+test('mirrored sitemap is derived from the filesystem walk, not a stale hardcoded list', () => {
   const xml = ensureMirrored();
   const count = (xml.match(/<loc>/g) || []).length;
-  assert.ok(count > 100, `expected >100 URLs from the walk generator, got ${count}`);
+  // Post-reduction the site is ~11 indexable public pages; the walk generator
+  // derives them from disk. The old hardcoded list advertised 18 fixed URLs
+  // (several noindexed / non-existent), so lock that the walk output covers the
+  // surviving surfaces without reintroducing the drift.
+  assert.ok(count >= 10, `expected the walk generator to emit the surviving pages, got ${count}`);
 });
 
 test('mirrored sitemap excludes noindexed and non-existent URLs', () => {
@@ -65,9 +69,9 @@ test('mirrored sitemap keeps the surviving core surfaces', () => {
     'https://goldtickerlive.com/',
     'https://goldtickerlive.com/tracker.html',
     'https://goldtickerlive.com/calculator.html',
+    'https://goldtickerlive.com/compare.html',
     'https://goldtickerlive.com/learn.html',
     'https://goldtickerlive.com/methodology.html',
-    'https://goldtickerlive.com/ar/',
   ];
   for (const url of core) {
     assert.ok(xml.includes(`<loc>${url}</loc>`), `sitemap must include ${url}`);

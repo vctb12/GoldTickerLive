@@ -43,8 +43,8 @@ test('NAV_DATA group keys match between locales', async () => {
   const { NAV_DATA } = await loadNav();
   const enKeys = NAV_DATA.en.groups.map((g) => g.key);
   const arKeys = NAV_DATA.ar.groups.map((g) => g.key);
-  // Top-level order is intentional IA: primary price checking, tools, and discovery.
-  const expectedKeys = ['prices', 'tools', 'discover'];
+  // 2026-07-04 flat-IA reset: one footer/drawer-only group ('explore').
+  const expectedKeys = ['explore'];
   assert.deepEqual(enKeys, expectedKeys);
   assert.deepEqual(arKeys, expectedKeys);
   assert.deepEqual(
@@ -165,12 +165,16 @@ test('NAV_DATA every dropdown item has a non-empty description', async () => {
       assert.ok(group.layout, `${lang}.${group.key} missing layout`);
       assert.ok(Array.isArray(group.sections), `${lang}.${group.key} missing sections`);
       assert.ok(group.sections.length > 0, `${lang}.${group.key} has no sections`);
-      assert.ok(group.featured?.href, `${lang}.${group.key} missing featured link`);
-      assert.ok(group.featured?.label, `${lang}.${group.key} missing featured label`);
-      assert.ok(group.featured?.description, `${lang}.${group.key} missing featured description`);
-      assert.ok(group.cta?.href, `${lang}.${group.key} missing contextual CTA`);
-      assert.ok(group.cta?.label, `${lang}.${group.key} missing CTA label`);
-      assert.ok(group.cta?.description, `${lang}.${group.key} missing CTA description`);
+      if (!group.footerOnly) {
+        // Desktop dropdowns need the featured tile + contextual CTA;
+        // footer/drawer-only groups render as plain link sections.
+        assert.ok(group.featured?.href, `${lang}.${group.key} missing featured link`);
+        assert.ok(group.featured?.label, `${lang}.${group.key} missing featured label`);
+        assert.ok(group.featured?.description, `${lang}.${group.key} missing featured description`);
+        assert.ok(group.cta?.href, `${lang}.${group.key} missing contextual CTA`);
+        assert.ok(group.cta?.label, `${lang}.${group.key} missing CTA label`);
+        assert.ok(group.cta?.description, `${lang}.${group.key} missing CTA description`);
+      }
       for (const section of group.sections) {
         assert.ok(section.key, `${lang}.${group.key} section missing key`);
         assert.ok(section.label, `${lang}.${group.key}.${section.key} missing label`);
@@ -186,10 +190,10 @@ test('NAV_DATA every dropdown item has a non-empty description', async () => {
   }
 });
 
-test('NAV_DATA primary flag exists in prices and tools for both locales', async () => {
+test('NAV_DATA primary flag exists in every group for both locales', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
-    for (const key of ['prices', 'tools']) {
+    for (const key of ['explore']) {
       const group = NAV_DATA[lang].groups.find((g) => g.key === key);
       assert.ok(group, `${lang}.${key} group missing`);
       const primaryCount = group.items.filter((it) => it.primary === true).length;
@@ -218,16 +222,11 @@ test('NAV_DATA primary flag membership matches across locales per group', async 
   }
 });
 
-test('NAV_DATA primary links are slim (live + calculator only)', async () => {
+test('NAV_DATA primary links cover the flat 6-link bar (CTA covers the tracker)', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
-    assert.equal(
-      NAV_DATA[lang].primaryLinks.length,
-      2,
-      `${lang} should expose two primary nav links (live + calculator)`
-    );
     const keys = NAV_DATA[lang].primaryLinks.map((l) => l.key);
-    assert.deepEqual(keys, ['live-prices', 'calculator']);
+    assert.deepEqual(keys, ['calculator', 'compare', 'heatmap', 'portfolio', 'shops', 'learn']);
   }
 });
 
@@ -259,9 +258,12 @@ test('NAV_DATA canonical 7 surfaces are present and locale-parity aligned', asyn
     '/index.html',
     '/tracker.html',
     '/calculator.html',
-    '/countries/index.html',
+    '/compare.html',
+    '/heatmap.html',
+    '/portfolio.html',
     '/shops.html',
     '/learn.html',
+    '/methodology.html',
   ];
   assert.deepEqual(NAV_DATA.en.canonicalSurfaces, expected);
   assert.deepEqual(NAV_DATA.ar.canonicalSurfaces, expected);

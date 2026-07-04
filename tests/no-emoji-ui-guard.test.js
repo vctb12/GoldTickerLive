@@ -29,7 +29,6 @@ const EMOJI_RE =
 const SWEPT = [
   'tracker.html',
   'index.html',
-  'ar/index.html',
   'src/pages/tracker-pro.js',
   'src/config/translations.js',
   'src/components/icon-sprite.js',
@@ -38,16 +37,12 @@ const SWEPT = [
   'src/components/nav-data.js',
   'src/components/breadcrumbs.js',
   'src/components/price-fetch-error.js',
-  'src/pages/markets.js',
   'src/lib/page-hydrator.js',
   'src/lib/sw-update-toast.js',
   'src/lib/alert-engine.js',
   'src/lib/safe-dom.js',
   'src/components/alert-manager.js',
-  'src/pages/chart/chart-page.js',
   'learn.html',
-  'chart/index.html',
-  'ar/chart/index.html',
   'scripts/node/render-learn-static-fallback.mjs',
   ...fs
     .readdirSync(path.join(ROOT, 'src', 'learn-hub'))
@@ -57,24 +52,7 @@ const SWEPT = [
     .readdirSync(path.join(ROOT, 'src', 'tracker'))
     .filter((f) => f.endsWith('.js'))
     .map((f) => `src/tracker/${f}`),
-  // Countries tree + content guides/tools (V1-VISUAL agent D sweep). The X-post
-  // generator is an editorial composer whose emoji are post copy, not UI.
-  ...walk('countries', (f) => f.endsWith('.html') || f.endsWith('.js')),
-  ...walk('content', (f) => f.endsWith('.html')).filter(
-    (f) => f !== 'content/social/x-post-generator.html'
-  ),
 ];
-
-/** Recursively collect repo-relative file paths under `rel` matching `keep`. */
-function walk(rel, keep) {
-  const out = [];
-  for (const entry of fs.readdirSync(path.join(ROOT, rel), { withFileTypes: true })) {
-    const childRel = `${rel}/${entry.name}`;
-    if (entry.isDirectory()) out.push(...walk(childRel, keep));
-    else if (entry.isFile() && keep(childRel)) out.push(childRel);
-  }
-  return out;
-}
 
 for (const rel of SWEPT) {
   test(`no-emoji-ui: ${rel} carries no emoji-as-UI`, () => {

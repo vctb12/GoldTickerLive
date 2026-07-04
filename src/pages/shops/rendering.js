@@ -189,9 +189,11 @@ function renderPrimaryActions(shop, country, STATE, t) {
 
   if (country?.slug) {
     const name = countryName(country, STATE.lang);
+    // Country pages were retired; deep-link into the compare tool instead.
+    const code = country.code.toLowerCase();
     row.appendChild(
       renderActionLink({
-        href: `countries/${country.slug}/gold-price/`,
+        href: code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`,
         className: 'shop-action-btn shop-action-btn--country',
         icon: 'i-receipt',
         label: name,

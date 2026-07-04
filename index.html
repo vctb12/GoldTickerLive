@@ -61,7 +61,7 @@
     <link rel="canonical" href="https://goldtickerlive.com/" />
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/" />
     <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/" />
-    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/ar/" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/?lang=ar" />
     <title>Gold Ticker Live — Reference Gold Prices UAE &amp; GCC Today</title>
 
     <!-- DNS Prefetch -->
@@ -82,7 +82,7 @@
     <link rel="modulepreload" href="src/components/site-shell.js" />
 
     <!-- Resource Hints for Prefetching -->
-    <link rel="prefetch" href="countries/index.html" as="document" />
+    <link rel="prefetch" href="compare.html" as="document" />
 
     <!-- Critical CSS (inlined file to improve FCP) -->
     <link rel="stylesheet" href="styles/critical.css" />
@@ -129,14 +129,6 @@
   "name": "Gold Ticker Live",
   "url": "https://goldtickerlive.com",
   "description": "Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": {
-      "@type": "EntryPoint",
-      "urlTemplate": "https://goldtickerlive.com/content/search/?q={search_term_string}"
-    },
-    "query-input": "required name=search_term_string"
-  },
   "inLanguage": [
     "en",
     "ar"
@@ -225,7 +217,7 @@
               >
             </div>
             <div class="hero-ctas-secondary">
-              <a href="countries/index.html" class="hero-secondary-link" id="hero-cta-countries"
+              <a href="compare.html" class="hero-secondary-link" id="hero-cta-countries"
                 >Browse Countries</a
               >
               <span class="hero-secondary-sep" aria-hidden="true">·</span>
@@ -289,7 +281,7 @@
               >
               <a
                 class="hlc-retail-link"
-                href="content/spot-vs-retail-gold-price/"
+                href="methodology.html"
                 data-i18n="heroRetailLink"
                 >How retail differs →</a
               >
@@ -416,7 +408,7 @@
                   >
                 </a>
                 <a
-                  href="content/spot-vs-retail-gold-price/"
+                  href="methodology.html"
                   class="action-rail-link"
                   id="home-action-learn"
                 >
@@ -760,7 +752,7 @@
               </p>
               <span class="tool-card-cta" id="tool-calc-cta">Open Calculator →</span>
             </a>
-            <a href="countries/uae/gold-price/" class="tool-card">
+            <a href="compare.html" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-pin"/></svg></div>
               <h3 class="tool-card-title" id="tool-uae-title">UAE Gold Prices</h3>
               <p class="tool-card-desc" id="tool-uae-desc">
@@ -777,7 +769,7 @@
               </p>
               <span class="tool-card-cta" id="tool-shops-cta">Browse Shops →</span>
             </a>
-            <a href="countries/index.html" class="tool-card">
+            <a href="compare.html" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></div>
               <h3 class="tool-card-title" id="tool-countries-title">Browse Countries</h3>
               <p class="tool-card-desc" id="tool-countries-desc">
@@ -887,7 +879,7 @@
             </div>
           </div>
           <div class="tools-grid">
-            <a href="content/uae-gold-buying-guide/" class="tool-card">
+            <a href="learn.html#pricing" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-pin"/></svg></div>
               <h3 class="tool-card-title" id="next-uae-title">UAE buying guide</h3>
               <p class="tool-card-desc" id="next-uae-desc">
@@ -895,7 +887,7 @@
               </p>
               <span class="tool-card-cta" id="next-uae-cta">Read UAE guide →</span>
             </a>
-            <a href="content/dubai-gold-rate-guide/" class="tool-card">
+            <a href="learn.html#aed-peg" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-skyline"/></svg></div>
               <h3 class="tool-card-title" id="next-dubai-title">Dubai gold rate guide</h3>
               <p class="tool-card-desc" id="next-dubai-desc">
@@ -903,7 +895,7 @@
               </p>
               <span class="tool-card-cta" id="next-dubai-cta">Open Dubai guide →</span>
             </a>
-            <a href="content/gcc-gold-price-comparison/" class="tool-card">
+            <a href="compare.html" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-globe"/></svg></div>
               <h3 class="tool-card-title" id="next-gcc-title">GCC comparison</h3>
               <p class="tool-card-desc" id="next-gcc-desc">
@@ -911,7 +903,7 @@
               </p>
               <span class="tool-card-cta" id="next-gcc-cta">Compare GCC markets →</span>
             </a>
-            <a href="content/spot-vs-retail-gold-price/" class="tool-card">
+            <a href="methodology.html" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-receipt"/></svg></div>
               <h3 class="tool-card-title" id="next-svr-title">Spot vs retail</h3>
               <p class="tool-card-desc" id="next-svr-desc">
@@ -933,7 +925,7 @@
                 Dedicated pages with local context for every major market
               </p>
             </div>
-            <a href="countries/index.html" class="section-link" id="countries-see-all"
+            <a href="compare.html" class="section-link" id="countries-see-all"
               >See all countries →</a
             >
           </div>
@@ -949,37 +941,37 @@
             />
           </div>
           <div class="country-tiles" role="list">
-            <a href="countries/uae/" class="country-tile" role="listitem"
+            <a href="compare.html" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ae"/></svg><span id="ct-uae">UAE</span></a
             >
-            <a href="countries/saudi-arabia/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,sa&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg><span id="ct-sa">Saudi Arabia</span></a
             >
-            <a href="countries/kuwait/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,kw&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-kw"/></svg><span id="ct-kw">Kuwait</span></a
             >
-            <a href="countries/qatar/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,qa&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-qa"/></svg><span id="ct-qa">Qatar</span></a
             >
-            <a href="countries/bahrain/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,bh&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-bh"/></svg><span id="ct-bh">Bahrain</span></a
             >
-            <a href="countries/oman/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,om&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-om"/></svg><span id="ct-om">Oman</span></a
             >
-            <a href="countries/egypt/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,eg&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-eg"/></svg><span id="ct-eg">Egypt</span></a
             >
-            <a href="countries/jordan/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,jo&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-jo"/></svg><span id="ct-jo">Jordan</span></a
             >
-            <a href="countries/morocco/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,ma&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-ma"/></svg><span id="ct-ma">Morocco</span></a
             >
-            <a href="countries/india/" class="country-tile" role="listitem"
+            <a href="compare.html#compare=ae,in&k=22" class="country-tile" role="listitem"
               ><svg class="nav-flag country-tile-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-in"/></svg><span id="ct-in">India</span></a
             >
-            <a href="countries/index.html" class="country-tile country-tile--more" role="listitem"
+            <a href="compare.html" class="country-tile country-tile--more" role="listitem"
               ><span aria-hidden="true">+</span><span id="ct-more">See all countries</span></a
             >
           </div>
@@ -1010,7 +1002,7 @@
             >
           </div>
           <div class="markets-grid">
-            <a href="countries/uae/" class="market-card hover-lift">
+            <a href="compare.html" class="market-card hover-lift">
               <figure class="market-card-media">
                 <picture>
                   <source
@@ -1049,7 +1041,7 @@
                 <span class="market-card-cta" id="mkt-dubai-cta">View UAE prices →</span>
               </div>
             </a>
-            <a href="countries/saudi-arabia/" class="market-card hover-lift">
+            <a href="compare.html#compare=ae,sa&k=22" class="market-card hover-lift">
               <figure class="market-card-media">
                 <picture>
                   <source
@@ -1088,7 +1080,7 @@
                 <span class="market-card-cta" id="mkt-riyadh-cta">View Saudi prices →</span>
               </div>
             </a>
-            <a href="countries/kuwait/" class="market-card hover-lift">
+            <a href="compare.html#compare=ae,kw&k=22" class="market-card hover-lift">
               <figure class="market-card-media">
                 <picture>
                   <source
@@ -1127,7 +1119,7 @@
                 <span class="market-card-cta" id="mkt-kuwait-cta">View Kuwait prices →</span>
               </div>
             </a>
-            <a href="countries/egypt/" class="market-card hover-lift">
+            <a href="compare.html#compare=ae,eg&k=22" class="market-card hover-lift">
               <figure class="market-card-media">
                 <picture>
                   <source
@@ -1170,7 +1162,7 @@
 
           <h3 class="market-strip-title" id="market-strip-title" data-i18n="mktStripTitle">From the markets</h3>
           <div class="market-strip" aria-labelledby="market-strip-title">
-            <a href="countries/qatar/doha/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,qa&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/qatar-souq-waqif-gold-souk-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/qatar-souq-waqif-gold-souk-480.webp" />
@@ -1178,7 +1170,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripQa">Doha — Souq Waqif Gold Souk</span>
             </a>
-            <a href="countries/bahrain/manama/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,bh&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/bahrain-manama-souq-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/bahrain-manama-souq-480.webp" />
@@ -1186,7 +1178,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripBh">Manama — Bab Al Bahrain Souq</span>
             </a>
-            <a href="countries/oman/muscat/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,om&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/oman-muttrah-souq-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/oman-muttrah-souq-480.webp" />
@@ -1194,7 +1186,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripOm">Muscat — Muttrah Souq</span>
             </a>
-            <a href="countries/jordan/amman/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,jo&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/jordan-amman-gold-souq-1953-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/jordan-amman-gold-souq-1953-480.webp" />
@@ -1202,7 +1194,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripJo">Amman — goldsmiths’ souq, 1953</span>
             </a>
-            <a href="countries/morocco/marrakech/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,ma&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/morocco-marrakech-souk-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/morocco-marrakech-souk-480.webp" />
@@ -1210,7 +1202,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripMa">Marrakech — Souk Haddadine</span>
             </a>
-            <a href="countries/turkey/istanbul/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,tr&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/turkey-grand-bazaar-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/turkey-grand-bazaar-480.webp" />
@@ -1218,7 +1210,7 @@
               </picture>
               <span class="market-strip-label" data-i18n="mktStripTr">Istanbul — Grand Bazaar</span>
             </a>
-            <a href="countries/india/" class="market-strip-tile hover-lift">
+            <a href="compare.html#compare=ae,in&k=22" class="market-strip-tile hover-lift">
               <picture>
                 <source type="image/avif" srcset="assets/images/markets/india-manek-chowk-480.avif" />
                 <source type="image/webp" srcset="assets/images/markets/india-manek-chowk-480.webp" />
@@ -1302,7 +1294,7 @@
           <p class="explainer-strip-footer">
             <a href="methodology.html" class="section-link" id="explainer-methodology-link" data-i18n="explainerMethodologyLink">Full price methodology &amp; data sources →</a>
             <br>
-            <a href="content/spot-vs-retail-gold-price/" class="section-link" id="explainer-svr-link" data-i18n="explainerSvrLink">Spot vs retail price difference explained →</a>
+            <a href="methodology.html" class="section-link" id="explainer-svr-link" data-i18n="explainerSvrLink">Spot vs retail price difference explained →</a>
           </p>
         </div>
       </section>
@@ -1333,7 +1325,7 @@
                 Quick context for common karats, buyer habits, and quote-verification checkpoints.
               </p>
             </div>
-            <a href="countries/index.html" class="section-link" id="home-location-guides-link"
+            <a href="compare.html" class="section-link" id="home-location-guides-link"
               >Browse country pages →</a
             >
           </div>
@@ -1366,7 +1358,7 @@
                 <div itemprop="text" id="faq-a1">
                   The live gold price per gram in UAE (AED) is shown on the
                   <a href="tracker.html">Live Tracker</a> and the
-                  <a href="countries/uae/">UAE page</a>. Spot source updates hourly during market hours;
+                  <a href="compare.html">UAE comparison</a>. Spot source updates hourly during market hours;
                   pages re-poll about every 90 seconds while open. Prices use the official AED peg of 3.6725.
                 </div>
               </div>
@@ -1484,7 +1476,7 @@
                   in some countries VAT (e.g. 5% in the UAE). The tracker gives you the bullion
                   baseline so you can understand how much of the quoted price is gold and how much
                   is markup. See
-                  <a href="content/spot-vs-retail-gold-price/">Spot vs retail price</a>
+                  <a href="methodology.html">Spot vs retail price</a>
                   for a detailed breakdown.
                 </div>
               </div>
@@ -1516,7 +1508,7 @@
             </details>
           </div>
           <div class="faq-more-row">
-            <a href="content/faq/" class="section-link" id="faq-more-link"
+            <a href="learn.html#faq" class="section-link" id="faq-more-link"
               >More gold price questions answered →</a
             >
           </div>

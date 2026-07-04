@@ -3,8 +3,9 @@
  * Stage deploy-only static assets into dist/ before auditing built links.
  *
  * Vite builds the root HTML entry points, while deploy.yml copies static
- * directories such as countries/, content/, styles/, and src/ afterward.
- * Link checks need the same shape users receive from GitHub Pages.
+ * directories such as styles/ and src/ afterward. Link checks need the same
+ * shape users receive from GitHub Pages. (The countries/ and content/ trees
+ * were removed in the 2026-07-04 IA reset — both are now optional.)
  */
 'use strict';
 
@@ -57,7 +58,7 @@ copyFile('favicon.svg');
 copyFile('manifest.json');
 copyDirectory('styles');
 copyDirectory('admin', { optional: true });
-copyDirectory('countries');
+copyDirectory('countries', { optional: true });
 copyDirectory('content', { optional: true });
 
 console.log('[stage-dist-statics] staged deploy static assets into dist/');

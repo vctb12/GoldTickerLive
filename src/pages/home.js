@@ -163,8 +163,8 @@ function txGlobal(key) {
 const GCC = COUNTRIES.filter((c) => c.group === 'gcc');
 const MENA = COUNTRIES.filter((c) => ['gcc', 'levant', 'africa'].includes(c.group));
 const GLOBAL = COUNTRIES;
-// Complete map of country-code → countries/ directory slug.
-// Only codes listed here have a dedicated page; the rest are rendered without a link.
+// Codes listed here get a clickable card that deep-links into the compare tool;
+// the rest are rendered without a link. (The slug value is retained for clarity.)
 const COUNTRY_SLUGS = {
   AE: 'uae',
   SA: 'saudi-arabia',
@@ -948,12 +948,11 @@ function renderGCCGrid() {
     if (slug) {
       cardChildren.push(el('span', { class: 'gcc-card-cta' }, tx('gccCardCta')));
     }
+    // Country pages were retired; deep-link into the compare tool instead.
+    const code = c.code.toLowerCase();
+    const compareHref = code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
     const card = slug
-      ? el(
-          'a',
-          { href: safeHref(`./countries/${slug}/`), class: 'gcc-card card-interactive' },
-          cardChildren
-        )
+      ? el('a', { href: safeHref(compareHref), class: 'gcc-card card-interactive' }, cardChildren)
       : el('div', { class: 'gcc-card gcc-card--no-link card-interactive' }, cardChildren);
 
     fragment.append(

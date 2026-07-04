@@ -641,10 +641,17 @@ function renderDetail() {
 
   const links = el('div', { class: 'heatmap-detail-links' });
   if (country.slug) {
+    // Country pages were retired; deep-link into the compare tool instead.
+    const code = country.code.toLowerCase();
     links.appendChild(
-      el('a', { class: 'heatmap-detail-link', href: `countries/${country.slug}/` }, [
-        dict.countryPage,
-      ])
+      el(
+        'a',
+        {
+          class: 'heatmap-detail-link',
+          href: code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`,
+        },
+        [dict.countryPage]
+      )
     );
   }
   if (country.code !== 'AE') {

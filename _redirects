@@ -3,6 +3,11 @@
 # This site is a MULTI-PAGE STATIC SITE, not a SPA. Do NOT add a catch-all
 # to /index.html 200 — that produces soft-404s and confuses crawlers.
 # Unknown URLs must fall through to /404.html with a 404 status.
+#
+# 2026-07-04 radical page reduction: the countries/, content/, ar/, chart/,
+# gold-price/, methodology/ trees and several root pages were removed. Their
+# aliases now retarget to the surviving surfaces, and tree-level rules at the
+# bottom sweep any deep URL under a removed tree before the 404 fallback.
 
 # --- Admin panel ------------------------------------------------------------
 /admin        /admin/          301
@@ -18,6 +23,7 @@
 # All are canonical at the .html form so these are permanent 301 redirects.
 /tracker         /tracker.html        301
 /calculator      /calculator.html     301
+/compare         /compare.html        301
 /shops           /shops.html          301
 /learn           /learn.html          301
 /methodology     /methodology.html    301
@@ -28,61 +34,65 @@
 /learn/insights      /learn.html#insights 301
 /learn/              /learn.html        301
 /invest          /learn.html#invest   301
-/pricing         /pricing.html        301
+/pricing         /                    301
 /privacy         /privacy.html        301
 /terms           /terms.html          301
 /offline         /offline.html        301
 
-# --- Country code / shorthand aliases → canonical country pages ------------
-# ISO-2 and common shorthand aliases that users may type directly.
-/uae             /countries/uae/               301
-/uae/            /countries/uae/               301
-/dubai           /countries/uae/               301
-/ksa             /countries/saudi-arabia/       301
-/ksa/            /countries/saudi-arabia/       301
-/saudi-arabia    /countries/saudi-arabia/       301
-/saudi-arabia/   /countries/saudi-arabia/       301
-/kw              /countries/kuwait/             301
-/kuwait          /countries/kuwait/             301
-/qa              /countries/qatar/              301
-/qatar           /countries/qatar/              301
-/bh              /countries/bahrain/            301
-/bahrain         /countries/bahrain/            301
-/om              /countries/oman/               301
-/oman            /countries/oman/               301
-/eg              /countries/egypt/              301
-/egypt           /countries/egypt/              301
-/jo              /countries/jordan/             301
-/jordan          /countries/jordan/             301
-/lb              /countries/lebanon/            301
-/lebanon         /countries/lebanon/            301
-/tr              /countries/turkey/             301
-/turkey          /countries/turkey/             301
-/pk              /countries/pakistan/           301
-/pakistan        /countries/pakistan/           301
-/in              /countries/india/              301
-/india           /countries/india/              301
+# --- Country code / shorthand aliases → compare surface --------------------
+# The per-country pages were removed; the cross-country compare tool is now the
+# canonical destination for every country shorthand a user might type.
+/uae             /compare.html        301
+/uae/            /compare.html        301
+/dubai           /compare.html        301
+/ksa             /compare.html        301
+/ksa/            /compare.html        301
+/saudi-arabia    /compare.html        301
+/saudi-arabia/   /compare.html        301
+/kw              /compare.html        301
+/kuwait          /compare.html        301
+/qa              /compare.html        301
+/qatar           /compare.html        301
+/bh              /compare.html        301
+/bahrain         /compare.html        301
+/om              /compare.html        301
+/oman            /compare.html        301
+/eg              /compare.html        301
+/egypt           /compare.html        301
+/jo              /compare.html        301
+/jordan          /compare.html        301
+/lb              /compare.html        301
+/lebanon         /compare.html        301
+/tr              /compare.html        301
+/turkey          /compare.html        301
+/pk              /compare.html        301
+/pakistan        /compare.html        301
+/in              /compare.html        301
+/india           /compare.html        301
 
-# --- Legacy guide slug aliases → canonical content pages -------------------
-# Short guide aliases users or old links might reference.
-/guide           /content/guides/              301
-/guides          /content/guides/              301
-/faq             /content/faq/                 301
-/search          /content/search/              301
-/compare         /tracker.html#mode=compare    301
-/gold-history    /content/gold-price-history/  301
-/history         /content/gold-price-history/  301
-/making-charges  /content/gold-making-charges-guide/  301
-/spot-vs-retail  /content/spot-vs-retail-gold-price/  301
-/uae-guide       /content/uae-gold-buying-guide/       301
-/dubai-guide     /content/dubai-gold-rate-guide/       301
+# --- Legacy guide slug aliases → learn surface -----------------------------
+# The content/ guides were merged into /learn.html; short guide aliases now
+# resolve there. Karat and insight anchors still live on kept surfaces.
+/guide           /learn.html          301
+/guides          /learn.html          301
+/faq             /learn.html          301
+/search          /learn.html          301
+/gold-history    /learn.html          301
+/history         /learn.html          301
+/making-charges  /learn.html          301
+/spot-vs-retail  /learn.html          301
+/uae-guide       /learn.html          301
+/dubai-guide     /learn.html          301
 /22k             /learn.html#karats                   301
 /24k             /learn.html#karats                   301
-/best-rates      /tracker.html#mode=compare           301
+/best-rates      /compare.html                        301
 /news            /learn.html#insights                 301
-/submit-shop     /content/submit-shop/                 301
+/submit-shop     /learn.html                          301
 
 # --- Consolidated landing pages (architecture simplification) ----------------
+# These predate the tree-level /content/* sweep below; they keep the more
+# specific destinations (compare tool, karat/insight anchors) and win because
+# _redirects is first-match-wins.
 /content/index.html                  /learn.html                  301
 /content                             /learn.html                  301
 /content/                            /learn.html                  301
@@ -109,66 +119,34 @@
 /content/24k-gold-price-guide/       /learn.html#karats           301
 /content/24k-gold-price-guide/index.html /learn.html#karats       301
 
-# --- City URL consolidation (gold-prices + per-karat → gold-rate hub) -------
-/countries/:country/:city/gold-prices/      /countries/:country/:city/gold-rate/      301
-/countries/:country/:city/gold-prices        /countries/:country/:city/gold-rate/      301
-/countries/:country/:city/gold-rate/:karat/  /countries/:country/:city/gold-rate/      301
-/countries/:country/:city/gold-rate/:karat    /countries/:country/:city/gold-rate/      301
-
-# --- Country gold-price duplicate → canonical country hub -------------------
-/countries/:country/gold-price/      /countries/:country/      301
-/countries/:country/gold-price       /countries/:country/      301
-
-# --- Country pages: /countries/<slug>.html → /countries/<slug>/ -------------
-# Baseline scan (reports/links-initial.json) shows several internal links use
-# the flat `.html` form while actual files live at `/countries/<slug>/index.html`.
-/countries/uae.html            /countries/uae/             301
-/countries/saudi-arabia.html   /countries/saudi-arabia/    301
-/countries/bahrain.html        /countries/bahrain/         301
-/countries/kuwait.html         /countries/kuwait/          301
-/countries/jordan.html         /countries/jordan/          301
-/countries/qatar.html          /countries/qatar/           301
-/countries/oman.html           /countries/oman/            301
-/countries/egypt.html          /countries/egypt/           301
-/countries/morocco.html        /countries/morocco/         301
-/countries/india.html          /countries/india/           301
-/countries/pakistan.html       /countries/pakistan/        301
-/countries/turkey.html         /countries/turkey/          301
-/countries/iraq.html           /countries/iraq/            301
-/countries/syria.html          /countries/syria/           301
-/countries/lebanon.html        /countries/lebanon/         301
-/countries/palestine.html      /countries/palestine/       301
-/countries/yemen.html          /countries/yemen/           301
-/countries/sudan.html          /countries/sudan/           301
-/countries/libya.html          /countries/libya/           301
-/countries/tunisia.html        /countries/tunisia/         301
-/countries/algeria.html        /countries/algeria/         301
-
-# --- Explicit 404 fallback (defensive — Netlify does this by default) -------
-# --- 2026-07-04 knowledge-hub merge (insights + invest -> learn; HTML stubs exist) ---
+# --- 2026-07-04 knowledge-hub merge (insights + invest -> learn) ---
 /insights.html                                 /learn.html#insights                             301
 /invest.html                                   /learn.html#invest                               301
 
-# --- 2026-07-04 design-consolidation merges (HTML stubs also exist for GitHub Pages) ---
+# --- 2026-07-04 design-consolidation merges (methodology dir -> page) ---
 /methodology/                                  /methodology.html                                301
 /methodology/index.html                        /methodology.html                                301
-/content/guides/24k-vs-22k.html                /content/guides/24k-vs-22k-vs-18k-gold/          301
-/content/guides/gold-karat-comparison.html     /content/guides/24k-vs-22k-vs-18k-gold/          301
-/content/guides/invest-in-gold-gcc.html        /content/guides/gold-investment-for-beginners/   301
+/content/guides/24k-vs-22k.html                /learn.html                                      301
+/content/guides/gold-karat-comparison.html     /learn.html                                      301
+/content/guides/invest-in-gold-gcc.html        /learn.html                                      301
 /content/tools/investment-return.html          /tracker.html                                    301
 /content/tools/weight-converter.html           /calculator.html?mode=convert                    301
-/countries/uae/cities/                         /countries/uae/                                  301
-/countries/uae/cities/index.html               /countries/uae/                                  301
-/countries/uae/cities/dubai.html               /countries/uae/dubai/                            301
-/countries/uae/cities/abu-dhabi.html           /countries/uae/abu-dhabi/                        301
-/countries/saudi-arabia/cities/                /countries/saudi-arabia/                         301
-/countries/saudi-arabia/cities/index.html      /countries/saudi-arabia/                         301
-/countries/saudi-arabia/cities/riyadh.html     /countries/saudi-arabia/riyadh/                  301
-/countries/egypt/cities/                       /countries/egypt/                                301
-/countries/egypt/cities/index.html             /countries/egypt/                                301
-/countries/egypt/cities/cairo.html             /countries/egypt/cairo/                          301
-/countries/qatar/cities/                       /countries/qatar/                                301
-/countries/qatar/cities/index.html             /countries/qatar/                                301
-/countries/qatar/cities/doha.html              /countries/qatar/doha/                           301
 
+# --- Tree-level sweeps for removed page trees (2026-07-04 reduction) --------
+# Any deep URL under a removed tree lands on the closest surviving surface.
+# These sit ABOVE the 404 fallback but BELOW the specific rules above so the
+# granular destinations keep winning.
+/countries/*     /compare.html        301
+/content/*       /learn.html          301
+/ar/*            /?lang=ar            301
+/chart/*         /tracker.html        301
+/gold-price/*    /tracker.html        301
+/methodology/*   /methodology.html    301
+/account.html    /                    301
+/dashboard.html  /                    301
+/pricing.html    /                    301
+/developer.html  /                    301
+/design-lab.html /                    301
+
+# --- Explicit 404 fallback (defensive — Netlify does this by default) -------
 /*            /404.html        404

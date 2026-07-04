@@ -97,10 +97,8 @@ jobs:
           cp -r styles dist/
           # Admin pages — excluded from Vite build, served as-is (ES modules with top-level await)
           [ -d admin ] && cp -r admin dist/ || true
-          # ── Country content (unified under countries/) ──
-          cp -r countries dist/
-          # ── Content pages (guides, tools, etc.) ──
-          [ -d content ] && cp -r content dist/ || true
+          # 2026-07-04 IA reset: countries/ and content/ trees were deleted
+          # (docs/plans/2026-07-04_radical-page-reduction.md) — nothing to copy.
 
       - name: Flatten leaf-page CSS (collapse the @import waterfall in the dist copy)
         # Leaf pages (countries/, content/) load styles/global.css as-is, where 9

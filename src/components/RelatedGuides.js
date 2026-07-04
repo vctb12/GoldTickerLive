@@ -1,17 +1,41 @@
 import { el } from '../lib/safe-dom.js';
 
 const GUIDES_EN = [
-  { href: 'content/guides/buying-guide.html', title: 'GCC gold buying guide', desc: 'Weights, karats, and shop checklist' },
-  { href: 'content/spot-vs-retail-gold-price/', title: 'Spot vs retail', desc: 'Why shop quotes differ from reference' },
-  { href: 'content/gold-making-charges-guide/index.html', title: 'Making charges', desc: 'Fees shops add on top of spot' },
-  { href: 'content/guides/24k-vs-22k-vs-18k-gold/index.html', title: '24K vs 22K vs 18K', desc: 'Purity and resale value' },
+  {
+    href: '/learn.html#faq',
+    title: 'GCC gold buying guide',
+    desc: 'Weights, karats, and shop checklist',
+  },
+  {
+    href: '/learn.html#pricing',
+    title: 'Spot vs retail',
+    desc: 'Why shop quotes differ from reference',
+  },
+  { href: '/learn.html#pricing', title: 'Making charges', desc: 'Fees shops add on top of spot' },
+  { href: '/learn.html#karats', title: '24K vs 22K vs 18K', desc: 'Purity and resale value' },
 ];
 
 const GUIDES_AR = [
-  { href: 'content/guides/buying-guide.html?lang=ar', title: 'دليل شراء الذهب في الخليج', desc: 'الأوزان والعيارات وقائمة التحقق' },
-  { href: 'content/spot-vs-retail-gold-price/?lang=ar', title: 'السعر الفوري مقابل التجزئة', desc: 'لماذا تختلف أسعار المحلات' },
-  { href: 'content/gold-making-charges-guide/index.html?lang=ar', title: 'رسوم المصنعية', desc: 'ما تضيفه المحلات فوق السعر المرجعي' },
-  { href: 'content/guides/ar/24k-vs-22k-vs-18k-gold/index.html', title: '24 مقابل 22 مقابل 18', desc: 'النقاء وقيمة إعادة البيع' },
+  {
+    href: '/learn.html?lang=ar#faq',
+    title: 'دليل شراء الذهب في الخليج',
+    desc: 'الأوزان والعيارات وقائمة التحقق',
+  },
+  {
+    href: '/learn.html?lang=ar#pricing',
+    title: 'السعر الفوري مقابل التجزئة',
+    desc: 'لماذا تختلف أسعار المحلات',
+  },
+  {
+    href: '/learn.html?lang=ar#pricing',
+    title: 'رسوم المصنعية',
+    desc: 'ما تضيفه المحلات فوق السعر المرجعي',
+  },
+  {
+    href: '/learn.html?lang=ar#karats',
+    title: '24 مقابل 22 مقابل 18',
+    desc: 'النقاء وقيمة إعادة البيع',
+  },
 ];
 
 /**
@@ -20,8 +44,7 @@ const GUIDES_AR = [
 export function renderRelatedGuides(options = {}) {
   const lang = options.lang === 'ar' ? 'ar' : 'en';
   const items = lang === 'ar' ? GUIDES_AR : GUIDES_EN;
-  const heading =
-    options.heading ?? (lang === 'ar' ? 'أدلة ذات صلة' : 'Related guides');
+  const heading = options.heading ?? (lang === 'ar' ? 'أدلة ذات صلة' : 'Related guides');
 
   const list = el(
     'ul',
@@ -36,10 +59,11 @@ export function renderRelatedGuides(options = {}) {
     )
   );
 
-  return el('section', { class: 'related-guides card card--bordered', 'aria-labelledby': 'related-guides-heading' }, [
-    el('h2', { id: 'related-guides-heading', class: 'related-guides-title' }, heading),
-    list,
-  ]);
+  return el(
+    'section',
+    { class: 'related-guides card card--bordered', 'aria-labelledby': 'related-guides-heading' },
+    [el('h2', { id: 'related-guides-heading', class: 'related-guides-title' }, heading), list]
+  );
 }
 
 /**

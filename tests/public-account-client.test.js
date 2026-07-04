@@ -123,18 +123,11 @@ test('getAccessToken resolves from supabase token key variants', async () => {
   assert.equal(mod.isAuthenticated(), true);
 });
 
-test('redirectToAccount includes encoded next URL', async () => {
-  global.window = { location: { href: 'https://goldtickerlive.com/tracker.html?x=1' } };
+test('redirectToAccount was retired with the account page (no sign-in surface)', async () => {
   const mod = await import('../src/lib/public-account-client.js');
-
-  mod.redirectToAccount();
-  assert.equal(
-    global.window.location.href,
-    '/account.html?next=https%3A%2F%2Fgoldtickerlive.com%2Ftracker.html%3Fx%3D1'
-  );
-
-  mod.redirectToAccount('/calculator.html?unit=gram');
-  assert.equal(global.window.location.href, '/account.html?next=%2Fcalculator.html%3Funit%3Dgram');
+  // The standalone account/dashboard pages were removed in the 2026-07-04 IA
+  // reset; callers degrade to local-only saves instead of redirecting.
+  assert.equal(typeof mod.redirectToAccount, 'undefined');
 });
 
 test('getMe sends bearer auth and returns data payload', async () => {

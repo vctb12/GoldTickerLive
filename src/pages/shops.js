@@ -17,7 +17,6 @@ import { observeReveal } from '../lib/reveal.js';
 import {
   createSavedShop,
   isAuthenticated as isAccountAuthenticated,
-  redirectToAccount,
 } from '../lib/public-account-client.js';
 import { iconSvg, iconUseElement } from '../components/icon-sprite.js';
 import { initShopsMap, updateMapMarkers, invalidateMapSize } from '../components/shops-map.js';
@@ -160,6 +159,7 @@ const TXT = {
     removeFromShortlist: 'Remove from shortlist',
     saveToAccount: 'Save to account',
     savedToAccount: 'Saved to account',
+    savedToShortlist: 'Saved to your shortlist on this device.',
     saveToAccountAuthPrompt: 'Sign in to save this shop to your account?',
     saved: 'Saved',
     shortlistCount: (n) => `${n} saved`,
@@ -315,6 +315,7 @@ const TXT = {
     removeFromShortlist: 'إزالة من القائمة',
     saveToAccount: 'حفظ في الحساب',
     savedToAccount: 'تم الحفظ في الحساب',
+    savedToShortlist: 'تم الحفظ في قائمتك على هذا الجهاز.',
     saveToAccountAuthPrompt: 'هل تريد تسجيل الدخول لحفظ هذا المحل في حسابك؟',
     saved: 'محفوظ',
     shortlistCount: (n) => `${n} محفوظة`,
@@ -666,16 +667,17 @@ function sortedShops(shops) {
   });
 }
 
+// Country/city gold-price pages were retired; deep-link into the compare tool.
+// UAE is the reference column, so it lands on the default compare view; every
+// other country pre-selects ae + itself at 22K.
+function countryCompareHref(country) {
+  if (!country?.code) return '';
+  const code = country.code.toLowerCase();
+  return code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
+}
+
 function cityGoldRateUrl(shop) {
-  const country = countryByCode(shop.countryCode);
-  if (!country?.slug) return '';
-  const cityMatch = (country.cities || []).find(
-    (c) => c.nameEn === shop.city || c.nameAr === shop.city
-  );
-  if (cityMatch?.slug) {
-    return `countries/${country.slug}/${cityMatch.slug}/gold-rate/`;
-  }
-  return `countries/${country.slug}/gold-price/`;
+  return countryCompareHref(countryByCode(shop.countryCode));
 }
 
 async function copyShopDetails(shop, button = null) {
@@ -763,9 +765,10 @@ function announceShopStatus(message) {
 async function saveShopToAccount(shop) {
   if (!shop?.id) return;
   if (!isAccountAuthenticated()) {
-    if (window.confirm(t('saveToAccountAuthPrompt'))) {
-      redirectToAccount();
-    }
+    // Cross-device account sync was retired with the account page — fall back
+    // to the local shortlist so the save still works on this device.
+    if (!isInShortlist(shop.id)) toggleShortlist(shop.id);
+    announceShopStatus(t('savedToShortlist'));
     return;
   }
   await createSavedShop({
@@ -1063,7 +1066,7 @@ function applyStaticText() {
   if (priceDisclEl) {
     const textNode = document.createTextNode(t('priceDisclaimer') + ' ');
     const spotLink = document.createElement('a');
-    spotLink.href = 'content/spot-vs-retail-gold-price/';
+    spotLink.href = 'methodology.html';
     spotLink.textContent = t('spotVsRetailLinkText');
     const sep = document.createTextNode(' · ');
     const methodLink = document.createElement('a');
@@ -1347,7 +1350,7 @@ function buildShopCardMarkup(shop) {
   const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
   const inShortlist = isInShortlist(shop.id);
   const inCompare = isInCompareList(shop.id);
-  const countryUrl = country?.slug ? `countries/${country.slug}/gold-price/` : '';
+  const countryUrl = countryCompareHref(country);
   const goldRateUrl = cityGoldRateUrl(shop);
   const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
@@ -2450,7 +2453,7 @@ init();
       {
         city: 'Dubai',
         name: 'Dubai Gold Souk',
-        page: '/countries/uae/markets/dubai-gold-souk.html',
+        page: '/shops.html?country=AE&city=Dubai',
         lat: 25.2881,
         lng: 55.3021,
       },
@@ -2466,7 +2469,7 @@ init();
       {
         city: 'Cairo',
         name: 'Khan el-Khalili Gold Market',
-        page: '/countries/egypt/markets/khan-el-khalili-cairo.html',
+        page: '/shops.html?country=EG&city=Cairo',
         lat: 30.0478,
         lng: 31.2625,
       },

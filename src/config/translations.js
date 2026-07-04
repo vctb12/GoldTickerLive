@@ -692,6 +692,7 @@ export const TRANSLATIONS = {
     'tracker.toast.presetSaved': 'Preset "{name}" saved',
     'tracker.toast.presetUrlCopied': 'Preset URL copied to clipboard',
     'tracker.toast.watchlistSavedAccount': 'Saved {count} watchlist items to your account.',
+    'tracker.toast.watchlistSavedLocal': 'Watchlist saved on this device.',
     'tracker.toast.watchlistSaveFailed': 'Could not save watchlist right now.',
     'tracker.toast.alertLimitWarning': 'You have {count}/{max} alerts. Maximum is {max}.',
     'tracker.workspace.toggleBasic': 'Use basic workspace',
@@ -997,7 +998,7 @@ export const TRANSLATIONS = {
       'The live gold price per gram in UAE (AED) is shown on the ',
       ['./tracker.html', 'Live Tracker'],
       ' and the ',
-      ['./countries/uae/', 'UAE page'],
+      ['./compare.html', 'UAE comparison'],
       '. Spot source updates hourly during market hours; pages re-poll about every 90 seconds while open. Prices use the official AED peg of 3.6725.',
     ],
     'home.faq2A': [
@@ -1013,7 +1014,7 @@ export const TRANSLATIONS = {
       "The gold spot price auto-refreshes while you have the page open; the underlying source data updates hourly during market hours. FX rates update once per day (via open.er-api.com). A countdown timer on the tracker shows you exactly when the next refresh is due. Data is cached locally so the last known price shows even when you're offline, with a visible cached / fallback label so you can tell the difference.",
     'home.faq6A': [
       'No. The prices on Gold Ticker Live are spot-linked reference estimates for the gold content only. When you buy jewellery in a shop, the final price is higher because it adds making charges (fabrication fees, typically 5–25%), dealer margin, and in some countries VAT (e.g. 5% in the UAE). The tracker gives you the bullion baseline so you can understand how much of the quoted price is gold and how much is markup. See ',
-      ['./content/spot-vs-retail-gold-price/', 'Spot vs retail price'],
+      ['./methodology.html', 'Spot vs retail price'],
       ' for a detailed breakdown.',
     ],
     'home.faq7A': [
@@ -2097,6 +2098,7 @@ export const TRANSLATIONS = {
     'tracker.toast.presetSaved': 'تم حفظ الإعداد المسبق "{name}"',
     'tracker.toast.presetUrlCopied': 'تم نسخ رابط الإعداد المسبق إلى الحافظة',
     'tracker.toast.watchlistSavedAccount': 'تم حفظ {count} عناصر من قائمة المراقبة في حسابك.',
+    'tracker.toast.watchlistSavedLocal': 'تم حفظ قائمة المراقبة على هذا الجهاز.',
     'tracker.toast.watchlistSaveFailed': 'تعذر حفظ قائمة المراقبة حالياً.',
     'tracker.toast.alertLimitWarning': 'لديك {count}/{max} تنبيهات. الحد الأقصى {max}.',
     'tracker.workspace.toggleBasic': 'استخدام مساحة العمل الأساسية',
@@ -2397,7 +2399,7 @@ export const TRANSLATIONS = {
       'يظهر سعر غرام الذهب المرتبط بالسعر الفوري في الإمارات (بالدرهم) في ',
       ['./tracker.html', 'المتتبع المباشر'],
       ' وفي ',
-      ['./countries/uae/', 'صفحة الإمارات'],
+      ['./compare.html', 'مقارنة الإمارات'],
       '. يُحدَّث مصدر السعر الفوري كل ساعة خلال ساعات السوق؛ وتعيد الصفحات الاستعلام كل 90 ثانية تقريبًا أثناء فتحها. تعتمد الأسعار على الربط الرسمي للدرهم عند 3.6725.',
     ],
     'home.faq2A': [
@@ -2413,7 +2415,7 @@ export const TRANSLATIONS = {
       'يُحدَّث السعر الفوري للذهب تلقائيًا أثناء فتح الصفحة؛ بينما تُحدَّث بيانات المصدر الأساسية كل ساعة خلال ساعات السوق. وتُحدَّث أسعار الصرف مرة واحدة يوميًا (عبر open.er-api.com). ويعرض مؤقت تنازلي في المتتبع موعد التحديث التالي بدقة. وتُخزَّن البيانات محليًا فيظهر آخر سعر معروف حتى دون اتصال بالإنترنت، مع تسمية واضحة للبيانات المخزنة/الاحتياطية لتمييزها.',
     'home.faq6A': [
       'لا. الأسعار على Gold Ticker Live تقديرات مرجعية مرتبطة بالسعر الفوري لمحتوى الذهب فقط. وعند شراء المجوهرات من متجر يكون السعر النهائي أعلى لأنه يضيف رسوم الصياغة (رسوم التصنيع، عادةً 5–25%) وهامش التاجر، وفي بعض الدول ضريبة القيمة المضافة (مثل 5% في الإمارات). يمنحك المتتبع خط أساس السبائك لتفهم كم من السعر المعروض ذهب وكم منه زيادة. راجع ',
-      ['./content/spot-vs-retail-gold-price/', 'السعر الفوري مقابل التجزئة'],
+      ['./methodology.html', 'السعر الفوري مقابل التجزئة'],
       ' لتفصيل كامل.',
     ],
     'home.faq7A': [

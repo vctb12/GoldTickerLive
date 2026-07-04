@@ -11,7 +11,7 @@
  *   3. Core static pages that exist on disk are present in the sitemap.
  *   4. Every `<loc>` is unique (no duplicate entries).
  *   5. `offline.html` is excluded (per generator's EXCLUDE list).
- *   6. Every `countries/<slug>/index.html` that exists on disk has a `<loc>`.
+ *   6. Pages removed in the 2026-07-04 page reduction stay out of the sitemap.
  */
 
 'use strict';
@@ -21,19 +21,11 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { execFileSync } = require('node:child_process');
-const vm = require('node:vm');
 
 const REPO_ROOT = path.join(__dirname, '..');
 const SITEMAP_PATH = path.join(REPO_ROOT, 'sitemap.xml');
 const GENERATOR = path.join(REPO_ROOT, 'scripts', 'node', 'generate-sitemap.js');
 const CANONICAL_ORIGIN = 'https://goldtickerlive.com';
-
-function loadCountries() {
-  const raw = fs.readFileSync(path.join(REPO_ROOT, 'src/config/countries.js'), 'utf8');
-  const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
-  if (!match) throw new Error('Could not parse COUNTRIES');
-  return vm.runInNewContext(`(${match[1]})`, Object.create(null), { timeout: 2000 });
-}
 
 function ensureSitemap() {
   // Always regenerate so the test is deterministic and doesn't depend on
@@ -79,10 +71,11 @@ test('core static pages are in the sitemap', () => {
     '/tracker.html',
     '/shops.html',
     '/calculator.html',
+    '/compare.html',
+    '/heatmap.html',
+    '/portfolio.html',
     '/learn.html',
-    '/insights.html',
     '/methodology.html',
-    '/invest.html',
   ];
   for (const p of core) {
     const expected = CANONICAL_ORIGIN + p;
@@ -117,35 +110,22 @@ test('offline.html is excluded from sitemap', () => {
   assert.deepEqual(offline, [], 'offline.html should not appear in sitemap');
 });
 
-test('configured noindex pages are excluded from sitemap', () => {
+test('deleted/noindex pages are excluded from sitemap', () => {
   const xml = ensureSitemap();
   const all = locs(xml);
+  // These trees were removed in the 2026-07-04 radical page reduction, plus the
+  // never-indexed offline shell — none may resurface in the sitemap.
   const blocked = [
-    `${CANONICAL_ORIGIN}/countries/uae/dubai/gold-rate/18-karat/`,
-    `${CANONICAL_ORIGIN}/content/tools/investment-return.html`,
-    `${CANONICAL_ORIGIN}/content/guides/invest-in-gold-gcc.html`,
-    `${CANONICAL_ORIGIN}/content/social/x-post-generator.html`,
+    `${CANONICAL_ORIGIN}/countries/uae/`,
+    `${CANONICAL_ORIGIN}/content/guides/`,
+    `${CANONICAL_ORIGIN}/insights.html`,
+    `${CANONICAL_ORIGIN}/invest.html`,
+    `${CANONICAL_ORIGIN}/offline.html`,
   ];
   const present = blocked.filter((u) => all.includes(u));
-  assert.deepEqual(present, [], 'Noindex pages should not appear in sitemap: ' + present.join(', '));
-});
-
-test('every existing country page is present in the sitemap', () => {
-  const xml = ensureSitemap();
-  const all = new Set(locs(xml));
-  const countries = loadCountries();
-  let checked = 0;
-  for (const c of countries) {
-    if (!c.slug) continue;
-    const idx = path.join(REPO_ROOT, 'countries', c.slug, 'index.html');
-    if (!fs.existsSync(idx)) continue;
-    checked++;
-    const slash = `${CANONICAL_ORIGIN}/countries/${c.slug}/`;
-    const html = `${CANONICAL_ORIGIN}/countries/${c.slug}/index.html`;
-    assert.ok(
-      all.has(slash) || all.has(html),
-      `Expected sitemap to include canonical hub for country "${c.slug}"`
-    );
-  }
-  assert.ok(checked > 0, 'Expected to verify at least one country page');
+  assert.deepEqual(
+    present,
+    [],
+    'Excluded pages should not appear in sitemap: ' + present.join(', ')
+  );
 });

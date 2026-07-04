@@ -28,7 +28,8 @@ export const CATEGORIES = [
 ];
 
 /**
- * The insight feed. Each entry links to a real, existing content page so the
+ * The insight feed. Each entry links to a real, kept page (a learn.html hub
+ * section or a first-class tool such as compare / tracker / portfolio) so the
  * feed never ships broken links. `words` is a representative article length used
  * only to derive the displayed read time. `icon` is a sprite symbol id from
  * `src/components/icon-sprite.js` (rendered by the feed with `iconUseElement`).
@@ -41,7 +42,7 @@ export const INSIGHTS = [
   {
     id: 'aed-peg',
     category: 'price-analysis',
-    href: 'content/guides/aed-peg-explained.html',
+    href: '/learn.html#aed-peg',
     icon: 'i-exchange',
     date: '2026-05',
     words: 1180,
@@ -55,7 +56,7 @@ export const INSIGHTS = [
   {
     id: 'uae-saudi-kuwait',
     category: 'price-analysis',
-    href: 'content/guides/uae-vs-saudi-vs-kuwait-gold-prices/',
+    href: '/compare.html',
     icon: 'i-globe',
     date: '2026-05',
     words: 1460,
@@ -69,7 +70,7 @@ export const INSIGHTS = [
   {
     id: 'inflation-hedge',
     category: 'price-analysis',
-    href: 'content/guides/gold-as-inflation-hedge/',
+    href: '/learn.html#invest',
     icon: 'i-chart',
     date: '2026-04',
     words: 1520,
@@ -83,7 +84,7 @@ export const INSIGHTS = [
   {
     id: 'market-hours',
     category: 'market-news',
-    href: 'content/guides/gcc-market-hours.html',
+    href: '/tracker.html',
     icon: 'i-clock',
     date: '2026-05',
     words: 940,
@@ -97,7 +98,7 @@ export const INSIGHTS = [
   {
     id: 'best-time-to-buy',
     category: 'buying-guides',
-    href: 'content/guides/best-time-to-buy-gold/',
+    href: '/tracker.html',
     icon: 'i-bell',
     date: '2026-04',
     words: 1240,
@@ -111,7 +112,7 @@ export const INSIGHTS = [
   {
     id: '24k-vs-22k',
     category: 'buying-guides',
-    href: 'content/guides/24k-vs-22k-vs-18k-gold/',
+    href: '/learn.html#karats',
     icon: 'i-scale',
     date: '2026-05',
     words: 1080,
@@ -125,7 +126,7 @@ export const INSIGHTS = [
   {
     id: 'spot-fake-gold',
     category: 'buying-guides',
-    href: 'content/guides/how-to-spot-fake-gold/',
+    href: '/learn.html#hallmark',
     icon: 'i-search',
     date: '2026-04',
     words: 1320,
@@ -139,7 +140,7 @@ export const INSIGHTS = [
   {
     id: 'zakat',
     category: 'zakat',
-    href: 'content/guides/zakat-gold-guide.html',
+    href: '/learn.html#zakat',
     icon: 'i-receipt',
     date: '2026-05',
     words: 1150,
@@ -153,7 +154,7 @@ export const INSIGHTS = [
   {
     id: 'bars-vs-coins',
     category: 'investment',
-    href: 'content/guides/gold-bars-vs-coins/',
+    href: '/learn.html#invest',
     icon: 'i-coins',
     date: '2026-05',
     words: 1210,
@@ -167,7 +168,7 @@ export const INSIGHTS = [
   {
     id: 'beginners',
     category: 'investment',
-    href: 'content/guides/gold-investment-for-beginners/',
+    href: '/portfolio.html',
     icon: 'i-book',
     date: '2026-04',
     words: 1390,
@@ -181,7 +182,7 @@ export const INSIGHTS = [
   {
     id: 'savings-plans',
     category: 'investment',
-    href: 'content/guides/gold-savings-plans-gcc/',
+    href: '/portfolio.html',
     icon: 'i-bars',
     date: '2026-04',
     words: 1100,
@@ -195,7 +196,7 @@ export const INSIGHTS = [
   {
     id: 'hallmarks',
     category: 'buying-guides',
-    href: 'content/guides/gold-hallmarks-explained/',
+    href: '/learn.html#hallmark',
     icon: 'i-check',
     date: '2026-03',
     words: 990,

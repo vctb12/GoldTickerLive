@@ -33,12 +33,10 @@ export function isAuthenticated() {
   return Boolean(getAccessToken());
 }
 
-export function redirectToAccount(nextUrl = null) {
-  // `next` is validated on the account page before redirecting back, so
-  // cross-origin values are rejected there.
-  const next = encodeURIComponent(nextUrl || window.location.href);
-  window.location.href = `/account.html?next=${next}`;
-}
+// NOTE: the standalone account/dashboard pages were removed in the 2026-07-04
+// IA reset (docs/plans/2026-07-04_radical-page-reduction.md). Cross-device
+// account sync therefore has no sign-in surface; callers degrade to the
+// local-only fallbacks below. `redirectToAccount` was retired with the page.
 
 async function authedFetch(path, options = {}) {
   const token = getAccessToken();

@@ -58,8 +58,10 @@ const DEAD_XFO_META = /<meta[^>]*http-equiv=["']?x-frame-options["']?[^>]*>/i;
 const ALL_FILES = findHtmlFiles(REPO_ROOT);
 
 test('public HTML carries no dead X-Frame-Options <meta> (D5 regression guard)', () => {
+  // The 2026-07-04 radical page reduction cut the site to ~13 public pages plus
+  // the admin tree; a healthy full-site scan still finds a few dozen HTML files.
   assert.ok(
-    ALL_FILES.length > 100,
+    ALL_FILES.length > 20,
     `expected to scan the full site, only found ${ALL_FILES.length} HTML files`
   );
   const offenders = ALL_FILES.filter((f) =>

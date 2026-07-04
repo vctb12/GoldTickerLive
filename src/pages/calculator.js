@@ -22,7 +22,6 @@ import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
 import {
   createSavedCalculation,
   isAuthenticated as isAccountAuthenticated,
-  redirectToAccount,
 } from '../lib/public-account-client.js';
 import { parseCalculatorUrlState, serializeCalculatorUrlState } from './calculator/url-state.js';
 import {
@@ -404,10 +403,12 @@ function getSelectedCountryContext(currency) {
 }
 
 function buildCountryPageHref(country) {
-  // Keep the leading `./` — safe-dom's safeHref() strips bare-relative hrefs
-  // (only `/`, `./`, `../`, `#`, or absolute schemes survive), so an el()-built
-  // anchor would otherwise render with no href and become a dead link.
-  return country?.slug ? `./countries/${country.slug}/` : './countries/index.html';
+  // Dedicated country pages were retired; deep-link into the compare tool.
+  // Root-absolute hrefs survive safe-dom's safeHref() (only `/`, `./`, `../`,
+  // `#`, or absolute schemes survive), so an el()-built anchor keeps its href.
+  if (!country?.code) return '/compare.html';
+  const code = country.code.toLowerCase();
+  return code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
 }
 
 let _shopsHandoffListenersBound = false;
@@ -1054,7 +1055,7 @@ function applyLang() {
     clear(trustNote);
     trustNote.append(
       `${t('trust_note')} `,
-      el('a', { href: './content/spot-vs-retail-gold-price/' }, [`${t('trust_spot_link')} →`]),
+      el('a', { href: './methodology.html' }, [`${t('trust_spot_link')} →`]),
       ' · ',
       el('a', { href: `./${buildMethodologyHref({ lang: STATE.lang })}` }, [
         `${t('trust_method_link')} →`,
@@ -1132,7 +1133,7 @@ function applyLang() {
     clear(valDisclaimer);
     valDisclaimer.append(
       `${t('val_disclaimer')} `,
-      el('a', { href: './content/gold-making-charges-guide/', class: 'calc-inline-link' }, [
+      el('a', { href: './learn.html#pricing', class: 'calc-inline-link' }, [
         t('val_making_charge_link'),
       ])
     );
@@ -1662,10 +1663,11 @@ function initCopyBtn() {
     };
 
     if (!isAccountAuthenticated()) {
+      // Cross-device account sync was retired with the account page — save
+      // locally and confirm on the button instead of prompting a sign-in.
       fallback();
-      if (window.confirm(t('save_requires_auth'))) {
-        redirectToAccount();
-      }
+      button.textContent = t('saved_result');
+      button.setAttribute('aria-label', t('saved_result'));
       return;
     }
 
