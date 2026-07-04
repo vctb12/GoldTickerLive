@@ -309,7 +309,7 @@ export function createArticleRenderer({
         ]
       ),
       el('div', { class: 'learn-hub-article-copy' }, [
-        el('h1', { class: 'learn-hub-article-title' }, [t(currentArticle.titleKey)]),
+        el('h2', { class: 'learn-hub-article-title' }, [t(currentArticle.titleKey)]),
         el('p', { class: 'learn-hub-article-subtitle' }, [t(currentArticle.subtitleKey)]),
         el('div', { class: 'learn-hub-article-meta' }, metaParts),
       ]),

@@ -2,9 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
     <script>
       (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
         try {
           var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
           var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
@@ -14,20 +16,32 @@
               : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light';
-          var el = document.documentElement;
           el.setAttribute('data-theme', resolved);
           el.setAttribute('data-theme-mode', mode);
         } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
       })();
     </script>
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live</title>
+    <title>Gold Portfolio Tracker — Value Holdings | Gold Ticker Live</title>
     <meta
       name="description"
-      content="Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded."
+      content="Track your gold holdings privately in your browser — weight, karat and cost valued against the spot-linked reference price. No account, nothing uploaded."
     />
     <link rel="canonical" href="https://goldtickerlive.com/portfolio.html" />
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/portfolio.html" />
@@ -99,7 +113,7 @@
   "@type": "WebApplication",
   "name": "Gold Portfolio Tracker",
   "url": "https://goldtickerlive.com/portfolio.html",
-  "description": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+  "description": "Track your gold holdings privately in your browser — weight, karat and cost valued against the spot-linked reference price. No account, nothing uploaded.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
