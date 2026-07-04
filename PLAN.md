@@ -90,6 +90,14 @@ Canonical plan:
 
 ## 🟡 Up Next
 
+### Product Roadmap (2026-07-04)
+
+Canonical plan:
+[`docs/plans/2026-07-04_product-roadmap.md`](docs/plans/2026-07-04_product-roadmap.md) —
+owner-supplied 17-item near/medium/long-term roadmap mapped to existing repo assets, blockers, and
+owner gates. Suggested first PRs: T1.1 secondary gold cross-validation → newsletter digest →
+portfolio tracker MVP → SVG heatmap → owner decision on backend-in-production + billing RED zone.
+
 ### Platform Upgrade Program (2026-06-09)
 
 Canonical plan:
