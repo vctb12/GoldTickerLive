@@ -190,6 +190,36 @@ function extractContentPanelFaq(content) {
 }
 
 /**
+ * Extract Q&A pairs from a visible `<details>` FAQ (summary = question, first
+ * `<p>` = answer). Bilingual pages render an EN and an AR twin of each item;
+ * we keep only the canonical English one (skip any question containing Arabic
+ * characters) so the FAQPage schema matches the page's canonical language.
+ * @param {string} content
+ * @param {string} itemClass - the details class to match (e.g. 'dubai-faq-item')
+ */
+function extractDetailsFaq(content, itemClass) {
+  const re = new RegExp(
+    `<details[^>]*class="[^"]*${itemClass}[^"]*"[^>]*>[\\s\\S]*?<summary[^>]*>([\\s\\S]*?)<\\/summary>[\\s\\S]*?<p[^>]*>([\\s\\S]*?)<\\/p>`,
+    'gi'
+  );
+  const strip = (s) =>
+    s
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  const faqItems = [];
+  let match = re.exec(content);
+  while (match) {
+    const q = strip(match[1]);
+    if (q && !/[؀-ۿ]/.test(q)) {
+      faqItems.push({ q, a: strip(match[2]) });
+    }
+    match = re.exec(content);
+  }
+  return faqItems;
+}
+
+/**
  * Dataset schema for price data pages.
  * @param {Object} options
  */
@@ -436,6 +466,16 @@ function generateSchemasForPage(filePath, content) {
     const breadcrumbs = generateBreadcrumbs(urlPath, canonicalUrl);
     if (breadcrumbs.length > 1) {
       schemas.push(getBreadcrumbSchema(breadcrumbs));
+    }
+  }
+
+  // Pages with a visible <details class="dubai-faq-item"> FAQ (e.g. the Dubai/UAE
+  // landing page) get FAQPage schema built from that visible Q&A — canonical
+  // (English) twin only.
+  if (content.includes('dubai-faq-item')) {
+    const faqItems = extractDetailsFaq(content, 'dubai-faq-item');
+    if (faqItems.length > 0) {
+      schemas.push(getFAQPageSchema(faqItems));
     }
   }
 

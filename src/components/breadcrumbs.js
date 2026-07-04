@@ -36,6 +36,7 @@ function getLabels(_extra = {}) {
     compare: tx('nav.compare', 'Compare Countries'),
     heatmap: tx('nav.heatmap', 'World Map'),
     portfolio: tx('nav.portfolio', 'Portfolio'),
+    dubai: tx('nav.dubai', 'Dubai & UAE Gold Price'),
   };
 }
 
@@ -138,6 +139,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
     compare: [{ label: labels.compare, url: '/compare.html' }],
     heatmap: [{ label: labels.heatmap, url: '/heatmap.html' }],
     portfolio: [{ label: labels.portfolio, url: '/portfolio.html' }],
+    dubai: [{ label: labels.dubai, url: '/dubai-gold-price.html' }],
   };
 
   if (pageMap[pageName]) {
