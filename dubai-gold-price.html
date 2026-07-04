@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
+    <script>
+      (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gold Rate in Dubai &amp; UAE — Price per Gram in AED (24K/22K/21K/18K) | Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="The gold rate in Dubai and UAE gold price as a spot-linked reference in AED — per gram for 24K, 22K, 21K and 18K, plus the dirham peg, making charges, VAT and a Dubai buying checklist. Bilingual EN/AR."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/dubai-gold-price.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/dubai-gold-price.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/dubai-gold-price.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/dubai-gold-price.html?lang=ar" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="Gold Rate in Dubai &amp; UAE — Price per Gram in AED | Gold Ticker Live" />
+    <meta
+      property="og:description"
+      content="A spot-linked reference for the gold price in Dubai and the UAE, in AED — per gram by karat, plus the dirham peg, making charges, VAT and a buying checklist."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/dubai-gold-price.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gold Rate in Dubai &amp; UAE — Price per Gram in AED" />
+    <meta
+      name="twitter:description"
+      content="A spot-linked reference for the Dubai/UAE gold price in AED — by karat, with the dirham peg, making charges and VAT explained."
+    />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:alt" content="Gold Ticker Live — gold rate in Dubai and the UAE, price per gram in AED" />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/dubai-gold-price.css" />
+    <link rel="modulepreload" href="./src/pages/dubai-gold-price.js" />
+    <link rel="modulepreload" href="./src/components/site-shell.js" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/dubai-gold-price.css" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Dubai Gold Price",
+      "item": "https://goldtickerlive.com/dubai-gold-price.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the gold rate in Dubai today?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The rate shown here is a spot-linked reference estimate , updated through the day from the international gold price and the fixed peg of 1 USD = 3.6725 AED. It is not a live dealer quote. Treat it as a baseline: a shop's retail price adds making charges, dealer margin, and any VAT. See our methodology ."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is gold cheaper in Dubai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dubai is often competitive because the underlying spot price is global and making charges can be modest, but \"cheaper\" depends on the day, the karat, the piece, and the shop's margin. Always compare the reference rate against the actual retail quote before you buy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I pay VAT on gold in Dubai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "UAE VAT is 5% and generally applies to jewellery making and craftsmanship. Investment-grade bullion (99% purity or higher, in tradable form) is commonly zero-rated. Rules change, so check current guidance and read your invoice rather than assume."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is 22K vs 24K?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Karat is purity. 24K is about 99.9% pure gold, soft, and used for bars and coins. 22K is about 91.6% pure, alloyed with other metals for durability, and common in jewellery. Higher karat means more gold per gram and a higher reference price."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is gold priced per gram or per tola?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "UAE shops usually price per gram, by karat. Tola is a traditional unit still quoted for some bars: 1 tola is about 11.6638 grams. To compare fairly, convert everything to a per-gram basis first — our calculator does this for you."
+      }
+    }
+  ]
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by dubai-gold-price.js) -->
+    <div class="page-breadcrumbs"></div>
+
+    <main id="main-content">
+      <section class="dubai-hero">
+        <div class="dubai-hero-inner">
+          <p class="dubai-hero-eyebrow" id="dubai-eyebrow">UAE · Dubai gold rate</p>
+          <h1 class="dubai-hero-title" id="dubai-h1">Gold Rate in Dubai &amp; the UAE</h1>
+          <p class="dubai-hero-sub" id="dubai-sub">
+            A spot-linked reference for the gold price in Dubai and across the UAE, in AED and USD —
+            plus how the dirham peg, karats, making charges and VAT shape the number you actually pay
+            at the counter.
+          </p>
+        </div>
+      </section>
+
+      <nav class="dubai-jump" aria-label="Sections" data-lang-block="en">
+        <span class="dubai-jump-label" id="dubai-jump-label">Jump to a section</span>
+        <a href="#intro">Overview</a>
+        <a href="#aed">AED pricing</a>
+        <a href="#units">Units & karats</a>
+        <a href="#checklist">Buying checklist</a>
+        <a href="#making">Making charges</a>
+        <a href="#vat">VAT & invoice</a>
+        <a href="#where">Where to buy</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <nav class="dubai-jump" aria-label="أقسام الصفحة" data-lang-block="ar" lang="ar" dir="rtl">
+        <span class="dubai-jump-label">الانتقال إلى قسم</span>
+        <a href="#intro">نظرة عامة</a>
+        <a href="#aed">التسعير بالدرهم</a>
+        <a href="#units">الوحدات والعيارات</a>
+        <a href="#checklist">قائمة الشراء</a>
+        <a href="#making">أجور الصياغة</a>
+        <a href="#vat">الضريبة والفاتورة</a>
+        <a href="#where">أين تشتري</a>
+        <a href="#faq">الأسئلة الشائعة</a>
+      </nav>
+
+      <section class="dubai-section" id="intro" aria-labelledby="intro-h-en intro-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="intro-h-en">Gold Rate in Dubai — What the UAE Gold Price Means</h2>
+            <p class="dubai-lead">The <strong>gold rate in Dubai</strong> — what most people search for as the <strong>UAE gold price</strong> — is the value of pure gold expressed in dirhams per gram, tracked across 24K, 22K, 21K, and 18K. On this page we show a <strong>spot-linked reference in AED</strong>, updated through the day from the global gold price and the fixed USD peg (1 USD = 3.6725 AED).</p><p class="dubai-p">Treat that number as a <strong>reference estimate, not a live dealer quote</strong>. It tells you roughly what the metal itself is worth right now — a fair starting point before you visit a shop. The price you actually pay at a Dubai jeweller is higher, because retail adds making charges, the dealer's margin, and 5% VAT on craftsmanship. To turn today's reference into an expected shop figure, use the <a href="calculator.html">calculator</a> and read our <a href="methodology.html">methodology</a>.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="intro-h-ar">سعر الذهب في دبي — ماذا يعني سعر الذهب في الإمارات</h2>
+            <p class="dubai-lead"><strong>سعر الذهب في دبي</strong> — أو ما يبحث عنه معظم الناس باسم <strong>سعر الذهب في الإمارات</strong> — هو قيمة الذهب الخالص مقوَّمة بالدرهم للغرام الواحد، ويُتابَع لعيارات 24 و22 و21 و18 قيراطًا. نعرض في هذه الصفحة <strong>سعرًا مرجعيًا مرتبطًا بالسعر الفوري بالدرهم الإماراتي</strong>، يُحدَّث على مدار اليوم استنادًا إلى سعر الذهب العالمي وربط الدرهم الثابت بالدولار (1 دولار = 3.6725 درهم).</p><p class="dubai-p">اعتبر هذا الرقم <strong>تقديرًا مرجعيًا لا سعرًا مباشرًا من التاجر</strong>. فهو يبيّن تقريبًا قيمة المعدن نفسه في اللحظة الراهنة، وهو نقطة انطلاق منصفة قبل زيارة المحل. أما السعر الذي تدفعه فعليًا لدى صائغ في دبي فيكون أعلى، لأن سعر التجزئة يضيف أجور الصياغة وهامش التاجر وضريبة القيمة المضافة بنسبة 5% على الصناعة. ولتحويل السعر المرجعي اليوم إلى رقم متوقع في المحل، استخدم <a href="calculator.html">الحاسبة</a> واطّلع على <a href="methodology.html">منهجيتنا</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="aed" aria-labelledby="aed-h-en aed-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="aed-h-en">How AED Gold Pricing Works</h2>
+            <p class="dubai-lead">The UAE dirham is pegged to the US dollar at a fixed rate of <strong>1 USD = 3.6725 AED</strong>, and gold trades globally in dollars. That link is why UAE gold prices move almost in step with the international spot price.</p>
+            <p class="dubai-p">Because the peg holds steady, the dirham figure you see is essentially the world dollar price converted at 3.6725, then expressed per gram for each karat. When the global price rises or falls, the local reference number follows within the same trading day — there is no separate "UAE premium" baked into the spot conversion itself.</p>
+            <h3 class="dubai-subhead">What this means for a buyer</h3>
+            <p class="dubai-p">The number on our page is a <strong>spot-linked reference estimate</strong>, not a shop's till price. A retailer adds making charges, dealer margin and any applicable VAT on top. Use the reference to judge whether a quote is fair, then confirm the final figure on your invoice.</p>
+            <p class="dubai-callout">See our <a href="methodology.html">methodology</a> for how we convert and update these figures, and the <a href="market.html">market</a> page for what is moving the global dollar price today.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="aed-h-ar">كيف يعمل تسعير الذهب بالدرهم</h2>
+            <p class="dubai-lead">الدرهم الإماراتي مربوط بالدولار الأمريكي بسعر ثابت قدره <strong>1 دولار = 3.6725 درهم</strong>، والذهب يُتداول عالميًا بالدولار. هذا الارتباط هو ما يجعل أسعار الذهب في الإمارات تتحرك تقريبًا بالتوازي مع السعر الفوري العالمي.</p>
+            <p class="dubai-p">ولأن الربط ثابت، فإن سعر الدرهم الذي تراه هو في جوهره السعر العالمي بالدولار محوّلًا على أساس 3.6725، ثم معبّرًا عنه لكل غرام حسب كل عيار. وعندما يرتفع السعر العالمي أو ينخفض، يتبعه الرقم المرجعي المحلي خلال يوم التداول نفسه، دون وجود "علاوة إماراتية" منفصلة داخل التحويل الفوري ذاته.</p>
+            <h3 class="dubai-subhead">ماذا يعني هذا للمشتري</h3>
+            <p class="dubai-p">الرقم المعروض على صفحتنا هو <strong>تقدير مرجعي مرتبط بالسعر الفوري</strong>، وليس سعر البيع في المتجر. فالتاجر يضيف أجور الصياغة وهامش الربح وأي ضريبة قيمة مضافة مطبّقة. استخدم الرقم المرجعي للحكم على مدى عدالة العرض، ثم تأكّد من الرقم النهائي على فاتورتك.</p>
+            <p class="dubai-callout">اطّلع على <a href="methodology.html">منهجيتنا</a> لمعرفة كيفية تحويل هذه الأرقام وتحديثها، وعلى صفحة <a href="market.html">السوق</a> لمعرفة ما يحرّك السعر العالمي بالدولار اليوم.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="units" aria-labelledby="units-h-en units-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="units-h-en">Units & Karats in the UAE</h2>
+            <p class="dubai-lead">In the UAE, gold is quoted and sold <strong>per gram</strong> — that's the retail norm on every shop display and on our reference tables.</p>
+            <p class="dubai-p">Two other units still matter here. One <strong>troy ounce = 31.1035 g</strong>, the unit global spot markets and bullion bars are priced in. One <strong>tola ≈ 11.6638 g</strong>, long used across the region's South Asian jewellery trade.</p>
+            <h3 class="dubai-subhead">Karat purity at a glance</h3>
+            <ul class="dubai-list">
+            <li><strong>24K</strong> (~99.9% pure) — bars and coins; the bullion standard.</li>
+            <li><strong>22K</strong> (~91.6%) — common in jewellery, especially heavier gold-souk pieces.</li>
+            <li><strong>21K</strong> (~87.5%) — the everyday Gulf jewellery favourite.</li>
+            <li><strong>18K</strong> (75%) — harder and more durable, used for stone-set and designer work.</li>
+            </ul>
+            <p class="dubai-callout">These figures are spot-linked reference estimates by karat, not a shop's final price — retail adds making charges, dealer margin and any VAT. Convert grams, tolas or ounces with our <a href="calculator.html">calculator</a>, or check any term in the <a href="glossary.html">glossary</a>.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="units-h-ar">الوحدات والعِيارات في الإمارات</h2>
+            <p class="dubai-lead">في الإمارات، يُسعَّر الذهب ويُباع <strong>بالغرام</strong> — وهذا هو المعيار المعتاد للتجزئة على كل شاشة عرض في المتاجر وفي جداولنا المرجعية.</p>
+            <p class="dubai-p">تبقى وحدتان أخريان مهمتين هنا. الأوقية التروية الواحدة <strong>= 31.1035 غرامًا</strong>، وهي الوحدة التي تُسعَّر بها الأسواق الفورية العالمية وسبائك الذهب. والتولة الواحدة <strong>≈ 11.6638 غرامًا</strong>، وقد استُخدمت طويلًا في تجارة المجوهرات لدى جاليات جنوب آسيا في المنطقة.</p>
+            <h3 class="dubai-subhead">العِيارات ونقاؤها باختصار</h3>
+            <ul class="dubai-list">
+            <li><strong>عيار 24</strong> (نقاء ~99.9%) — السبائك والعملات؛ معيار المعدن الاستثماري.</li>
+            <li><strong>عيار 22</strong> (~91.6%) — شائع في المجوهرات، خاصةً القطع الثقيلة في سوق الذهب.</li>
+            <li><strong>عيار 21</strong> (~87.5%) — المفضّل اليومي للمجوهرات الخليجية.</li>
+            <li><strong>عيار 18</strong> (75%) — أكثر صلابة ومتانة، يُستخدم للقطع المرصّعة بالأحجار والتصاميم.</li>
+            </ul>
+            <p class="dubai-callout">هذه الأرقام تقديرات مرجعية مرتبطة بالسعر الفوري حسب العِيار، وليست السعر النهائي في المتجر — إذ تضيف التجزئة أجور الصياغة وهامش التاجر وأي ضريبة قيمة مضافة. حوّل بين الغرامات والتولات والأوقيات عبر <a href="calculator.html">الحاسبة</a>، أو راجع أي مصطلح في <a href="glossary.html">المسرد</a>.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="checklist" aria-labelledby="checklist-h-en checklist-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="checklist-h-en">Your Dubai gold buying checklist</h2>
+            <p class="dubai-lead">Before you hand over cash in a Dubai souk or mall shop, run through these six checks. They keep the retail price honest and keep the metal you pay for separate from the labour you're charged.</p>
+            <ul class="dubai-list">
+            <li><strong>Verify the karat stamp and hallmark.</strong> Look for a 999, 916, 875 or 750 mark plus the UAE assay stamp. If a piece isn't stamped, ask why.</li>
+            <li><strong>Ask for the per-gram rate and making charge separately.</strong> The per-gram figure should track the day's reference rate; making is labour and varies by design.</li>
+            <li><strong>Weigh the piece in front of you</strong> and check the scale reading against the invoice.</li>
+            <li><strong>Get an itemized invoice</strong> showing weight, karat, per-gram rate, making charge and 5% VAT.</li>
+            <li><strong>Compare a few shops</strong> before you commit — a short walk can move the making charge more than the gold rate does.</li>
+            <li><strong>Understand the buy-back spread:</strong> dealers usually refund the metal value, not the making charge you paid.</li>
+            </ul>
+            <p class="dubai-callout">Use our <a href="calculator.html">calculator</a> to estimate the metal portion, then <a href="compare.html">compare</a> shops on making charge before you buy.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="checklist-h-ar">قائمة تحقّق لشراء الذهب في دبي</h2>
+            <p class="dubai-lead">قبل أن تدفع في سوق دبي أو في محل بأحد المولات، راجِع هذه الفحوص الستة. فهي تُبقي سعر التجزئة صادقًا وتفصل بين المعدن الذي تدفع ثمنه وبين أجرة الصياغة المضافة إليه.</p>
+            <ul class="dubai-list">
+            <li><strong>تحقّق من دمغة العيار والختم.</strong> ابحث عن علامة 999 أو 916 أو 875 أو 750 مع ختم الدمغة الإماراتي. وإن لم تكن القطعة مدموغة، فاسأل عن السبب.</li>
+            <li><strong>اطلب سعر الغرام وأجرة الصياغة كلًّا على حدة.</strong> ينبغي أن يواكب سعر الغرام السعر المرجعي لليوم، أما الصياغة فهي أجرة عمل تختلف بحسب التصميم.</li>
+            <li><strong>زِن القطعة أمامك</strong> وطابِق قراءة الميزان مع الفاتورة.</li>
+            <li><strong>احصل على فاتورة مفصّلة</strong> تبيّن الوزن والعيار وسعر الغرام وأجرة الصياغة وضريبة القيمة المضافة 5%.</li>
+            <li><strong>قارِن بين عدة محال</strong> قبل أن تُقرِّر؛ فبضع خطوات قد تغيّر أجرة الصياغة أكثر مما يتغيّر سعر الذهب نفسه.</li>
+            <li><strong>افهم فارق سعر إعادة الشراء:</strong> يُعيد التاجر عادةً قيمة المعدن، لا أجرة الصياغة التي دفعتها.</li>
+            </ul>
+            <p class="dubai-callout">استخدم <a href="calculator.html">الحاسبة</a> لتقدير قيمة المعدن، ثم <a href="compare.html">قارِن</a> بين المحال بحسب أجرة الصياغة قبل الشراء.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="making" aria-labelledby="making-h-en making-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="making-h-en">Making Charges Explained</h2>
+            <p class="dubai-lead">The gold rate you see here is a spot-linked reference estimate for the metal only. What you actually pay at a Dubai shop also includes <strong>making charges</strong> — the cost of turning raw gold into a finished piece.</p>
+            <p class="dubai-p">Making charges cover craftsmanship and labour: cutting, moulding, polishing, and finishing. They sit <strong>on top of</strong> the metal value, so two chains of the same weight and karat can cost different amounts depending on how intricate each design is.</p>
+            <p class="dubai-p">Shops usually quote making charges in one of two ways:</p>
+            <ul class="dubai-list"><li><strong>Per gram</strong> — a fixed amount (say, a few dirhams) for each gram of the piece.</li><li><strong>As a percentage</strong> — a share of the metal value, often higher for detailed or branded designs.</li></ul>
+            <p class="dubai-callout">Making charges are often <strong>negotiable</strong>, especially on plain or heavier pieces — always ask before you buy.</p>
+            <p class="dubai-p">This is why a reference rate is never the retail price. See the <a href="glossary.html">glossary</a> for how making charges, margin, and VAT stack up.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="making-h-ar">أجور التصنيع (المصنعية) بإيجاز</h2>
+            <p class="dubai-lead">سعر الذهب الذي تراه هنا هو تقدير مرجعي مرتبط بالسعر الفوري للمعدن وحده. أما ما تدفعه فعلياً في محل بدبي فيشمل أيضاً <strong>أجور التصنيع</strong> — تكلفة تحويل الذهب الخام إلى قطعة جاهزة.</p>
+            <p class="dubai-p">تغطي أجور التصنيع الحرفية والعمل اليدوي: القص والصب والتلميع والتشطيب. وهي تُضاف <strong>فوق</strong> قيمة المعدن، لذا قد تختلف تكلفة سلسلتين بالوزن والعيار نفسيهما تبعاً لمدى دقة تصميم كل منهما.</p>
+            <p class="dubai-p">عادةً ما تحدد المحلات أجور التصنيع بإحدى طريقتين:</p>
+            <ul class="dubai-list"><li><strong>لكل غرام</strong> — مبلغ ثابت (بضعة دراهم مثلاً) عن كل غرام من القطعة.</li><li><strong>كنسبة مئوية</strong> — حصة من قيمة المعدن، وغالباً ما تكون أعلى في التصاميم المعقّدة أو ذات العلامات التجارية.</li></ul>
+            <p class="dubai-callout">أجور التصنيع <strong>قابلة للتفاوض</strong> في كثير من الأحيان، خاصةً في القطع البسيطة أو الأثقل — اسأل دائماً قبل الشراء.</p>
+            <p class="dubai-p">لهذا السبب لا يساوي السعر المرجعي سعر البيع بالتجزئة أبداً. راجع <a href="glossary.html">المصطلحات</a> لمعرفة كيف تتراكم أجور التصنيع والهامش وضريبة القيمة المضافة.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="vat" aria-labelledby="vat-h-en vat-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="vat-h-en">VAT, your invoice & purity</h2>
+            <p class="dubai-lead">UAE VAT is 5%, and it generally applies to the making and craftsmanship on gold jewellery, not usually to the metal value alone. Investment-grade bullion at 99% purity or higher, in tradable form, is commonly zero-rated — but rules change, so treat this as background and check the current position or your own invoice.</p><p class="dubai-p">This is why an itemized invoice matters. A clear invoice separates the <strong>gold value</strong> (weight times purity times a spot-linked reference) from <strong>making charges</strong>, dealer margin, and any VAT. If a shop shows only one lump-sum figure, you cannot tell what you paid for the metal versus the workmanship. Ask for the breakdown before you pay.</p><p class="dubai-p">Verify purity from the hallmark stamp — 24K, 22K, 21K, or 18K — and confirm it matches the invoice. Our <a href="calculator.html">calculator</a> and <a href="methodology.html">methodology</a> show how we derive reference estimates.</p><p class="dubai-callout">Nothing here is tax or financial advice. VAT treatment depends on the item, its purity, and current UAE rules — confirm with the retailer and check your invoice.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="vat-h-ar">ضريبة القيمة المضافة والفاتورة والعيار</h2>
+            <p class="dubai-lead">تبلغ ضريبة القيمة المضافة في الإمارات 5%، وهي تنطبق عادةً على أجور الصياغة والتشغيل في مصوغات الذهب، لا على قيمة المعدن وحدها في الغالب. أما السبائك الاستثمارية بنقاء 99% فأعلى وبشكل قابل للتداول فكثيرًا ما تكون معفاة بنسبة صفر — لكن القواعد تتغيّر، فاعتبر هذا خلفية عامة وتحقّق من الوضع الحالي أو من فاتورتك.</p><p class="dubai-p">لهذا السبب تهمّ الفاتورة المفصّلة. فالفاتورة الواضحة تفصل <strong>قيمة الذهب</strong> (الوزن مضروبًا في النقاء مضروبًا في سعر مرجعي مرتبط بالفوري) عن <strong>أجور الصياغة</strong> وهامش التاجر وأي ضريبة. وإذا عرض المتجر رقمًا إجماليًا واحدًا فقط، فلن تعرف ما دفعته مقابل المعدن مقابل الصنعة. اطلب التفصيل قبل الدفع.</p><p class="dubai-p">تحقّق من العيار عبر ختم الدمغة — 24 أو 22 أو 21 أو 18 قيراطًا — وتأكّد من مطابقته للفاتورة. تُبيّن <a href="calculator.html">الحاسبة</a> و<a href="methodology.html">منهجيتنا</a> كيف نشتقّ التقديرات المرجعية.</p><p class="dubai-callout">لا شيء هنا يُعدّ نصيحة ضريبية أو مالية. تعتمد معاملة ضريبة القيمة المضافة على الصنف ونقائه والقواعد الإماراتية الحالية — تأكّد من ذلك مع البائع وراجع فاتورتك.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="where" aria-labelledby="where-h-en where-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="where-h-en">Where to buy: Souk, malls, or online</h2>
+            <p class="dubai-lead">Where you buy in Dubai changes what you pay on top of the daily reference rate — the metal value is similar everywhere, but making charges, dealer margin, and convenience differ.</p>
+            <ul class="dubai-list">
+            <li><strong>Gold Souk (Deira):</strong> a dense cluster of shops with wide selection and room to compare and negotiate making charges face to face. Ask for the per-gram rate and the making charge separately.</li>
+            <li><strong>Malls and branded stores:</strong> fixed displays, consistent service, and hallmarked pieces, often at higher making charges for design and brand.</li>
+            <li><strong>Online and digital gold:</strong> convenient and easy to track, but check who holds the metal, how it is stored, and how you redeem or take delivery.</li>
+            </ul>
+            <p class="dubai-callout">Wherever you buy, the shop's price should trace back to the same spot-linked reference plus making charges and 5% VAT where it applies. Compare the full quote, not just the headline gram rate.</p>
+            <p class="dubai-p">Use our <a href="shops.html">shops guide</a> to see how listings and charges are structured before you go. This is general guidance, not an endorsement of any seller.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="where-h-ar">أين تشتري: السوق أم المولات أم الإنترنت</h2>
+            <p class="dubai-lead">يؤثّر مكان الشراء في دبي على ما تدفعه فوق السعر المرجعي اليومي؛ فقيمة المعدن متقاربة في كل مكان، لكن أجور الصياغة وهامش التاجر ومدى الراحة تختلف.</p>
+            <ul class="dubai-list">
+            <li><strong>سوق الذهب (ديرة):</strong> تجمّع كثيف من المحال بتشكيلة واسعة، ومجال للمقارنة والتفاوض على أجور الصياغة وجهاً لوجه. اطلب سعر الغرام وأجرة الصياغة كلّاً على حدة.</li>
+            <li><strong>المولات والمتاجر ذات العلامات:</strong> واجهات ثابتة، وخدمة متّسقة، وقطع مدموغة، وغالباً بأجور صياغة أعلى مقابل التصميم والعلامة.</li>
+            <li><strong>الشراء عبر الإنترنت والذهب الرقمي:</strong> مريح وسهل المتابعة، لكن تحقّق ممّن يحتفظ بالمعدن، وكيف يُخزَّن، وكيف تستردّه أو تستلمه.</li>
+            </ul>
+            <p class="dubai-callout">أينما اشتريت، ينبغي أن يعود سعر المحل إلى السعر المرجعي المرتبط بالفوري نفسه، مضافاً إليه أجور الصياغة وضريبة القيمة المضافة 5% حيثما تنطبق. قارن عرض السعر الكامل، لا سعر الغرام المعلن فقط.</p>
+            <p class="dubai-p">استعن بـ<a href="shops.html">دليل المحال</a> لدينا لتفهم كيف تُنظَّم القوائم والأجور قبل زيارتك. هذه إرشادات عامة وليست تزكية لأي بائع.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="faq" aria-labelledby="faq-h-en faq-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="faq-h-en">Dubai gold rate FAQ</h2>
+            <div class="dubai-faq"><details class="dubai-faq-item"><summary>What is the gold rate in Dubai today?</summary><p class="dubai-p">The rate shown here is a <strong>spot-linked reference estimate</strong>, updated through the day from the international gold price and the fixed peg of 1 USD = 3.6725 AED. It is not a live dealer quote. Treat it as a baseline: a shop's retail price adds making charges, dealer margin, and any VAT. See our <a href="methodology.html">methodology</a>.</p></details><details class="dubai-faq-item"><summary>Is gold cheaper in Dubai?</summary><p class="dubai-p">Dubai is often competitive because the underlying spot price is global and making charges can be modest, but "cheaper" depends on the day, the karat, the piece, and the shop's margin. Always <a href="compare.html">compare</a> the reference rate against the actual retail quote before you buy.</p></details><details class="dubai-faq-item"><summary>Do I pay VAT on gold in Dubai?</summary><p class="dubai-p">UAE VAT is 5% and generally applies to jewellery making and craftsmanship. Investment-grade bullion (99% purity or higher, in tradable form) is commonly zero-rated. Rules change, so check current guidance and read your invoice rather than assume.</p></details><details class="dubai-faq-item"><summary>What is 22K vs 24K?</summary><p class="dubai-p">Karat is purity. <strong>24K</strong> is about 99.9% pure gold, soft, and used for bars and coins. <strong>22K</strong> is about 91.6% pure, alloyed with other metals for durability, and common in jewellery. Higher karat means more gold per gram and a higher reference price.</p></details><details class="dubai-faq-item"><summary>Is gold priced per gram or per tola?</summary><p class="dubai-p">UAE shops usually price per gram, by karat. Tola is a traditional unit still quoted for some bars: 1 tola is about 11.6638 grams. To compare fairly, convert everything to a per-gram basis first — our <a href="calculator.html">calculator</a> does this for you.</p></details></div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="faq-h-ar">أسئلة شائعة عن سعر الذهب في دبي</h2>
+            <div class="dubai-faq"><details class="dubai-faq-item"><summary>ما هو سعر الذهب في دبي اليوم؟</summary><p class="dubai-p">السعر الظاهر هنا هو <strong>تقدير مرجعي مرتبط بالسعر الفوري</strong>، ويُحدَّث على مدار اليوم استناداً إلى سعر الذهب العالمي والربط الثابت للدرهم عند 1 دولار = 3.6725 درهم. وهو ليس عرض سعر مباشراً من التاجر. اعتبره أساساً فقط: سعر التجزئة في المتجر يضيف أجور الصياغة وهامش التاجر وأي ضريبة قيمة مضافة. اطّلع على <a href="methodology.html">طريقة الحساب</a>.</p></details><details class="dubai-faq-item"><summary>هل الذهب أرخص في دبي؟</summary><p class="dubai-p">كثيراً ما تكون دبي تنافسية لأن السعر الفوري الأساسي عالمي وأجور الصياغة قد تكون معتدلة، لكن مسألة "الأرخص" تعتمد على اليوم والعيار والقطعة وهامش المتجر. <a href="compare.html">قارن</a> دائماً السعر المرجعي بعرض التجزئة الفعلي قبل الشراء.</p></details><details class="dubai-faq-item"><summary>هل أدفع ضريبة القيمة المضافة على الذهب في دبي؟</summary><p class="dubai-p">ضريبة القيمة المضافة في الإمارات 5% وتنطبق عموماً على صياغة المجوهرات والأعمال الحرفية. أما السبائك الاستثمارية (نقاء 99% أو أعلى، بشكل قابل للتداول) فغالباً ما تكون خاضعة لنسبة صفر. القواعد تتغير، لذا راجع الإرشادات الحالية واقرأ فاتورتك بدلاً من الافتراض.</p></details><details class="dubai-faq-item"><summary>ما الفرق بين عيار 22 وعيار 24؟</summary><p class="dubai-p">العيار يدل على النقاء. <strong>عيار 24</strong> نقاؤه نحو 99.9% وهو ذهب لين يُستخدم في السبائك والعملات. <strong>عيار 22</strong> نقاؤه نحو 91.6%، ويُخلط بمعادن أخرى لزيادة المتانة، وهو شائع في المجوهرات. كلما ارتفع العيار زاد محتوى الذهب في الغرام وارتفع السعر المرجعي.</p></details><details class="dubai-faq-item"><summary>هل يُسعَّر الذهب بالغرام أم بالتولة؟</summary><p class="dubai-p">عادةً ما تسعّر متاجر الإمارات بالغرام حسب العيار. والتولة وحدة تقليدية لا تزال تُذكر لبعض السبائك: التولة الواحدة نحو 11.6638 غراماً. للمقارنة العادلة، حوّل كل شيء إلى أساس السعر لكل غرام أولاً — و<a href="calculator.html">الحاسبة</a> تقوم بذلك نيابةً عنك.</p></details></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="dubai-section" id="next" aria-labelledby="next-h-en next-h-ar">
+        <div class="dubai-inner">
+          <div data-lang-block="en">
+            <h2 class="dubai-section-title" id="next-h-en">Put today's rate to use</h2>
+            <div class="dubai-router">
+              <a class="dubai-router-card" href="calculator.html"><h3 class="dubai-router-title">Gold calculator</h3><p class="dubai-router-text">Value a weight and karat in AED &amp; USD.</p></a>
+              <a class="dubai-router-card" href="tracker.html"><h3 class="dubai-router-title">Live tracker</h3><p class="dubai-router-text">Spot-linked reference prices, updated through the day.</p></a>
+              <a class="dubai-router-card" href="compare.html"><h3 class="dubai-router-title">Compare countries</h3><p class="dubai-router-text">See how the UAE compares with other markets.</p></a>
+              <a class="dubai-router-card" href="shops.html"><h3 class="dubai-router-title">Find gold shops</h3><p class="dubai-router-text">Souks and market areas across the UAE.</p></a>
+              <a class="dubai-router-card" href="glossary.html"><h3 class="dubai-router-title">Glossary</h3><p class="dubai-router-text">Every term on this page, defined.</p></a>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <h2 class="dubai-section-title" id="next-h-ar">استفد من سعر اليوم</h2>
+            <div class="dubai-router">
+              <a class="dubai-router-card" href="calculator.html"><h3 class="dubai-router-title">حاسبة الذهب</h3><p class="dubai-router-text">قيّم وزنًا وعيارًا بالدرهم والدولار.</p></a>
+              <a class="dubai-router-card" href="tracker.html"><h3 class="dubai-router-title">المتتبع المباشر</h3><p class="dubai-router-text">أسعار مرجعية مرتبطة بالسعر الفوري، تُحدَّث خلال اليوم.</p></a>
+              <a class="dubai-router-card" href="compare.html"><h3 class="dubai-router-title">قارن الدول</h3><p class="dubai-router-text">قارن الإمارات بأسواق أخرى.</p></a>
+              <a class="dubai-router-card" href="shops.html"><h3 class="dubai-router-title">ابحث عن المحلات</h3><p class="dubai-router-text">الأسواق ومناطق الذهب في الإمارات.</p></a>
+              <a class="dubai-router-card" href="glossary.html"><h3 class="dubai-router-title">مسرد المصطلحات</h3><p class="dubai-router-text">كل مصطلح في هذه الصفحة، مشروحًا.</p></a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="dubai-foot">
+        <p class="dubai-disclaimer">
+          This page is for information and education only and is not financial or tax advice. Prices
+          shown across Gold Ticker Live are spot-linked reference estimates, not live dealer quotes;
+          the price at a Dubai or UAE shop adds making charges, dealer margin and any applicable VAT.
+          Confirm the final figure on your invoice.
+        </p>
+      </div>
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+    <script type="module" src="./src/pages/dubai-gold-price.js"></script>
+  </body>
+</html>

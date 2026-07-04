@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-07-04",
   "summary": {
-    "totalHtmlFiles": 15,
-    "withCanonical": 13,
+    "totalHtmlFiles": 16,
+    "withCanonical": 14,
     "withoutCanonical": 2,
-    "withOgImage": 13,
+    "withOgImage": 14,
     "withoutOgImage": 2,
-    "withJsonLd": 13,
+    "withJsonLd": 14,
     "withoutJsonLd": 2,
-    "hreflangEnArPairs": 13,
+    "hreflangEnArPairs": 14,
     "noindexCount": 2
   },
   "records": [
@@ -104,6 +104,43 @@
       "jsonLdTypes": [
         "BreadcrumbList",
         "WebApplication"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "dubai-gold-price.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Rate in Dubai & UAE — Price per Gram in AED (24K/22K/21K/18K) | Gold Ticker Live",
+      "metaDescription": "The gold rate in Dubai and UAE gold price as a spot-linked reference in AED — per gram for 24K, 22K, 21K and 18K, plus the dirham peg, making charges, VAT and a Dubai buying checklist. Bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/dubai-gold-price.html",
+      "robots": null,
+      "ogTitle": "Gold Rate in Dubai & UAE — Price per Gram in AED | Gold Ticker Live",
+      "ogDescription": "A spot-linked reference for the gold price in Dubai and the UAE, in AED — per gram by karat, plus the dirham peg, making charges, VAT and a buying checklist.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/dubai-gold-price.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/dubai-gold-price.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/dubai-gold-price.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/dubai-gold-price.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "FAQPage"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null

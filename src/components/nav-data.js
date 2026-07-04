@@ -125,6 +125,13 @@ const RAW_NAV_DATA = {
             description: 'Compare reference prices across countries.',
             items: [
               {
+                href: '/dubai-gold-price.html',
+                label: 'Dubai & UAE gold price',
+                description: 'AED per gram, karats, making charges & VAT',
+                icon: 'AED',
+                primary: true,
+              },
+              {
                 href: '/compare.html',
                 label: 'Compare countries',
                 description: 'Sortable cross-country price tool',
@@ -306,6 +313,13 @@ const RAW_NAV_DATA = {
             label: 'الأسواق',
             description: 'قارن الأسعار المرجعية بين الدول.',
             items: [
+              {
+                href: '/dubai-gold-price.html',
+                label: 'سعر الذهب في دبي والإمارات',
+                description: 'سعر الغرام بالدرهم والعيارات وأجور الصياغة والضريبة',
+                icon: 'AED',
+                primary: true,
+              },
               {
                 href: '/compare.html',
                 label: 'قارن الدول',

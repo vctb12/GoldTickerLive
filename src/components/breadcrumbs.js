@@ -38,6 +38,7 @@ function getLabels(_extra = {}) {
     glossary: tx('nav.glossary', 'Glossary'),
     market: tx('nav.market', 'How Gold Is Priced'),
     portfolio: tx('nav.portfolio', 'Portfolio'),
+    dubai: tx('nav.dubai', 'Dubai & UAE Gold Price'),
   };
 }
 
@@ -142,6 +143,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
     glossary: [{ label: labels.glossary, url: '/glossary.html' }],
     market: [{ label: labels.market, url: '/market.html' }],
     portfolio: [{ label: labels.portfolio, url: '/portfolio.html' }],
+    dubai: [{ label: labels.dubai, url: '/dubai-gold-price.html' }],
   };
 
   if (pageMap[pageName]) {
