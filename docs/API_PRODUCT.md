@@ -28,7 +28,8 @@ premiums, making charges, or VAT.
 6. [Error Codes](#error-codes)
 7. [Trust & Freshness Fields](#trust--freshness-fields)
 8. [Code Examples](#code-examples)
-9. [Pricing Tiers](#pricing-tiers)
+9. [Google Sheets](#google-sheets)
+10. [Pricing Tiers](#pricing-tiers)
 
 ---
 
@@ -56,12 +57,12 @@ Authorization: Bearer gtl_<your-key>
 
 ## Rate Limits & Quotas
 
-| Tier            | Daily calls                     | History access |
-| --------------- | ------------------------------- | -------------- |
+| Tier            | Daily calls                         | History access |
+| --------------- | ----------------------------------- | -------------- |
 | Free (no key)   | 10 / day per IP on `/public/latest` | Not available  |
-| Free (with key) | Not currently enforced          | 30 days        |
-| Pro             | Not currently enforced          | 365 days       |
-| API             | Not currently enforced          | Unlimited      |
+| Free (with key) | Not currently enforced              | 30 days        |
+| Pro             | Not currently enforced              | 365 days       |
+| API             | Not currently enforced              | Unlimited      |
 
 Anonymous access to `/public/latest` resets at **midnight UTC** each day.
 
@@ -687,6 +688,72 @@ old_id = keys[0]["id"]
 new_key_resp = requests.post(f"{BASE}/me/api-keys/{old_id}/regenerate", headers=headers).json()
 print("New key (save this):", new_key_resp["data"]["key"])
 ```
+
+---
+
+## Google Sheets
+
+> **Interim, no-key integration** (roadmap item 10). The production API above is dormant while the
+> backend is disabled; until it ships, Sheets users can read the **committed hourly data file**
+> served by GitHub Pages: `https://goldtickerlive.com/data/gold_price.json`. This file is refreshed
+> hourly by `gold-price-fetch.yml` — treat values as **updated** reference prices (never "live"),
+> and check the freshness fields before trusting a number.
+
+### Option A — `GOLDPRICE()` custom function (Apps Script)
+
+In your sheet: **Extensions → Apps Script**, paste, save, then use `=GOLDPRICE()` in any cell.
+
+```js
+/**
+ * Gold Ticker Live reference price (hourly-updated, NOT a live quote).
+ *
+ * =GOLDPRICE()             → XAU/USD per troy ounce
+ * =GOLDPRICE("USD", "G")   → USD per gram (24K)
+ * =GOLDPRICE("AED", "24K") → AED per gram for 24K (also 22K / 21K / 18K)
+ * =GOLDPRICE("AGE")        → data age in seconds (freshness check)
+ *
+ * @customfunction
+ */
+function GOLDPRICE(currency, unit) {
+  const data = JSON.parse(
+    UrlFetchApp.fetch('https://goldtickerlive.com/data/gold_price.json').getContentText()
+  );
+  const cur = String(currency || 'USD').toUpperCase();
+  const u = String(unit || 'OZ').toUpperCase();
+  if (cur === 'AGE') return data.freshness_seconds;
+  if (cur === 'AED') {
+    const karat = /^(24|22|21|18)K?$/.exec(u);
+    if (!karat) throw new Error('AED supports 24K / 22K / 21K / 18K per gram');
+    return data.karats_aed_per_gram[karat[1] + 'k'];
+  }
+  if (cur === 'USD') {
+    if (u === 'G' || u === 'GRAM') return data.usd_per_gram_24k;
+    return data.xau_usd_per_oz;
+  }
+  throw new Error('Supported: USD (OZ/G), AED (24K/22K/21K/18K), AGE');
+}
+```
+
+The file only carries USD and AED (fixed 3.6725 peg); convert other currencies with
+`GOOGLEFINANCE("CURRENCY:USDSAR")`-style rates in your sheet and label the result as your own
+estimate.
+
+### Option B — formula-only (no script)
+
+`IMPORTDATA` splits the JSON on commas; rejoin the cells and regex out one field:
+
+```text
+=VALUE(REGEXEXTRACT(TEXTJOIN("",TRUE,
+  IMPORTDATA("https://goldtickerlive.com/data/gold_price.json")),
+  """xau_usd_per_oz"":\s*([0-9.]+)"))
+```
+
+Swap the field name for `usd_per_gram_24k` or `aed_per_gram_24k` as needed.
+
+**Honesty notes:** Sheets caches external fetches for minutes to hours — your cell can lag the
+hourly file, which itself lags spot. Show a timestamp next to the price (extract `timestamp_utc` the
+same way) and never present these cells as live or as a retail quote. The file's field names are
+stable (`schema_version: 1`); a future version bump will be announced in the changelog.
 
 ---
 

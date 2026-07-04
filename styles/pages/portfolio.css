@@ -1,0 +1,548 @@
+/* ==========================================================================
+   Gold Portfolio Tracker page — styles
+   All values use design tokens (colour / space / radius / shadow / type).
+   Logical properties keep the layout correct under dir="rtl".
+   ========================================================================== */
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.portfolio-hero {
+  padding-block: var(--space-6) var(--space-4);
+  padding-inline: var(--space-4);
+  text-align: center;
+}
+
+.portfolio-hero-inner {
+  max-width: 760px;
+  margin-inline: auto;
+}
+
+.portfolio-hero-title {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  margin: 0 0 var(--space-2);
+  line-height: 1.12;
+}
+
+.portfolio-hero-sub {
+  font-size: var(--text-base);
+  color: var(--color-text-muted);
+  margin: 0 auto var(--space-4);
+  max-width: 60ch;
+}
+
+.portfolio-spot-badge {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2) var(--space-3);
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-1);
+  font-size: var(--text-sm);
+}
+
+.portfolio-spot-text {
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
+
+.portfolio-spot-text #portfolio-spot-label {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-bold);
+  margin-inline-end: var(--space-1);
+}
+
+.portfolio-fresh {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+}
+
+.portfolio-fresh-dot {
+  inline-size: 0.5rem;
+  block-size: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-live, var(--color-up));
+}
+
+.portfolio-fresh[data-state='delayed'] .portfolio-fresh-dot,
+.portfolio-fresh[data-state='cached'] .portfolio-fresh-dot {
+  background: var(--color-warning, var(--color-amber));
+}
+
+.portfolio-fresh[data-state='stale'] .portfolio-fresh-dot,
+.portfolio-fresh[data-state='fallback'] .portfolio-fresh-dot,
+.portfolio-fresh[data-state='unavailable'] .portfolio-fresh-dot {
+  background: var(--color-down);
+}
+
+.portfolio-trust-note {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-block-start: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-1) var(--space-3);
+}
+
+.portfolio-trust-note a {
+  color: var(--color-gold-dark, var(--color-gold));
+  font-weight: var(--weight-semibold);
+}
+
+/* ── Toolbar ──────────────────────────────────────────────────────────── */
+.portfolio-toolbar {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.portfolio-toolbar-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.portfolio-toolbar-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.portfolio-currency-select {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  min-inline-size: 120px;
+}
+
+.portfolio-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.portfolio-btn {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast, 0.15s ease),
+    color var(--transition-fast, 0.15s ease),
+    border-color var(--transition-fast, 0.15s ease);
+}
+
+.portfolio-btn:hover {
+  border-color: var(--color-gold-dark);
+  color: var(--color-gold-dark);
+}
+
+.portfolio-btn-primary {
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+  color: var(--color-surface, #fff);
+}
+
+.portfolio-btn-primary:hover {
+  background: var(--color-gold-deep, var(--color-gold-dark));
+  color: var(--color-surface, #fff);
+}
+
+.portfolio-btn-danger:hover {
+  border-color: var(--color-down);
+  color: var(--color-down);
+}
+
+/* ── Summary cards ────────────────────────────────────────────────────── */
+.portfolio-summary {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  margin-block-start: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.portfolio-card {
+  border: 1px solid var(--color-border-subtle, var(--color-border));
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-1);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.portfolio-card-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide, 0.04em);
+}
+
+.portfolio-card-value {
+  font-size: var(--text-xl);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.portfolio-card-hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.portfolio-gain-up {
+  color: var(--price-up, var(--color-move-up));
+}
+
+.portfolio-gain-down {
+  color: var(--price-down, var(--color-move-down));
+}
+
+/* ── Timeline sparkline ───────────────────────────────────────────────── */
+.portfolio-chart-section {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  margin-block-start: var(--space-6);
+}
+
+.portfolio-chart-heading {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+}
+
+.portfolio-chart {
+  border: 1px solid var(--color-border-subtle, var(--color-border));
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-1);
+  padding: var(--space-3);
+}
+
+/* Time flows left→right even in RTL — the sparkline is a chart, not text. */
+.portfolio-spark,
+.portfolio-spark-labels {
+  direction: ltr;
+}
+
+.portfolio-spark {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+
+.portfolio-spark-line {
+  stroke: var(--color-gold-dark);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.portfolio-spark-area {
+  fill: var(--color-gold-bg, rgb(176 125 31 / 10%));
+  stroke: none;
+}
+
+.portfolio-spark-dot {
+  fill: var(--color-gold-dark);
+}
+
+.portfolio-spark-labels {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.portfolio-spark-range {
+  font-weight: var(--weight-semibold);
+}
+
+.portfolio-chart-note {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin-block-start: var(--space-2);
+}
+
+.portfolio-chart-empty {
+  margin: 0;
+  padding-block: var(--space-4);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Holdings table ───────────────────────────────────────────────────── */
+.portfolio-holdings-section {
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  margin-block-start: var(--space-6);
+}
+
+.portfolio-holdings-heading {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-3);
+}
+
+.portfolio-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-border-subtle, var(--color-border));
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-1);
+}
+
+.portfolio-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  min-inline-size: 720px;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: start;
+  border-block-start: 1px solid var(--color-border-subtle, var(--color-border));
+  font-variant-numeric: tabular-nums;
+}
+
+.portfolio-table thead th {
+  border-block-start: none;
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide, 0.04em);
+}
+
+.portfolio-table-label {
+  font-weight: var(--weight-semibold);
+}
+
+.portfolio-table-actions {
+  white-space: nowrap;
+}
+
+.portfolio-row-btn {
+  border: 1px solid var(--color-border);
+  background: none;
+  border-radius: var(--radius-pill);
+  padding: 2px var(--space-3);
+  font: inherit;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  margin-inline-end: var(--space-1);
+}
+
+.portfolio-row-btn:hover {
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+}
+
+.portfolio-row-btn-danger:hover {
+  color: var(--color-down);
+  border-color: var(--color-down);
+}
+
+.portfolio-muted {
+  color: var(--color-text-muted);
+}
+
+/* ── Empty state ──────────────────────────────────────────────────────── */
+.portfolio-empty {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-1);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.portfolio-empty-title {
+  margin: 0;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.portfolio-empty-body {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+/* ── Dialog + form ────────────────────────────────────────────────────── */
+.portfolio-dialog {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface, #fff);
+  color: var(--color-text);
+  padding: var(--space-5);
+  inline-size: min(480px, calc(100vw - var(--space-6)));
+  box-shadow: var(--shadow-xl);
+}
+
+.portfolio-dialog::backdrop {
+  background: rgb(6 7 8 / 55%);
+}
+
+.portfolio-dialog-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+}
+
+.portfolio-dialog-body {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.portfolio-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.portfolio-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.portfolio-field-row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.portfolio-field-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+
+.portfolio-input {
+  font-family: inherit;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  inline-size: 100%;
+}
+
+.portfolio-input:focus-visible {
+  outline: 2px solid var(--color-gold-dark);
+  outline-offset: 1px;
+}
+
+.portfolio-form-error {
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--color-down);
+  font-weight: var(--weight-semibold);
+}
+
+.portfolio-form-actions {
+  display: flex;
+  justify-content: end;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+/* ── How + disclaimer ─────────────────────────────────────────────────── */
+.portfolio-how {
+  max-width: 760px;
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  margin-block-start: var(--space-6);
+}
+
+.portfolio-how-heading {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2);
+}
+
+.portfolio-how-list {
+  margin: 0;
+  padding-inline-start: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+}
+
+.portfolio-disclaimer {
+  max-width: 760px;
+  margin: var(--space-6) auto var(--space-8);
+  padding-inline: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint, var(--color-text-muted));
+  text-align: center;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .portfolio-hero-title {
+    font-size: var(--text-3xl);
+  }
+
+  .portfolio-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .portfolio-toolbar-actions {
+    justify-content: start;
+  }
+
+  .portfolio-field-row {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+}

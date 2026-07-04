@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/portfolio.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/portfolio.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/portfolio.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/portfolio.html?lang=ar" />
+    <link rel="dns-prefetch" href="https://open.er-api.com" />
+    <link rel="preconnect" href="https://open.er-api.com" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="Gold Portfolio Tracker | Gold Ticker Live" />
+    <meta
+      property="og:description"
+      content="Track gold holdings privately in your browser — reference valuation by weight and karat, gain vs. cost, and portfolio value over time."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/portfolio.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gold Portfolio Tracker | Gold Ticker Live" />
+    <meta
+      name="twitter:description"
+      content="Track gold holdings privately in your browser — reference valuation by weight and karat."
+    />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta
+      property="og:image:alt"
+      content="Gold Ticker Live — private reference valuation of gold holdings"
+    />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/portfolio.css" />
+    <link rel="modulepreload" href="./src/pages/portfolio.js" />
+    <link rel="modulepreload" href="./src/lib/api.js" />
+    <link rel="modulepreload" href="./src/components/site-shell.js" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/portfolio.css" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Portfolio",
+      "item": "https://goldtickerlive.com/portfolio.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Gold Portfolio Tracker",
+  "url": "https://goldtickerlive.com/portfolio.html",
+  "description": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "Private, local-only gold holdings list (weight, karat, purchase date, cost)",
+    "Reference valuation against the spot-linked gram price",
+    "Gain vs. cost in the original purchase currency",
+    "Portfolio value over time from daily snapshots",
+    "CSV export and JSON backup/restore"
+  ],
+  "inLanguage": [
+    "en",
+    "ar"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gold Ticker Live",
+    "url": "https://goldtickerlive.com"
+  }
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by portfolio.js) -->
+    <div class="page-breadcrumbs"></div>
+
+    <main id="main-content">
+      <!-- Hero -->
+      <section class="portfolio-hero">
+        <div class="portfolio-hero-inner">
+          <h1 class="portfolio-hero-title" id="portfolio-h1">Gold Portfolio Tracker</h1>
+          <p class="portfolio-hero-sub" id="portfolio-sub">
+            Track your gold holdings over time — valued against the live spot-linked reference
+            price, privately, in this browser.
+          </p>
+          <div
+            class="portfolio-spot-badge"
+            id="portfolio-spot-badge"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span class="portfolio-spot-text">
+              <span id="portfolio-spot-label">XAU/USD spot:</span>
+              <span id="portfolio-spot-price">—</span>
+            </span>
+            <span class="portfolio-fresh" id="portfolio-freshness" data-state="unavailable"></span>
+          </div>
+          <p class="portfolio-trust-note">
+            <span id="portfolio-privacy">Stored only on this device — holdings are never uploaded.</span>
+            <a id="portfolio-methodology" href="methodology.html">How prices work →</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- Toolbar: currency, add, export/import -->
+      <section
+        class="portfolio-toolbar"
+        id="portfolio-toolbar"
+        aria-label="Portfolio actions"
+      ></section>
+
+      <!-- Summary cards -->
+      <section class="portfolio-summary" id="portfolio-summary" aria-label="Portfolio summary" hidden></section>
+
+      <!-- Value over time -->
+      <section class="portfolio-chart-section" id="portfolio-chart-section" aria-labelledby="portfolio-chart-title" hidden>
+        <h2 class="portfolio-chart-heading" id="portfolio-chart-title">Portfolio value over time</h2>
+        <div class="portfolio-chart" id="portfolio-chart"></div>
+        <p class="portfolio-chart-note" id="portfolio-chart-note">
+          Reference value replayed from daily price snapshots saved by this browser — days without
+          a visit have no snapshot.
+        </p>
+      </section>
+
+      <!-- Holdings -->
+      <section class="portfolio-holdings-section" aria-labelledby="portfolio-holdings-title">
+        <h2 class="portfolio-holdings-heading" id="portfolio-holdings-title">Holdings</h2>
+        <div id="portfolio-holdings"></div>
+      </section>
+
+      <!-- How the valuation works -->
+      <section class="portfolio-how" aria-labelledby="portfolio-how-title">
+        <h2 class="portfolio-how-heading" id="portfolio-how-title">How this valuation works</h2>
+        <ul class="portfolio-how-list">
+          <li id="portfolio-how-1">
+            Reference value = weight × karat purity × the live spot-linked price per gram,
+            converted at the current FX rate (AED uses the fixed 3.6725 peg).
+          </li>
+          <li id="portfolio-how-2">
+            Your purchase price usually included making charges — those are not recoverable when
+            you sell, so a positive number here does not promise a resale profit.
+          </li>
+          <li id="portfolio-how-3">
+            Gain vs. cost is only totalled when your costs are in the display currency — historic
+            costs are never converted at today’s FX rate.
+          </li>
+        </ul>
+      </section>
+
+      <p class="portfolio-disclaimer" id="portfolio-disclaimer">
+        This is a reference valuation of gold content, not a broker statement, buy-back quote or
+        financial advice. Shop resale offers depend on the piece, its condition and the dealer’s
+        rate board.
+      </p>
+    </main>
+
+    <!-- Add/edit/confirm dialog (content rendered by portfolio.js) -->
+    <dialog class="portfolio-dialog" id="portfolio-dialog"></dialog>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+    <script type="module" src="./src/pages/portfolio.js"></script>
+  </body>
+</html>

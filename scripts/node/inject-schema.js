@@ -615,6 +615,75 @@ function generateSchemasForPage(filePath, content) {
     });
   }
 
+  // World heatmap — WebApplication for the retail-estimate choropleth map.
+  if (relativePath === 'heatmap.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Price World Map',
+      url: canonicalUrl || `${SITE_URL}/heatmap.html`,
+      description:
+        pageDescription ||
+        'Interactive world map of all-in gold retail estimates per gram — spot-linked reference plus VAT and typical making charges.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'World map colored by all-in gold retail estimate per gram',
+        'Per-karat view (24K, 22K, 21K, 18K)',
+        'Country detail with VAT, making charges and vs-UAE comparison',
+        'Accessible table fallback of every tracked market',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
+  }
+
+  // Portfolio tracker — WebApplication for the local-first holdings valuation.
+  if (relativePath === 'portfolio.html') {
+    schemas.push({
+      '@context': 'https://schema.org',
+      '@type': 'WebApplication',
+      name: 'Gold Portfolio Tracker',
+      url: canonicalUrl || `${SITE_URL}/portfolio.html`,
+      description:
+        pageDescription ||
+        'Track gold holdings privately in your browser — reference valuation by weight and karat, gain vs. cost, and portfolio value over time.',
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Any (web browser)',
+      browserRequirements: 'Requires JavaScript',
+      isAccessibleForFree: true,
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      featureList: [
+        'Private, local-only gold holdings list (weight, karat, purchase date, cost)',
+        'Reference valuation against the spot-linked gram price',
+        'Gain vs. cost in the original purchase currency',
+        'Portfolio value over time from daily snapshots',
+        'CSV export and JSON backup/restore',
+      ],
+      inLanguage: ['en', 'ar'],
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    });
+  }
+
   // Country hub (countries/{slug}/index.html, indexable) — add a Dataset for
   // the reference price data the page displays. FAQPage is injected at runtime
   // by country-page.js alongside the visible FAQ (parity-correct), so it is not

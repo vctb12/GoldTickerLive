@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-03T11:59:42.040Z",
+  "generatedAt": "2026-07-04T07:50:11.577Z",
   "summary": {
     "groups": {
-      "core": 63,
+      "core": 65,
       "countries": 190,
       "cities": 69,
       "markets": 4,
       "content": 50
     },
     "totals": {
-      "htmlPages": 376,
-      "indexablePages": 240,
-      "thinRiskPages": 151,
+      "htmlPages": 378,
+      "indexablePages": 221,
+      "thinRiskPages": 140,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
       "missingHreflang": 0,
@@ -22,28 +22,8 @@
     "risks": {
       "thinRisk": [
         {
-          "path": "account.html",
-          "words": 66
-        },
-        {
           "path": "ar/chart/index.html",
           "words": 90
-        },
-        {
-          "path": "ar/gold-price/18k/index.html",
-          "words": 122
-        },
-        {
-          "path": "ar/gold-price/21k/index.html",
-          "words": 122
-        },
-        {
-          "path": "ar/gold-price/22k/index.html",
-          "words": 122
-        },
-        {
-          "path": "ar/gold-price/24k/index.html",
-          "words": 122
         },
         {
           "path": "ar/methodology/index.html",
@@ -600,30 +580,6 @@
         {
           "path": "countries/yemen/taiz/gold-shops/index.html",
           "words": 62
-        },
-        {
-          "path": "dashboard.html",
-          "words": 79
-        },
-        {
-          "path": "gold-price/18k/index.html",
-          "words": 122
-        },
-        {
-          "path": "gold-price/21k/index.html",
-          "words": 126
-        },
-        {
-          "path": "gold-price/22k/index.html",
-          "words": 126
-        },
-        {
-          "path": "gold-price/24k/index.html",
-          "words": 125
-        },
-        {
-          "path": "methodology/index.html",
-          "words": 128
         }
       ],
       "duplicateRisk": [],
@@ -652,7 +608,7 @@
     {
       "path": "account.html",
       "group": "core",
-      "noindex": false,
+      "noindex": true,
       "title": "Account Sign In — Gold Ticker Live",
       "description": "Sign in to save watchlists, calculator outputs, and favorite shops across devices.",
       "canonical": "https://goldtickerlive.com/account.html",
@@ -663,7 +619,7 @@
       ],
       "hasSchema": true,
       "wordCount": 66,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -930,8 +886,8 @@
     {
       "path": "ar/gold-price/18k/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "سعر ذهب 18 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "noindex": true,
+      "title": "السعر المرجعي لذهب عيار 18 في الإمارات | Gold Ticker Live",
       "description": "سعر 18 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
       "canonical": "https://goldtickerlive.com/ar/gold-price/18k/",
       "hreflangs": [
@@ -941,7 +897,7 @@
       ],
       "hasSchema": true,
       "wordCount": 122,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -949,8 +905,8 @@
     {
       "path": "ar/gold-price/21k/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "سعر ذهب 21 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "noindex": true,
+      "title": "السعر المرجعي لذهب عيار 21 في الإمارات | Gold Ticker Live",
       "description": "سعر 21 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
       "canonical": "https://goldtickerlive.com/ar/gold-price/21k/",
       "hreflangs": [
@@ -960,7 +916,7 @@
       ],
       "hasSchema": true,
       "wordCount": 122,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -968,8 +924,8 @@
     {
       "path": "ar/gold-price/22k/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "سعر ذهب 22 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "noindex": true,
+      "title": "السعر المرجعي لذهب عيار 22 في الإمارات | Gold Ticker Live",
       "description": "سعر 22 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
       "canonical": "https://goldtickerlive.com/ar/gold-price/22k/",
       "hreflangs": [
@@ -979,7 +935,7 @@
       ],
       "hasSchema": true,
       "wordCount": 122,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -987,8 +943,8 @@
     {
       "path": "ar/gold-price/24k/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "سعر ذهب 24 قيراط في الإمارات اليوم | Gold Ticker Live",
+      "noindex": true,
+      "title": "السعر المرجعي لذهب عيار 24 في الإمارات | Gold Ticker Live",
       "description": "سعر 24 قيراط المرجعي في الإمارات مع مخطط 7 أيام وجدول 30 يوماً وحاسبة وزن.",
       "canonical": "https://goldtickerlive.com/ar/gold-price/24k/",
       "hreflangs": [
@@ -998,7 +954,7 @@
       ],
       "hasSchema": true,
       "wordCount": 122,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -1260,17 +1216,13 @@
     {
       "path": "content/guides/24k-vs-22k.html",
       "group": "content",
-      "noindex": false,
-      "title": "24K vs 22K Gold: Which Is the Better Buy? | Gold Ticker Live",
-      "description": "Compare 24K (99.9% pure) and 22K (91.7% pure) gold. Learn which karat is better for investment vs jewellery and how prices differ in UAE and GCC markets.",
-      "canonical": "https://goldtickerlive.com/content/guides/24k-vs-22k.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 1572,
+      "noindex": true,
+      "title": "24K vs 22K Gold Guide (Moved) | Gold Ticker Live",
+      "description": "This guide has been merged into the 24K vs 22K vs 18K karat comparison guide.",
+      "canonical": "https://goldtickerlive.com/content/guides/24k-vs-22k-vs-18k-gold/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 37,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1479,7 +1431,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 262,
+      "wordCount": 258,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1659,17 +1611,13 @@
     {
       "path": "content/guides/gold-karat-comparison.html",
       "group": "content",
-      "noindex": false,
-      "title": "Gold Karat Comparison Guide: 24K, 22K, 21K, 18K, 14K Explained | Gold Ticker Live",
-      "description": "Compare all gold karats side by side: purity, price differences, uses, and durability. Understand which karat suits investment, jewellery, or gifting.",
-      "canonical": "https://goldtickerlive.com/content/guides/gold-karat-comparison.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 1691,
+      "noindex": true,
+      "title": "Gold Karat Comparison Guide (Moved) | Gold Ticker Live",
+      "description": "This guide has been merged into the 24K vs 22K vs 18K karat comparison guide.",
+      "canonical": "https://goldtickerlive.com/content/guides/24k-vs-22k-vs-18k-gold/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 35,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1726,7 +1674,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 329,
+      "wordCount": 325,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1736,16 +1684,12 @@
       "path": "content/guides/invest-in-gold-gcc.html",
       "group": "content",
       "noindex": true,
-      "title": "How to Invest in Gold in the GCC: A Practical Guide | Gold Ticker Live",
-      "description": "A complete guide to investing in gold in UAE, Saudi Arabia, Kuwait, Qatar, Bahrain, and Oman. Compare physical gold, ETFs, digital gold, and savings accounts.",
-      "canonical": "https://goldtickerlive.com/content/guides/invest-in-gold-gcc.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 2055,
+      "title": "How to Invest in Gold in the GCC (Moved) | Gold Ticker Live",
+      "description": "This guide has been merged into the gold investment for beginners guide.",
+      "canonical": "https://goldtickerlive.com/content/guides/gold-investment-for-beginners/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 43,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1979,16 +1923,12 @@
       "path": "content/tools/investment-return.html",
       "group": "content",
       "noindex": true,
-      "title": "Gold Investment Return Calculator — Historical ROI | Gold Ticker Live",
-      "description": "Calculate your gold investment returns over time. See historical ROI, annualized gains, and total profit based on real gold price data from 2006 to today.",
-      "canonical": "https://goldtickerlive.com/content/tools/investment-return.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 378,
+      "title": "Gold Investment Return Calculator (Moved) | Gold Ticker Live",
+      "description": "This tool has been retired in favour of the live tracker",
+      "canonical": "https://goldtickerlive.com/tracker.html",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 35,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2016,17 +1956,13 @@
     {
       "path": "content/tools/weight-converter.html",
       "group": "content",
-      "noindex": false,
-      "title": "Gold Weight Converter — Grams, Troy Oz, Tola, Baht, Mithqal | Gold Ticker Live",
-      "description": "Free gold weight converter. Instantly convert grams, troy ounces, kilograms, tola, baht, mithqal, and pennyweight. Essential for buyers and jewellers.",
-      "canonical": "https://goldtickerlive.com/content/tools/weight-converter.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 147,
+      "noindex": true,
+      "title": "Gold Weight Converter (Moved) | Gold Ticker Live",
+      "description": "The weight converter now lives inside the gold calculator",
+      "canonical": "https://goldtickerlive.com/calculator.html?mode=convert",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 33,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2605,17 +2541,13 @@
     {
       "path": "countries/egypt/cities/cairo.html",
       "group": "countries",
-      "noindex": false,
-      "title": "Gold Price in Cairo Today — EGP per Gram | Gold Ticker Live",
-      "description": "Reference gold price in Cairo today in Egyptian Pounds (EGP) per gram — 24K, 22K, 21K, 18K. Khan el-Khalili, Nasr City gold markets, and where to buy gold in Cairo.",
-      "canonical": "https://goldtickerlive.com/countries/egypt/cities/cairo.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 697,
+      "noindex": true,
+      "title": "Cairo Gold Prices (Moved) | Gold Ticker Live",
+      "description": "The Cairo gold page has moved to the Cairo city hub.",
+      "canonical": "https://goldtickerlive.com/countries/egypt/cairo/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 34,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2625,16 +2557,12 @@
       "path": "countries/egypt/cities/index.html",
       "group": "countries",
       "noindex": true,
-      "title": "Cities in Egypt | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Egypt — reference gold rates, shops and karat pages.",
-      "canonical": "https://goldtickerlive.com/countries/egypt/cities/",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 62,
+      "title": "Egypt City Gold Pages (Moved) | Gold Ticker Live",
+      "description": "Egypt city gold pages have moved under the Egypt country hub.",
+      "canonical": "https://goldtickerlive.com/countries/egypt/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 36,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4999,17 +4927,13 @@
     {
       "path": "countries/qatar/cities/doha.html",
       "group": "countries",
-      "noindex": false,
-      "title": "Gold Price in Doha Today — QAR per Gram | Gold Ticker Live",
-      "description": "Reference gold price in Doha today in Qatari Riyals (QAR) per gram — 24K, 22K, 21K, 18K. Souq Waqif gold market, where to buy gold in Doha.",
-      "canonical": "https://goldtickerlive.com/countries/qatar/cities/doha.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 642,
+      "noindex": true,
+      "title": "Doha Gold Prices (Moved) | Gold Ticker Live",
+      "description": "The Doha gold page has moved to the Doha city hub.",
+      "canonical": "https://goldtickerlive.com/countries/qatar/doha/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 34,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5019,16 +4943,12 @@
       "path": "countries/qatar/cities/index.html",
       "group": "countries",
       "noindex": true,
-      "title": "Cities in Qatar | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Qatar — reference gold rates, shops and karat pages.",
-      "canonical": "https://goldtickerlive.com/countries/qatar/cities/",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 66,
+      "title": "Qatar City Gold Pages (Moved) | Gold Ticker Live",
+      "description": "Qatar city gold pages have moved under the Qatar country hub.",
+      "canonical": "https://goldtickerlive.com/countries/qatar/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 36,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5133,16 +5053,12 @@
       "path": "countries/saudi-arabia/cities/index.html",
       "group": "countries",
       "noindex": true,
-      "title": "Cities in Saudi Arabia | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in Saudi Arabia — reference gold rates, shops and karat pages.",
-      "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 84,
+      "title": "Saudi Arabia City Gold Pages (Moved) | Gold Ticker Live",
+      "description": "Saudi city gold pages have moved under the Saudi Arabia country hub.",
+      "canonical": "https://goldtickerlive.com/countries/saudi-arabia/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 39,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5151,17 +5067,13 @@
     {
       "path": "countries/saudi-arabia/cities/riyadh.html",
       "group": "countries",
-      "noindex": false,
-      "title": "Gold Price in Riyadh Today — SAR per Gram | Gold Ticker Live",
-      "description": "Reference gold price in Riyadh today in SAR per gram — 24K, 22K, 21K, 18K. Taiba Markets, gold souks, and where to buy gold in Riyadh.",
-      "canonical": "https://goldtickerlive.com/countries/saudi-arabia/cities/riyadh.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 676,
+      "noindex": true,
+      "title": "Riyadh Gold Prices (Moved) | Gold Ticker Live",
+      "description": "The Riyadh gold page has moved to the Riyadh city hub.",
+      "canonical": "https://goldtickerlive.com/countries/saudi-arabia/riyadh/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 34,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6443,17 +6355,13 @@
     {
       "path": "countries/uae/cities/abu-dhabi.html",
       "group": "countries",
-      "noindex": false,
-      "title": "Gold Price in Abu Dhabi Today — AED per Gram | Gold Ticker Live",
-      "description": "Reference gold price in Abu Dhabi today in AED per gram — 24K, 22K, 21K, 18K. Madinat Zayed Gold Center, Hamdan Street, and where to buy gold in Abu Dhabi.",
-      "canonical": "https://goldtickerlive.com/countries/uae/cities/abu-dhabi.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 572,
+      "noindex": true,
+      "title": "Abu Dhabi Gold Prices (Moved) | Gold Ticker Live",
+      "description": "The Abu Dhabi gold page has moved to the Abu Dhabi city hub.",
+      "canonical": "https://goldtickerlive.com/countries/uae/abu-dhabi/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 37,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6462,17 +6370,13 @@
     {
       "path": "countries/uae/cities/dubai.html",
       "group": "countries",
-      "noindex": false,
-      "title": "Gold Price in Dubai Today — AED per Gram, Dubai Gold Souk | Gold Ticker Live",
-      "description": "Reference gold price in Dubai today in AED per gram — 24K, 22K, 21K and 18K. Dubai Gold Souk guide, buying tips, and where to find the best gold prices in Dubai.",
-      "canonical": "https://goldtickerlive.com/countries/uae/cities/dubai.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 721,
+      "noindex": true,
+      "title": "Dubai Gold Prices (Moved) | Gold Ticker Live",
+      "description": "The Dubai gold page has moved to the Dubai city hub.",
+      "canonical": "https://goldtickerlive.com/countries/uae/dubai/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 34,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6482,16 +6386,12 @@
       "path": "countries/uae/cities/index.html",
       "group": "countries",
       "noindex": true,
-      "title": "Cities in United Arab Emirates | Gold Ticker Live",
-      "description": "Cities covered by Gold Ticker Live in United Arab Emirates — reference gold rates, shops and karat pages.",
-      "canonical": "https://goldtickerlive.com/countries/uae/cities/",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 116,
+      "title": "UAE City Gold Pages (Moved) | Gold Ticker Live",
+      "description": "UAE city gold pages have moved under the UAE country hub.",
+      "canonical": "https://goldtickerlive.com/countries/uae/",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 36,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7070,7 +6970,7 @@
     {
       "path": "dashboard.html",
       "group": "core",
-      "noindex": false,
+      "noindex": true,
       "title": "User Dashboard — Gold Ticker Live",
       "description": "Manage your saved calculations, watchlist items, and shops from your Gold Ticker Live account.",
       "canonical": "https://goldtickerlive.com/dashboard.html",
@@ -7081,7 +6981,7 @@
       ],
       "hasSchema": true,
       "wordCount": 79,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7138,9 +7038,9 @@
     {
       "path": "gold-price/18k/index.html",
       "group": "core",
-      "noindex": false,
+      "noindex": true,
       "title": "18K Gold Price UAE Today | Gold Ticker Live",
-      "description": "Live 18K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "description": "18K gold reference price in UAE with 7-day chart, 30-day table, calculator, and methodology context.",
       "canonical": "https://goldtickerlive.com/gold-price/18k/",
       "hreflangs": [
         "x-default",
@@ -7149,7 +7049,7 @@
       ],
       "hasSchema": true,
       "wordCount": 122,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7157,9 +7057,9 @@
     {
       "path": "gold-price/21k/index.html",
       "group": "core",
-      "noindex": false,
+      "noindex": true,
       "title": "21K Gold Price in UAE Today (AED per gram) | Gold Ticker Live",
-      "description": "Live 21K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "description": "21K gold reference price in UAE with 7-day chart, 30-day table, calculator, and methodology context.",
       "canonical": "https://goldtickerlive.com/gold-price/21k/",
       "hreflangs": [
         "x-default",
@@ -7168,7 +7068,7 @@
       ],
       "hasSchema": true,
       "wordCount": 126,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7176,9 +7076,9 @@
     {
       "path": "gold-price/22k/index.html",
       "group": "core",
-      "noindex": false,
+      "noindex": true,
       "title": "22K Gold Price UAE Today — Jewelry & Investment | Gold Ticker Live",
-      "description": "Live 22K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "description": "22K gold reference price in UAE with 7-day chart, 30-day table, calculator, and methodology context.",
       "canonical": "https://goldtickerlive.com/gold-price/22k/",
       "hreflangs": [
         "x-default",
@@ -7187,7 +7087,7 @@
       ],
       "hasSchema": true,
       "wordCount": 126,
-      "thinRisk": true,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7195,9 +7095,9 @@
     {
       "path": "gold-price/24k/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "24K Gold Price in UAE Today (Live AED) | Gold Ticker Live",
-      "description": "Live 24K gold reference price in UAE today with 7-day chart, 30-day table, calculator, and methodology context.",
+      "noindex": true,
+      "title": "24K Gold Reference Price in UAE (AED per gram) | Gold Ticker Live",
+      "description": "24K gold reference price in UAE with 7-day chart, 30-day table, calculator, and methodology context.",
       "canonical": "https://goldtickerlive.com/gold-price/24k/",
       "hreflangs": [
         "x-default",
@@ -7205,8 +7105,27 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 125,
-      "thinRisk": true,
+      "wordCount": 126,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
+      "path": "heatmap.html",
+      "group": "core",
+      "noindex": false,
+      "title": "Gold Price World Map — Retail Estimates by Country | Gold Ticker Live",
+      "description": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+      "canonical": "https://goldtickerlive.com/heatmap.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 195,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7233,17 +7152,13 @@
     {
       "path": "insights.html",
       "group": "core",
-      "noindex": false,
-      "title": "Gold Market Insights &amp; Analysis | Gold Ticker Live",
-      "description": "Gold market insights and GCC price context — live mini ticker, featured analysis, and buyer guides. Evergreen karat education lives on Learn.",
-      "canonical": "https://goldtickerlive.com/insights.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 455,
+      "noindex": true,
+      "title": "Market Insights (Moved) | Gold Ticker Live",
+      "description": "Market insights are now available inside the Learn knowledge hub.",
+      "canonical": "https://goldtickerlive.com/learn.html",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 32,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7252,17 +7167,13 @@
     {
       "path": "invest.html",
       "group": "core",
-      "noindex": false,
-      "title": "Gold Investing Guide — UAE, Saudi &amp; Egypt | Gold Ticker Live",
-      "description": "A practical gold investing guide for UAE, Saudi Arabia, and Egypt. Build a live budget plan, compare bullion vs jewelry vs ETFs, and buy gold more rationally.",
-      "canonical": "https://goldtickerlive.com/invest.html",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 583,
+      "noindex": true,
+      "title": "Gold Investing Guide (Moved) | Gold Ticker Live",
+      "description": "The gold investing guide is now available inside the Learn knowledge hub.",
+      "canonical": "https://goldtickerlive.com/learn.html",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 34,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7272,8 +7183,8 @@
       "path": "learn.html",
       "group": "core",
       "noindex": false,
-      "title": "Learn About Gold — Karats, Pricing, Zakat | Gold Ticker Live",
-      "description": "Gold education hub: karats, purity, AED peg, Zakat, and spot vs retail — evergreen bilingual EN/AR guides for UAE and GCC buyers. For market analysis see Insights.",
+      "title": "Gold Knowledge Hub — Learn, Market Insights &amp; Investing | Gold Ticker Live",
+      "description": "Gold knowledge hub: karats, purity, AED peg, Zakat, spot vs retail, market insights, and a rational investing guide — bilingual EN/AR for UAE and GCC buyers.",
       "canonical": "https://goldtickerlive.com/learn.html",
       "hreflangs": [
         "x-default",
@@ -7281,7 +7192,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1489,
+      "wordCount": 2070,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7309,18 +7220,14 @@
     {
       "path": "methodology/index.html",
       "group": "core",
-      "noindex": false,
-      "title": "How Gold Prices Are Calculated in UAE | Gold Ticker Live",
-      "description": "Transparent methodology: how we source, convert, and display gold prices for UAE. Spot vs retail, AED conversion formula, karat purity explained.",
-      "canonical": "https://goldtickerlive.com/methodology/",
-      "hreflangs": [
-        "x-default",
-        "en",
-        "ar"
-      ],
-      "hasSchema": true,
-      "wordCount": 128,
-      "thinRisk": true,
+      "noindex": true,
+      "title": "Methodology — How Gold Prices Work | Gold Ticker Live",
+      "description": "This page has moved to the full pricing methodology page.",
+      "canonical": "https://goldtickerlive.com/methodology.html",
+      "hreflangs": [],
+      "hasSchema": false,
+      "wordCount": 36,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -7335,6 +7242,25 @@
       "hreflangs": [],
       "hasSchema": false,
       "wordCount": 63,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
+      "path": "portfolio.html",
+      "group": "core",
+      "noindex": false,
+      "title": "Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live",
+      "description": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+      "canonical": "https://goldtickerlive.com/portfolio.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 188,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7391,7 +7317,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 505,
+      "wordCount": 506,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

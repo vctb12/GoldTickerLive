@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Roadmap items 6 + 7 — Portfolio Tracker + Gold Price World Map — 2026-07-04
+
+**Two new tool pages (roadmap `docs/plans/2026-07-04_product-roadmap.md`, zero new dependencies):**
+
+- feat(portfolio): local-first Gold Portfolio Tracker at `portfolio.html` — holdings
+  (weight/karat/purchase date/cost) stored only in this browser (`gtl_portfolio_v1`), valued against
+  the spot-linked reference price via the canonical karat table + fixed AED peg. Honest gain rules:
+  per-holding gain stays in its own cost currency; the portfolio-level total only renders when every
+  holding has a cost in the display currency (no cross-currency or partial-cost-basis fabrication).
+  Value-over-time sparkline replays the browser's daily `gold_price_history` snapshots (only
+  counting holdings owned on each date). CSV export, JSON backup/restore, `<dialog>`
+  add/edit/confirm flows, EN/AR with RTL, freshness pill via `live-status.js`. Pure logic in
+  `src/pages/portfolio/portfolio-core.js` (16 unit tests).
+- feat(heatmap): interactive Gold Price World Map at `heatmap.html` — inline-SVG choropleth of the
+  all-in retail estimate per gram (compare-core math: spot value + median making charge + VAT),
+  generated from Natural Earth 1:110m by `scripts/node/generate-world-map.js` (committed as
+  `src/pages/heatmap/world-map-data.js`, lazy-loaded; Eurozone members merged into the site's EU
+  pseudo-country; circle markers for Bahrain/Comoros; enlarged hit targets for tiny countries).
+  5-bucket one-hue gold ramp per theme (ordinal ramps validated for monotone lightness + light-end
+  contrast; dark mode flips the anchor), karat switcher, `#k=22&c=eg` deep links, hover/focus
+  tooltip, keyboard-operable countries, jump-to-country select, per-country detail panel with
+  country-page/compare/calculator cross-links, and a full table fallback. Pure logic in
+  `src/pages/heatmap/heatmap-core.js` (10 unit tests).
+- feat(nav): both pages wired into the mega-menu (EN + AR), breadcrumbs registry, and `nav.heatmap`
+  / `nav.portfolio` translation keys; sitemap picks both up automatically; `inject-schema.js` now
+  owns their `WebApplication` JSON-LD.
+- docs(sheets): `docs/API_PRODUCT.md` § Google Sheets — interim `GOLDPRICE()` Apps Script function
+  - formula-only recipe against the committed hourly `data/gold_price.json` (roadmap item 10 interim
+    step), with explicit updated-not-live framing.
+
 ### Premium redesign — design-token re-theme, nav shell, page rollout — 2026-06-10
 
 **Visual system (no URL, data, or markup-contract changes):**

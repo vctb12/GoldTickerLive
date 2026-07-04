@@ -104,7 +104,25 @@ Canonical plan:
 [`docs/plans/2026-07-04_product-roadmap.md`](docs/plans/2026-07-04_product-roadmap.md) —
 owner-supplied 17-item near/medium/long-term roadmap mapped to existing repo assets, blockers, and
 owner gates. Suggested first PRs: T1.1 secondary gold cross-validation → newsletter digest →
-portfolio tracker MVP → SVG heatmap → owner decision on backend-in-production + billing RED zone.
+~~portfolio tracker MVP~~ ✅ → ~~SVG heatmap~~ ✅ → owner decision on backend-in-production +
+billing RED zone.
+
+- [x] **Item 6 — Portfolio tracker MVP** (2026-07-04, branch
+      `claude/product-roadmap-implementation-4oopr4`): `portfolio.html` + `src/pages/portfolio.js` +
+      pure core `src/pages/portfolio/portfolio-core.js` (16 tests). Local-only `gtl_portfolio_v1`
+      holdings, reference valuation (karat table + AED peg), honest gain rules (no cross-currency or
+      partial-cost-basis totals), value-over-time from `gold_price_history` snapshots, CSV/JSON
+      export + restore, EN/AR + RTL, dialogs via `<dialog>`, zero DOM sinks.
+- [x] **Item 7 — World heatmap** (same session): `heatmap.html` + `src/pages/heatmap.js` + pure core
+      `src/pages/heatmap/heatmap-core.js` (10 tests). Generated inline-SVG world map
+      (`scripts/node/generate-world-map.js` → `src/pages/heatmap/world-map-data.js`, Natural Earth
+      1:110m, no new deps, Eurozone merged into the EU pseudo-country, markers for BH/KM). 5-bucket
+      one-hue gold ramp per theme (validated ordinal ramps), karat switcher, `#k=&c=` deep links,
+      keyboard countries + jump select + table fallback, EN/AR.
+- [x] **Item 10 interim — Sheets `GOLDPRICE()` docs** (same session): `docs/API_PRODUCT.md` § Google
+      Sheets — Apps Script custom function + formula-only recipe against the committed
+      `data/gold_price.json`, with freshness-honesty notes. Real add-on remains blocked on backend
+      enablement.
 
 ### Platform Upgrade Program (2026-06-09)
 

@@ -18,6 +18,7 @@ data/audit-logs.json
 data/link-audit.json
 data/shops-data.json
 src/data/historical-baseline.json
+src/pages/heatmap/world-map-data.js
 
 # Auto-generated audit reports — produced deterministically by their own
 # --check-capable scripts. Prettier's array-compaction fights the
