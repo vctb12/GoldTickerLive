@@ -29,7 +29,9 @@ computation + `getByRole` landmark probe) against the built `dist/` and raw sour
 
 Discovered (out of D1 scope, not a live 404): 69 city pages link `../../../../styles/global.css`
 (one `../` too many); browsers clamp `../` at root so it resolves to `/styles/global.css` in
-production — latent, fix as a follow-up.
+production — latent, fix as a follow-up. **Reconciliation 2026-07-03: fixed** — the depth fix landed
+2026-06-30 (see `PLAN.md` "Multi-task session 2026-06-30"); a fresh sweep of all 336 HTML files
+referencing `global.css` found zero unresolvable stylesheet paths.
 
 - **Branch:** `claude/elegant-cori-lyo379` · **PR:** vctb12/GoldTickerLive#443
 - **Baseline:** 1081 tests passing, 0 failing — held green on every committed phase.

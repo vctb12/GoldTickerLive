@@ -190,6 +190,101 @@ export function formatCountryName(country, lang) {
 }
 
 /**
+ * Resolve the Intl locale tag for a display language.
+ * Mirrors the `lang === 'ar' ? 'ar-AE' : 'en-AE'` convention used by the
+ * timestamp formatters above.
+ * @param {'en'|'ar'} [lang]
+ * @returns {string}
+ */
+function localeFor(lang) {
+  return lang === 'ar' ? 'ar-AE' : 'en-AE';
+}
+
+/**
+ * Format a plain number with locale-aware grouping separators.
+ * Returns `'—'` for `null`, `undefined`, or `NaN` inputs.
+ *
+ * @param {number|null|undefined} value
+ * @param {'en'|'ar'} [lang]
+ * @param {Intl.NumberFormatOptions} [options]  Extra Intl.NumberFormat options.
+ * @returns {string}
+ */
+export function formatNumber(value, lang = 'en', options = {}) {
+  if (value === null || value === undefined || isNaN(value)) return '—';
+  return new Intl.NumberFormat(localeFor(lang), options).format(value);
+}
+
+/**
+ * Format a value as ISO-4217 currency using Intl (localized symbol placement,
+ * grouping, and digits). Unlike formatPrice() — which uses the project's
+ * compact symbol map and en-US grouping — this follows the target locale's
+ * own conventions. Falls back to formatPrice() when Intl rejects the code.
+ *
+ * @param {number|null|undefined} value
+ * @param {string} currency  ISO 4217 code (e.g. `'AED'`).
+ * @param {'en'|'ar'} [lang]
+ * @param {number} [decimals=2]
+ * @returns {string}
+ */
+export function formatCurrency(value, currency, lang = 'en', decimals = 2) {
+  if (value === null || value === undefined || isNaN(value)) return '—';
+  try {
+    return new Intl.NumberFormat(localeFor(lang), {
+      style: 'currency',
+      currency,
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(value);
+  } catch {
+    // Invalid/unknown currency code — fall back to the symbol-map formatter.
+    return formatPrice(value, currency, decimals);
+  }
+}
+
+/**
+ * Format a number in compact notation (`"1.2K"`, `"3.4M"`), locale-aware.
+ * Returns `'—'` for `null`, `undefined`, or `NaN` inputs.
+ *
+ * @param {number|null|undefined} value
+ * @param {'en'|'ar'} [lang]
+ * @param {number} [maxFractionDigits=1]
+ * @returns {string}
+ */
+export function formatCompactNumber(value, lang = 'en', maxFractionDigits = 1) {
+  if (value === null || value === undefined || isNaN(value)) return '—';
+  return new Intl.NumberFormat(localeFor(lang), {
+    notation: 'compact',
+    maximumFractionDigits: maxFractionDigits,
+  }).format(value);
+}
+
+/**
+ * Format a timestamp as a localized relative-time phrase ("5 minutes ago" /
+ * "قبل ٥ دقائق"). Complements formatFreshness(), which returns the
+ * English-only freshness *state* labels used by price surfaces — this helper
+ * is the general-purpose, localized variant for non-price UI.
+ *
+ * @param {string|number|Date|null|undefined} target  Timestamp to describe.
+ * @param {'en'|'ar'} [lang]
+ * @param {number} [nowMs]  Reference time in ms (injectable for tests).
+ * @returns {string}  Relative phrase, or `'—'` for invalid input.
+ */
+export function formatRelativeTime(target, lang = 'en', nowMs = Date.now()) {
+  if (target === null || target === undefined || target === '') return '—';
+  const then = new Date(target).getTime();
+  if (isNaN(then)) return '—';
+  const diffSec = Math.round((then - nowMs) / 1000);
+  const abs = Math.abs(diffSec);
+  const rtf = new Intl.RelativeTimeFormat(localeFor(lang), { numeric: 'auto' });
+  if (abs < 60) return rtf.format(diffSec, 'second');
+  if (abs < 3600) return rtf.format(Math.round(diffSec / 60), 'minute');
+  if (abs < 86400) return rtf.format(Math.round(diffSec / 3600), 'hour');
+  if (abs < 2592000) return rtf.format(Math.round(diffSec / 86400), 'day');
+  if (abs < 31536000) return rtf.format(Math.round(diffSec / 2592000), 'month');
+  return rtf.format(Math.round(diffSec / 31536000), 'year');
+}
+
+/**
  * Return a freshness label and CSS state class for a price timestamp.
  * Used by every page that displays prices.
  * @param {string|number|Date|null} updatedAt  ISO timestamp, ms, or Date

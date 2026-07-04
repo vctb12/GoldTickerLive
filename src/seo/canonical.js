@@ -1,4 +1,6 @@
-export const CANONICAL_BASE = 'https://goldtickerlive.com';
+import { SITE } from '../config/site.js';
+
+export const CANONICAL_BASE = SITE.url;
 
 export function normalizePathname(pathname = '/') {
   let normalized = pathname || '/';

@@ -1,8 +1,8 @@
 # Gold Ticker Live — Active Task Plan
 
 > This file is the persistent task tracker for AI agents and human contributors. Agents: read this
-> before starting any task. Update it after completing work. Last updated: 2026-06-09 (platform
-> upgrade program + GitHub control center)
+> before starting any task. Update it after completing work. Last updated: 2026-07-03 (repo-upgrade
+> session — docs/tooling/test hardening)
 
 **Master workbook v2 (read first):**
 [`docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md`](docs/GOLD_TICKER_LIVE_MASTER_WORKBOOK.md) · appendices
@@ -145,6 +145,17 @@ Canonical plan:
 
 ## ✅ Recently Completed
 
+- [x] **Repo-upgrade session (2026-07-03)** — plan:
+      [`docs/plans/2026-07-03_repo-upgrade-session.md`](docs/plans/2026-07-03_repo-upgrade-session.md).
+      Central site identity `src/config/site.js` (canonical.js now derives `CANONICAL_BASE` from it;
+      drift-guard vs `inject-schema.js` in `tests/site-config.test.js`); site-wide error reporting
+      `src/lib/error-reporter.js` (window `error` + `unhandledrejection` → governed analytics
+      `error` event, deduped/capped, wired via `site-shell.js`); locale-aware formatter additions
+      (`formatNumber`, `formatCurrency`, `formatCompactNumber`, `formatRelativeTime`); first unit
+      tests for runtime SEO modules (`tests/seo-runtime-helpers.test.js`); root `SECURITY.md`
+      policy; `docs/INTEGRATIONS.md` (live/scaffolded/inert map + MCP rules);
+      `docs/environment-variables.md` rewritten (~35 missing vars added; client-side constants
+      correctly reclassified). Verified full green gate: tests 1282+new, lint, validate, build.
 - [x] **X follow banner + brand favicon refresh (2026-07-01)** — Higgsfield-generated homepage
       banner linking to [x.com/GoldTickerLive](https://x.com/GoldTickerLive) at the top of
       `index.html` (EN/AR parity, `assets/social/x-follow-banner-{960,1920}.webp`); site-wide
@@ -264,10 +275,13 @@ Canonical plan:
 
 ### ⚠️ Pre-existing (Not Fixed)
 
-- 44 content pages missing webpage-schema (pre-existing test failures)
-- 3 pre-existing test failures (provider-failover, cache-revalidation, audit-content-pages)
+- 44 content pages missing webpage-schema — **since resolved**: `inject-schema.js --check` passes
+  clean in `npm run validate` (re-verified 2026-07-03)
+- 3 pre-existing test failures (provider-failover, cache-revalidation, audit-content-pages) —
+  **since resolved**: full suite green 1282/1282 (re-verified 2026-07-03)
 - 565 hardcoded hex colors in CSS (large effort — tracked in backlog)
-- `window.confirm()` used in developer.js for destructive actions (acceptable UX)
+- `window.confirm()` used in developer.js for destructive actions — **since resolved** via
+  `<dialog>` modal (see Up Next, 2026-06-30)
 
 ## 🏆 Big Build Catalog Status
 

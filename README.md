@@ -710,6 +710,8 @@ GoldTickerLive/
 | [`docs/LIMITATIONS.md`](docs/LIMITATIONS.md)                     | Technical limitations, bottlenecks, UX/SEO weaknesses                                     |
 | [`docs/ERROR_REPORT.md`](docs/ERROR_REPORT.md)                   | Error audit findings, root causes, and fixes                                              |
 | [`docs/environment-variables.md`](docs/environment-variables.md) | Environment variable reference                                                            |
+| [`docs/INTEGRATIONS.md`](docs/INTEGRATIONS.md)                   | Integrations / connectors / MCP map — live vs scaffolded vs inert                         |
+| [`SECURITY.md`](SECURITY.md)                                     | Security policy — how to report a vulnerability                                           |
 | [`docs/SUPABASE_SETUP.md`](docs/SUPABASE_SETUP.md)               | Supabase migration guide                                                                  |
 | [`docs/SEO_CHECKLIST.md`](docs/SEO_CHECKLIST.md)                 | SEO optimization checklist                                                                |
 | [`docs/AUTOMATIONS.md`](docs/AUTOMATIONS.md)                     | CI/CD workflow documentation                                                              |
