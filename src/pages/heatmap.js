@@ -303,6 +303,22 @@ async function mountMap() {
     'aria-label': t().mapAria,
   });
 
+  // Ocean sphere (fills the projection frame) + graticule grid, drawn under land.
+  if (data.WORLD_SPHERE) {
+    const ocean = svgEl('path', { d: data.WORLD_SPHERE, class: 'heatmap-ocean' });
+    ocean.setAttribute('aria-hidden', 'true');
+    svg.appendChild(ocean);
+  }
+  if (data.WORLD_GRATICULE) {
+    const graticule = svgEl('path', {
+      d: data.WORLD_GRATICULE,
+      class: 'heatmap-graticule',
+      fill: 'none',
+    });
+    graticule.setAttribute('aria-hidden', 'true');
+    svg.appendChild(graticule);
+  }
+
   const backdrop = svgEl('path', { d: data.WORLD_BACKGROUND, class: 'heatmap-land' });
   backdrop.setAttribute('aria-hidden', 'true');
   svg.appendChild(backdrop);
