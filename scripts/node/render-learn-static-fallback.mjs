@@ -186,7 +186,7 @@ function renderArticleHeader(article) {
   <div class="learn-hub-article-heading">
     <span class="learn-hub-article-icon" aria-label="${esc(t(article.iconLabelKey))}"><svg class="learn-hub-article-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#${esc(article.icon)}"/></svg></span>
     <div class="learn-hub-article-copy">
-      <h1 class="learn-hub-article-title">${esc(t(article.titleKey))}</h1>
+      <h2 class="learn-hub-article-title">${esc(t(article.titleKey))}</h2>
       <p class="learn-hub-article-subtitle">${esc(t(article.subtitleKey))}</p>
       <div class="learn-hub-article-meta">${meta}</div>
     </div>
@@ -206,6 +206,7 @@ function renderCatalog() {
   </div>
   <h3 class="learn-guide-card__title">${esc(tx(guide.titleKey))}</h3>
   <p class="learn-guide-card__desc">${esc(tx(guide.descKey))}</p>
+  <span class="learn-guide-card__cta" aria-hidden="true">${esc(tx('learn.card.cta'))}</span>
 </a>`
       )
       .join('');
@@ -217,12 +218,17 @@ function renderCatalog() {
   }).join('');
 
   return `<section class="learn-hub-catalog card card--bordered" data-static-fallback="true">
+  <p class="learn-hub-eyebrow">${esc(tx('learn.hubEyebrow'))}</p>
+  <p class="learn-hub-intro">${esc(tx('learn.hubIntro'))}</p>
   <p class="learn-hub-progress">${esc(tx('learn.progress', { read: 0, total }))}</p>
   <input type="search" class="learn-hub-filter" placeholder="${esc(tx('learn.filterPlaceholder'))}" aria-label="${esc(tx('learn.filterPlaceholder'))}" disabled aria-disabled="true" />
   <div class="learn-hub-sections">${sections}</div>
   <div class="learn-hub-related-row">
-    <a href="methodology.html" class="related-tool-link">${esc(tx('learn.relatedMethod'))}</a>
+    <span class="learn-hub-related-label">${esc(tx('learn.relatedLabel'))}</span>
     <a href="calculator.html" class="related-tool-link">${esc(tx('learn.relatedCalc'))}</a>
+    <a href="glossary.html" class="related-tool-link">${esc(tx('learn.relatedGlossary'))}</a>
+    <a href="market.html" class="related-tool-link">${esc(tx('learn.relatedMarket'))}</a>
+    <a href="methodology.html" class="related-tool-link">${esc(tx('learn.relatedMethod'))}</a>
   </div>
 </section>`;
 }

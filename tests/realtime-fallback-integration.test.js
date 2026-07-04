@@ -18,9 +18,24 @@
  * fundamental contract of `docs/realtime-validation-report.md` is broken.
  */
 
-const { test } = require('node:test');
+const { test, beforeEach, afterEach, mock } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
+
+// Pin the clock to a market-OPEN instant (Wed 2026-06-10 14:00 UTC). spotBar and
+// ticker both apply the market-closed overlay (src/lib/live-status.js#applyMarketClosedOverlay),
+// which repaints freshness (including "fallback") as "closed" while the gold
+// market is shut — i.e. every Saturday/Sunday. These integration cases assert the
+// fallback state reaches the DOM; without pinning they pass Mon–Fri and fail on
+// weekend CI runs. The pure-engine case below (getLiveFreshness) is unaffected
+// either way since it never applies the overlay.
+const MARKET_OPEN_MS = new Date('2026-06-10T14:00:00Z').getTime();
+beforeEach(() => {
+  mock.timers.enable({ apis: ['Date'], now: MARKET_OPEN_MS });
+});
+afterEach(() => {
+  mock.timers.reset();
+});
 
 function importModule(relPath) {
   const url = new URL('file://' + path.resolve(__dirname, '..', relPath));

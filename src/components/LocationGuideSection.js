@@ -50,7 +50,9 @@ export function renderLocationGuideSection({ lang = 'en', t = (key) => key, clas
     'section',
     {
       class: `location-guides-section${className ? ` ${className}` : ''}`,
-      id: 'location-guides',
+      // No id here: this section is mounted inside the static `#location-guides`
+      // wrapper on the homepage, which owns that id/anchor. Duplicating it here
+      // produced two `id="location-guides"` elements (invalid HTML).
       'aria-labelledby': 'location-guides-title',
     },
     [
