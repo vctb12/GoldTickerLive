@@ -28,6 +28,7 @@ const UI = {
   en: {
     searchPlaceholder: 'Search insights…',
     searchLabel: 'Search insights',
+    filterAriaLabel: 'Filter insights by category',
     read: 'Read',
     contextCta: 'Open tracker →',
     noResults: (q) => `No insights match “${q}”. Try “karat” or “Dubai”.`,
@@ -36,6 +37,7 @@ const UI = {
   ar: {
     searchPlaceholder: 'ابحث في الرؤى…',
     searchLabel: 'ابحث في الرؤى',
+    filterAriaLabel: 'تصفية الرؤى حسب الفئة',
     read: 'اقرأ',
     contextCta: 'افتح المتتبّع ←',
     noResults: (q) => `لا توجد رؤى تطابق «${q}». جرّب «عيار» أو «دبي».`,
@@ -236,6 +238,7 @@ export function initInsightsFeed(initialLang = 'en') {
     // The visible (sr-only) <label> is the accessible name; don't also set
     // aria-label on the input or it would override the associated label.
     if (searchLabelEl) setText(searchLabelEl, t().searchLabel);
+    stripEl.setAttribute('aria-label', t().filterAriaLabel);
   }
 
   if (searchEl) {

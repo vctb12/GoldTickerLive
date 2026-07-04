@@ -354,7 +354,7 @@
 }
 
 .mkt-info-card:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold);
 }
 
@@ -382,7 +382,7 @@
 }
 
 .mkt-tips-list li:hover {
-  border-color: rgb(196 144 46 / 25%);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
   box-shadow: var(--shadow-xs);
 }
 
@@ -450,7 +450,11 @@
 .mkt-trust-note {
   border-inline-start: 3px solid var(--color-gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: linear-gradient(90deg, rgb(196 144 46 / 6%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 6%, transparent),
+    transparent 70%
+  );
   padding: var(--space-3) var(--space-4);
   font-size: 0.8rem;
 }

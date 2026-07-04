@@ -2,12 +2,12 @@
 
 ## 2026-07-03 V1-VISUAL review follow-up (PR #488 stack)
 
-Reviewed unresolved GitHub feedback on the open V1-VISUAL stack, especially PR #488 and the now-merged
-PR #490. The current `claude/v1-tracker-redesign` head already carries the pricing reference-copy fix,
-the localized legacy freshness banner, tracker hero-stats aria localization, welcome-strip fallback
-alignment, and featured-market captions from the imagery wave. This follow-up closes the remaining
-country-hub schema gap by making runtime FAQPage JSON-LD use the active language (`faqAr` for AR,
-`faqEn` for EN) whenever `renderFaq()` re-runs on language changes.
+Reviewed unresolved GitHub feedback on the open V1-VISUAL stack, especially PR #488 and the
+now-merged PR #490. The current `claude/v1-tracker-redesign` head already carries the pricing
+reference-copy fix, the localized legacy freshness banner, tracker hero-stats aria localization,
+welcome-strip fallback alignment, and featured-market captions from the imagery wave. This follow-up
+closes the remaining country-hub schema gap by making runtime FAQPage JSON-LD use the active
+language (`faqAr` for AR, `faqEn` for EN) whenever `renderFaq()` re-runs on language changes.
 
 ## 🛠 2026-06-27 Defect-closure session (branch `claude/gold-ticker-defects-ia4fgz`)
 

@@ -116,7 +116,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 60% 50% at 85% 0%,
-    rgb(196 144 46 / 10%) 0%,
+    color-mix(in srgb, var(--color-gold) 10%, transparent) 0%,
     transparent 60%
   );
   pointer-events: none;
@@ -135,7 +135,7 @@
 }
 
 .karat-card:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 
@@ -158,8 +158,8 @@
 .karat-table th {
   background: linear-gradient(
     180deg,
-    rgb(196 144 46 / 7%) 0%,
-    rgb(196 144 46 / 3%) 100%
+    color-mix(in srgb, var(--color-gold) 7%, transparent) 0%,
+    color-mix(in srgb, var(--color-gold) 3%, transparent) 100%
   );
   padding: 0.65rem var(--space-3);
   font-size: 0.7rem;
@@ -185,7 +185,7 @@
 }
 
 .karat-table tbody tr:hover {
-  background: rgb(196 144 46 / 4%);
+  background: color-mix(in srgb, var(--color-gold) 4%, transparent);
 }
 
 .karat-table tbody tr:last-child td {
@@ -205,7 +205,7 @@
 .karat-calc-row input:focus {
   outline: none;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 /* Sibling links — pill style */
@@ -255,11 +255,11 @@
 }
 
 .karat-faq details:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
 }
 
 .karat-faq details[open] {
-  border-color: rgb(196 144 46 / 40%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 

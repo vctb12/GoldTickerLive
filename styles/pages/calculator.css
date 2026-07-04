@@ -89,7 +89,7 @@
 .badge-dot {
   width: 6px;
   height: 6px;
-  background: var(--color-success, #22c55e);
+  background: var(--color-success, #137a36);
   border-radius: 50%;
   animation: pulse 2s infinite;
   flex-shrink: 0;
@@ -1176,7 +1176,11 @@
   color: var(--color-gold-deep);
   border-bottom-color: var(--color-gold);
   font-weight: var(--weight-extrabold);
-  background: linear-gradient(180deg, transparent 80%, rgb(196 144 46 / 5%) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 80%,
+    color-mix(in srgb, var(--color-gold) 5%, transparent) 100%
+  );
 }
 
 /* Calculator card — enhanced gradient */
@@ -1191,7 +1195,7 @@
 .calc-input:focus,
 .calc-select:focus {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 /* Result box — stronger gold treatment */
@@ -1202,7 +1206,7 @@
     color-mix(in srgb, var(--surface-primary) 85%, transparent) 60%,
     transparent 100%
   );
-  border: 1.5px solid rgb(196 144 46 / 40%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 40%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
@@ -1215,7 +1219,7 @@
 }
 
 .calc-result-breakdown {
-  border-top-color: rgb(196 144 46 / 20%);
+  border-top-color: color-mix(in srgb, var(--color-gold) 20%, transparent);
 }
 
 /* Tracker handoff banner — gradient card */
@@ -1228,8 +1232,8 @@
 
 /* Zakat nisab banner */
 .calc-zakat-nisab {
-  background: rgb(196 144 46 / 7%);
-  border: 1.5px solid rgb(196 144 46 / 25%);
+  background: color-mix(in srgb, var(--color-gold) 7%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 25%, transparent);
   border-radius: var(--radius-md);
 }
 
@@ -1242,7 +1246,11 @@
 .calc-result-note {
   border-inline-start: 3px solid var(--color-gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: linear-gradient(90deg, rgb(196 144 46 / 7%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 7%, transparent),
+    transparent 70%
+  );
 }
 
 /* Focus ring */

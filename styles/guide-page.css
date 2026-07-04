@@ -473,7 +473,7 @@
 /* TOC — richer treatment */
 .guide-toc {
   background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--color-gold-bg) 100%);
-  border: 1.5px solid rgb(196 144 46 / 35%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 35%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
   padding: 1.4rem var(--space-5);
@@ -512,7 +512,11 @@
   border-inline-start: 3px solid var(--color-gold);
   padding-inline-start: var(--space-3);
   padding-block: 0.1rem;
-  background: linear-gradient(90deg, rgb(196 144 46 / 4%), transparent 60%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 4%, transparent),
+    transparent 60%
+  );
   border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 }
 
@@ -529,7 +533,7 @@
 }
 
 .guide-compare-card:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
 
@@ -544,7 +548,7 @@
 }
 
 .guide-checklist li:hover {
-  border-color: rgb(196 144 46 / 25%);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
   box-shadow: var(--shadow-xs);
 }
 
@@ -556,7 +560,7 @@
     var(--color-gold-bg) 60%,
     color-mix(in srgb, var(--surface-primary) 85%, transparent) 100%
   );
-  border: 1.5px solid rgb(196 144 46 / 40%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 40%, transparent);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
@@ -616,7 +620,7 @@
 }
 
 .guide-faq-item[open] {
-  border-color: rgb(196 144 46 / 40%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 
@@ -631,7 +635,11 @@
 
 .guide-faq-item[open] summary {
   color: var(--color-gold-deep);
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 70%
+  );
 }
 
 .guide-faq-item summary::after {

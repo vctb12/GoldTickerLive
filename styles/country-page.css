@@ -912,7 +912,7 @@
   inset: 0;
   background: radial-gradient(
     ellipse 60% 50% at 85% -5%,
-    rgb(196 144 46 / 10%) 0%,
+    color-mix(in srgb, var(--color-gold) 10%, transparent) 0%,
     transparent 60%
   );
   pointer-events: none;
@@ -1000,14 +1000,18 @@
 }
 
 .cp-table th {
-  background: linear-gradient(180deg, rgb(196 144 46 / 6%) 0%, rgb(196 144 46 / 3%) 100%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-gold) 6%, transparent) 0%,
+    color-mix(in srgb, var(--color-gold) 3%, transparent) 100%
+  );
   color: var(--text-tertiary);
   font-size: 0.68rem;
   letter-spacing: 0.07em;
 }
 
 .cp-table tbody tr:hover {
-  background: rgb(196 144 46 / 4%);
+  background: color-mix(in srgb, var(--color-gold) 4%, transparent);
 }
 
 .cp-table td {
@@ -1054,11 +1058,11 @@
 }
 
 .cp-faq-item:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
 }
 
 .cp-faq-item[open] {
-  border-color: rgb(196 144 46 / 40%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 
@@ -1080,7 +1084,7 @@
 }
 
 .cp-mi-stat:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold);
 }
 
@@ -1119,7 +1123,11 @@
 .cp-trust-note {
   border-inline-start: 3px solid var(--color-gold);
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 70%
+  );
 }
 
 /* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */

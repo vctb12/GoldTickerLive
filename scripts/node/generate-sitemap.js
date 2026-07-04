@@ -99,6 +99,55 @@ function formatDate(ms) {
   return new Date(ms).toISOString().split('T')[0];
 }
 
+// ── Real AR mirror resolution (2026-07-04) ──────────────────────────────────
+// Pages with a dedicated /ar/ document must declare a correct reciprocal pair
+// instead of the runtime `?lang=ar` fallback (which is nonsense for /ar/ URLs:
+// it made the sitemap say hreflang=en points at the Arabic document). Mirrors
+// are resolved against the filesystem — never hardcoded. Site-wide `?lang=ar`
+// strategy changes beyond this stay owner-gated (OWNER_REVIEW.md Phase 43).
+function urlPathExists(urlPath) {
+  if (urlPath === '' || urlPath === '/') return fs.existsSync(path.join(ROOT, 'index.html'));
+  const rel = urlPath.replace(/^\//, '');
+  if (rel.endsWith('.html')) return fs.existsSync(path.join(ROOT, rel));
+  return fs.existsSync(path.join(ROOT, rel, 'index.html'));
+}
+
+// EN url-path (no leading slash, '' = root) → AR mirror url-path or null.
+function arMirrorFor(urlPath) {
+  const candidates = [];
+  if (urlPath === '') candidates.push('ar/');
+  else if (urlPath === 'methodology.html') candidates.push('ar/methodology/');
+  else if (urlPath.startsWith('content/guides/')) {
+    candidates.push(urlPath.replace('content/guides/', 'content/guides/ar/'));
+  } else if (urlPath.startsWith('content/tools/')) {
+    candidates.push(urlPath.replace('content/tools/', 'content/tools/ar/'));
+  } else {
+    candidates.push(`ar/${urlPath}`);
+  }
+  for (const c of candidates) if (urlPathExists(c)) return c;
+  return null;
+}
+
+// AR url-path → EN counterpart url-path or null.
+function enCounterpartFor(urlPath) {
+  let candidates = [];
+  if (urlPath === 'ar/') candidates = [''];
+  else if (urlPath === 'ar/methodology/') candidates = ['methodology.html', 'methodology/'];
+  else if (urlPath.startsWith('content/guides/ar/')) {
+    candidates = [urlPath.replace('content/guides/ar/', 'content/guides/')];
+  } else if (urlPath.startsWith('content/tools/ar/')) {
+    candidates = [urlPath.replace('content/tools/ar/', 'content/tools/')];
+  } else if (urlPath.startsWith('ar/')) {
+    candidates = [urlPath.slice(3)];
+  }
+  for (const c of candidates) if (urlPathExists(c)) return c;
+  return null;
+}
+
+function toLoc(urlPath) {
+  return urlPath ? `${BASE_URL}/${urlPath}` : `${BASE_URL}/`;
+}
+
 // ── Build entries ────────────────────────────────────────────────────────────
 const pages = walk(ROOT);
 
@@ -120,9 +169,19 @@ const urls = allEntries
     const priority = getPriority(urlPath);
     const changefreq = getChangefreq(urlPath);
 
-    // Add hreflang alternates for all pages
-    const enUrl = loc;
-    const arUrl = loc.includes('?') ? loc + '&lang=ar' : loc + '?lang=ar';
+    // Hreflang alternates: use real /ar/ document mirrors when they exist on
+    // disk; otherwise keep the runtime `?lang=ar` pair for EN pages.
+    const isArPage = urlPath === 'ar/' || urlPath.startsWith('ar/') || urlPath.includes('/ar/');
+    let enUrl = loc;
+    let arUrl;
+    if (isArPage) {
+      const en = enCounterpartFor(urlPath);
+      enUrl = en === null ? loc : toLoc(en);
+      arUrl = loc;
+    } else {
+      const mirror = arMirrorFor(urlPath);
+      arUrl = mirror ? toLoc(mirror) : loc.includes('?') ? loc + '&lang=ar' : loc + '?lang=ar';
+    }
 
     return `  <url>
     <loc>${loc}</loc>

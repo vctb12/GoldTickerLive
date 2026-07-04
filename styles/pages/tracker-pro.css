@@ -76,6 +76,8 @@
 
   /* Chart terminal inset */
   --tp-chart-bg: #080a10;
+  --tp-snapshot: #0d7680; /* local-snapshot source badge — distinct from live/warning semantics */
+  --tp-snapshot-strong: #40bfc8;
   --tp-chart-border: color-mix(in srgb, var(--color-gold) 18%, var(--border-subtle));
   --tp-chart-grid: rgb(255 255 255 / 4%);
 }
@@ -2064,11 +2066,11 @@ td.tracker-chg-down {
 }
 
 td.tracker-chg-up {
-  color: var(--color-live, #1b8a4c);
+  color: var(--color-live, #1a7a32);
 }
 
 td.tracker-chg-down {
-  color: var(--color-error, #c94040);
+  color: var(--color-error, #b81428);
 }
 
 /* Flat / no-change karat row — neutral, never green. */
@@ -2800,15 +2802,15 @@ td.tracker-chg-flat {
   color: var(--color-warning-text);
 }
 .tracker-source-badge--local-snapshot {
-  background: rgb(16 111 120 / 8%);
-  border-color: rgb(16 111 120 / 22%);
-  color: #0d7680;
+  background: color-mix(in srgb, var(--tp-snapshot) 8%, transparent);
+  border-color: color-mix(in srgb, var(--tp-snapshot) 22%, transparent);
+  color: var(--tp-snapshot);
 }
 
 [data-theme='dark'] .tracker-source-badge--local-snapshot {
-  background: rgb(62 188 200 / 10%);
-  border-color: rgb(62 188 200 / 25%);
-  color: #40bfc8;
+  background: color-mix(in srgb, var(--tp-snapshot-strong) 10%, transparent);
+  border-color: color-mix(in srgb, var(--tp-snapshot-strong) 25%, transparent);
+  color: var(--tp-snapshot-strong);
 }
 .tracker-source-badge--LBMA-baseline {
   background: var(--tp-blue-soft);
@@ -4256,7 +4258,7 @@ td.tracker-chg-flat {
 
 .tracker-panel:hover,
 .tracker-subpanel:hover {
-  border-color: rgb(196 144 46 / 25%);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
   box-shadow:
     var(--shadow-xs),
     0 0 0 0 transparent;
@@ -4274,7 +4276,7 @@ td.tracker-chg-flat {
 }
 
 .tracker-result-card:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 
@@ -4289,7 +4291,7 @@ td.tracker-chg-flat {
 }
 
 .tracker-stat-card:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-gold);
 }
 
@@ -4382,13 +4384,13 @@ td.tracker-chg-flat {
 
 /* Table hover — gold tint */
 .tracker-table tbody tr:hover {
-  background: rgb(196 144 46 / 4%);
+  background: color-mix(in srgb, var(--color-gold) 4%, transparent);
 }
 
 /* Calc result box — richer accent */
 .tracker-calc-result {
   background: linear-gradient(135deg, var(--color-gold-tint) 0%, var(--surface-accent) 100%);
-  border: 1.5px solid rgb(196 144 46 / 35%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 35%, transparent);
   box-shadow: var(--shadow-gold), var(--shadow-xs);
 }
 

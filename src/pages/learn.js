@@ -14,6 +14,8 @@ import { createTocRenderer } from '../learn-hub/toc-renderer.js';
 import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
+import { initInsightsFeed } from './insights/insights-feed.js';
+import { TRANSLATIONS } from '../config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -99,6 +101,22 @@ function mountArticleExperience(article) {
   return { renderer, toc: null };
 }
 
+// Hub strings live in src/config/translations.js (bilingual policy) — the
+// feed component owns its own search label internally.
+function hubTx(lang, key) {
+  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
+}
+
+function applyInsightsHeading(lang) {
+  const title = document.getElementById('insights-feed-heading');
+  const sub = document.getElementById('insights-feed-sub');
+  if (title) title.textContent = hubTx(lang, 'learn.insightsFeedTitle');
+  if (sub) sub.textContent = hubTx(lang, 'learn.insightsFeedSub');
+  document.querySelectorAll('[data-learn-tool]').forEach((node) => {
+    node.textContent = hubTx(lang, `learn.tools.${node.getAttribute('data-learn-tool')}`);
+  });
+}
+
 function init() {
   cache.loadState(STATE);
 
@@ -114,6 +132,8 @@ function init() {
   injectBreadcrumbs('learn');
 
   mountLearnHubCatalog({ lang: STATE.lang, container: '#learn-catalog-root' });
+  const insightsFeed = initInsightsFeed(STATE.lang);
+  applyInsightsHeading(STATE.lang);
   initPageEnter('#main-content');
 
   const article = getArticle('learn');
@@ -127,6 +147,8 @@ function init() {
       experience.toc?.destroy();
       experience = mountArticleExperience(article);
       mountLearnHubCatalog({ lang: STATE.lang, container: '#learn-catalog-root' });
+      insightsFeed?.setLang(STATE.lang);
+      applyInsightsHeading(STATE.lang);
       scrollToHashTarget();
     });
   });

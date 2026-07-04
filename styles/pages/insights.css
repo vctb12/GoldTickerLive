@@ -1248,9 +1248,13 @@
 
 /* Price bar — gold glow border */
 .insights-price-bar {
-  border-top-color: rgb(196 144 46 / 25%);
-  border-bottom-color: rgb(196 144 46 / 25%);
-  background: linear-gradient(180deg, var(--surface-primary) 0%, rgb(196 144 46 / 3%) 100%);
+  border-top-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
+  border-bottom-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
+  background: linear-gradient(
+    180deg,
+    var(--surface-primary) 0%,
+    color-mix(in srgb, var(--color-gold) 3%, transparent) 100%
+  );
 }
 
 /* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */

@@ -32,7 +32,7 @@
 }
 
 .dashboard-card {
-  border: 1px solid var(--border-muted, #e5e7eb);
+  border: 1px solid var(--border-muted, #e2e8f0);
   border-radius: 1rem;
   padding: 0.95rem;
   background: var(--surface-1, #fff);
@@ -74,8 +74,8 @@
 
 .dashboard-danger-zone {
   margin-top: 0.75rem;
-  border: 1px solid var(--color-error-border, #fecaca);
-  background: var(--color-error-bg, #fef2f2);
+  border: 1px solid var(--color-error-border, #f87171);
+  background: var(--color-error-bg, rgb(184 20 40 / 8%));
   border-radius: 0.85rem;
   padding: 0.85rem;
   display: grid;
@@ -93,7 +93,7 @@
 
 .dashboard-field input {
   min-height: 2.5rem;
-  border: 1px solid var(--border-muted, #d1d5db);
+  border: 1px solid var(--border-muted, #e2e8f0);
   border-radius: 0.6rem;
   padding: 0.45rem 0.65rem;
 
@@ -107,21 +107,21 @@
 }
 
 .dashboard-card-privacy .btn-danger {
-  border: 1px solid var(--color-error-border, #ef4444);
-  color: var(--color-error, #b91c1c);
+  border: 1px solid var(--color-error-border, #f87171);
+  color: var(--color-error, #b81428);
   background: var(--surface-1, #fff);
 }
 
 .dashboard-card-privacy .btn-danger:hover,
 .dashboard-card-privacy .btn-danger:focus-visible {
-  background: var(--color-error-bg, #fef2f2);
+  background: var(--color-error-bg, rgb(184 20 40 / 8%));
 }
 
 /* ── Phase 63 — Premium Polish ─────────────────────────────────────────────── */
 
 .dashboard-card {
   background: var(--gradient-card);
-  border: 1.5px solid var(--border-subtle, var(--border-muted, #e5e7eb));
+  border: 1.5px solid var(--border-subtle, var(--border-muted, #e2e8f0));
   box-shadow: var(--shadow-xs);
   transition:
     box-shadow var(--duration-normal) var(--ease-out),

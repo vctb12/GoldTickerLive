@@ -342,7 +342,7 @@
 /* City market card tag — more premium */
 .city-market-card-tag {
   background: var(--color-gold-tint);
-  border-color: rgb(196 144 46 / 28%);
+  border-color: color-mix(in srgb, var(--color-gold) 28%, transparent);
   border-radius: var(--radius-pill);
   letter-spacing: 0.06em;
 }
@@ -359,7 +359,7 @@
 }
 
 .city-area-card:hover {
-  border-color: rgb(196 144 46 / 35%);
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
   box-shadow: var(--shadow-gold);
 }
 
@@ -374,7 +374,7 @@
 }
 
 .city-tips-list li:hover {
-  border-color: rgb(196 144 46 / 25%);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
   box-shadow: var(--shadow-xs);
 }
 
@@ -386,7 +386,7 @@
     var(--color-gold-bg) 60%,
     color-mix(in srgb, var(--surface-primary) 85%, transparent) 100%
   );
-  border: 1.5px solid rgb(196 144 46 / 40%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 40%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }

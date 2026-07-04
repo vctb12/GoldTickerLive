@@ -238,7 +238,11 @@
   border-inline-start: 3px solid var(--color-gold);
   padding-inline-start: var(--space-3);
   padding-block: var(--space-1);
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 60%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 60%
+  );
   border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 }
 
@@ -313,7 +317,6 @@
   border-color: var(--color-gold);
   color: var(--surface-canvas);
   text-decoration: none;
-  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
   filter: brightness(1.06);
 }
@@ -331,8 +334,7 @@
   background: var(--color-gold-tint);
   color: var(--text-accent);
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-gold);
+  box-shadow: var(--shadow-sm);
 }
 
 /* Ghost — minimal, ink-on-light (hero only) */
@@ -346,7 +348,6 @@
   background: var(--surface-secondary);
   color: var(--text-primary);
   text-decoration: none;
-  transform: translateY(-1px);
 }
 
 /* Hero ghost: ink-on-light variant */
@@ -842,23 +843,13 @@
     var(--color-gold-bg) 50%,
     var(--surface-canvas) 100%
   );
-  border-top: 1px solid rgb(196 144 46 / 18%);
+  border-top: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-5) var(--space-5) var(--space-6);
   position: relative;
 }
 
-/* Gold accent top hairline on karat strip */
-.karat-strip::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
-  height: 2px;
-  background: var(--rule-foil);
-  opacity: 0.55;
-  pointer-events: none;
-}
+/* Foil top hairline retired (DESIGN-SYSTEM §4 — the border-block seams are the only rules) */
 
 .karat-strip-inner {
   max-width: 1200px;
@@ -948,21 +939,20 @@
 
 .karat-strip-item.is-selected {
   border-color: var(--color-gold);
-  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
   background: var(--color-gold-tint);
 }
 
 [data-theme='dark'] .karat-strip-item.is-selected {
   background: var(--color-gold-bg);
   border-color: var(--color-gold);
-  box-shadow: var(--shadow-gold-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .karat-strip-item:hover {
   background: var(--color-gold-tint);
   border-color: var(--color-gold);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-gold), var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 
 .karat-strip-item[data-tooltip]::after {
@@ -1125,8 +1115,6 @@
   border-color: var(--color-gold);
   color: var(--color-gold-dark);
   background: var(--color-gold-tint);
-  box-shadow: var(--shadow-gold);
-  transform: translateY(-1px);
 }
 
 .trust-icon {
@@ -1139,7 +1127,7 @@
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 20%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
   color: var(--color-gold-dark);
 }
 
@@ -1211,7 +1199,7 @@
 
 .trust-banner-box {
   background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--surface-accent) 100%);
-  border: 1px solid rgb(196 144 46 / 28%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
   border-inline-start: 4px solid var(--color-gold);
   border-radius: var(--radius-lg);
   padding: 1.4rem 1.6rem;
@@ -1220,7 +1208,7 @@
   gap: 1.1rem;
   max-width: 780px;
   margin: 0 auto;
-  box-shadow: var(--shadow-sm), var(--shadow-gold);
+  box-shadow: var(--shadow-sm);
 }
 
 .trust-banner-icon {
@@ -1322,14 +1310,14 @@
   color: #ece1c8;
 }
 .home-section--trust-banner .trust-banner-content a {
-  color: #f0ca5c;
+  color: var(--color-gold-bright);
   border-bottom-color: rgb(240 202 92 / 45%);
 }
 .home-section--trust-banner .trust-banner-content a:hover {
-  border-bottom-color: #f0ca5c;
+  border-bottom-color: var(--color-gold-bright);
 }
 .home-section--trust-banner .trust-banner-icon {
-  color: #f0ca5c;
+  color: var(--color-gold-bright);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1472,7 +1460,7 @@
   color: var(--color-gold-deep);
   font-weight: var(--weight-bold);
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgb(196 144 46 / 30%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1497,18 +1485,8 @@
     border-color var(--transition-premium);
 }
 
-.gcc-card::before,
-.tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--rule-foil);
-  opacity: 0;
-  transition: opacity var(--transition-normal);
-}
+/* Foil hover top-rule retired (DESIGN-SYSTEM §4 — border-color is the hover affordance;
+   also removes the physical top/left/right positioning path) */
 
 .gcc-card:hover,
 .tool-card:hover {
@@ -1516,11 +1494,6 @@
   border-color: var(--color-gold);
   text-decoration: none;
   color: inherit;
-}
-
-.gcc-card:hover::before,
-.tool-card:hover::before {
-  opacity: 1;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1700,7 +1673,7 @@
   margin-bottom: 0.35rem;
   border-radius: 0.7rem;
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 22%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
   color: var(--color-gold-dark);
 }
 
@@ -1760,15 +1733,15 @@
     var(--color-gold-bg) 60%,
     rgb(253 250 240 / 80%) 100%
   );
-  border-color: rgb(196 144 46 / 45%);
-  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ◈ tool-card glyph retired (DESIGN-SYSTEM §4 — no decorative glyphs) */
 
 .tool-card--primary .tool-card-icon {
   background: linear-gradient(145deg, rgb(255 255 255 / 60%), var(--color-gold-tint));
-  border-color: rgb(196 144 46 / 40%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
 }
 
 .tool-card--primary .tool-card-title {
@@ -1778,7 +1751,7 @@
 .tool-card--primary:hover {
   border-color: var(--color-gold);
   background: linear-gradient(145deg, rgb(212 168 64 / 14%) 0%, rgb(184 137 44 / 8%) 100%);
-  box-shadow: var(--shadow-gold-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 [data-theme='dark'] .tool-card--primary {
@@ -1800,11 +1773,11 @@
   margin-top: 2.25rem;
   padding: 1.1rem 1.6rem;
   background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--color-gold-tint) 100%);
-  border: 1px solid rgb(196 144 46 / 32%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
   border-radius: var(--radius-lg);
   font-size: 0.88rem;
   color: var(--text-secondary);
-  box-shadow: var(--shadow-gold);
+  box-shadow: var(--shadow-xs);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1893,23 +1866,22 @@
   background: var(--color-gold-tint);
   color: var(--color-gold-dark);
   text-decoration: none;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  box-shadow: var(--shadow-sm);
 }
 
 .country-tile--more {
   background: var(--color-gold-bg);
   color: var(--color-gold-dark);
-  border-color: rgb(196 144 46 / 38%);
+  border-color: color-mix(in srgb, var(--color-gold) 38%, transparent);
   font-weight: var(--weight-bold);
-  box-shadow: var(--shadow-gold);
+  box-shadow: var(--shadow-xs);
 }
 
 .country-tile--more:hover {
   background: var(--color-gold);
   color: var(--color-on-gold);
   border-color: var(--color-gold);
-  box-shadow: var(--shadow-gold-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1933,13 +1905,17 @@
 }
 
 .faq-item[open] {
-  border-color: rgb(196 144 46 / 45%);
-  box-shadow: var(--shadow-gold), var(--shadow-sm);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+  box-shadow: var(--shadow-sm);
 }
 
 .faq-item[open] .faq-q {
   color: var(--color-gold-deep);
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 70%
+  );
 }
 
 .faq-q {
@@ -2539,7 +2515,7 @@
 
 .x-follow-banner-handle {
   font-weight: var(--weight-bold, 700);
-  color: #fff;
+  color: var(--color-white);
   white-space: nowrap;
 }
 
@@ -2712,9 +2688,8 @@
 }
 
 .explainer-strip-item:hover {
-  border-color: rgb(196 144 46 / 30%);
-  box-shadow: var(--shadow-gold), var(--shadow-sm);
-  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+  box-shadow: var(--shadow-sm);
 }
 
 .explainer-strip-icon {
@@ -2728,7 +2703,7 @@
   width: 2.8rem;
   height: 2.8rem;
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 22%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
   border-radius: var(--radius-md);
 }
 
@@ -2787,7 +2762,6 @@
 }
 
 .home-social-btn:hover {
-  transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
 }
 
@@ -3041,8 +3015,7 @@
   text-decoration: none;
   color: inherit;
   border-color: var(--color-gold);
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-gold-lg), var(--shadow-md);
+  box-shadow: var(--shadow-md);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3338,20 +3311,11 @@
 }
 
 .home-stat-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-gold), var(--shadow-md);
-  border-color: rgb(196 144 46 / 35%);
+  box-shadow: var(--shadow-md);
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
 }
 
-.home-stat-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  inset-inline: 0;
-  height: 2px;
-  background: var(--rule-foil);
-  opacity: 0.5;
-}
+/* Foil top-rule retired (DESIGN-SYSTEM §4) */
 
 .home-stat-value {
   /* solid gold-deep fill (gradient text-clip retired — solid is strictly more legible) */
@@ -3417,7 +3381,7 @@
   gap: var(--space-1);
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-lg, 12px);
-  background: var(--surface-secondary, #f8f9fa);
+  background: var(--surface-secondary, #faf7ee);
   border: 1px solid var(--border-subtle, rgb(0 0 0 / 6%));
   transition:
     transform 0.15s ease,
@@ -3426,16 +3390,15 @@
 }
 
 .price-trend-card:hover {
-  transform: translateY(-2px);
   box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
 }
 
 .price-trend-card--up {
-  border-block-start: 3px solid var(--color-up, #22c55e);
+  border-block-start: 3px solid var(--color-up, #176832);
 }
 
 .price-trend-card--down {
-  border-block-start: 3px solid var(--color-down, #ef4444);
+  border-block-start: 3px solid var(--color-down, #b81428);
 }
 
 .price-trend-month {
@@ -3520,7 +3483,7 @@
 
 .home-chart-section {
   padding-block: var(--space-10) var(--space-12);
-  background: var(--surface-secondary, #f8f9fb);
+  background: var(--surface-secondary, #faf7ee);
   border-block: 1px solid var(--border-subtle, rgb(0 0 0 / 5%));
 }
 
@@ -3562,15 +3525,16 @@
 }
 
 .home-chart-range-btn:hover {
-  background: var(--color-gold-light, #fef9ec);
-  color: var(--color-gold, #c9a84c);
-  border-color: var(--color-gold, #c9a84c);
+  /* Pale-tint hover (the old --color-gold-light fallback intent) with AA text gold */
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold);
 }
 
 .home-chart-range-btn.is-active {
-  background: var(--color-gold, #c9a84c);
-  color: #fff;
-  border-color: var(--color-gold, #c9a84c);
+  background: var(--color-gold);
+  color: var(--color-on-gold);
+  border-color: var(--color-gold);
 }
 
 .home-chart-wrap {
@@ -3667,7 +3631,7 @@
 
 .hero-live-card.ds-card {
   border: 1.5px solid color-mix(in srgb, var(--color-gold) 22%, var(--border-subtle));
-  box-shadow: var(--shadow-lg), var(--shadow-gold);
+  box-shadow: var(--rim-inset), var(--readout-chrome);
   padding: var(--space-5);
 }
 

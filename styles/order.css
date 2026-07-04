@@ -474,8 +474,8 @@
 .order-partners {
   margin-top: var(--space-8, 2rem);
   padding: var(--space-6, 1.5rem);
-  background: var(--color-surface, #fafaf8);
-  border: 1px solid var(--color-border, #e8e0d0);
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #d9cfb6);
   border-radius: var(--radius-lg, 12px);
 }
 
@@ -509,7 +509,7 @@
   gap: 0.5rem;
   padding: 1rem;
   background: var(--color-white);
-  border: 1px solid var(--color-border, #e8e0d0);
+  border: 1px solid var(--color-border, #d9cfb6);
   border-radius: var(--radius-md, 8px);
   text-decoration: none;
   color: inherit;
@@ -557,8 +557,8 @@
 
 /* ── Information notice ── */
 .order-info-notice {
-  background: var(--color-live-bg, #e8f5e9);
-  border: 1px solid var(--color-live-border, #a5d6a7);
+  background: var(--color-live-bg, rgb(26 122 50 / 9%));
+  border: 1px solid var(--color-live-border, rgb(26 122 50 / 25%));
   border-radius: var(--radius-md, 8px);
   color: var(--text-primary);
   font-size: var(--text-sm, 0.875rem);
@@ -625,9 +625,9 @@
 }
 
 .shop-badge--verified {
-  background: var(--color-live-bg, #e8f5e9);
-  border: 1px solid var(--color-live-border, #a5d6a7);
-  color: var(--color-live, #2e7d32);
+  background: var(--color-live-bg, rgb(26 122 50 / 9%));
+  border: 1px solid var(--color-live-border, rgb(26 122 50 / 25%));
+  color: var(--color-live, #1a7a32);
 }
 
 .shop-badge--featured {
@@ -741,13 +741,13 @@
 
 .order-partners {
   background: var(--gradient-card);
-  border: 1.5px solid var(--border-subtle, var(--color-border, #e8e0d0));
+  border: 1.5px solid var(--border-subtle, var(--color-border, #d9cfb6));
   box-shadow: var(--shadow-xs);
 }
 
 .order-partner-card {
   background: var(--gradient-card);
-  border: 1.5px solid var(--border-subtle, var(--color-border, #e8e0d0));
+  border: 1.5px solid var(--border-subtle, var(--color-border, #d9cfb6));
   border-radius: var(--radius-lg, 12px);
   transition:
     border-color 0.15s,

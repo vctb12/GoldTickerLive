@@ -152,5 +152,5 @@ in markup + AR alt via `data-alt-ar`).
 - Fixed the remaining country-hub AR schema gap: `renderFaq()` now injects FAQPage JSON-LD from the
   active visible FAQ list, so AR mode emits Arabic questions/answers and EN mode emits English.
 - Left broader backlog items (generic OG imagery, city/country intent copy, credit localization,
-  thin static copy) as follow-up scope because they are either documented existing debt or larger than
-  the unresolved inline review fix.
+  thin static copy) as follow-up scope because they are either documented existing debt or larger
+  than the unresolved inline review fix.

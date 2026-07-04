@@ -7,43 +7,45 @@
 This document describes the design token system implemented across the Gold Ticker Live platform.
 Tokens are defined in `styles/partials/tokens.css` (imported via `styles/global.css`).
 
-> ⚠️ **Source of truth: `styles/partials/tokens.css`.** This reference is hand-maintained and some
-> values below have drifted from the implementation — always verify against `tokens.css`. Phase 25
-> corrected the headline surface/gold values; an auto-generation step (so this file can never drift
-> again) is staged in `PROGRESS.md`.
+> ⚠️ **Source of truth: `styles/partials/tokens.css`.** This reference is hand-maintained — always
+> verify against `tokens.css`. Reconciled 2026-07-04 against the shipped Precision Instrument values
+> (`redesign/DESIGN-SYSTEM.md`): cooled canvas `#fdfbf5`, struck-metal `--color-gold #b07d1f`,
+> `--color-ink-data`, `--color-rule`, `--readout-*`/`--rim-inset` readout chrome, and
+> `--font-numeric-features` (slashed-zero). An auto-generation step is still staged in
+> `PROGRESS.md`.
 
 ## Color Tokens
 
 ### Surface Colors
 
 ```css
---color-bg: #fefcf7; /* Canvas background (warm parchment) */
+--color-bg: #fdfbf5; /* Canvas background (warm parchment) */
 --color-surface: #fff; /* Primary surface */
---color-surface-2: #f9f6f0; /* Secondary surface */
---color-surface-3: #f2ede0; /* Tertiary surface */
---color-border: #e8e2d0; /* Default border */
---color-border-subtle: #ede8da; /* Subtle border */
+--color-surface-2: #faf7ee; /* Secondary surface */
+--color-surface-3: #f3eedd; /* Tertiary surface */
+--color-border: #d9cfb6; /* Default border */
+--color-border-subtle: #ece5d2; /* Subtle border */
 ```
 
 ### Text Colors
 
 ```css
---color-text: #1a1612; /* Primary text */
---color-text-muted: #6b5f4e; /* Muted text */
---color-text-faint: #78685a; /* Faint text */
+--color-text: #15110a; /* Primary text */
+--color-text-muted: #6a5c48; /* Muted text */
+--color-text-faint: #6f6350; /* Faint text */
 ```
 
 ### Gold Palette
 
 ```css
---color-gold: #c4902e; /* Primary gold */
---color-gold-light: #e0b84a; /* Light gold */
---color-gold-bright: #f0c84a; /* Bright gold */
---color-gold-dark: #8a6420; /* Dark gold */
---color-gold-deep: #5e4210; /* Deep gold */
---color-gold-bg: #fdf8ee; /* Gold background */
---color-gold-tint: #faf4e2; /* Gold tint */
---color-gold-glow: rgb(196 153 62 / 15%); /* Gold glow */
+--color-gold: #b07d1f; /* Primary gold */
+--color-gold-light: #ddb040; /* Light gold */
+--color-gold-bright: #f0ca5c; /* Bright gold */
+--color-gold-dark: #7e5912; /* Dark gold */
+--color-gold-deep: #6b4a0e; /* Deep gold */
+--color-gold-bg: #fdf8e8; /* Gold background */
+--color-gold-tint: #f8f2dc; /* Gold tint */
+--color-gold-glow: rgb(196 144 46 / 16%); /* Gold glow */
 ```
 
 ### Status Colors
@@ -86,7 +88,7 @@ Tokens are defined in `styles/partials/tokens.css` (imported via `styles/global.
 ```css
 --border-default: var(--color-border);
 --border-subtle: var(--color-border-subtle);
---border-strong: #d9cfb7;
+--border-strong: #d6ccb4;
 --border-accent: var(--color-gold);
 ```
 
@@ -95,7 +97,7 @@ Tokens are defined in `styles/partials/tokens.css` (imported via `styles/global.
 ### Font Stacks
 
 ```css
---font-main: 'Cairo', -apple-system, blinkmacsystemfont, 'Segoe UI', sans-serif;
+--font-main: var(--font-latin); /* Source Sans 3; Cairo under [dir='rtl'] via --font-arabic swap */
 --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
 ```
 
@@ -135,19 +137,19 @@ price-data UI; display tier (`--text-4xl` / `--text-5xl`) is reserved for hero h
 --leading-none: 1;
 --leading-tight: 1.2;
 --leading-snug: 1.35;
---leading-normal: 1.55;
---leading-relaxed: 1.7;
+--leading-normal: 1.5;
+--leading-relaxed: 1.65;
 --leading-loose: 2;
 ```
 
 ### Letter Spacing
 
 ```css
---tracking-tight: -0.02em;
+--tracking-tight: -0.025em;
 --tracking-normal: 0;
---tracking-wide: 0.02em;
---tracking-wider: 0.04em;
---tracking-caps: 0.08em;
+--tracking-wide: 0.025em;
+--tracking-wider: 0.05em;
+--tracking-caps: 0.1em;
 ```
 
 ## Spacing Scale
@@ -169,8 +171,8 @@ price-data UI; display tier (`--text-4xl` / `--text-5xl`) is reserved for hero h
 --radius-xs: 4px;
 --radius-sm: 8px;
 --radius-md: 12px;
---radius-lg: 18px;
---radius-xl: 24px;
+--radius-lg: 16px;
+--radius-xl: 22px;
 --radius-pill: 999px;
 ```
 

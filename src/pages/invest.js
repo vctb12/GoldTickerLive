@@ -7,7 +7,6 @@ import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
 import { updateTicker } from '../components/ticker.js';
 import { mountSharedShell } from '../components/site-shell.js';
-import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { iconUseElement } from '../components/icon-sprite.js';
@@ -26,18 +25,23 @@ const I18N = {
     badge: 'Practical guide · March 2026',
     heroTitle: 'How to Invest in Gold Rationally',
     heroLead:
-      'No hype. No emotion. Build a cleaner gold plan with live prices, a budget calculator, and market-specific buying notes for UAE, Saudi Arabia, and Egypt.',
-    ctaTracker: 'See Live Prices Now →',
+      'No hype. No emotion. Build a cleaner gold plan with spot-linked reference prices, a budget calculator, and market-specific buying notes for UAE, Saudi Arabia, and Egypt.',
+    ctaTracker: 'Open the live tracker →',
     ctaPlanner: 'Build My Plan',
     ctaCompare: 'Compare Options',
     point1Title: 'Use gold for a job',
     point1Copy: 'Protection, liquidity, gifting, or tactical exposure — decide the job first.',
-    point2Title: 'Buy with live numbers',
+    point2Title: 'Buy with spot-linked numbers',
     point2Copy: 'Use spot-linked pricing before walking into a store or placing an order.',
     point3Title: 'Respect premiums',
     point3Copy: 'The wrong premium can ruin a good gold decision.',
-    liveLabel: 'Live gold snapshot',
+    liveLabel: 'Reference price snapshot',
     liveTitle: 'Investment snapshot',
+    disclosureLabel: 'Disclosure:',
+    disclosureBody:
+      'Some links on this page may be affiliate links. If you purchase through them, Gold Ticker Live may earn a small commission at no extra cost to you. This supports our free tools and reference data.',
+    disclosureAria: 'Affiliate disclosure',
+    budgetSliderAria: 'Investment budget slider',
     statSpot: 'Spot (XAU/USD)',
     statSpotNote: 'per troy ounce',
     stat24: '24K • AED / gram',
@@ -60,10 +64,10 @@ const I18N = {
     goalsTitle: 'Choose the job gold should do',
     goalsSub:
       'The best product changes depending on whether you want defense, cultural use, or short-term positioning.',
-    plannerKicker: 'Live planner',
+    plannerKicker: 'Price-linked planner',
     plannerTitle: 'What can your budget really buy?',
     plannerSub:
-      'Use live spot-linked estimates to size a one-time purchase or a monthly accumulation plan.',
+      'Use spot-linked reference estimates to size a one-time purchase or a monthly accumulation plan.',
     marketLabel: 'Primary market',
     typeLabel: 'Product type',
     frequencyLabel: 'Contribution style',
@@ -102,7 +106,7 @@ const I18N = {
     planGramsNote: 'spot-linked estimate',
     planOuncesNote: '31.1035g per troy ounce',
     planEtfNote: 'spot-equivalent exposure',
-    metaLive: 'Live price based',
+    metaLive: 'Spot-linked estimate',
     metaSpot: 'Spot-linked estimate',
     metaAed: 'AED peg fixed at 3.6725',
     metaVerify: 'Verify local premiums before purchase',
@@ -111,18 +115,23 @@ const I18N = {
     badge: 'دليل عملي · مارس 2026',
     heroTitle: 'كيف تستثمر في الذهب بعقلانية',
     heroLead:
-      'بدون مبالغة وبدون عاطفة. ابنِ خطة ذهب أوضح باستخدام الأسعار الحية، وحاسبة الميزانية، وملاحظات شراء مخصصة للإمارات والسعودية ومصر.',
-    ctaTracker: 'اعرض الأسعار المباشرة الآن ←',
+      'بدون مبالغة وبدون عاطفة. ابنِ خطة ذهب أوضح باستخدام أسعار مرجعية مرتبطة بالسعر الفوري، وحاسبة الميزانية، وملاحظات شراء مخصصة للإمارات والسعودية ومصر.',
+    ctaTracker: 'افتح المتتبع المباشر ←',
     ctaPlanner: 'ابنِ خطتي',
     ctaCompare: 'قارن الخيارات',
     point1Title: 'حدّد وظيفة الذهب',
     point1Copy: 'حماية، سيولة، هدية، أو تعرض تكتيكي — حدّد الهدف أولاً.',
-    point2Title: 'اشترِ بأرقام حية',
+    point2Title: 'اشترِ بأرقام مرتبطة بالسعر الفوري',
     point2Copy: 'استخدم السعر الفوري المرتبط بالسوق قبل الذهاب إلى المتجر أو تنفيذ الشراء.',
     point3Title: 'احترم العلاوة',
     point3Copy: 'العلاوة الخاطئة قد تفسد قراراً جيداً في الذهب.',
-    liveLabel: 'لقطة حية للذهب',
+    liveLabel: 'لقطة سعر مرجعية',
     liveTitle: 'ملخص الاستثمار',
+    disclosureLabel: 'إفصاح:',
+    disclosureBody:
+      'قد تتضمن بعض الروابط في هذه الصفحة روابط تسويق بالعمولة. إذا اشتريت عبرها، قد يحصل Gold Ticker Live على عمولة صغيرة دون تكلفة إضافية عليك. هذا يدعم أدواتنا المجانية وبياناتنا المرجعية.',
+    disclosureAria: 'إفصاح الروابط التسويقية',
+    budgetSliderAria: 'شريط تحديد ميزانية الاستثمار',
     statSpot: 'السعر الفوري (XAU/USD)',
     statSpotNote: 'لكل أوقية تروي',
     stat24: '24K • درهم / غرام',
@@ -145,9 +154,10 @@ const I18N = {
     goalsTitle: 'اختر الوظيفة التي تريدها من الذهب',
     goalsSub:
       'أفضل منتج يتغير حسب ما إذا كنت تريد الحماية أو الاستخدام الثقافي أو تمركزاً قصير الأجل.',
-    plannerKicker: 'مخطط مباشر',
+    plannerKicker: 'مخطط مرتبط بالسعر',
     plannerTitle: 'ماذا تستطيع ميزانيتك أن تشتري فعلاً؟',
-    plannerSub: 'استخدم تقديرات السوق الحية لتحديد حجم شراء لمرة واحدة أو خطة تجميع شهرية.',
+    plannerSub:
+      'استخدم تقديرات مرجعية مرتبطة بالسعر الفوري لتحديد حجم شراء لمرة واحدة أو خطة تجميع شهرية.',
     marketLabel: 'السوق الأساسي',
     typeLabel: 'نوع المنتج',
     frequencyLabel: 'أسلوب الشراء',
@@ -183,7 +193,7 @@ const I18N = {
     planGramsNote: 'تقدير مرتبط بالسعر الفوري',
     planOuncesNote: '31.1035 غرام لكل أوقية تروي',
     planEtfNote: 'تعرض مكافئ للسعر الفوري',
-    metaLive: 'مبني على سعر حي',
+    metaLive: 'تقدير مرتبط بالسعر الفوري',
     metaSpot: 'تقدير مرتبط بالسعر الفوري',
     metaAed: 'ربط الدرهم ثابت عند 3.6725',
     metaVerify: 'تحقق من العلاوة المحلية قبل الشراء',
@@ -598,6 +608,7 @@ const FAQ = {
 const state = {
   lang: 'en',
   goldPriceUsdPerOz: null,
+  goldUpdatedAt: null,
   dayOpenUsdPerOz: null,
   rates: {},
   purpose: 'hedge',
@@ -690,13 +701,16 @@ function renderStaticText() {
     node.textContent = tx(key);
   });
 
+  document.querySelectorAll('[data-i18n-aria]').forEach((node) => {
+    const key = node.getAttribute('data-i18n-aria');
+    node.setAttribute('aria-label', tx(key));
+  });
+
   document.getElementById('budget-label').textContent =
     `${state.lang === 'ar' ? 'الميزانية' : 'Budget'} (${MARKET_META[state.market].currency})`;
 
-  document.title =
-    state.lang === 'ar'
-      ? 'الاستثمار في الذهب | خطة عقلانية للإمارات والسعودية ومصر'
-      : 'Gold Investing Guide | Rational Gold Plan for UAE, Saudi & Egypt';
+  // document.title is owned by the host page (learn.html) since the
+  // 2026-07-04 knowledge-hub merge — the invest section must not retitle it.
 }
 
 function renderChipButtons(root, entries, { active, dataKey, baseClass, onSelect }) {
@@ -1085,8 +1099,10 @@ function renderLiveCard() {
 
   const updatedEl = document.getElementById('invest-updated');
   if (updatedEl) {
-    if (state.goldPriceUsdPerOz) {
-      updatedEl.textContent = `${tx('updated')}: ${fmt.formatTimestampShort(new Date().toISOString(), state.lang)}`;
+    if (state.goldPriceUsdPerOz && state.goldUpdatedAt) {
+      // Stamp the DATA timestamp, not the render time — the render moment says
+      // nothing about how old the pipeline snapshot actually is.
+      updatedEl.textContent = `${tx('updated')}: ${fmt.formatTimestampShort(state.goldUpdatedAt, state.lang)}`;
     } else {
       mountSkeleton(updatedEl, 'freshnessStrip');
     }
@@ -1129,6 +1145,7 @@ async function fetchLiveData() {
 
   if (gold?.price) {
     state.goldPriceUsdPerOz = gold.price;
+    state.goldUpdatedAt = gold.updatedAt ?? null;
     cache.saveGoldPrice(gold.price, gold.updatedAt);
     hideDataStatusBanner();
   }
@@ -1175,7 +1192,7 @@ async function init() {
 
   shellCtrl = mountSharedShell({ lang: state.lang, depth: 0 });
   const navCtrl = shellCtrl.navCtrl;
-  injectBreadcrumbs('invest');
+  // Breadcrumbs are injected by the host page (learn.js) since the knowledge-hub merge.
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       state.lang = state.lang === 'en' ? 'ar' : 'en';

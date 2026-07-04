@@ -21,13 +21,13 @@
 /shops           /shops.html          301
 /learn           /learn.html          301
 /methodology     /methodology.html    301
-/insights        /insights.html       301
+/insights        /learn.html#insights 301
 # Learn-hub clean URLs — point at the consolidated learn surface; canonical
 # remains the .html files until the unified renderer fully owns the surface.
 /learn/methodology   /methodology.html  301
-/learn/insights      /insights.html     301
+/learn/insights      /learn.html#insights 301
 /learn/              /learn.html        301
-/invest          /invest.html         301
+/invest          /learn.html#invest   301
 /pricing         /pricing.html        301
 /privacy         /privacy.html        301
 /terms           /terms.html          301
@@ -79,7 +79,7 @@
 /22k             /learn.html#karats                   301
 /24k             /learn.html#karats                   301
 /best-rates      /tracker.html#mode=compare           301
-/news            /insights.html                       301
+/news            /learn.html#insights                 301
 /submit-shop     /content/submit-shop/                 301
 
 # --- Consolidated landing pages (architecture simplification) ----------------
@@ -92,18 +92,18 @@
 /content/tools/index.html            /calculator.html             301
 /content/embed/                      /tracker.html                301
 /content/embed/index.html            /tracker.html                301
-/content/social/                     /insights.html               301
-/content/social/index.html           /insights.html               301
+/content/social/                     /learn.html#insights         301
+/content/social/index.html           /learn.html#insights         301
 /content/todays-best-rates/          /tracker.html#mode=compare   301
 /content/todays-best-rates/index.html /tracker.html#mode=compare  301
 /content/compare-countries/          /tracker.html#mode=compare   301
 /content/compare-countries/index.html /tracker.html#mode=compare  301
-/content/premium-watch/              /insights.html               301
-/content/premium-watch/index.html    /insights.html               301
-/content/news/                       /insights.html               301
-/content/news/index.html             /insights.html               301
-/content/changelog/                  /insights.html               301
-/content/changelog/index.html        /insights.html               301
+/content/premium-watch/              /learn.html#insights               301
+/content/premium-watch/index.html    /learn.html#insights               301
+/content/news/                       /learn.html#insights               301
+/content/news/index.html             /learn.html#insights               301
+/content/changelog/                  /learn.html#insights               301
+/content/changelog/index.html        /learn.html#insights               301
 /content/22k-gold-price-guide/       /learn.html#karats           301
 /content/22k-gold-price-guide/index.html /learn.html#karats       301
 /content/24k-gold-price-guide/       /learn.html#karats           301
@@ -145,4 +145,30 @@
 /countries/algeria.html        /countries/algeria/         301
 
 # --- Explicit 404 fallback (defensive — Netlify does this by default) -------
+# --- 2026-07-04 knowledge-hub merge (insights + invest -> learn; HTML stubs exist) ---
+/insights.html                                 /learn.html#insights                             301
+/invest.html                                   /learn.html#invest                               301
+
+# --- 2026-07-04 design-consolidation merges (HTML stubs also exist for GitHub Pages) ---
+/methodology/                                  /methodology.html                                301
+/methodology/index.html                        /methodology.html                                301
+/content/guides/24k-vs-22k.html                /content/guides/24k-vs-22k-vs-18k-gold/          301
+/content/guides/gold-karat-comparison.html     /content/guides/24k-vs-22k-vs-18k-gold/          301
+/content/guides/invest-in-gold-gcc.html        /content/guides/gold-investment-for-beginners/   301
+/content/tools/investment-return.html          /tracker.html                                    301
+/content/tools/weight-converter.html           /calculator.html?mode=convert                    301
+/countries/uae/cities/                         /countries/uae/                                  301
+/countries/uae/cities/index.html               /countries/uae/                                  301
+/countries/uae/cities/dubai.html               /countries/uae/dubai/                            301
+/countries/uae/cities/abu-dhabi.html           /countries/uae/abu-dhabi/                        301
+/countries/saudi-arabia/cities/                /countries/saudi-arabia/                         301
+/countries/saudi-arabia/cities/index.html      /countries/saudi-arabia/                         301
+/countries/saudi-arabia/cities/riyadh.html     /countries/saudi-arabia/riyadh/                  301
+/countries/egypt/cities/                       /countries/egypt/                                301
+/countries/egypt/cities/index.html             /countries/egypt/                                301
+/countries/egypt/cities/cairo.html             /countries/egypt/cairo/                          301
+/countries/qatar/cities/                       /countries/qatar/                                301
+/countries/qatar/cities/index.html             /countries/qatar/                                301
+/countries/qatar/cities/doha.html              /countries/qatar/doha/                           301
+
 /*            /404.html        404
