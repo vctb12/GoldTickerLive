@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Site-enrichment wave — 19 PRs merged — 2026-07-04
+
+A batch of additive, reference-honest improvements shipped together (each was its own PR, verified
+with `lint` + `test` + `validate` + `build`, EN/AR parity preserved):
+
+- **New reference pages** — bilingual **Gold Glossary** (`glossary.html`, #502), **"How gold is
+  priced" market page** (`market.html`, #503), and a **Dubai/UAE gold-rate landing page**
+  (`dubai-gold-price.html`, #512) targeting "gold rate in Dubai / UAE gold price per gram in AED"
+  search intent — reference-framed throughout (spot-linked reference estimate ≠ live dealer quote;
+  AED peg 3.6725; troy oz 31.1035 g; tola 11.6638 g), with BreadcrumbList + FAQPage JSON-LD.
+- **Learn hub rescue + upgrade** (#506) — the guide hub can no longer render empty (static-first
+  fallback + reveal safety net), richer cards with CTAs, eyebrow/intro, and an expanded related row.
+- **Education hubs** — gold-vs-other-assets on `compare.html` (#497), allocation/rebalancing on
+  `portfolio.html` (#498), and a "what moves the gold price" drivers overview on `heatmap.html`
+  (#499), all via the shared `edu` component system, framed as educational (not financial advice).
+- **Premium world map** (#501) — ocean, graticule, projection frame on the heatmap.
+- **Reliability** — sitewide fail-open reveal hardening so a broken JS chunk can never blank a page
+  (#510); shell-surface isolation (#496); QA click-through fixes (#500).
+- **SEO** — Article JSON-LD on learn + methodology (#509), SERP-length-safe titles/descriptions + a
+  length guard (#513), World Map + Portfolio surfaced in the homepage tools grid (#511).
+- **A11y / polish** — legal-link WCAG-AA contrast (#508), admin login tab labels (#505), shops
+  ampersand fix (#504).
+- **Tests / docs** — weekend-deterministic freshness tests (#514), master site audit & revamp plan
+  (`docs/MASTER_SITE_AUDIT_AND_REVAMP_PLAN.md`, #507).
+
 ### Roadmap items 6 + 7 — Portfolio Tracker + Gold Price World Map — 2026-07-04
 
 **Two new tool pages (roadmap `docs/plans/2026-07-04_product-roadmap.md`, zero new dependencies):**
