@@ -12,13 +12,17 @@ const PUBLIC_HTML = fs
   .map((entry) => path.join(ROOT, entry.name));
 
 const EXPECTED_SURFACES = [
+  // 2026-07-04 owner-ordered IA reset: 9 meaningful public surfaces
+  // (docs/plans/2026-07-04_radical-page-reduction.md).
   '/index.html',
   '/tracker.html',
   '/calculator.html',
-  '/countries/index.html',
+  '/compare.html',
+  '/heatmap.html',
+  '/portfolio.html',
   '/shops.html',
   '/learn.html',
-  // '/insights.html' merged into /learn.html#insights (2026-07-04 knowledge-hub consolidation)
+  '/methodology.html',
 ];
 
 let errors = 0;

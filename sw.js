@@ -11,20 +11,19 @@
  * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldtickerlive-v19';
-const RUNTIME_CACHE = 'goldtickerlive-runtime-v19';
+const CACHE_NAME = 'goldtickerlive-v20';
+const RUNTIME_CACHE = 'goldtickerlive-runtime-v20';
 
 // Static assets to pre-cache on install — kept intentionally small.
-// Country/city/guide pages are added lazily to RUNTIME_CACHE on first visit.
+// v20 (2026-07-04 page reduction): insights.html/invest.html removed — both
+// pages were deleted in the 9-surface IA reset and merged into /learn.html.
 const PRECACHE_URLS = [
   '/',
   '/tracker.html',
   '/shops.html',
   '/calculator.html',
   '/learn.html',
-  '/insights.html',
   '/methodology.html',
-  '/invest.html',
   '/offline.html',
   '/404.html',
 ];

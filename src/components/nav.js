@@ -344,7 +344,12 @@ export function injectNav(lang = 'en', depth = 0) {
   const desktopPrimaryLinksHtml = primaryLinks
     .map((item) => buildPrimaryLink(item, depth))
     .join('');
-  const desktopDropdownsHtml = data.groups.map((g) => buildDropdown(g, depth)).join('');
+  // `footerOnly` groups feed the footer sitemap + mobile drawer but are not
+  // desktop dropdowns (2026-07-04 flat-IA nav redesign).
+  const desktopDropdownsHtml = data.groups
+    .filter((g) => !g.footerOnly)
+    .map((g) => buildDropdown(g, depth))
+    .join('');
   const mobilePrimaryLinksHtml = primaryLinks
     .map((item) => buildDrawerPrimaryLink(item, depth))
     .join('');
@@ -1003,10 +1008,10 @@ function _injectMobileBottomNav(lang, _depth) {
       key: 'calculator',
     },
     {
-      href: '/countries/index.html',
+      href: '/compare.html',
       icon: 'i-globe',
-      label: findLabel('/countries/index.html', isAr ? 'الدول' : 'Countries'),
-      key: 'countries',
+      label: findLabel('/compare.html', isAr ? 'قارن' : 'Compare'),
+      key: 'compare',
     },
     {
       href: '/shops.html',

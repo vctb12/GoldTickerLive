@@ -36,6 +36,12 @@ function robotsContent(relPath) {
 }
 
 function main() {
+  // 2026-07-04 IA reset: the countries/ tree was removed. Keep the script (and
+  // its validate-chain slot) as a guard in case country pages ever return.
+  if (!fs.existsSync(COUNTRIES)) {
+    console.log('[country-url-policy] countries/ not present — nothing to check.');
+    return;
+  }
   const files = walkHtml(COUNTRIES, 'countries');
   const violations = [];
 
