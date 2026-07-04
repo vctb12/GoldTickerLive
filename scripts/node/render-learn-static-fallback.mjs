@@ -186,7 +186,7 @@ function renderArticleHeader(article) {
   <div class="learn-hub-article-heading">
     <span class="learn-hub-article-icon" aria-label="${esc(t(article.iconLabelKey))}"><svg class="learn-hub-article-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#${esc(article.icon)}"/></svg></span>
     <div class="learn-hub-article-copy">
-      <h1 class="learn-hub-article-title">${esc(t(article.titleKey))}</h1>
+      <h2 class="learn-hub-article-title">${esc(t(article.titleKey))}</h2>
       <p class="learn-hub-article-subtitle">${esc(t(article.subtitleKey))}</p>
       <div class="learn-hub-article-meta">${meta}</div>
     </div>

@@ -2,6 +2,20 @@
    Learn Page Styles — Premium Redesign v2
    ═══════════════════════════════════════════════════ */
 
+/* Zero-JS bilingual toggle for the static page H1 (English default; flips on
+   html[lang="ar"]). The article body itself is localized by learn.js. */
+[data-lang-block='ar'] {
+  display: none;
+}
+
+html[lang='ar'] [data-lang-block='ar'] {
+  display: revert;
+}
+
+html[lang='ar'] [data-lang-block='en'] {
+  display: none;
+}
+
 /* ── Page heading ────────────────────────────────── */
 .learn-page-heading {
   max-width: var(--content-max-width, 1100px);
