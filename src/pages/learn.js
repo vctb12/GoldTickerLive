@@ -15,6 +15,7 @@ import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
 import { initInsightsFeed } from './insights/insights-feed.js';
+import { TRANSLATIONS } from '../config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -100,27 +101,20 @@ function mountArticleExperience(article) {
   return { renderer, toc: null };
 }
 
-const INSIGHTS_HEADING_TX = {
-  en: {
-    title: 'Market insights',
-    sub: 'Analysis, buying context, and guides — filter by category or search.',
-    search: 'Search insights',
-  },
-  ar: {
-    title: 'رؤى السوق',
-    sub: 'تحليلات وسياق للشراء وأدلة — صفِّ حسب الفئة أو ابحث.',
-    search: 'ابحث في الرؤى',
-  },
-};
+// Hub strings live in src/config/translations.js (bilingual policy) — the
+// feed component owns its own search label internally.
+function hubTx(lang, key) {
+  return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
+}
 
 function applyInsightsHeading(lang) {
-  const dict = INSIGHTS_HEADING_TX[lang] ?? INSIGHTS_HEADING_TX.en;
   const title = document.getElementById('insights-feed-heading');
   const sub = document.getElementById('insights-feed-sub');
-  const searchLabel = document.getElementById('insights-search-label');
-  if (title) title.textContent = dict.title;
-  if (sub) sub.textContent = dict.sub;
-  if (searchLabel) searchLabel.textContent = dict.search;
+  if (title) title.textContent = hubTx(lang, 'learn.insightsFeedTitle');
+  if (sub) sub.textContent = hubTx(lang, 'learn.insightsFeedSub');
+  document.querySelectorAll('[data-learn-tool]').forEach((node) => {
+    node.textContent = hubTx(lang, `learn.tools.${node.getAttribute('data-learn-tool')}`);
+  });
 }
 
 function init() {
