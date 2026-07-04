@@ -145,6 +145,12 @@ const RAW_NAV_DATA = {
                 icon: 'CMP',
               },
               {
+                href: '/heatmap.html',
+                label: 'World map',
+                description: 'Retail-estimate heatmap by country',
+                icon: 'MAP',
+              },
+              {
                 href: '/tracker.html#mode=compare&r=30D',
                 label: 'Tracker compare mode',
                 description: 'Side-by-side market comparison',
@@ -239,6 +245,12 @@ const RAW_NAV_DATA = {
                 description: 'Local browser alerts',
                 icon: 'ALRT',
                 primary: true,
+              },
+              {
+                href: '/portfolio.html',
+                label: 'Portfolio tracker',
+                description: 'Private holdings valuation',
+                icon: 'PORT',
               },
               {
                 href: '/tracker.html#mode=exports',
@@ -588,6 +600,12 @@ const RAW_NAV_DATA = {
                 icon: 'CMP',
               },
               {
+                href: '/heatmap.html',
+                label: 'خريطة العالم',
+                description: 'خريطة حرارية لتقديرات التجزئة حسب الدولة',
+                icon: 'MAP',
+              },
+              {
                 href: '/tracker.html#mode=compare&r=30D',
                 label: 'وضع المقارنة في المتتبع',
                 description: 'مقارنة الأسواق جنباً إلى جنب',
@@ -682,6 +700,12 @@ const RAW_NAV_DATA = {
                 description: 'تنبيهات محلية في المتصفح',
                 icon: 'ALRT',
                 primary: true,
+              },
+              {
+                href: '/portfolio.html',
+                label: 'متتبع المحفظة',
+                description: 'تقييم خاص لمقتنياتك من الذهب',
+                icon: 'PORT',
               },
               {
                 href: '/tracker.html#mode=exports',

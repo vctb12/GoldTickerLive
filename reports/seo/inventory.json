@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "generatedAtDate": "2026-07-04",
   "summary": {
-    "totalHtmlFiles": 343,
-    "withCanonical": 341,
+    "totalHtmlFiles": 345,
+    "withCanonical": 343,
     "withoutCanonical": 2,
-    "withOgImage": 251,
+    "withOgImage": 253,
     "withoutOgImage": 92,
-    "withJsonLd": 322,
+    "withJsonLd": 324,
     "withoutJsonLd": 21,
-    "hreflangEnArPairs": 322,
+    "hreflangEnArPairs": 324,
     "noindexCount": 124
   },
   "records": [
@@ -11858,6 +11858,43 @@
       "jsonLdParseFailures": null
     },
     {
+      "path": "heatmap.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Price World Map — Retail Estimates by Country | Gold Ticker Live",
+      "metaDescription": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+      "canonical": "https://goldtickerlive.com/heatmap.html",
+      "robots": null,
+      "ogTitle": "Gold Price World Map | Gold Ticker Live",
+      "ogDescription": "World map of all-in gold retail estimates per gram — reference prices, VAT and making charges across the GCC and Arab world.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/heatmap.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/heatmap.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/heatmap.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/heatmap.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "WebApplication"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
       "path": "index.html",
       "exempt": null,
       "lang": "en",
@@ -12048,6 +12085,43 @@
       "hreflang": [],
       "jsonLdTypes": [],
       "hasStructuredData": false,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "portfolio.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live",
+      "metaDescription": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+      "canonical": "https://goldtickerlive.com/portfolio.html",
+      "robots": null,
+      "ogTitle": "Gold Portfolio Tracker | Gold Ticker Live",
+      "ogDescription": "Track gold holdings privately in your browser — reference valuation by weight and karat, gain vs. cost, and portfolio value over time.",
+      "ogImage": "https://goldtickerlive.com/assets/og-image.png",
+      "ogUrl": "https://goldtickerlive.com/portfolio.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og-image.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/portfolio.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/portfolio.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/portfolio.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList",
+        "WebApplication"
+      ],
+      "hasStructuredData": true,
       "jsonLdParseFailures": null
     },
     {

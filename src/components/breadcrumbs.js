@@ -35,6 +35,8 @@ function getLabels(extra = {}) {
     tracker: tx('nav.tracker', 'Tracker'),
     countries: tx('nav.countries', 'Countries'),
     compare: tx('nav.compare', 'Compare Countries'),
+    heatmap: tx('nav.heatmap', 'World Map'),
+    portfolio: tx('nav.portfolio', 'Portfolio'),
     country: extra.countryName || tx('nav.country', 'Country'),
   };
 }
@@ -137,6 +139,8 @@ export function getBreadcrumbs(pageName, extra = {}) {
     invest: [{ label: labels.invest, url: '/invest.html' }],
     tracker: [{ label: labels.tracker, url: '/tracker.html' }],
     compare: [{ label: labels.compare, url: '/compare.html' }],
+    heatmap: [{ label: labels.heatmap, url: '/heatmap.html' }],
+    portfolio: [{ label: labels.portfolio, url: '/portfolio.html' }],
     country: [
       { label: labels.countries, url: '/countries/index.html' },
       { label: labels.country, url: extra.countryUrl || '#' },
