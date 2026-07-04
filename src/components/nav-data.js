@@ -121,13 +121,13 @@ const RAW_NAV_DATA = {
                 primary: true,
               },
               {
-                href: '/countries/uae/cities/dubai.html',
+                href: '/countries/uae/dubai/',
                 label: 'Dubai',
                 description: 'Dubai rates and souks',
                 icon: 'DXB',
               },
               {
-                href: '/countries/egypt/cities/cairo.html',
+                href: '/countries/egypt/cairo/',
                 label: 'Cairo',
                 description: 'Egypt market reference',
                 icon: 'CAI',
@@ -216,12 +216,6 @@ const RAW_NAV_DATA = {
                 icon: 'ZKT',
               },
               {
-                href: '/content/tools/investment-return.html',
-                label: 'Return model',
-                description: 'Model gold performance',
-                icon: 'ROI',
-              },
-              {
                 href: '/content/tools/investment-calculator.html',
                 label: 'Investment calculator',
                 description: 'Compound gold return projections',
@@ -267,7 +261,7 @@ const RAW_NAV_DATA = {
             description: 'Method and units for clearer decisions.',
             items: [
               {
-                href: '/content/tools/weight-converter.html',
+                href: '/calculator.html?mode=convert',
                 label: 'Weight converter',
                 description: 'Grams, tola, ounces',
                 icon: 'WGT',
@@ -571,13 +565,13 @@ const RAW_NAV_DATA = {
                 primary: true,
               },
               {
-                href: '/countries/uae/cities/dubai.html',
+                href: '/countries/uae/dubai/',
                 label: 'دبي',
                 description: 'أسعار دبي والأسواق',
                 icon: 'DXB',
               },
               {
-                href: '/countries/egypt/cities/cairo.html',
+                href: '/countries/egypt/cairo/',
                 label: 'القاهرة',
                 description: 'مرجع السوق المصري',
                 icon: 'CAI',
@@ -666,12 +660,6 @@ const RAW_NAV_DATA = {
                 icon: 'ZKT',
               },
               {
-                href: '/content/tools/investment-return.html',
-                label: 'نموذج العائد',
-                description: 'نمذجة أداء الذهب',
-                icon: 'ROI',
-              },
-              {
                 href: '/content/tools/ar/investment-calculator.html',
                 label: 'حاسبة الاستثمار',
                 description: 'توقعات عائد الذهب المركب',
@@ -717,7 +705,7 @@ const RAW_NAV_DATA = {
             description: 'المنهجية والوحدات لقرارات أوضح.',
             items: [
               {
-                href: '/content/tools/weight-converter.html',
+                href: '/calculator.html?mode=convert',
                 label: 'محول الأوزان',
                 description: 'جرام وتولة وأونصة',
                 icon: 'WGT',

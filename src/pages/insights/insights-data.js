@@ -110,7 +110,7 @@ export const INSIGHTS = [
   {
     id: '24k-vs-22k',
     category: 'buying-guides',
-    href: 'content/guides/24k-vs-22k.html',
+    href: 'content/guides/24k-vs-22k-vs-18k-gold/',
     icon: '⚖️',
     date: '2026-05',
     words: 1080,

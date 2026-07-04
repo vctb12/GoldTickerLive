@@ -145,4 +145,26 @@
 /countries/algeria.html        /countries/algeria/         301
 
 # --- Explicit 404 fallback (defensive — Netlify does this by default) -------
+# --- 2026-07-04 design-consolidation merges (HTML stubs also exist for GitHub Pages) ---
+/methodology/                                  /methodology.html                                301
+/methodology/index.html                        /methodology.html                                301
+/content/guides/24k-vs-22k.html                /content/guides/24k-vs-22k-vs-18k-gold/          301
+/content/guides/gold-karat-comparison.html     /content/guides/24k-vs-22k-vs-18k-gold/          301
+/content/guides/invest-in-gold-gcc.html        /content/guides/gold-investment-for-beginners/   301
+/content/tools/investment-return.html          /tracker.html                                    301
+/content/tools/weight-converter.html           /calculator.html?mode=convert                    301
+/countries/uae/cities/                         /countries/uae/                                  301
+/countries/uae/cities/index.html               /countries/uae/                                  301
+/countries/uae/cities/dubai.html               /countries/uae/dubai/                            301
+/countries/uae/cities/abu-dhabi.html           /countries/uae/abu-dhabi/                        301
+/countries/saudi-arabia/cities/                /countries/saudi-arabia/                         301
+/countries/saudi-arabia/cities/index.html      /countries/saudi-arabia/                         301
+/countries/saudi-arabia/cities/riyadh.html     /countries/saudi-arabia/riyadh/                  301
+/countries/egypt/cities/                       /countries/egypt/                                301
+/countries/egypt/cities/index.html             /countries/egypt/                                301
+/countries/egypt/cities/cairo.html             /countries/egypt/cairo/                          301
+/countries/qatar/cities/                       /countries/qatar/                                301
+/countries/qatar/cities/index.html             /countries/qatar/                                301
+/countries/qatar/cities/doha.html              /countries/qatar/doha/                           301
+
 /*            /404.html        404
