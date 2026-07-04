@@ -50,6 +50,9 @@ const PAGES = [
   'shops.html',
   'learn.html',
   'methodology.html',
+  'market.html',
+  'glossary.html',
+  'dubai-gold-price.html',
   'privacy.html',
   'terms.html',
 ];
