@@ -115,7 +115,9 @@ Canonical plan:
 - [ ] **T3.2** Sitemap gaps (28) — `@.github/prompts/platform-upgrade-t32-sitemap.prompt.md`
 
 - [ ] **Track B1–B4** — visual polish (nav, homepage, tracker terminal, hover rollout) — after D1
-- [ ] **NEXT_PR_SEQUENCE PR 2** — noindex plan for stub karat pages (no deletions)
+- [x] **NEXT_PR_SEQUENCE PR 2** — noindex applied to the 8 stub karat pages
+      (`gold-price/{18,21,22,24}k/` + `ar/gold-price/*`), self-canonicals kept, no deletions —
+      2026-07-04
 - [ ] Replace hardcoded hex colors in CSS with design tokens (565 instances across styles/) —
       priority: medium — context: improves maintainability and dark mode consistency
 - [ ] Add visibilitychange cleanup to insights.js sparkline/charts if added — priority: low —
