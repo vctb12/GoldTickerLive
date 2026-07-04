@@ -21,7 +21,7 @@ function tx(key, fallback) {
   return TRANSLATIONS[locale]?.[key] ?? TRANSLATIONS.en?.[key] ?? fallback;
 }
 
-function getLabels(extra = {}) {
+function getLabels(_extra = {}) {
   return {
     home: tx('nav.home', 'Home'),
     shops: tx('nav.shops', 'Shops & Markets'),
@@ -33,11 +33,9 @@ function getLabels(extra = {}) {
     privacy: tx('nav.privacy', 'Privacy Policy'),
     invest: tx('nav.invest', 'Invest'),
     tracker: tx('nav.tracker', 'Tracker'),
-    countries: tx('nav.countries', 'Countries'),
     compare: tx('nav.compare', 'Compare Countries'),
     heatmap: tx('nav.heatmap', 'World Map'),
     portfolio: tx('nav.portfolio', 'Portfolio'),
-    country: extra.countryName || tx('nav.country', 'Country'),
   };
 }
 
@@ -118,10 +116,9 @@ export function renderBreadcrumbs(container, items) {
  * Return the breadcrumb item list for a named page.
  * Always starts with a "Home" entry.
  *
- * @param {'shops'|'calculator'|'learn'|'insights'|'methodology'|'terms'|'privacy'|'invest'|'tracker'|'country'|string} pageName
+ * @param {'shops'|'calculator'|'learn'|'insights'|'methodology'|'terms'|'privacy'|'invest'|'tracker'|string} pageName
  *   Well-known page identifier. Unknown names produce `[Home]` only.
- * @param {{ countryName?: string, countryUrl?: string }} [extra]
- *   Extra context used by the `'country'` page type.
+ * @param {object} [extra]  Reserved for future page-specific context.
  * @returns {Array<{label: string, url: string}>}
  */
 export function getBreadcrumbs(pageName, extra = {}) {
@@ -136,15 +133,11 @@ export function getBreadcrumbs(pageName, extra = {}) {
     methodology: [{ label: labels.methodology, url: '/methodology.html' }],
     terms: [{ label: labels.terms, url: '/terms.html' }],
     privacy: [{ label: labels.privacy, url: '/privacy.html' }],
-    invest: [{ label: labels.invest, url: '/invest.html' }],
+    invest: [{ label: labels.invest, url: '/learn.html#invest' }],
     tracker: [{ label: labels.tracker, url: '/tracker.html' }],
     compare: [{ label: labels.compare, url: '/compare.html' }],
     heatmap: [{ label: labels.heatmap, url: '/heatmap.html' }],
     portfolio: [{ label: labels.portfolio, url: '/portfolio.html' }],
-    country: [
-      { label: labels.countries, url: '/countries/index.html' },
-      { label: labels.country, url: extra.countryUrl || '#' },
-    ],
   };
 
   if (pageMap[pageName]) {

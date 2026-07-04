@@ -13,36 +13,23 @@ const _BASE_URL = 'https://goldtickerlive.com';
 function buildIndex() {
   const entries = [];
 
-  // Countries
+  // Countries — dedicated country pages were retired; deep-link into the
+  // compare tool instead (UAE is the reference column, so it lands on the
+  // default compare view; every other country pre-selects ae + itself at 22K).
   for (const c of COUNTRIES) {
     if (!c.slug) continue;
+    const code = c.code.toLowerCase();
     entries.push({
       type: 'country',
       slug: c.slug,
       label: c.nameEn,
       labelAr: c.nameAr,
-      // Canonical indexable hub is /countries/{slug}/ (see build/generateSitemap.js);
-      // the bare /{slug}/gold-price/ path is not a real route and 404s in search.
-      url: `/countries/${c.slug}/`,
+      url: code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`,
       // Match the nav: show the country's flag (falls back to a location pin
       // for countries without a flag symbol). navIconSymbol handles the lookup.
       icon: navIconSymbol(c.code),
       keywords: [c.nameEn, c.nameAr, c.currency, ...(c.searchAliases || [])],
     });
-
-    // Cities
-    for (const city of c.cities || []) {
-      entries.push({
-        type: 'city',
-        slug: city.slug,
-        country: c.slug,
-        label: `${city.nameEn}, ${c.nameEn}`,
-        labelAr: `${city.nameAr}, ${c.nameAr}`,
-        url: `/countries/${c.slug}/${city.slug}/gold-rate/`,
-        icon: 'i-skyline',
-        keywords: [city.nameEn, city.nameAr, c.nameEn, c.nameAr, c.currency],
-      });
-    }
   }
 
   // Karats
@@ -75,22 +62,6 @@ function buildIndex() {
       url: '/calculator.html',
       icon: 'i-calc',
       keywords: ['calculator', 'calc', 'compute', 'حاسبة'],
-    },
-    {
-      type: 'page',
-      label: 'Gold Price History & Charts',
-      labelAr: 'تاريخ أسعار الذهب',
-      url: '/gold-price-history/',
-      icon: 'i-chart',
-      keywords: ['history', 'chart', 'historical', 'تاريخ'],
-    },
-    {
-      type: 'page',
-      label: 'Order Gold',
-      labelAr: 'اطلب الذهب',
-      url: '/order-gold/',
-      icon: 'i-receipt',
-      keywords: ['buy', 'order', 'purchase', 'شراء', 'طلب'],
     },
     {
       type: 'page',

@@ -666,16 +666,17 @@ function sortedShops(shops) {
   });
 }
 
+// Country/city gold-price pages were retired; deep-link into the compare tool.
+// UAE is the reference column, so it lands on the default compare view; every
+// other country pre-selects ae + itself at 22K.
+function countryCompareHref(country) {
+  if (!country?.code) return '';
+  const code = country.code.toLowerCase();
+  return code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
+}
+
 function cityGoldRateUrl(shop) {
-  const country = countryByCode(shop.countryCode);
-  if (!country?.slug) return '';
-  const cityMatch = (country.cities || []).find(
-    (c) => c.nameEn === shop.city || c.nameAr === shop.city
-  );
-  if (cityMatch?.slug) {
-    return `countries/${country.slug}/${cityMatch.slug}/gold-rate/`;
-  }
-  return `countries/${country.slug}/gold-price/`;
+  return countryCompareHref(countryByCode(shop.countryCode));
 }
 
 async function copyShopDetails(shop, button = null) {
@@ -1063,7 +1064,7 @@ function applyStaticText() {
   if (priceDisclEl) {
     const textNode = document.createTextNode(t('priceDisclaimer') + ' ');
     const spotLink = document.createElement('a');
-    spotLink.href = 'content/spot-vs-retail-gold-price/';
+    spotLink.href = 'methodology.html';
     spotLink.textContent = t('spotVsRetailLinkText');
     const sep = document.createTextNode(' · ');
     const methodLink = document.createElement('a');
@@ -1347,7 +1348,7 @@ function buildShopCardMarkup(shop) {
   const listingTypeBadge = `<span class="shop-listing-type ${isCluster ? 'shop-listing-type--market' : 'shop-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
   const inShortlist = isInShortlist(shop.id);
   const inCompare = isInCompareList(shop.id);
-  const countryUrl = country?.slug ? `countries/${country.slug}/gold-price/` : '';
+  const countryUrl = countryCompareHref(country);
   const goldRateUrl = cityGoldRateUrl(shop);
   const areaGuideUrl = `${location.pathname}?country=${encodeURIComponent(shop.countryCode)}&search=${encodeURIComponent(shop.market)}`;
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${shop.name}, ${shop.market}, ${shop.city}`)}`;
@@ -2450,7 +2451,7 @@ init();
       {
         city: 'Dubai',
         name: 'Dubai Gold Souk',
-        page: '/countries/uae/markets/dubai-gold-souk.html',
+        page: '/shops.html?country=AE&city=Dubai',
         lat: 25.2881,
         lng: 55.3021,
       },
@@ -2466,7 +2467,7 @@ init();
       {
         city: 'Cairo',
         name: 'Khan el-Khalili Gold Market',
-        page: '/countries/egypt/markets/khan-el-khalili-cairo.html',
+        page: '/shops.html?country=EG&city=Cairo',
         lat: 30.0478,
         lng: 31.2625,
       },

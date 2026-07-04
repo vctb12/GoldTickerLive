@@ -125,12 +125,14 @@ function syncCurrentCountryPageLink() {
   if (!link) return;
   const label = document.getElementById('tp-country-page-link-label') || link;
   const selectedCountry = COUNTRIES.find((country) => country.currency === state.selectedCurrency);
+  // Country pages were retired; deep-link into the compare tool instead.
   if (!selectedCountry?.slug) {
-    link.href = 'countries/index.html';
+    link.href = '/compare.html';
     label.textContent = trackerTx('quickToolsCountries');
     return;
   }
-  link.href = `countries/${selectedCountry.slug}/gold-price/`;
+  const code = selectedCountry.code.toLowerCase();
+  link.href = code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
   label.textContent =
     state.lang === 'ar' ? selectedCountry.nameAr || selectedCountry.nameEn : selectedCountry.nameEn;
 }
