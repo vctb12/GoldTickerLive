@@ -2,9 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
     <script>
       (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
         try {
           var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
           var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
@@ -14,10 +16,22 @@
               : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light';
-          var el = document.documentElement;
           el.setAttribute('data-theme', resolved);
           el.setAttribute('data-theme-mode', mode);
         } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
       })();
     </script>
     <script src="assets/analytics.js" defer></script>
@@ -86,6 +100,32 @@
       "item": "https://goldtickerlive.com/learn.html"
     }
   ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Gold Knowledge Hub — Learn, Market Insights & Investing | Gold Ticker Live",
+  "description": "Gold knowledge hub: karats, purity, AED peg, Zakat, spot vs retail, market insights, and a rational investing guide — bilingual EN/AR for UAE and GCC buyers.",
+  "url": "https://goldtickerlive.com/learn.html",
+  "datePublished": "2026-07-04",
+  "dateModified": "2026-07-04",
+  "author": {
+    "@type": "Organization",
+    "name": "Gold Ticker Live"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gold Ticker Live",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://goldtickerlive.com/assets/favicon-512x512.png",
+      "width": 512,
+      "height": 512
+    }
+  },
+  "inLanguage": "en"
 }
   </script>
   </head>
@@ -488,7 +528,7 @@
             <a href="#planner" data-i18n="jumpPlanner">Planner</a>
             <a href="#compare" data-i18n="jumpCompare">Compare</a>
             <a href="#markets" data-i18n="jumpMarkets">Markets</a>
-            <a href="#faq" data-i18n="jumpFaq">FAQ</a>
+            <a href="#invest-faq" data-i18n="jumpFaq">FAQ</a>
           </nav>
         </div>
       </div>
@@ -722,7 +762,7 @@
         </div>
       </section>
 
-      <section id="faq" class="invest-section invest-section--alt">
+      <section id="invest-faq" class="invest-section invest-section--alt">
         <div class="invest-shell">
           <div class="invest-section-header center">
             <span class="invest-kicker" data-i18n="faqKicker">Before you buy</span>

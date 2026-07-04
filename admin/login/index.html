@@ -392,18 +392,23 @@
 
       /* ── Tabs & forms ───────────────────────────────────── */
       .tab-list {
-        display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
+        display: flex;
+        flex-wrap: wrap;
         gap: 6px;
         margin-bottom: 16px;
       }
       .tab-btn {
+        flex: 1 1 0;
+        min-width: max-content;
+        text-align: center;
+        white-space: nowrap;
         background: var(--surface-2);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         color: var(--text-muted);
         cursor: pointer;
-        padding: 10px 8px;
+        padding: 10px 10px;
+        font-size: 13px;
         font-weight: 600;
         transition:
           border-color 0.2s,

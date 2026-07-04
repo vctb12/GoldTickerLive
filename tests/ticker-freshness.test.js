@@ -10,9 +10,23 @@
  * matches `getLiveFreshness()`'s contract.
  */
 
-const { test } = require('node:test');
+const { test, beforeEach, afterEach, mock } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
+
+// Pin the clock to a market-OPEN instant (Wed 2026-06-10 14:00 UTC). The ticker
+// applies the market-closed overlay (src/lib/live-status.js#applyMarketClosedOverlay),
+// which repaints every freshness key as "closed" while the gold market is shut —
+// i.e. every Saturday/Sunday. These tests assert the pure freshness vocabulary
+// (live/cached/stale/fallback); without pinning they pass Mon–Fri and fail on
+// weekend CI runs. The closed overlay itself is covered separately.
+const MARKET_OPEN_MS = new Date('2026-06-10T14:00:00Z').getTime();
+beforeEach(() => {
+  mock.timers.enable({ apis: ['Date'], now: MARKET_OPEN_MS });
+});
+afterEach(() => {
+  mock.timers.reset();
+});
 
 async function loadTicker() {
   const url = new URL('file://' + path.resolve(__dirname, '..', 'src', 'components', 'ticker.js'));

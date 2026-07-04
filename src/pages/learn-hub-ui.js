@@ -159,6 +159,12 @@ export function mountLearnHubCatalog(options) {
 
   filter.addEventListener('input', () => renderSections(filter.value));
 
+  // Defensive (shell-reliability #496): never replace the server-rendered static
+  // fallback with an empty guide list. If the catalog data resolves to zero
+  // guides (e.g. a partial deploy with a stale chunk), keep the static cards
+  // already in `root` rather than blanking the featured-guides area.
+  if (!total) return;
+
   root.replaceChildren(
     el('section', { class: 'learn-hub-catalog card card--bordered' }, [
       eyebrow,
