@@ -33,7 +33,6 @@
   </url>
 
   <url>
-<<<<<<< HEAD
     <loc>https://goldtickerlive.com/dubai-gold-price.html</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>daily</changefreq>
@@ -41,7 +40,9 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/dubai-gold-price.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://goldtickerlive.com/dubai-gold-price.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/dubai-gold-price.html?lang=ar"/>
-=======
+  </url>
+
+  <url>
     <loc>https://goldtickerlive.com/glossary.html</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -49,7 +50,6 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/glossary.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://goldtickerlive.com/glossary.html"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/glossary.html?lang=ar"/>
->>>>>>> origin/main
   </url>
 
   <url>
