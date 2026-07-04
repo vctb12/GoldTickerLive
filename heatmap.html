@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gold Price World Map — Retail Estimates by Country | Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/heatmap.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/heatmap.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/heatmap.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/heatmap.html?lang=ar" />
+    <link rel="dns-prefetch" href="https://open.er-api.com" />
+    <link rel="preconnect" href="https://open.er-api.com" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="Gold Price World Map | Gold Ticker Live" />
+    <meta
+      property="og:description"
+      content="World map of all-in gold retail estimates per gram — reference prices, VAT and making charges across the GCC and Arab world."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/heatmap.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Gold Price World Map | Gold Ticker Live" />
+    <meta
+      name="twitter:description"
+      content="World map of all-in gold retail estimates per gram across the GCC and Arab world."
+    />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta
+      property="og:image:alt"
+      content="Gold Ticker Live — reference gold pricing across world markets"
+    />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/heatmap.css" />
+    <link rel="modulepreload" href="./src/pages/heatmap.js" />
+    <link rel="modulepreload" href="./src/lib/api.js" />
+    <link rel="modulepreload" href="./src/components/site-shell.js" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/heatmap.css" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Heatmap",
+      "item": "https://goldtickerlive.com/heatmap.html"
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Gold Price World Map",
+  "url": "https://goldtickerlive.com/heatmap.html",
+  "description": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "World map colored by all-in gold retail estimate per gram",
+    "Per-karat view (24K, 22K, 21K, 18K)",
+    "Country detail with VAT, making charges and vs-UAE comparison",
+    "Accessible table fallback of every tracked market"
+  ],
+  "inLanguage": [
+    "en",
+    "ar"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "Gold Ticker Live",
+    "url": "https://goldtickerlive.com"
+  }
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by heatmap.js) -->
+    <div class="page-breadcrumbs"></div>
+
+    <main id="main-content">
+      <!-- Hero -->
+      <section class="heatmap-hero">
+        <div class="heatmap-hero-inner">
+          <h1 class="heatmap-hero-title" id="heatmap-h1">Gold Price World Map</h1>
+          <p class="heatmap-hero-sub" id="heatmap-sub">
+            All-in retail estimates for one gram of gold — spot-linked reference value plus typical
+            making charges and VAT — colored across every market we track.
+          </p>
+          <div
+            class="heatmap-spot-badge"
+            id="heatmap-spot-badge"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span class="heatmap-spot-text">
+              <span id="heatmap-spot-label">XAU/USD spot:</span>
+              <span id="heatmap-spot-price">—</span>
+            </span>
+            <span class="heatmap-fresh" id="heatmap-freshness" data-state="unavailable"></span>
+          </div>
+          <p class="heatmap-trust-note">
+            Spot-linked reference estimates — not final retail quotes.
+            <a id="heatmap-methodology" href="methodology.html">How prices work →</a>
+          </p>
+        </div>
+      </section>
+
+      <!-- Controls -->
+      <section class="heatmap-controls" aria-label="Map controls">
+        <div class="heatmap-karat" id="heatmap-karat" role="group" aria-label="Karat"></div>
+        <div class="heatmap-jump-block">
+          <label class="heatmap-jump-label" id="heatmap-jump-label" for="heatmap-jump"
+            >Jump to a country</label
+          >
+          <select class="heatmap-jump-select" id="heatmap-jump"></select>
+        </div>
+      </section>
+
+      <!-- Map -->
+      <section class="heatmap-map-section" aria-label="World map">
+        <div class="heatmap-map-wrap" id="heatmap-map-wrap">
+          <div class="heatmap-map" id="heatmap-map">
+            <p class="heatmap-map-loading">Loading map…</p>
+          </div>
+          <div class="heatmap-tooltip" id="heatmap-tooltip" role="status" hidden></div>
+        </div>
+        <p class="heatmap-map-hint" id="heatmap-map-hint">
+          Hover, tap or use the keyboard to explore countries. Full data in the table below.
+        </p>
+        <div class="heatmap-legend" id="heatmap-legend" aria-label="Map legend"></div>
+      </section>
+
+      <!-- Detail panel -->
+      <section class="heatmap-detail" id="heatmap-detail" aria-live="polite"></section>
+
+      <!-- Table fallback -->
+      <section class="heatmap-table-section" aria-labelledby="heatmap-table-title">
+        <h2 class="heatmap-table-heading" id="heatmap-table-title">All tracked markets</h2>
+        <div class="heatmap-table-wrap" id="heatmap-table-wrap"></div>
+      </section>
+
+      <!-- How to read -->
+      <section class="heatmap-how" aria-labelledby="heatmap-how-title">
+        <h2 class="heatmap-how-heading" id="heatmap-how-title">How to read this map</h2>
+        <ul class="heatmap-how-list">
+          <li id="heatmap-how-1">
+            Every country starts from the same spot-linked gold value per gram in USD — the color
+            differences come from local VAT and typical jewellery making charges.
+          </li>
+          <li id="heatmap-how-2">
+            Darker gold means a higher all-in retail estimate; countries with no FX or market data
+            stay neutral and are listed as unavailable.
+          </li>
+          <li id="heatmap-how-3">
+            These are reference estimates for comparison — a shop’s final quote depends on the
+            piece, its making charge and the daily rate board.
+          </li>
+        </ul>
+      </section>
+
+      <p class="heatmap-disclaimer" id="heatmap-disclaimer">
+        Gold value per gram is globally identical in USD — the map colors reflect local VAT and
+        typical making charges only. All figures are spot-linked reference estimates, not final
+        retail quotes or financial advice.
+      </p>
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+    <script type="module" src="./src/pages/heatmap.js"></script>
+  </body>
+</html>
