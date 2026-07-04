@@ -37,9 +37,3 @@ test('tracker.html hero uses skeleton placeholders instead of Connecting', () =>
   assert.doesNotMatch(html, /tracker-hero-s">Connecting/);
   assert.match(html, /id="tp-xauusd-value"[\s\S]*shell-skeleton-price-lg/);
 });
-
-test('country index shells use price skeletons not Loading ellipsis', () => {
-  const sample = fs.readFileSync(path.join(root, 'countries/bahrain/index.html'), 'utf8');
-  assert.doesNotMatch(sample, /cp-price-value">Loading/);
-  assert.match(sample, /shell-skeleton-price-md/);
-});

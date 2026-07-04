@@ -1,6 +1,6 @@
 // phx/13: Smoke coverage for JS-driven links.
 // - Tracker hash state round-trips (mode/currency/karat/unit).
-// - Search page renders and accepts a query.
+// - Compare page renders its cross-country comparison UI.
 const { test, expect } = require('@playwright/test');
 
 test.describe('Tracker: hash deep-link round-trip', () => {
@@ -34,15 +34,15 @@ test.describe('Tracker: hash deep-link round-trip', () => {
   });
 });
 
-test.describe('Search page: renders and responds', () => {
-  test('/content/search/ loads and shows an input or results area', async ({ page, baseURL }) => {
-    const res = await page.goto((baseURL || '') + '/content/search/', {
+test.describe('Compare page: renders and responds', () => {
+  test('/compare.html loads and shows the comparison table area', async ({ page, baseURL }) => {
+    const res = await page.goto((baseURL || '') + '/compare.html', {
       waitUntil: 'domcontentloaded',
     });
     expect(res.status()).toBeLessThan(400);
     const hasUI = await page
-      .locator('input[type="search"], input[name="q"], [role="search"], form input')
+      .locator('#compare-table-wrap, #compare-chips, main#main-content')
       .count();
-    expect(hasUI, 'no search input rendered').toBeGreaterThan(0);
+    expect(hasUI, 'no compare UI rendered').toBeGreaterThan(0);
   });
 });

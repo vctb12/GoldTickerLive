@@ -3,7 +3,9 @@
  * non-visual SEO layer is owned by the JSON-LD injector and the head metadata:
  *   - shops.html        → ItemList of JewelryStore listings (no fabricated data)
  *   - calculator.html   → WebApplication with a featureList
- *   - countries/<slug>/ → Dataset + BreadcrumbList (FAQPage is runtime-injected)
+ *
+ * The per-country hubs (countries/<slug>/) were removed in the 2026-07-04
+ * radical page reduction, so their Dataset/BreadcrumbList assertions are gone.
  *
  * Enforced invariants:
  *   1. <title> <= 60 chars, <meta name="description"> <= 155 chars.
@@ -13,7 +15,6 @@
  *      name + addressLocality + addressCountry, and NO fabricated fields
  *      (telephone, openingHours, aggregateRating, review, geo, priceRange).
  *   5. calculator.html WebApplication exists with a non-empty featureList.
- *   6. Each country hub emits a Dataset.
  */
 
 'use strict';
@@ -28,18 +29,7 @@ const ROOT = path.join(__dirname, '..');
 const TITLE_MAX = 60;
 const DESCRIPTION_MAX = 155;
 
-// Country hubs are discovered from disk (countries/<slug>/index.html), excluding
-// the directory landing page, so new countries are covered automatically.
-function countryHubFiles() {
-  const dir = path.join(ROOT, 'countries');
-  return fs
-    .readdirSync(dir, { withFileTypes: true })
-    .filter((e) => e.isDirectory())
-    .map((e) => `countries/${e.name}/index.html`)
-    .filter((rel) => fs.existsSync(path.join(ROOT, rel)));
-}
-
-const PAGES = ['shops.html', 'calculator.html', ...countryHubFiles()];
+const PAGES = ['shops.html', 'calculator.html'];
 
 function read(file) {
   return fs.readFileSync(path.join(ROOT, file), 'utf8');
@@ -159,33 +149,6 @@ test('calculator.html: emits a WebApplication with a featureList', () => {
     'WebApplication: free calculator should advertise a zero-price offer'
   );
 });
-
-for (const file of countryHubFiles()) {
-  test(`${file}: emits a Dataset`, () => {
-    const objs = jsonLdObjects(read(file));
-    const dataset = objs.find((o) => o['@type'] === 'Dataset');
-    assert.ok(dataset, `${file}: missing Dataset JSON-LD`);
-    assert.ok(dataset.variableMeasured, `${file}: Dataset missing variableMeasured`);
-  });
-}
-
-// Trust-framing guard (PR #448 review): reference pricing must be explicit on
-// the country hubs (meta description + Dataset) — these are trust surfaces, so
-// a bare "live gold price" without the reference qualifier is a regression.
-for (const file of countryHubFiles()) {
-  test(`${file}: meta description + Dataset state reference pricing`, () => {
-    const html = read(file);
-    const desc = getMeta(head(html), 'name', 'description') || '';
-    assert.match(desc, /reference/i, `${file}: meta description must state reference pricing`);
-    const dataset = jsonLdObjects(html).find((o) => o['@type'] === 'Dataset');
-    assert.ok(dataset, `${file}: missing Dataset`);
-    assert.match(
-      dataset.description,
-      /reference/i,
-      `${file}: Dataset.description must state reference pricing`
-    );
-  });
-}
 
 test('calculator.html: reference framing across description, WebApplication, and social tags', () => {
   const html = read('calculator.html');

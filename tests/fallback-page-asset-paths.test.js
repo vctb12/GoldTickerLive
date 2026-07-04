@@ -2,10 +2,10 @@
  * D2 regression guard — SW fallback pages must use root-absolute asset paths.
  *
  * `404.html` and `offline.html` are served by the host / service worker as the
- * fallback for *arbitrary* request URLs (a 404 at /countries/uae/something, or
+ * fallback for *arbitrary* request URLs (a 404 at /admin/shops/something, or
  * the offline page for any failed navigation — see sw.js `caches.match('/offline.html')`).
  * When that happens the document's base URL is the requested path, so a RELATIVE
- * asset ref like `styles/critical.css` resolves against `/countries/uae/…` and
+ * asset ref like `styles/critical.css` resolves against `/admin/shops/…` and
  * 404s — leaving an unstyled fallback with no analytics. Every asset ref on
  * these two pages must therefore be root-absolute (`/…`), an absolute URL
  * (`https://…`, `//…`), or a `data:` URI.

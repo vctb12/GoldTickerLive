@@ -128,7 +128,6 @@ test('i18n: every data-i18n attribute key resolves in EN and AR', async () => {
   const htmlNamespaces = {
     'tracker.html': 'tracker.',
     'index.html': 'home.',
-    'ar/index.html': 'home.',
   };
   const re = /\bdata-i18n(?:-placeholder|-aria-label|-title|-alt)?="([^"]+)"/g;
   const missing = [];

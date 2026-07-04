@@ -1,13 +1,18 @@
 #!/usr/bin/env node
 /**
  * build/generateSitemap.js
- * Generates sitemap.xml from all known route combinations.
+ * Generates sitemap.xml from the surviving public page set.
  * Run: node build/generateSitemap.js
+ *
+ * 2026-07-04 radical page reduction: the countries/ and content/ trees (and the
+ * insights/invest root pages) were removed, so this list is now just the kept
+ * public surfaces. 404.html and offline.html are intentionally excluded, as
+ * before. The canonical filesystem-walk generator is
+ * scripts/node/generate-sitemap.js; this hardcoded list feeds `npm run build`.
  */
 
 const fs   = require('fs');
 const path = require('path');
-const vm   = require('vm');
 
 const ROOT     = path.resolve(__dirname, '..');
 const SITE_URL = 'https://goldtickerlive.com';
@@ -30,25 +35,6 @@ function sitemapUrlToFilePath(loc) {
   return path.join(ROOT, rel, 'index.html');
 }
 
-/** Safely evaluate a JS array literal from a trusted local config file. */
-function evalConfigArray(src) {
-  return vm.runInNewContext(`(${src})`, Object.create(null), { timeout: 2000 });
-}
-
-const { COUNTRIES } = (() => {
-  const raw = fs.readFileSync(path.join(ROOT, 'src/config/countries.js'), 'utf8');
-  const match = raw.match(/export const COUNTRIES\s*=\s*(\[[\s\S]*?\]);/);
-  if (!match) throw new Error('Could not parse COUNTRIES');
-  return { COUNTRIES: evalConfigArray(match[1]) };
-})();
-
-const { KARATS } = (() => {
-  const raw = fs.readFileSync(path.join(ROOT, 'src/config/karats.js'), 'utf8');
-  const match = raw.match(/export const KARATS\s*=\s*(\[[\s\S]*?\]);/);
-  if (!match) throw new Error('Could not parse KARATS');
-  return { KARATS: evalConfigArray(match[1]) };
-})();
-
 function url(loc, changefreq, priority) {
   return `
   <url>
@@ -64,117 +50,26 @@ function url(loc, changefreq, priority) {
 
 const urls = [];
 
-// Static pages (from existing sitemap)
+// Kept public pages (the 2026-07-04 reduction survivors). 404.html and
+// offline.html are excluded by convention.
 const staticPages = [
   { loc: `${SITE_URL}/`,                  changefreq: 'hourly',  priority: '1.0' },
   { loc: `${SITE_URL}/tracker.html`,      changefreq: 'always',  priority: '0.95' },
+  { loc: `${SITE_URL}/compare.html`,      changefreq: 'always',  priority: '0.80' },
+  { loc: `${SITE_URL}/heatmap.html`,      changefreq: 'daily',   priority: '0.70' },
   { loc: `${SITE_URL}/shops.html`,        changefreq: 'weekly',  priority: '0.85' },
   { loc: `${SITE_URL}/calculator.html`,   changefreq: 'monthly', priority: '0.75' },
-  { loc: `${SITE_URL}/compare.html`,       changefreq: 'always',  priority: '0.80' },
+  { loc: `${SITE_URL}/portfolio.html`,    changefreq: 'weekly',  priority: '0.60' },
   { loc: `${SITE_URL}/learn.html`,        changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/insights.html`,     changefreq: 'daily',   priority: '0.75' },
   { loc: `${SITE_URL}/methodology.html`,  changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/invest.html`,       changefreq: 'monthly', priority: '0.60' },
   { loc: `${SITE_URL}/privacy.html`,      changefreq: 'yearly',  priority: '0.30' },
   { loc: `${SITE_URL}/terms.html`,        changefreq: 'yearly',  priority: '0.30' },
-  { loc: `${SITE_URL}/content/guides/buying-guide.html`,          changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/guides/24k-vs-22k.html`,            changefreq: 'monthly', priority: '0.60' },
-  { loc: `${SITE_URL}/content/guides/gold-karat-comparison.html`, changefreq: 'monthly', priority: '0.60' },
-  { loc: `${SITE_URL}/content/guides/aed-peg-explained.html`,     changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/content/guides/gcc-market-hours.html`,      changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/content/guides/invest-in-gold-gcc.html`,    changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/content/guides/zakat-gold-guide.html`,      changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/content/guides/`,                           changefreq: 'weekly',  priority: '0.55' },
-  { loc: `${SITE_URL}/content/gold-price-history/`, changefreq: 'daily',   priority: '0.80' },
-  { loc: `${SITE_URL}/content/order-gold/`,         changefreq: 'hourly',  priority: '0.85' },
-  { loc: `${SITE_URL}/content/faq/`,                changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/submit-shop/`,        changefreq: 'monthly', priority: '0.55' },
-  { loc: `${SITE_URL}/content/uae-gold-buying-guide/`,        changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/dubai-gold-rate-guide/`,        changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/gcc-gold-price-comparison/`,    changefreq: 'monthly', priority: '0.70' },
-  { loc: `${SITE_URL}/content/spot-vs-retail-gold-price/`,    changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/gold-making-charges-guide/`,    changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/social/x-post-generator.html`, changefreq: 'monthly', priority: '0.40' },
-  { loc: `${SITE_URL}/countries/index.html`, changefreq: 'monthly', priority: '0.60' },
 ];
-
-staticPages.push(
-  // Investment and Scrap Calculators
-  { loc: `${SITE_URL}/content/tools/investment-calculator.html`, changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/tools/ar/investment-calculator.html`, changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/tools/scrap-calculator.html`, changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/tools/ar/scrap-calculator.html`, changefreq: 'monthly', priority: '0.65' },
-  // Guides hub
-  { loc: `${SITE_URL}/content/guides/ar/`, changefreq: 'weekly', priority: '0.60' },
-  // Guide articles (EN)
-  { loc: `${SITE_URL}/content/guides/24k-vs-22k-vs-18k-gold/`, changefreq: 'monthly', priority: '0.70' },
-  { loc: `${SITE_URL}/content/guides/how-to-spot-fake-gold/`, changefreq: 'monthly', priority: '0.70' },
-  { loc: `${SITE_URL}/content/guides/gold-hallmarks-explained/`, changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/guides/best-time-to-buy-gold/`, changefreq: 'monthly', priority: '0.70' },
-  { loc: `${SITE_URL}/content/guides/gold-as-inflation-hedge/`, changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/guides/gold-investment-for-beginners/`, changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/guides/gold-bars-vs-coins/`, changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/guides/buying-gold-online-vs-in-store/`, changefreq: 'monthly', priority: '0.68' },
-  { loc: `${SITE_URL}/content/guides/uae-vs-saudi-vs-kuwait-gold-prices/`, changefreq: 'monthly', priority: '0.72' },
-  { loc: `${SITE_URL}/content/guides/gold-savings-plans-gcc/`, changefreq: 'monthly', priority: '0.70' },
-  // Guide articles (AR)
-  { loc: `${SITE_URL}/content/guides/ar/24k-vs-22k-vs-18k-gold/`, changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/guides/ar/how-to-spot-fake-gold/`, changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/guides/ar/gold-hallmarks-explained/`, changefreq: 'monthly', priority: '0.63' },
-  { loc: `${SITE_URL}/content/guides/ar/best-time-to-buy-gold/`, changefreq: 'monthly', priority: '0.65' },
-  { loc: `${SITE_URL}/content/guides/ar/gold-as-inflation-hedge/`, changefreq: 'monthly', priority: '0.63' },
-  { loc: `${SITE_URL}/content/guides/ar/gold-investment-for-beginners/`, changefreq: 'monthly', priority: '0.67' },
-  { loc: `${SITE_URL}/content/guides/ar/gold-bars-vs-coins/`, changefreq: 'monthly', priority: '0.63' },
-  { loc: `${SITE_URL}/content/guides/ar/buying-gold-online-vs-in-store/`, changefreq: 'monthly', priority: '0.63' },
-  { loc: `${SITE_URL}/content/guides/ar/uae-vs-saudi-vs-kuwait-gold-prices/`, changefreq: 'monthly', priority: '0.67' },
-  { loc: `${SITE_URL}/content/guides/ar/gold-savings-plans-gcc/`, changefreq: 'monthly', priority: '0.65' },
-);
 
 for (const p of staticPages) {
   const filePath = sitemapUrlToFilePath(p.loc);
   if (fs.existsSync(filePath) && isNoindexFile(filePath)) continue;
   urls.push(url(p.loc, p.changefreq, p.priority));
-}
-
-// Country landing hubs.
-// Canonical for each country is the hub at /countries/{slug}/ — NOT the
-// /{slug}/gold-price/ form, which is a non-existent path (the physical page
-// lives at /countries/{slug}/gold-price/ and is noindex, self-canonicalising
-// to the hub; see _redirects "Country gold-price duplicate → canonical country
-// hub"). Emit the canonical hub URL so the sitemap never advertises a
-// redirected / non-canonical / 404-ing URL.
-for (const country of COUNTRIES) {
-  if (!country.slug) continue;
-  const htmlPath = path.join(ROOT, 'countries', country.slug, 'index.html');
-  if (fs.existsSync(htmlPath) && !isNoindexFile(htmlPath)) {
-    urls.push(url(`${SITE_URL}/countries/${country.slug}/`, 'hourly', '0.90'));
-  }
-
-  for (const city of (country.cities || [])) {
-    const cityGoldRateFile = path.join(
-      ROOT,
-      'countries',
-      country.slug,
-      city.slug,
-      'gold-rate',
-      'index.html'
-    );
-    if (fs.existsSync(cityGoldRateFile) && !isNoindexFile(cityGoldRateFile)) {
-      urls.push(url(`${SITE_URL}/countries/${country.slug}/${city.slug}/gold-rate/`, 'hourly', '0.85'));
-    }
-
-    const cityGoldShopsFile = path.join(
-      ROOT,
-      'countries',
-      country.slug,
-      city.slug,
-      'gold-shops',
-      'index.html'
-    );
-    if (fs.existsSync(cityGoldShopsFile) && !isNoindexFile(cityGoldShopsFile)) {
-      urls.push(url(`${SITE_URL}/countries/${country.slug}/${city.slug}/gold-shops/`, 'weekly', '0.70'));
-    }
-  }
 }
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>

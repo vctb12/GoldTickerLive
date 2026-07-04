@@ -1,6 +1,6 @@
-// phx/12: Nav + country index smoke coverage.
-// Validates the main navigation is present on key pages and that every
-// country card on /countries/ resolves to a non-error page.
+// phx/12: Nav smoke coverage.
+// Validates the main navigation is present on key pages and that the primary
+// nav links resolve to non-error pages.
 const { test, expect } = require('@playwright/test');
 
 const navPages = [
@@ -8,11 +8,11 @@ const navPages = [
   '/tracker.html',
   '/shops.html',
   '/calculator.html',
+  '/compare.html',
+  '/heatmap.html',
+  '/portfolio.html',
   '/learn.html',
-  '/insights.html',
-  '/invest.html',
   '/methodology.html',
-  '/countries/',
 ];
 
 test.describe('Nav: present on key pages', () => {
@@ -33,36 +33,53 @@ test.describe('Nav: present on key pages', () => {
   }
 });
 
-test.describe('Countries index: every card resolves', () => {
-  test('all country tiles link to pages that load without 404', async ({ page, baseURL }) => {
-    const indexUrl = (baseURL || 'http://localhost:8080') + '/countries/';
-    await page.goto(indexUrl, { waitUntil: 'domcontentloaded' });
+test.describe('Homepage nav: primary links resolve', () => {
+  test('internal nav links point to kept pages that load without 404', async ({
+    page,
+    baseURL,
+  }) => {
+    const homeUrl = (baseURL || 'http://localhost:8080') + '/';
+    await page.goto(homeUrl, { waitUntil: 'domcontentloaded' });
+
+    // The surviving public surfaces after the 2026-07-04 page reduction.
+    const kept = [
+      '/tracker.html',
+      '/calculator.html',
+      '/compare.html',
+      '/heatmap.html',
+      '/portfolio.html',
+      '/shops.html',
+      '/learn.html',
+      '/methodology.html',
+    ];
 
     // Resolve hrefs against the page URL to handle absolute, root-relative, and relative forms.
     const urls = await page.$$eval(
       'a[href]',
-      (as, pageUrl) =>
-        Array.from(
+      (as, args) => {
+        const [pageUrl, keptPaths] = args;
+        return Array.from(
           new Set(
             as
               .map((a) => {
                 try {
-                  return new URL(a.getAttribute('href') || '', pageUrl).href;
+                  return new URL(a.getAttribute('href') || '', pageUrl).pathname;
                 } catch {
                   return '';
                 }
               })
-              .filter((u) => /\/countries\/[a-z-]+\/?/.test(u))
+              .filter((p) => keptPaths.includes(p))
           )
-        ).slice(0, 25),
-      indexUrl
+        );
+      },
+      [homeUrl, kept]
     );
 
-    expect(urls.length, 'no country links found on /countries/').toBeGreaterThan(0);
+    expect(urls.length, 'no kept-page nav links found on homepage').toBeGreaterThan(0);
 
-    for (const url of urls) {
-      const res = await page.request.get(url);
-      expect(res.status(), `broken country link: ${url}`).toBeLessThan(400);
+    for (const p of urls) {
+      const res = await page.request.get((baseURL || 'http://localhost:8080') + p);
+      expect(res.status(), `broken nav link: ${p}`).toBeLessThan(400);
     }
   });
 });

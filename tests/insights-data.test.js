@@ -100,13 +100,17 @@ test('buildPriceContextCard: up / down / flat / unknown', async () => {
   assert.match(ar.body, /ارتفع/);
 });
 
-test('every insight links to an existing content page (no broken links)', async () => {
+test('every insight links to an existing kept page (no broken links)', async () => {
   const { INSIGHTS } = await load();
   const root = path.join(__dirname, '..');
   for (const item of INSIGHTS) {
-    const rel = item.href.endsWith('/') ? item.href + 'index.html' : item.href;
+    // Insights now deep-link into kept pages (learn.html sections, compare,
+    // tracker, portfolio). Strip any #fragment / ?query before resolving to a
+    // file on disk. path.join collapses a leading slash to the repo root.
+    const cleaned = item.href.split('#')[0].split('?')[0];
+    const rel = cleaned.endsWith('/') ? cleaned + 'index.html' : cleaned;
     const abs = path.join(root, rel);
-    assert.ok(fs.existsSync(abs), `missing content page for ${item.id}: ${rel}`);
+    assert.ok(fs.existsSync(abs), `missing page for ${item.id}: ${rel}`);
   }
 });
 

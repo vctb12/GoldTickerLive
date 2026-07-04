@@ -19,10 +19,7 @@
  *      the enrichment script, OR a meta-refresh redirect stub) must carry
  *      valid canonical + title metadata; it just does not have to pass the
  *      hreflang/indexability rules.
- *   6. Every country slug listed in `src/config/countries.js` that has
- *      cities must have a `countries/<slug>/` index and a
- *      `countries/<slug>/<city>/` index for each city.
- *   7. No HTML file uses the wrong canonical origin (`www.goldtickerlive.com`
+ *   6. No HTML file uses the wrong canonical origin (`www.goldtickerlive.com`
  *      or http://).
  */
 
@@ -166,7 +163,9 @@ test('every "noindex,follow" and meta-refresh stub has a canonical and a title',
     const m = p.head.match(/<meta[^>]+name=["']robots["'][^>]*content=["']([^"']+)["']/i);
     return !!m && /follow/i.test(m[1]) && !/nofollow/i.test(m[1]);
   });
-  assert.ok(followableStubs.length > 0, 'expected at least some noindex,follow stub pages');
+  // After the 2026-07-04 radical page reduction the surviving surfaces are all
+  // fully indexable, so there may be zero noindex,follow stubs. When any exist
+  // (e.g. a future staged page), they must still carry canonical + title.
   const bad = [];
   for (const p of followableStubs) {
     if (!p.canonical) bad.push(`${p.file} — missing canonical`);
@@ -180,7 +179,7 @@ test('every "noindex,follow" and meta-refresh stub has a canonical and a title',
 // --- #1, #2, #3: indexable pages satisfy the canonical graph ---------
 test('every indexable HTML page has canonical + hreflang(x-default,en,ar) + title + description', () => {
   const indexable = PARSED.filter((p) => !p.noindex && !p.refresh);
-  assert.ok(indexable.length > 100, 'expected a lot of indexable pages');
+  assert.ok(indexable.length > 5, 'expected the surviving public pages to be indexable');
   const bad = [];
   for (const p of indexable) {
     // Canonical must exist and be on the canonical origin
@@ -225,38 +224,6 @@ test('indexable canonical URL matches the file path (no cross-page canonicalisat
     }
   }
   assert.deepEqual(bad, [], `Canonical/path mismatches:\n  ${bad.join('\n  ')}`);
-});
-
-// --- #6: country/city filesystem coverage ----------------------------
-test('every country+city declared in countries.js has a directory on disk', () => {
-  // Parse countries.js superficially (same tolerant approach as the
-  // enrichment script).
-  const src = fs.readFileSync(path.join(REPO_ROOT, 'src/config/countries.js'), 'utf8');
-  const re = /\{\s*code:[\s\S]*?\n\s*\}(?=\s*,|\s*\])/g;
-  const missing = [];
-  for (const m of src.matchAll(re)) {
-    const block = m[0];
-    const slug = (block.match(/slug:\s*'([^']+)'/) || [])[1];
-    if (!slug) continue;
-    const countryIdx = `countries/${slug}/index.html`;
-    if (!fs.existsSync(path.join(REPO_ROOT, countryIdx))) {
-      missing.push(countryIdx);
-    }
-    const cityBlock = (block.match(/cities:\s*\[([\s\S]*?)\]/) || [])[1];
-    if (cityBlock) {
-      for (const cm of cityBlock.matchAll(/\{\s*slug:\s*'([^']+)'/g)) {
-        const cityIdx = `countries/${slug}/${cm[1]}/index.html`;
-        if (!fs.existsSync(path.join(REPO_ROOT, cityIdx))) {
-          missing.push(cityIdx);
-        }
-      }
-    }
-  }
-  assert.deepEqual(
-    missing,
-    [],
-    `countries.js declares these paths but the file is missing:\n  ${missing.join('\n  ')}`
-  );
 });
 
 // --- X / Twitter social link — must have no spaces in the URL ---------

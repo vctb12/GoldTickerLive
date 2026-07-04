@@ -26,7 +26,7 @@ test.describe('Mobile smoke', () => {
     await expect(page.locator('.mobile-bottom-nav')).toBeVisible();
     await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="tracker"]')).toBeVisible();
     await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="calculator"]')).toBeVisible();
-    await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="countries"]')).toBeVisible();
+    await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="compare"]')).toBeVisible();
     await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="shops"]')).toBeVisible();
     await expect(page.locator('.mobile-bottom-nav [data-mobile-nav="home"]')).toHaveCount(0);
     await expectNoHorizontalOverflow(page, '/');
@@ -64,11 +64,10 @@ test.describe('Mobile smoke', () => {
     await expect(page.locator('main')).toBeVisible();
     await expectNoHorizontalOverflow(page, '/methodology.html');
 
-    await page.goto('/countries/uae/gold-price/');
-    await expect(page.locator('#country-page-title')).toBeVisible();
-    await expect(page.locator('#country-karat-cards .country-karat-card').first()).toBeVisible();
-    await expect(page.locator('#country-actions .country-action-card').first()).toBeVisible();
-    await expectNoHorizontalOverflow(page, '/countries/uae/gold-price/');
+    await page.goto('/compare.html');
+    await expect(page.locator('#compare-h1')).toBeVisible();
+    await expect(page.locator('#compare-table-wrap')).toBeVisible();
+    await expectNoHorizontalOverflow(page, '/compare.html');
   });
 
   test('mobile drawer toggles with hamburger and closes on Escape without stuck scroll lock', async ({

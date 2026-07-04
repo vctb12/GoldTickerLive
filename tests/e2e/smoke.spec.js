@@ -7,8 +7,8 @@ const criticalPages = [
   { path: '/shops.html', name: 'shops' },
   { path: '/tracker.html', name: 'tracker' },
   { path: '/calculator.html', name: 'calculator' },
-  { path: '/countries/index.html', name: 'countries index' },
-  { path: '/countries/uae/gold-price/index.html', name: 'country page (UAE)' },
+  { path: '/compare.html', name: 'compare' },
+  { path: '/heatmap.html', name: 'heatmap' },
 ];
 
 test.describe('Smoke: critical pages load', () => {

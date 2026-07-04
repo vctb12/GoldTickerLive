@@ -8,41 +8,31 @@ RewriteEngine On
 # Redirect legacy GitHub Pages base-path URLs to root equivalents
 RewriteRule ^Gold-Prices/?(.*)$ /$1 [R=301,L]
 
-# Redirect old city paths to new structure
-RewriteRule ^cities/dubai\.html$ countries/uae/cities/dubai.html [R=301,L]
-RewriteRule ^cities/abu-dhabi\.html$ countries/uae/cities/abu-dhabi.html [R=301,L]
-RewriteRule ^cities/cairo\.html$ countries/egypt/cities/cairo.html [R=301,L]
-RewriteRule ^cities/doha\.html$ countries/qatar/cities/doha.html [R=301,L]
-RewriteRule ^cities/riyadh\.html$ countries/saudi-arabia/cities/riyadh.html [R=301,L]
+# 2026-07-04 radical page reduction: the countries/, content/, ar/, chart/,
+# gold-price/, methodology/ trees and several root pages were removed. Mirror
+# the tree-level sweeps in _redirects (Netlify/Cloudflare) so an Apache host
+# retargets every removed URL to the closest surviving surface instead of 404.
 
-# Redirect old market paths to new structure
-RewriteRule ^markets/dubai-gold-souk\.html$ countries/uae/markets/dubai-gold-souk.html [R=301,L]
-RewriteRule ^markets/khan-el-khalili-cairo\.html$ countries/egypt/markets/khan-el-khalili-cairo.html [R=301,L]
+# Legacy city/market paths (previously rewritten under the countries/ tree).
+RewriteRule ^cities/ /compare.html [R=301,L]
+RewriteRule ^markets/ /compare.html [R=301,L]
 
-# Country pages: flat /countries/<slug>.html → /countries/<slug>/ (directory form).
-# Mirrors the same 21-slug set already in _redirects (Netlify/Cloudflare). Real pages
-# live at countries/<slug>/index.html; the flat .html form 404s without these rules.
-RewriteRule ^countries/uae\.html$ /countries/uae/ [R=301,L]
-RewriteRule ^countries/saudi-arabia\.html$ /countries/saudi-arabia/ [R=301,L]
-RewriteRule ^countries/bahrain\.html$ /countries/bahrain/ [R=301,L]
-RewriteRule ^countries/kuwait\.html$ /countries/kuwait/ [R=301,L]
-RewriteRule ^countries/jordan\.html$ /countries/jordan/ [R=301,L]
-RewriteRule ^countries/qatar\.html$ /countries/qatar/ [R=301,L]
-RewriteRule ^countries/oman\.html$ /countries/oman/ [R=301,L]
-RewriteRule ^countries/egypt\.html$ /countries/egypt/ [R=301,L]
-RewriteRule ^countries/morocco\.html$ /countries/morocco/ [R=301,L]
-RewriteRule ^countries/india\.html$ /countries/india/ [R=301,L]
-RewriteRule ^countries/pakistan\.html$ /countries/pakistan/ [R=301,L]
-RewriteRule ^countries/turkey\.html$ /countries/turkey/ [R=301,L]
-RewriteRule ^countries/iraq\.html$ /countries/iraq/ [R=301,L]
-RewriteRule ^countries/syria\.html$ /countries/syria/ [R=301,L]
-RewriteRule ^countries/lebanon\.html$ /countries/lebanon/ [R=301,L]
-RewriteRule ^countries/palestine\.html$ /countries/palestine/ [R=301,L]
-RewriteRule ^countries/yemen\.html$ /countries/yemen/ [R=301,L]
-RewriteRule ^countries/sudan\.html$ /countries/sudan/ [R=301,L]
-RewriteRule ^countries/libya\.html$ /countries/libya/ [R=301,L]
-RewriteRule ^countries/tunisia\.html$ /countries/tunisia/ [R=301,L]
-RewriteRule ^countries/algeria\.html$ /countries/algeria/ [R=301,L]
+# Removed page trees → closest surviving surface.
+RewriteRule ^countries(/.*)?$ /compare.html [R=301,L]
+RewriteRule ^content(/.*)?$ /learn.html [R=301,L]
+RewriteRule ^ar(/.*)?$ /?lang=ar [R=301,L]
+RewriteRule ^chart(/.*)?$ /tracker.html [R=301,L]
+RewriteRule ^gold-price(/.*)?$ /tracker.html [R=301,L]
+RewriteRule ^methodology/ /methodology.html [R=301,L]
+
+# Removed root pages → home / knowledge hub.
+RewriteRule ^account\.html$ / [R=301,L]
+RewriteRule ^dashboard\.html$ / [R=301,L]
+RewriteRule ^pricing\.html$ / [R=301,L]
+RewriteRule ^developer\.html$ / [R=301,L]
+RewriteRule ^design-lab\.html$ / [R=301,L]
+RewriteRule ^insights\.html$ /learn.html#insights [R=301,L]
+RewriteRule ^invest\.html$ /learn.html#invest [R=301,L]
 
 </IfModule>
 
