@@ -55,17 +55,32 @@ const PAGES = [
 ];
 
 // Minimal HTML-entity decode — enough for the entities our head markup uses
-// (&amp;, quotes, angle brackets, non-breaking space, numeric em/en dashes).
+// (&amp;, quotes, angle brackets, non-breaking space, em/en dashes).
+//
+// Single-pass by design: one regex matches every supported entity and each
+// match is replaced exactly once via the lookup, so substitution output is
+// never re-scanned. A sequential `.replace()` chain that unescaped `&amp;`
+// first would double-unescape inputs like `&amp;lt;` (CodeQL js/double-escaping);
+// the single pass makes that impossible.
+const ENTITY_MAP = {
+  '&amp;': '&',
+  '&quot;': '"',
+  '&#39;': "'",
+  '&apos;': "'",
+  '&lt;': '<',
+  '&gt;': '>',
+  '&nbsp;': ' ',
+  '&mdash;': '—',
+  '&#8212;': '—',
+  '&ndash;': '–',
+  '&#8211;': '–',
+};
+
 function decodeEntities(s) {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#0*39;|&apos;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/&#8212;|&mdash;/g, '—')
-    .replace(/&#8211;|&ndash;/g, '–');
+  return s.replace(
+    /&(?:amp|quot|#39|apos|lt|gt|nbsp|mdash|#8212|ndash|#8211);/g,
+    (m) => ENTITY_MAP[m] || m
+  );
 }
 
 // Collapse whitespace + decode entities → the string a SERP actually shows.
