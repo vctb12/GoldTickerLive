@@ -2,9 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
     <script>
       (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
         try {
           var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
           var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
@@ -14,10 +16,22 @@
               : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light';
-          var el = document.documentElement;
           el.setAttribute('data-theme', resolved);
           el.setAttribute('data-theme-mode', mode);
         } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
       })();
     </script>
     <script src="assets/analytics.js" defer></script>
@@ -776,6 +790,23 @@
                 Country-specific pages with local gold prices and market context for 24+ markets.
               </p>
               <span class="tool-card-cta" id="tool-countries-cta">All Countries →</span>
+            </a>
+            <a href="heatmap.html" class="tool-card">
+              <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-map"/></svg></div>
+              <h3 class="tool-card-title" id="tool-heatmap-title">World Gold Map</h3>
+              <p class="tool-card-desc" id="tool-heatmap-desc">
+                A colour-coded world map of spot-linked reference gold prices, country by country.
+              </p>
+              <span class="tool-card-cta" id="tool-heatmap-cta">Open Map →</span>
+            </a>
+            <a href="portfolio.html" class="tool-card">
+              <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-coins"/></svg></div>
+              <h3 class="tool-card-title" id="tool-portfolio-title">Portfolio Tracker</h3>
+              <p class="tool-card-desc" id="tool-portfolio-desc">
+                Value your own gold holdings privately — everything stays in your browser, no
+                account needed.
+              </p>
+              <span class="tool-card-cta" id="tool-portfolio-cta">Open Portfolio →</span>
             </a>
             <a href="learn.html" class="tool-card">
               <div class="tool-card-icon" aria-hidden="true"><svg class="ti" aria-hidden="true" focusable="false"><use href="#i-book"/></svg></div>

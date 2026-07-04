@@ -76,8 +76,8 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Compare Gold Prices by Country — GCC & Arab World | Gold Ticker Live",
-      "metaDescription": "Compare reference gold prices and all-in retail estimates across the UAE, GCC and the wider Arab world. Sortable table, country chips, side-by-side detail and a cheapest-to-buy callout.",
+      "title": "Gold Price Comparison — GCC & Arab World | Gold Ticker Live",
+      "metaDescription": "Compare reference gold prices and all-in retail estimates across the UAE, GCC and wider Arab world — sortable table, country chips and a cheapest-to-buy view.",
       "canonical": "https://goldtickerlive.com/compare.html",
       "robots": null,
       "ogTitle": "Compare Gold Prices by Country | Gold Ticker Live",
@@ -149,8 +149,8 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Price World Map — Retail Estimates by Country | Gold Ticker Live",
-      "metaDescription": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+      "title": "Gold Price World Map — Retail by Country | Gold Ticker Live",
+      "metaDescription": "Interactive world map of all-in gold retail estimates per gram — spot-linked reference plus VAT and making charges across the GCC and Arab world.",
       "canonical": "https://goldtickerlive.com/heatmap.html",
       "robots": null,
       "ogTitle": "Gold Price World Map | Gold Ticker Live",
@@ -223,7 +223,7 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Knowledge Hub — Learn, Market Insights & Investing | Gold Ticker Live",
+      "title": "Gold Knowledge Hub — Guides & Investing | Gold Ticker Live",
       "metaDescription": "Gold knowledge hub: karats, purity, AED peg, Zakat, spot vs retail, market insights, and a rational investing guide — bilingual EN/AR for UAE and GCC buyers.",
       "canonical": "https://goldtickerlive.com/learn.html",
       "robots": null,
@@ -249,6 +249,7 @@
         }
       ],
       "jsonLdTypes": [
+        "Article",
         "BreadcrumbList"
       ],
       "hasStructuredData": true,
@@ -285,6 +286,7 @@
         }
       ],
       "jsonLdTypes": [
+        "Article",
         "BreadcrumbList"
       ],
       "hasStructuredData": true,
@@ -316,8 +318,8 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live",
-      "metaDescription": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+      "title": "Gold Portfolio Tracker — Value Holdings | Gold Ticker Live",
+      "metaDescription": "Track your gold holdings privately in your browser — weight, karat and cost valued against the spot-linked reference price. No account, nothing uploaded.",
       "canonical": "https://goldtickerlive.com/portfolio.html",
       "robots": null,
       "ogTitle": "Gold Portfolio Tracker | Gold Ticker Live",

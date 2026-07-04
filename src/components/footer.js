@@ -102,6 +102,10 @@ export function injectFooter(lang = 'en', depth = 0) {
   const wrapper = document.createElement('div');
   wrapper.innerHTML = html;
   const footerEl = wrapper.firstElementChild;
+  // Idempotent: remove any footer already in the DOM before appending, so a
+  // double mount can never leave two footers — which would duplicate the
+  // `footer-admin-trigger` id and the entire footer sitemap.
+  document.querySelectorAll('footer.site-footer-global').forEach((existing) => existing.remove());
   document.body.appendChild(footerEl);
 
   // Populate gold-data freshness timestamp from localStorage

@@ -1376,6 +1376,14 @@ export const TRANSLATIONS = {
     'learn.filterPlaceholder': 'Filter guides…',
     'learn.relatedMethod': 'Methodology',
     'learn.relatedCalc': 'Calculator',
+    'learn.card.cta': 'Read guide',
+    'learn.hubEyebrow': 'Featured guides',
+    'learn.hubIntro':
+      'Nine practical guides on karats, spot vs retail pricing, making charges, hallmarks, buying safely, and the GCC market — written for first-time buyers and long-term holders alike.',
+    'learn.filterEmpty': 'No guides match your filter. Try a different word.',
+    'learn.relatedLabel': 'Keep exploring:',
+    'learn.relatedGlossary': 'Glossary',
+    'learn.relatedMarket': 'How gold is priced',
 
     // Markets hub
     'markets.heroTag': 'Global Gold Markets',
@@ -2771,6 +2779,14 @@ export const TRANSLATIONS = {
     'learn.filterPlaceholder': 'تصفية الأدلة…',
     'learn.relatedMethod': 'المنهجية',
     'learn.relatedCalc': 'الحاسبة',
+    'learn.card.cta': 'اقرأ الدليل',
+    'learn.hubEyebrow': 'أدلة مميزة',
+    'learn.hubIntro':
+      'تسعة أدلة عملية حول العيارات، والسعر الفوري مقابل التجزئة، وأجور الصياغة، والدمغات، والشراء الآمن، وسوق الخليج — مكتوبة للمشترين لأول مرة وللمحتفظين على المدى الطويل.',
+    'learn.filterEmpty': 'لا توجد أدلة مطابقة. جرّب كلمة أخرى.',
+    'learn.relatedLabel': 'واصل الاستكشاف:',
+    'learn.relatedGlossary': 'مسرد المصطلحات',
+    'learn.relatedMarket': 'كيف يُسعَّر الذهب',
 
     // Markets hub
     'markets.heroTag': 'أسواق الذهب العالمية',
