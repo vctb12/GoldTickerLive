@@ -53,7 +53,6 @@ const RAW_NAV_DATA = {
       '/countries/index.html',
       '/shops.html',
       '/learn.html',
-      '/insights.html',
     ],
     groups: [
       {
@@ -296,7 +295,7 @@ const RAW_NAV_DATA = {
           icon: 'SHOP',
         },
         cta: {
-          href: '/insights.html',
+          href: '/learn.html#insights',
           label: 'Read market insights',
           description: 'Context for spot moves, retail gaps, and regional pricing.',
         },
@@ -423,7 +422,7 @@ const RAW_NAV_DATA = {
             description: 'Analysis, charges, and long-term context.',
             items: [
               {
-                href: '/insights.html',
+                href: '/learn.html#insights',
                 label: 'Insights',
                 description: 'Market context and analysis',
                 icon: 'VIEW',
@@ -436,7 +435,7 @@ const RAW_NAV_DATA = {
                 icon: 'FEE',
               },
               {
-                href: '/invest.html',
+                href: '/learn.html#invest',
                 label: 'Investing guide',
                 description: 'Long-term gold context',
                 icon: 'INV',
@@ -498,7 +497,6 @@ const RAW_NAV_DATA = {
       '/countries/index.html',
       '/shops.html',
       '/learn.html',
-      '/insights.html',
     ],
     groups: [
       {
@@ -740,7 +738,7 @@ const RAW_NAV_DATA = {
           icon: 'SHOP',
         },
         cta: {
-          href: '/insights.html',
+          href: '/learn.html#insights',
           label: 'اقرأ تحليلات السوق',
           description: 'سياق حركة السعر الفوري وفروق التجزئة والتسعير الإقليمي.',
         },
@@ -867,7 +865,7 @@ const RAW_NAV_DATA = {
             description: 'سياق تحليلي ومصنعية واستثمار طويل الأجل.',
             items: [
               {
-                href: '/insights.html',
+                href: '/learn.html#insights',
                 label: 'التحليلات',
                 description: 'سياق وتحليل السوق',
                 icon: 'VIEW',
@@ -880,7 +878,7 @@ const RAW_NAV_DATA = {
                 icon: 'FEE',
               },
               {
-                href: '/invest.html',
+                href: '/learn.html#invest',
                 label: 'دليل الاستثمار',
                 description: 'سياق طويل الأجل للذهب',
                 icon: 'INV',

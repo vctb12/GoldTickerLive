@@ -7,7 +7,6 @@ import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
 import { updateTicker } from '../components/ticker.js';
 import { mountSharedShell } from '../components/site-shell.js';
-import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 import { el, clear } from '../lib/safe-dom.js';
 
@@ -692,10 +691,8 @@ function renderStaticText() {
   document.getElementById('budget-label').textContent =
     `${state.lang === 'ar' ? 'الميزانية' : 'Budget'} (${MARKET_META[state.market].currency})`;
 
-  document.title =
-    state.lang === 'ar'
-      ? 'الاستثمار في الذهب | خطة عقلانية للإمارات والسعودية ومصر'
-      : 'Gold Investing Guide | Rational Gold Plan for UAE, Saudi & Egypt';
+  // document.title is owned by the host page (learn.html) since the
+  // 2026-07-04 knowledge-hub merge — the invest section must not retitle it.
 }
 
 function renderChipButtons(root, entries, { active, dataKey, baseClass, onSelect }) {
@@ -1170,7 +1167,7 @@ async function init() {
 
   shellCtrl = mountSharedShell({ lang: state.lang, depth: 0 });
   const navCtrl = shellCtrl.navCtrl;
-  injectBreadcrumbs('invest');
+  // Breadcrumbs are injected by the host page (learn.js) since the knowledge-hub merge.
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
       state.lang = state.lang === 'en' ? 'ar' : 'en';

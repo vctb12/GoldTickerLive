@@ -5,12 +5,12 @@
     "totalHtmlFiles": 343,
     "withCanonical": 341,
     "withoutCanonical": 2,
-    "withOgImage": 253,
-    "withoutOgImage": 90,
-    "withJsonLd": 324,
-    "withoutJsonLd": 19,
-    "hreflangEnArPairs": 324,
-    "noindexCount": 120
+    "withOgImage": 251,
+    "withoutOgImage": 92,
+    "withJsonLd": 322,
+    "withoutJsonLd": 21,
+    "hreflangEnArPairs": 322,
+    "noindexCount": 122
   },
   "records": [
     {
@@ -11899,35 +11899,20 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Market Insights & Analysis | Gold Ticker Live",
-      "metaDescription": "Gold market insights and GCC price context — live mini ticker, featured analysis, and buyer guides. Evergreen karat education lives on Learn.",
-      "canonical": "https://goldtickerlive.com/insights.html",
-      "robots": null,
-      "ogTitle": "Gold Market Insights & Analysis | Gold Ticker Live",
-      "ogDescription": "Gold market insights, price analysis, and educational content for UAE, GCC and Arab world gold buyers.",
-      "ogImage": "https://goldtickerlive.com/assets/og/insights.png",
-      "ogUrl": "https://goldtickerlive.com/insights.html",
-      "ogType": "article",
-      "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og/insights.png",
-      "hreflang": [
-        {
-          "lang": "ar",
-          "href": "https://goldtickerlive.com/insights.html?lang=ar"
-        },
-        {
-          "lang": "en",
-          "href": "https://goldtickerlive.com/insights.html"
-        },
-        {
-          "lang": "x-default",
-          "href": "https://goldtickerlive.com/insights.html"
-        }
-      ],
-      "jsonLdTypes": [
-        "BreadcrumbList"
-      ],
-      "hasStructuredData": true,
+      "title": "Market Insights (Moved) | Gold Ticker Live",
+      "metaDescription": "Market insights now live inside the Learn knowledge hub.",
+      "canonical": "https://goldtickerlive.com/learn.html#insights",
+      "robots": "noindex,follow",
+      "ogTitle": "Market Insights (Moved) | Gold Ticker Live",
+      "ogDescription": "Market insights now live inside the Learn knowledge hub.",
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/learn.html#insights",
+      "ogType": null,
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [],
+      "jsonLdTypes": [],
+      "hasStructuredData": false,
       "jsonLdParseFailures": null
     },
     {
@@ -11935,35 +11920,20 @@
       "exempt": null,
       "lang": "en",
       "dir": "ltr",
-      "title": "Gold Investing Guide — UAE, Saudi & Egypt | Gold Ticker Live",
-      "metaDescription": "A practical gold investing guide for UAE, Saudi Arabia, and Egypt. Build a live budget plan, compare bullion vs jewelry vs ETFs, and buy gold more rationally.",
-      "canonical": "https://goldtickerlive.com/invest.html",
-      "robots": null,
-      "ogTitle": "Gold Investing Guide | Rational Gold Plan for UAE, Saudi & Egypt",
-      "ogDescription": "A practical gold investing guide for UAE, Saudi Arabia, and Egypt. Build a live budget plan, compare bullion vs jewelry vs ETFs, and buy gold more rationally.",
-      "ogImage": "https://goldtickerlive.com/assets/og/invest.png",
-      "ogUrl": "https://goldtickerlive.com/invest.html",
-      "ogType": "article",
-      "twitterCard": "summary_large_image",
-      "twitterImage": "https://goldtickerlive.com/assets/og/invest.png",
-      "hreflang": [
-        {
-          "lang": "ar",
-          "href": "https://goldtickerlive.com/invest.html?lang=ar"
-        },
-        {
-          "lang": "en",
-          "href": "https://goldtickerlive.com/invest.html"
-        },
-        {
-          "lang": "x-default",
-          "href": "https://goldtickerlive.com/invest.html"
-        }
-      ],
-      "jsonLdTypes": [
-        "BreadcrumbList"
-      ],
-      "hasStructuredData": true,
+      "title": "Gold Investing Guide (Moved) | Gold Ticker Live",
+      "metaDescription": "The gold investing guide now lives inside the Learn knowledge hub.",
+      "canonical": "https://goldtickerlive.com/learn.html#invest",
+      "robots": "noindex,follow",
+      "ogTitle": "Gold Investing Guide (Moved) | Gold Ticker Live",
+      "ogDescription": "The gold investing guide now lives inside the Learn knowledge hub.",
+      "ogImage": null,
+      "ogUrl": "https://goldtickerlive.com/learn.html#invest",
+      "ogType": null,
+      "twitterCard": null,
+      "twitterImage": null,
+      "hreflang": [],
+      "jsonLdTypes": [],
+      "hasStructuredData": false,
       "jsonLdParseFailures": null
     },
     {

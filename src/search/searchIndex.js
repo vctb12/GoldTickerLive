@@ -112,7 +112,7 @@ function buildIndex() {
       type: 'page',
       label: 'Gold Insights & Analysis',
       labelAr: 'تحليلات الذهب',
-      url: '/insights.html',
+      url: '/learn.html#insights',
       icon: 'i-info',
       keywords: ['insights', 'analysis', 'news', 'تحليل'],
     }

@@ -234,10 +234,7 @@ test('NAV_DATA primary links are slim (live + calculator only)', async () => {
 test('NAV_DATA drawer search placeholder exists in both locales', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
-    assert.ok(
-      NAV_DATA[lang].drawerSearchPlaceholder,
-      `${lang}.drawerSearchPlaceholder missing`
-    );
+    assert.ok(NAV_DATA[lang].drawerSearchPlaceholder, `${lang}.drawerSearchPlaceholder missing`);
   }
 });
 
@@ -265,7 +262,6 @@ test('NAV_DATA canonical 7 surfaces are present and locale-parity aligned', asyn
     '/countries/index.html',
     '/shops.html',
     '/learn.html',
-    '/insights.html',
   ];
   assert.deepEqual(NAV_DATA.en.canonicalSurfaces, expected);
   assert.deepEqual(NAV_DATA.ar.canonicalSurfaces, expected);

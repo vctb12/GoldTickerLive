@@ -46,6 +46,8 @@ const ALLOW_LIST = {
   '404.html': 'Error page; SW would self-cache before render. No need.',
   'offline.html': 'Served *by* the SW when network is down — must not register itself.',
   'design-lab.html': 'Internal noindex design-system proof page; not a public PWA surface.',
+  'insights.html': 'Redirect stub to /learn.html#insights (2026-07-04 knowledge-hub merge).',
+  'invest.html': 'Redirect stub to /learn.html#invest (2026-07-04 knowledge-hub merge).',
 };
 
 // Modules that, when loaded as a `<script src=…>`, register the SW.

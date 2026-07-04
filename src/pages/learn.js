@@ -14,6 +14,7 @@ import { createTocRenderer } from '../learn-hub/toc-renderer.js';
 import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
+import { initInsightsFeed } from './insights/insights-feed.js';
 
 const STATE = {
   lang: 'en',
@@ -99,6 +100,29 @@ function mountArticleExperience(article) {
   return { renderer, toc: null };
 }
 
+const INSIGHTS_HEADING_TX = {
+  en: {
+    title: 'Market insights',
+    sub: 'Analysis, buying context, and guides — filter by category or search.',
+    search: 'Search insights',
+  },
+  ar: {
+    title: 'رؤى السوق',
+    sub: 'تحليلات وسياق للشراء وأدلة — صفِّ حسب الفئة أو ابحث.',
+    search: 'ابحث في الرؤى',
+  },
+};
+
+function applyInsightsHeading(lang) {
+  const dict = INSIGHTS_HEADING_TX[lang] ?? INSIGHTS_HEADING_TX.en;
+  const title = document.getElementById('insights-feed-heading');
+  const sub = document.getElementById('insights-feed-sub');
+  const searchLabel = document.getElementById('insights-search-label');
+  if (title) title.textContent = dict.title;
+  if (sub) sub.textContent = dict.sub;
+  if (searchLabel) searchLabel.textContent = dict.search;
+}
+
 function init() {
   cache.loadState(STATE);
 
@@ -114,6 +138,8 @@ function init() {
   injectBreadcrumbs('learn');
 
   mountLearnHubCatalog({ lang: STATE.lang, container: '#learn-catalog-root' });
+  const insightsFeed = initInsightsFeed(STATE.lang);
+  applyInsightsHeading(STATE.lang);
   initPageEnter('#main-content');
 
   const article = getArticle('learn');
@@ -127,6 +153,8 @@ function init() {
       experience.toc?.destroy();
       experience = mountArticleExperience(article);
       mountLearnHubCatalog({ lang: STATE.lang, container: '#learn-catalog-root' });
+      insightsFeed?.setLang(STATE.lang);
+      applyInsightsHeading(STATE.lang);
       scrollToHashTarget();
     });
   });

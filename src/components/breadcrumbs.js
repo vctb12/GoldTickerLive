@@ -130,7 +130,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
     shops: [{ label: labels.shops, url: '/shops.html' }],
     calculator: [{ label: labels.calculator, url: '/calculator.html' }],
     learn: [{ label: labels.learn, url: '/learn.html' }],
-    insights: [{ label: labels.insights, url: '/insights.html' }],
+    insights: [{ label: labels.insights, url: '/learn.html#insights' }],
     methodology: [{ label: labels.methodology, url: '/methodology.html' }],
     terms: [{ label: labels.terms, url: '/terms.html' }],
     privacy: [{ label: labels.privacy, url: '/privacy.html' }],

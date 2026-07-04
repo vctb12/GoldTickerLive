@@ -18,7 +18,7 @@ const EXPECTED_SURFACES = [
   '/countries/index.html',
   '/shops.html',
   '/learn.html',
-  '/insights.html',
+  // '/insights.html' merged into /learn.html#insights (2026-07-04 knowledge-hub consolidation)
 ];
 
 let errors = 0;

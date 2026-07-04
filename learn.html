@@ -61,6 +61,8 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/learn.css" />
+    <link rel="stylesheet" href="./styles/pages/insights.css" />
+    <link rel="stylesheet" href="./styles/pages/invest.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -358,6 +360,490 @@
         </div>
       </section>
 <!-- LEARN_STATIC_FALLBACK:END -->
+      <!-- ═══════ MARKET INSIGHTS (merged from insights.html, 2026-07-04 knowledge-hub consolidation) ═══════ -->
+      <section id="insights" class="insights-section learn-merged-section" aria-labelledby="insights-feed-heading">
+        <div class="insights-inner">
+          <div class="insights-section-header">
+            <h2 class="insights-section-title" id="insights-feed-heading">Market insights</h2>
+            <p class="insights-section-sub" id="insights-feed-sub">
+              Analysis, buying context, and guides — filter by category or search.
+            </p>
+          </div>
+          <div class="insights-feed-toolbar">
+            <div class="insights-search">
+              <label class="sr-only" for="insights-search-input" id="insights-search-label">
+                Search insights
+              </label>
+              <span class="insights-search-icon" aria-hidden="true">🔎</span>
+              <input
+                type="search"
+                id="insights-search-input"
+                class="insights-search-input"
+                autocomplete="off"
+                spellcheck="false"
+              />
+            </div>
+            <div
+              class="insights-filter-strip"
+              id="insights-filter-strip"
+              role="tablist"
+              aria-label="Filter insights by category"
+            ></div>
+          </div>
+          <div class="insights-feed" id="insights-feed" aria-live="polite"></div>
+          <p class="insights-feed-empty" id="insights-feed-empty" role="status" hidden></p>
+        </div>
+      </section>
+
+      <!-- ═══════ INVESTING (merged from invest.html, 2026-07-04 knowledge-hub consolidation) ═══════ -->
+      <section id="invest" class="invest-main learn-merged-section" aria-labelledby="invest-title">
+      <section class="invest-hero" aria-labelledby="invest-title">
+        <div class="invest-shell invest-hero-grid">
+          <article class="invest-hero-copy">
+            <div class="invest-badge">
+              <span class="invest-badge-dot"></span>
+              <span data-i18n="badge">Practical guide · March 2026</span>
+            </div>
+
+            <h2 id="invest-title" class="invest-hero-title" data-i18n="heroTitle">
+              How to Invest in Gold Rationally
+            </h2>
+            <p class="invest-hero-lead" data-i18n="heroLead">
+              No hype. No emotion. Build a cleaner gold plan with live prices, a budget calculator, and
+              market-specific buying notes for UAE, Saudi Arabia, and Egypt.
+            </p>
+
+            <div class="invest-hero-points">
+              <div class="invest-point">
+                <strong data-i18n="point1Title">Use gold for a job</strong>
+                <span data-i18n="point1Copy"
+                  >Protection, liquidity, gifting, or tactical exposure — decide the job first.</span
+                >
+              </div>
+              <div class="invest-point">
+                <strong data-i18n="point2Title">Buy with live numbers</strong>
+                <span data-i18n="point2Copy"
+                  >Use spot-linked pricing before walking into a store or placing an order.</span
+                >
+              </div>
+              <div class="invest-point">
+                <strong data-i18n="point3Title">Respect premiums</strong>
+                <span data-i18n="point3Copy"
+                  >The wrong premium can ruin a good gold decision.</span
+                >
+              </div>
+            </div>
+
+            <div class="invest-actions">
+              <a href="tracker.html" class="btn btn-primary" data-i18n="ctaTracker"
+                >See Live Prices Now →</a
+              >
+              <a href="#planner" class="btn btn-outline-light" data-i18n="ctaPlanner"
+                >Build My Plan</a
+              >
+              <a href="#compare" class="btn btn-ghost-light" data-i18n="ctaCompare"
+                >Compare Options</a
+              >
+            </div>
+          </article>
+
+          <aside class="invest-live-panel" id="invest-live-panel" aria-busy="true">
+            <div class="invest-panel-top">
+              <div>
+                <p class="invest-panel-eyebrow" data-i18n="liveLabel">Live gold snapshot</p>
+                <h2 class="invest-panel-title" data-i18n="liveTitle">Investment snapshot</h2>
+              </div>
+              <span class="invest-market-chip" id="invest-market-status">
+                <span class="invest-skeleton invest-skeleton-market"></span>
+              </span>
+            </div>
+
+            <div class="invest-panel-grid">
+              <div class="invest-stat">
+                <div class="invest-stat-label" data-i18n="statSpot">Spot (XAU/USD)</div>
+                <div class="invest-stat-value" id="stat-spot">
+                  <span class="invest-skeleton"></span>
+                </div>
+                <div class="invest-stat-note" data-i18n="statSpotNote">per troy ounce</div>
+              </div>
+
+              <div class="invest-stat">
+                <div class="invest-stat-label" data-i18n="stat24">24K • AED / gram</div>
+                <div class="invest-stat-value" id="stat-24">
+                  <span class="invest-skeleton"></span>
+                </div>
+                <div class="invest-stat-note" data-i18n="stat24Note">bullion reference</div>
+              </div>
+
+              <div class="invest-stat">
+                <div class="invest-stat-label" data-i18n="stat22">22K • AED / gram</div>
+                <div class="invest-stat-value" id="stat-22">
+                  <span class="invest-skeleton"></span>
+                </div>
+                <div class="invest-stat-note" data-i18n="stat22Note">jewelry benchmark</div>
+              </div>
+
+              <div class="invest-stat">
+                <div class="invest-stat-label" data-i18n="stat21">21K • AED / gram</div>
+                <div class="invest-stat-value" id="stat-21">
+                  <span class="invest-skeleton"></span>
+                </div>
+                <div class="invest-stat-note" data-i18n="stat21Note">popular GCC grade</div>
+              </div>
+            </div>
+
+            <div class="invest-panel-foot">
+              <span id="invest-updated" data-i18n="fetching">Fetching live data…</span>
+              <a
+                href="tracker.html#section-chart"
+                class="invest-inline-link"
+                data-i18n="openTracker"
+                >Open full tracker →</a
+              >
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <div class="invest-jumpbar-wrap">
+        <div class="invest-shell">
+          <nav class="invest-jumpbar" aria-label="Invest page sections">
+            <a href="#goals" data-i18n="jumpGoals">Goal</a>
+            <a href="#planner" data-i18n="jumpPlanner">Planner</a>
+            <a href="#compare" data-i18n="jumpCompare">Compare</a>
+            <a href="#markets" data-i18n="jumpMarkets">Markets</a>
+            <a href="#faq" data-i18n="jumpFaq">FAQ</a>
+          </nav>
+        </div>
+      </div>
+
+      <section id="goals" class="invest-section">
+        <div class="invest-shell">
+          <div class="invest-section-header center">
+            <span class="invest-kicker" data-i18n="goalsKicker">Start with intent</span>
+            <h2 class="invest-section-title" data-i18n="goalsTitle">Choose the job gold should do</h2>
+            <p class="invest-section-sub" data-i18n="goalsSub">
+              The best product changes depending on whether you want defense, cultural use, or
+              short-term positioning.
+            </p>
+          </div>
+
+          <div class="invest-card-grid three" id="purpose-cards" data-static-fallback="true">
+            <button type="button" class="invest-goal-card is-active" data-purpose="hedge">
+              <span class="invest-goal-icon" aria-hidden="true">🛡️</span>
+              <div class="invest-goal-title">Hedge &amp; safety</div>
+              <div class="invest-goal-sub">Preserve value when currency or markets wobble.</div>
+            </button>
+            <button type="button" class="invest-goal-card" data-purpose="cultural">
+              <span class="invest-goal-icon" aria-hidden="true">💍</span>
+              <div class="invest-goal-title">Cultural &amp; gifting</div>
+              <div class="invest-goal-sub">Weddings, family transfer, and wearable savings.</div>
+            </button>
+            <button type="button" class="invest-goal-card" data-purpose="tactical">
+              <span class="invest-goal-icon" aria-hidden="true">📈</span>
+              <div class="invest-goal-title">Tactical exposure</div>
+              <div class="invest-goal-sub">Short-term positioning with clear entry and exit rules.</div>
+            </button>
+          </div>
+          <div class="invest-advice-box" id="purpose-output">
+            <h3 class="invest-advice-title">Build a defensive sleeve</h3>
+            <p class="invest-advice-body">
+              If the job is protection, favor low-premium 24K bullion with documented purity and a
+              resale plan before you buy.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="planner" class="invest-section invest-section--alt">
+        <div class="invest-shell">
+          <div class="invest-section-header">
+            <span class="invest-kicker" data-i18n="plannerKicker">Live planner</span>
+            <h2 class="invest-section-title" data-i18n="plannerTitle">
+              What can your budget really buy?
+            </h2>
+            <p class="invest-section-sub" data-i18n="plannerSub">
+              Use live spot-linked estimates to size a one-time purchase or a monthly accumulation
+              plan.
+            </p>
+          </div>
+
+          <div class="invest-planner">
+            <div class="invest-planner-panel">
+              <div class="invest-field">
+                <label class="invest-label" for="budget-input" id="budget-label" data-i18n="budgetLabel">Investment Budget</label>
+                <div class="invest-input-row">
+                  <input
+                    type="number"
+                    id="budget-input"
+                    class="invest-number"
+                    min="250"
+                    step="50"
+                    value="10000"
+                    aria-labelledby="budget-label"
+                  />
+                </div>
+                <input
+                  type="range"
+                  id="budget-range"
+                  class="invest-range"
+                  min="250"
+                  max="200000"
+                  step="250"
+                  value="10000"
+                  aria-label="Investment budget slider"
+                  aria-labelledby="budget-label"
+                />
+              </div>
+
+              <div class="invest-field">
+                <div class="invest-label" data-i18n="marketLabel">Primary market</div>
+                <div class="invest-chip-group" id="market-chips"></div>
+              </div>
+
+              <div class="invest-field">
+                <div class="invest-label" data-i18n="typeLabel">Product type</div>
+                <div class="invest-chip-group" id="type-chips"></div>
+              </div>
+
+              <div class="invest-field">
+                <div class="invest-label" data-i18n="frequencyLabel">Contribution style</div>
+                <div class="invest-chip-group" id="frequency-chips"></div>
+              </div>
+            </div>
+
+            <div class="invest-planner-results">
+              <div class="invest-section-header invest-section-header--compact">
+                <h3
+                  class="invest-section-title invest-section-title--compact"
+                  data-i18n="planSnapshot"
+                >
+                  Plan snapshot
+                </h3>
+                <p class="invest-section-sub invest-section-sub--compact" data-i18n="planSub">
+                  A quick rational estimate based on the current market.
+                </p>
+              </div>
+
+              <div class="invest-results-grid">
+                <div class="invest-result-card">
+                  <div class="invest-result-label" data-i18n="resultBudget">Budget</div>
+                  <div
+                    class="invest-result-value skeleton-inline shell-skeleton-price-md"
+                    id="result-budget"
+                    aria-busy="true"
+                  >
+                    <span class="invest-skeleton" aria-hidden="true"></span>
+                  </div>
+                  <div class="invest-result-note" id="result-budget-note"></div>
+                </div>
+
+                <div class="invest-result-card">
+                  <div class="invest-result-label" data-i18n="resultGrams"></div>
+                  <div class="invest-result-value skeleton-inline shell-skeleton-karat" id="result-grams" aria-busy="true"></div>
+                  <div class="invest-result-note" id="result-grams-note"></div>
+                </div>
+
+                <div class="invest-result-card">
+                  <div class="invest-result-label" data-i18n="resultOunces"></div>
+                  <div class="invest-result-value skeleton-inline shell-skeleton-karat" id="result-ounces" aria-busy="true"></div>
+                  <div class="invest-result-note" id="result-ounces-note"></div>
+                </div>
+
+                <div class="invest-result-card">
+                  <div class="invest-result-label" id="result-fourth-label"></div>
+                  <div class="invest-result-value skeleton-inline shell-skeleton-karat" id="result-fourth" aria-busy="true"></div>
+                  <div class="invest-result-note" id="result-fourth-note"></div>
+                </div>
+              </div>
+
+              <div class="invest-planner-summary" id="planner-summary"></div>
+              <div class="invest-planner-meta" id="planner-meta"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="compare" class="invest-section">
+        <div class="invest-shell">
+          <div class="invest-section-header center">
+            <span class="invest-kicker" data-i18n="compareKicker">Product choice</span>
+            <h2 class="invest-section-title" data-i18n="compareTitle">What actually makes sense?</h2>
+            <p class="invest-section-sub" data-i18n="compareSub">
+              Do not buy the same way for every goal. Gold bars, jewelry, and ETFs solve different
+              problems.
+            </p>
+          </div>
+
+          <div class="invest-card-grid three" id="compare-grid" data-static-fallback="true">
+            <article class="invest-compare-card">
+              <div class="invest-compare-top">
+                <h3 class="invest-compare-title">24K bullion</h3>
+                <span class="invest-compare-tag">Cleanest exposure</span>
+              </div>
+              <p class="invest-compare-copy">
+                Best when you want gold itself with the least distortion between spot price and what
+                you own.
+              </p>
+            </article>
+            <article class="invest-compare-card">
+              <div class="invest-compare-top">
+                <h3 class="invest-compare-title">22K jewelry</h3>
+                <span class="invest-compare-tag">Use + value</span>
+              </div>
+              <p class="invest-compare-copy">
+                Makes sense when cultural use and wearability matter alongside metal value.
+              </p>
+            </article>
+            <article class="invest-compare-card">
+              <div class="invest-compare-top">
+                <h3 class="invest-compare-title">Gold ETF</h3>
+                <span class="invest-compare-tag">Convenience first</span>
+              </div>
+              <p class="invest-compare-copy">
+                Useful when you want portfolio exposure and liquidity without storing physical metal.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="markets" class="invest-section invest-section--alt">
+        <div class="invest-shell">
+          <div class="invest-section-header">
+            <span class="invest-kicker" data-i18n="marketsKicker">Where to buy</span>
+            <h2 class="invest-section-title" data-i18n="marketsTitle">How to buy in your market</h2>
+            <p class="invest-section-sub" data-i18n="marketsSub">
+              Use the right channel, ask the right questions, and avoid the obvious mistakes before
+              paying.
+            </p>
+          </div>
+
+          <div class="invest-tab-row" id="market-tabs"></div>
+          <div class="invest-guide-card" id="market-guide" data-static-fallback="true">
+            <div class="invest-guide-head">
+              <h3 class="invest-guide-title">UAE buying guide</h3>
+              <span class="invest-guide-pill">Dubai / Abu Dhabi</span>
+            </div>
+            <p class="invest-guide-copy">
+              Strong market for both bullion and jewelry. Compare premiums, purity, and invoice clarity
+              before you commit.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="invest-section">
+        <div class="invest-shell">
+          <div class="invest-section-header center">
+            <span class="invest-kicker" data-i18n="mistakesKicker"></span>
+            <h2 class="invest-section-title" data-i18n="mistakesTitle"></h2>
+            <p class="invest-section-sub" data-i18n="mistakesSub"></p>
+          </div>
+
+          <div class="invest-card-grid three" id="mistakes-grid"></div>
+        </div>
+      </section>
+
+      <section id="faq" class="invest-section invest-section--alt">
+        <div class="invest-shell">
+          <div class="invest-section-header center">
+            <span class="invest-kicker" data-i18n="faqKicker">Before you buy</span>
+            <h2 class="invest-section-title" data-i18n="faqTitle">Questions worth asking first</h2>
+            <p class="invest-section-sub" data-i18n="faqSub">
+              A good gold purchase usually starts with the right question, not the right Instagram
+              reel.
+            </p>
+          </div>
+
+          <div class="invest-faq" id="faq-list" data-static-fallback="true">
+            <details class="invest-faq-item" open>
+              <summary>Is 24K always the best investment choice?</summary>
+              <div class="invest-faq-answer">
+                Usually for pure metal exposure, yes — but “best” still depends on premium, storage,
+                liquidity, and your actual purpose.
+              </div>
+            </details>
+            <details class="invest-faq-item">
+              <summary>What should I check before buying from a store?</summary>
+              <div class="invest-faq-answer">
+                Purity, weight, premium or making charge, invoice clarity, and how resale is handled.
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- Related tools -->
+      <section class="invest-section">
+        <div class="invest-shell">
+          <div class="invest-section-header center">
+            <span class="invest-kicker">Also useful</span>
+            <h2 class="invest-section-title">Related Tools</h2>
+          </div>
+          <div class="invest-card-grid three">
+            <a
+              href="tracker.html"
+              class="invest-guide-card invest-guide-link-card"
+            >
+              <div class="invest-guide-head">
+                <h3 class="invest-guide-title">📈 Live Tracker</h3>
+              </div>
+              <p class="invest-guide-copy">
+                24+ countries, 7 karats, with a visible freshness label. Set price alerts and export data.
+              </p>
+            </a>
+            <a
+              href="calculator.html"
+              class="invest-guide-card invest-guide-link-card"
+            >
+              <div class="invest-guide-head">
+                <h3 class="invest-guide-title">🧮 Gold Calculator</h3>
+              </div>
+              <p class="invest-guide-copy">
+                Calculate gold value, scrap price, Zakat, and buying power — all in one tool.
+              </p>
+            </a>
+            <a
+              href="shops.html"
+              class="invest-guide-card invest-guide-link-card"
+            >
+              <div class="invest-guide-head">
+                <h3 class="invest-guide-title">🏪 Find a Shop</h3>
+              </div>
+              <p class="invest-guide-copy">
+                Browse listed gold shops by region, country, city, and specialty across GCC and
+                beyond.
+              </p>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="invest-section">
+        <div class="invest-shell">
+          <div class="invest-cta-card">
+            <h2 data-i18n="finalTitle">Ready to make a cleaner gold decision?</h2>
+            <p data-i18n="finalSub">
+              Use the live tracker before you buy, then come back here to size and compare your next
+              move.
+            </p>
+            <a href="tracker.html" class="btn btn-primary btn-lg" data-i18n="finalBtn"
+              >Open Live Tracker →</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══════ AFFILIATE DISCLOSURE ═══════ -->
+      <section class="invest-disclosure" aria-label="Affiliate disclosure">
+        <strong>Disclosure:</strong> Some links on this page may be affiliate links. If you purchase
+        through these links, Gold Ticker Live may earn a small commission at no extra cost to you. This
+        helps support the free tools and data we provide.
+        <!-- AFFILIATE_PLACEHOLDER: replace with your partner link for UAE gold brokers/ETFs -->
+      </section>
+      </section>
+
       <div id="related-guides-slot"></div>
 
       <section class="learn-tools-section">
@@ -366,7 +852,7 @@
           <a href="calculator.html" class="related-tool-link">🧮 Calculator</a>
           <a href="countries/uae/" class="related-tool-link">🇦🇪 UAE Prices</a>
           <a href="methodology.html" class="related-tool-link">🔬 Methodology</a>
-          <a href="insights.html" class="related-tool-link">📊 Market insights</a>
+          <a href="#insights" class="related-tool-link">📊 Market insights</a>
           <a href="learn.html#karats" class="related-tool-link">💛 22K Guide</a>
           <a href="learn.html#karats" class="related-tool-link">🥇 24K Guide</a>
           <a href="content/spot-vs-retail-gold-price/" class="related-tool-link">🧾 Spot vs Retail</a>
@@ -382,5 +868,6 @@
       }
     </script>
     <script type="module" src="./src/pages/learn.js"></script>
+    <script type="module" src="./src/pages/invest.js"></script>
   </body>
 </html>
