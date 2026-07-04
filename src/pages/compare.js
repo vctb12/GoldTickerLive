@@ -27,7 +27,7 @@ import { updateSpotBar } from '../components/spotBar.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
-import { getLiveFreshness } from '../lib/live-status.js';
+import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 import { countUp } from '../lib/count-up.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import {
@@ -289,9 +289,12 @@ function renderSpotBadge() {
       lang: STATE.lang,
       hasLiveFailure: STATE.spotSource !== 'live',
     });
-    const label = t().freshness[f.key] || f.key;
+    // Never claim "Live" while the gold market is closed — mirror the overlay the
+    // shared spot bar / ticker apply (docs/freshness-contract.md).
+    const key = applyMarketClosedOverlay(f.key);
+    const label = t().freshness[key] || key;
     clear(freshEl);
-    freshEl.dataset.state = f.key;
+    freshEl.dataset.state = key;
     freshEl.append(
       el('span', { class: 'compare-fresh-dot', 'aria-hidden': 'true' }),
       el('span', null, `${label} · ${f.ageText}`)

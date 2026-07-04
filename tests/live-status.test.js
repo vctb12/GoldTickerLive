@@ -89,6 +89,32 @@ test('getLiveFreshness() forces fallback when upstream is_fallback=true (anti-mi
   assert.equal(recentFallback.reason, 'upstream-fallback');
 });
 
+// Anti-mislabel guard: an `isFresh === true` snapshot must still flip to STALE
+// once it is older than the refresh window. On the static deploy the committed
+// gold_price.json is frozen is_fresh:true and can never go false client-side, so
+// without an age ceiling the label would cap at "delayed" forever during a
+// fetch-workflow gap — a 3-hour-old price must read "Stale", not "Delayed".
+test('getLiveFreshness() escalates isFresh=true to stale past staleAfterMs', async () => {
+  const { getLiveFreshness, GOLD_MARKET } = await load();
+  const now = Date.now();
+
+  const oldButFlaggedFresh = getLiveFreshness({
+    updatedAt: new Date(now - (GOLD_MARKET.STALE_AFTER_MS + 60_000)).toISOString(),
+    hasLiveFailure: false,
+    isFresh: true, // upstream flag can't rescue data older than the refresh window
+  });
+  assert.equal(oldButFlaggedFresh.key, 'stale');
+  assert.equal(oldButFlaggedFresh.reason, 'age-exceeds-stale');
+
+  // A genuinely-fresh isFresh:true snapshot (seconds old) still reads live.
+  const freshLive = getLiveFreshness({
+    updatedAt: new Date(now - 1_000).toISOString(),
+    hasLiveFailure: false,
+    isFresh: true,
+  });
+  assert.equal(freshLive.key, 'live');
+});
+
 // Anti-mislabel guard: `isFresh === false` from upstream must classify as
 // stale even when age is within the local threshold. Upstream knows best.
 test('getLiveFreshness() forces stale when upstream is_fresh=false (anti-mislabel)', async () => {
