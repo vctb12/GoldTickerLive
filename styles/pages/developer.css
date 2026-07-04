@@ -578,3 +578,13 @@
     transition: none;
   }
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.key-reveal-icon .key-reveal-ico {
+  display: block;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

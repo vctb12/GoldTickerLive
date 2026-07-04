@@ -21,6 +21,7 @@
  */
 
 import { el, clear, setText } from '../lib/safe-dom.js';
+import { iconUseElement } from './icon-sprite.js';
 
 let _drawer = null;
 let _engine = null;
@@ -54,7 +55,7 @@ const LABELS = {
     delete: 'Delete',
     reactivate: 'Set new target',
     share: 'Share via WhatsApp',
-    soundLabel: '🔔 Sound',
+    soundLabel: 'Sound',
     soundOn: 'Sound on',
     soundOff: 'Sound off',
     exportBtn: 'Export alerts',
@@ -67,7 +68,7 @@ const LABELS = {
     invalidTarget: 'Enter a valid target price greater than 0.',
     importSuccess: 'Imported {count} alert(s) successfully.',
     importFail: 'Could not import alerts. Check the file format.',
-    triggered: '🎯 Alert triggered!',
+    triggered: 'Alert triggered!',
     triggeredMsg: '{scope} reached {price} (your target: {target})',
     dismiss: 'Dismiss',
     setNew: 'Set new alert',
@@ -96,7 +97,7 @@ const LABELS = {
     delete: 'حذف',
     reactivate: 'تعيين هدف جديد',
     share: 'مشاركة عبر واتساب',
-    soundLabel: '🔔 الصوت',
+    soundLabel: 'الصوت',
     soundOn: 'الصوت مفعّل',
     soundOff: 'الصوت مُعطّل',
     exportBtn: 'تصدير التنبيهات',
@@ -109,7 +110,7 @@ const LABELS = {
     invalidTarget: 'أدخل سعراً مستهدفاً صحيحاً أكبر من 0.',
     importSuccess: 'تم استيراد {count} تنبيه(ات) بنجاح.',
     importFail: 'تعذر استيراد التنبيهات. تحقق من صيغة الملف.',
-    triggered: '🎯 تم تفعيل التنبيه!',
+    triggered: 'تم تفعيل التنبيه!',
     triggeredMsg: '{scope} وصل {price} (هدفك: {target})',
     dismiss: 'إغلاق',
     setNew: 'تعيين تنبيه جديد',
@@ -187,7 +188,7 @@ function buildDrawer() {
     type: 'button',
     'aria-label': t('close'),
   });
-  setText(closeBtn, '✕');
+  closeBtn.append(iconUseElement('i-close', 'alert-mgr-btn-ico'));
   closeBtn.addEventListener('click', () => closeAlertManager());
 
   header.append(titleWrap, closeBtn);
@@ -424,7 +425,7 @@ function buildAlertCard(alert, type) {
       'aria-label': t('share'),
       title: t('share'),
     });
-    setText(waBtn, '💬');
+    waBtn.append(iconUseElement('i-share', 'alert-mgr-btn-ico'));
 
     // Delete
     const delBtn = el('button', {
@@ -433,7 +434,7 @@ function buildAlertCard(alert, type) {
       'aria-label': t('delete'),
       title: t('delete'),
     });
-    setText(delBtn, '×');
+    delBtn.append(iconUseElement('i-close', 'alert-mgr-btn-ico'));
     delBtn.addEventListener('click', () => {
       _engine.removeAlert(alert.id);
       renderAlertLists();
@@ -447,7 +448,7 @@ function buildAlertCard(alert, type) {
       type: 'button',
       'aria-label': t('reactivate'),
     });
-    setText(reactBtn, '↻');
+    reactBtn.append(iconUseElement('i-refresh', 'alert-mgr-btn-ico'));
     reactBtn.addEventListener('click', () => {
       _engine.reactivateAlert(alert.id);
       renderAlertLists();

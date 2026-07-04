@@ -22,6 +22,8 @@
  * inline copy stays byte-identical to `ICON_SPRITE_MARKUP` below.
  */
 
+import { markTrustedNode } from '../lib/safe-dom.js';
+
 export const ICON_SPRITE_ID = 'gtl-icon-sprite';
 
 /**
@@ -422,9 +424,12 @@ export function iconUseElement(symbol, className) {
   const ref = '#' + safeSymbolId(symbol);
   use.setAttribute('href', ref);
   // Legacy attribute for older engines that ignore plain `href` on <use>.
-  use.setAttributeNS(XLINK, 'xlink:href', ref);
-  svg.appendChild(use);
-  return svg;
+  // Guarded: bare-bones DOM shims in tests implement setAttribute only.
+  if (typeof use.setAttributeNS === 'function') use.setAttributeNS(XLINK, 'xlink:href', ref);
+  svg.append(use);
+  // Branded so safe-dom's el() accepts the icon as a nested child — this
+  // module builds nodes exclusively from createElementNS + sanitized ids.
+  return markTrustedNode(svg);
 }
 
 /**

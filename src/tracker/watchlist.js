@@ -1,5 +1,6 @@
 // tracker/watchlist.js — favorite currency watchlist rendering
 import { COUNTRIES } from '../config/index.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { _state, _el, _priceFor, _currentSpot, tx, formatUnitLabel } from './_ctx.js';
 import { clear, el } from '../lib/safe-dom.js';
 import { buildSourceBadge, getFreshnessModel } from './freshness.js';
@@ -57,7 +58,9 @@ export function renderWatchlist() {
       el('div', { class: 'tracker-watch-top' }, [
         el('div', { class: 'tracker-watch-title' }, [
           el('strong', null, [
-            country?.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+            flagSymbolForCountry(country?.code)
+              ? iconUseElement(flagSymbolForCountry(country.code), 'nav-flag tracker-row-flag')
+              : null,
             name ?? cur,
           ]),
           el('span', null, `${cur}${isCurrent ? ` · ${tx('selected')}` : ''}`),

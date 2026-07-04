@@ -13,7 +13,9 @@
 //     `state.panel`. Independent of `mode`.
 //
 // Registry order === tab-bar render order === `tracker.html` markup order.
-// Any divergence is caught by `tests/tracker-modes.test.js`.
+// Any divergence is caught by `tests/tracker-modes.test.js`. Mode tabs live
+// inside the `role="tablist"` nav; panel launchers follow it in a sibling
+// `role="group"` (a tablist may only own tabs — axe aria-required-children).
 
 import { VALID_MODES, VALID_PANELS } from './state.js';
 
@@ -37,7 +39,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-live',
     panelId: 'mode-live',
     workspace: 'basic',
-    label: { en: '📡 Live', ar: '📡 مباشر' },
+    label: { en: 'Live', ar: 'مباشر' },
     shortcut: 'h',
   },
   {
@@ -46,7 +48,7 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-compare',
     panelId: 'mode-compare',
     workspace: 'basic',
-    label: { en: '🌍 Compare', ar: '🌍 مقارنة' },
+    label: { en: 'Compare', ar: 'مقارنة' },
     shortcut: 'c',
   },
   {
@@ -55,15 +57,34 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-archive',
     panelId: 'mode-archive',
     workspace: 'advanced',
-    label: { en: '🗂 Archive', ar: '🗂 الأرشيف' },
+    label: { en: 'Archive', ar: 'الأرشيف' },
   },
+  {
+    kind: 'mode',
+    id: 'exports',
+    tabId: 'tab-exports',
+    panelId: 'mode-exports',
+    workspace: 'advanced',
+    label: { en: 'Exports', ar: 'تصدير' },
+  },
+  {
+    kind: 'mode',
+    id: 'method',
+    tabId: 'tab-method',
+    panelId: 'mode-method',
+    workspace: 'advanced',
+    label: { en: 'Method', ar: 'المنهجية' },
+  },
+  // Overlay launchers render AFTER the mode tabs, in a sibling group outside
+  // the `role="tablist"` element — a tablist may only own `role="tab"`
+  // children (axe aria-required-children), and these open modal overlays.
   {
     kind: 'panel',
     id: 'alerts',
     tabId: 'tab-alerts',
     panelId: 'tp-overlay-alerts',
     workspace: 'basic',
-    label: { en: '🔔 Alerts', ar: '🔔 تنبيهات' },
+    label: { en: 'Alerts', ar: 'تنبيهات' },
     shortcut: 'a',
   },
   {
@@ -72,24 +93,8 @@ export const TRACKER_TABS = Object.freeze([
     tabId: 'tab-planner',
     panelId: 'tp-overlay-planner',
     workspace: 'basic',
-    label: { en: '📋 Planner', ar: '📋 المخطط' },
+    label: { en: 'Planner', ar: 'المخطط' },
     shortcut: 'p',
-  },
-  {
-    kind: 'mode',
-    id: 'exports',
-    tabId: 'tab-exports',
-    panelId: 'mode-exports',
-    workspace: 'advanced',
-    label: { en: '⬇ Exports', ar: '⬇ تصدير' },
-  },
-  {
-    kind: 'mode',
-    id: 'method',
-    tabId: 'tab-method',
-    panelId: 'mode-method',
-    workspace: 'advanced',
-    label: { en: '📖 Method', ar: '📖 المنهجية' },
   },
 ]);
 

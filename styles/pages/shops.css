@@ -280,6 +280,7 @@
 .shops-resource-chip {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
   min-height: 44px;
   padding: 0.45rem 0.9rem;
   background: var(--surface-secondary);
@@ -881,11 +882,6 @@
   border-radius: var(--radius-pill);
   padding: 0.18rem 0.55rem;
   letter-spacing: 0.03em;
-}
-
-.shop-featured::before {
-  content: '★';
-  font-size: 0.6rem;
 }
 
 .shop-signal {
@@ -2820,4 +2816,34 @@
   .shops-claim-dialog-form button {
     transition: none;
   }
+}
+
+/* ── V1-VISUAL: sprite icons replacing emoji-as-UI (design-language §5) ───── */
+
+/* Monoline sprite icon, sized by the surrounding text (1em tracks the old
+   emoji glyph size in action buttons, chips, and empty states). */
+.shops-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Icon spans that only frame a sprite icon center it as a block. */
+.shops-quick-action-icon .shops-ico,
+.shops-view-toggle-icon .shops-ico,
+.shops-shortlist-icon .shops-ico,
+.shops-nearme-btn-icon .shops-ico,
+.ses-icon .shops-ico {
+  display: block;
+}
+
+/* Flag badge in the quick actions row (frame comes from .nav-flag). */
+.shops-quick-action-icon .nav-flag {
+  inline-size: 1.25em;
+  block-size: 1.25em;
 }

@@ -1,7 +1,7 @@
 {
   "meta": {
     "label": "baseline",
-    "generatedAt": "2026-06-27T06:07:49.560Z",
+    "generatedAt": "2026-07-02T05:50:16.507Z",
     "base": "http://127.0.0.1:8080",
     "chromium": "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
     "settleMs": 1500,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-03T06:39:54.532Z",
+  "generatedAt": "2026-07-03T11:59:42.040Z",
   "summary": {
     "groups": {
       "core": 63,
@@ -12,7 +12,7 @@
     "totals": {
       "htmlPages": 376,
       "indexablePages": 240,
-      "thinRiskPages": 152,
+      "thinRiskPages": 151,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
       "missingHreflang": 0,
@@ -27,7 +27,7 @@
         },
         {
           "path": "ar/chart/index.html",
-          "words": 89
+          "words": 90
         },
         {
           "path": "ar/gold-price/18k/index.html",
@@ -75,7 +75,7 @@
         },
         {
           "path": "countries/algeria/index.html",
-          "words": 33
+          "words": 32
         },
         {
           "path": "countries/algeria/oran/gold-rate/index.html",
@@ -87,11 +87,11 @@
         },
         {
           "path": "countries/bahrain/index.html",
-          "words": 33
+          "words": 92
         },
         {
           "path": "countries/bahrain/manama/gold-rate/index.html",
-          "words": 48
+          "words": 58
         },
         {
           "path": "countries/bahrain/manama/gold-shops/index.html",
@@ -135,7 +135,7 @@
         },
         {
           "path": "countries/egypt/index.html",
-          "words": 33
+          "words": 104
         },
         {
           "path": "countries/india/chennai/gold-rate/index.html",
@@ -155,7 +155,7 @@
         },
         {
           "path": "countries/india/index.html",
-          "words": 33
+          "words": 97
         },
         {
           "path": "countries/india/mumbai/gold-rate/index.html",
@@ -167,15 +167,15 @@
         },
         {
           "path": "countries/iraq/baghdad/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/iraq/basra/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/iraq/erbil/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/iraq/index.html",
@@ -183,7 +183,7 @@
         },
         {
           "path": "countries/jordan/amman/gold-rate/index.html",
-          "words": 48
+          "words": 64
         },
         {
           "path": "countries/jordan/amman/gold-shops/index.html",
@@ -191,7 +191,7 @@
         },
         {
           "path": "countries/jordan/index.html",
-          "words": 33
+          "words": 95
         },
         {
           "path": "countries/jordan/irbid/gold-rate/index.html",
@@ -219,11 +219,11 @@
         },
         {
           "path": "countries/kuwait/index.html",
-          "words": 33
+          "words": 102
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-rate/index.html",
-          "words": 52
+          "words": 61
         },
         {
           "path": "countries/kuwait/kuwait-city/gold-shops/index.html",
@@ -247,7 +247,7 @@
         },
         {
           "path": "countries/lebanon/index.html",
-          "words": 33
+          "words": 32
         },
         {
           "path": "countries/lebanon/sidon/gold-rate/index.html",
@@ -275,7 +275,7 @@
         },
         {
           "path": "countries/libya/index.html",
-          "words": 33
+          "words": 32
         },
         {
           "path": "countries/libya/misrata/gold-rate/index.html",
@@ -303,11 +303,11 @@
         },
         {
           "path": "countries/morocco/index.html",
-          "words": 33
+          "words": 91
         },
         {
           "path": "countries/morocco/marrakech/gold-rate/index.html",
-          "words": 48
+          "words": 57
         },
         {
           "path": "countries/morocco/marrakech/gold-shops/index.html",
@@ -323,11 +323,11 @@
         },
         {
           "path": "countries/oman/index.html",
-          "words": 33
+          "words": 82
         },
         {
           "path": "countries/oman/muscat/gold-rate/index.html",
-          "words": 48
+          "words": 58
         },
         {
           "path": "countries/oman/muscat/gold-shops/index.html",
@@ -355,19 +355,19 @@
         },
         {
           "path": "countries/pakistan/islamabad/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/pakistan/karachi/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/pakistan/lahore/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/palestine/gaza/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/palestine/index.html",
@@ -375,11 +375,11 @@
         },
         {
           "path": "countries/palestine/nablus/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/palestine/ramallah/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/qatar/al-rayyan/gold-rate/index.html",
@@ -403,7 +403,7 @@
         },
         {
           "path": "countries/qatar/index.html",
-          "words": 33
+          "words": 101
         },
         {
           "path": "countries/saudi-arabia/dammam/gold-rate/index.html",
@@ -415,7 +415,7 @@
         },
         {
           "path": "countries/saudi-arabia/index.html",
-          "words": 35
+          "words": 107
         },
         {
           "path": "countries/saudi-arabia/jeddah/gold-rate/index.html",
@@ -447,7 +447,7 @@
         },
         {
           "path": "countries/sudan/index.html",
-          "words": 33
+          "words": 32
         },
         {
           "path": "countries/sudan/khartoum/gold-rate/index.html",
@@ -475,15 +475,15 @@
         },
         {
           "path": "countries/syria/aleppo/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/syria/damascus/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/syria/homs/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/syria/index.html",
@@ -491,7 +491,7 @@
         },
         {
           "path": "countries/tunisia/index.html",
-          "words": 33
+          "words": 32
         },
         {
           "path": "countries/tunisia/sfax/gold-rate/index.html",
@@ -519,19 +519,15 @@
         },
         {
           "path": "countries/turkey/ankara/gold-shops/index.html",
-          "words": 63
-        },
-        {
-          "path": "countries/turkey/index.html",
-          "words": 94
+          "words": 62
         },
         {
           "path": "countries/turkey/istanbul/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/turkey/izmir/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/uae/abu-dhabi/gold-rate/index.html",
@@ -563,7 +559,7 @@
         },
         {
           "path": "countries/uae/index.html",
-          "words": 54
+          "words": 125
         },
         {
           "path": "countries/uae/ras-al-khaimah/gold-rate/index.html",
@@ -591,7 +587,7 @@
         },
         {
           "path": "countries/yemen/aden/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/yemen/index.html",
@@ -599,11 +595,11 @@
         },
         {
           "path": "countries/yemen/sanaa/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "countries/yemen/taiz/gold-shops/index.html",
-          "words": 63
+          "words": 62
         },
         {
           "path": "dashboard.html",
@@ -647,7 +643,7 @@
       "canonical": "",
       "hreflangs": [],
       "hasSchema": false,
-      "wordCount": 100,
+      "wordCount": 91,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -925,7 +921,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 89,
+      "wordCount": 90,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1020,7 +1016,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1547,
+      "wordCount": 1625,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1058,7 +1054,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 721,
+      "wordCount": 710,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1145,7 +1141,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 195,
+      "wordCount": 192,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1179,7 +1175,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 224,
+      "wordCount": 220,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1198,7 +1194,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 178,
+      "wordCount": 175,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1217,7 +1213,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 177,
+      "wordCount": 174,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1236,7 +1232,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 171,
+      "wordCount": 170,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1255,7 +1251,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1134,
+      "wordCount": 1133,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1274,7 +1270,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1579,
+      "wordCount": 1572,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1293,7 +1289,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1550,
+      "wordCount": 1544,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1312,7 +1308,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1359,
+      "wordCount": 1358,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1331,7 +1327,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1356,
+      "wordCount": 1355,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1350,7 +1346,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1356,
+      "wordCount": 1355,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1369,7 +1365,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1354,
+      "wordCount": 1353,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1388,7 +1384,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1338,
+      "wordCount": 1337,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1407,7 +1403,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1347,
+      "wordCount": 1346,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1426,7 +1422,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1350,
+      "wordCount": 1349,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1445,7 +1441,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1352,
+      "wordCount": 1351,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1464,7 +1460,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1479,
+      "wordCount": 1478,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1483,7 +1479,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 272,
+      "wordCount": 262,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1502,7 +1498,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1366,
+      "wordCount": 1365,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1521,7 +1517,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 997,
+      "wordCount": 996,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1540,7 +1536,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 792,
+      "wordCount": 791,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1559,7 +1555,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1844,
+      "wordCount": 1833,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1578,7 +1574,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1397,
+      "wordCount": 1393,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1597,7 +1593,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 934,
+      "wordCount": 933,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1616,7 +1612,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 814,
+      "wordCount": 813,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1635,7 +1631,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1020,
+      "wordCount": 1019,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1654,7 +1650,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 800,
+      "wordCount": 799,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1673,7 +1669,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1696,
+      "wordCount": 1691,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1692,7 +1688,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1691,
+      "wordCount": 1690,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1711,7 +1707,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1549,
+      "wordCount": 1548,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1730,7 +1726,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 339,
+      "wordCount": 329,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1749,7 +1745,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 2063,
+      "wordCount": 2055,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1768,7 +1764,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1689,
+      "wordCount": 1688,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1787,7 +1783,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1726,
+      "wordCount": 1721,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1825,7 +1821,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 326,
+      "wordCount": 322,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1844,7 +1840,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 249,
+      "wordCount": 247,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1882,7 +1878,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 161,
+      "wordCount": 158,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1935,7 +1931,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 680,
+      "wordCount": 677,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1954,7 +1950,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 521,
+      "wordCount": 520,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1973,7 +1969,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 857,
+      "wordCount": 854,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -1992,7 +1988,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 384,
+      "wordCount": 378,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2011,7 +2007,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 679,
+      "wordCount": 678,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2030,7 +2026,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 152,
+      "wordCount": 147,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2049,7 +2045,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 410,
+      "wordCount": 404,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2068,7 +2064,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 195,
+      "wordCount": 192,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2220,7 +2216,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 32,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2315,7 +2311,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 92,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2334,7 +2330,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 58,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2562,7 +2558,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 308,
+      "wordCount": 317,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2619,7 +2615,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 711,
+      "wordCount": 697,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2733,7 +2729,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 104,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2771,7 +2767,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 945,
+      "wordCount": 933,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2790,7 +2786,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 187,
+      "wordCount": 159,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -2942,7 +2938,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 97,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3037,7 +3033,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3094,7 +3090,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3151,7 +3147,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3227,7 +3223,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 64,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3303,7 +3299,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 95,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3512,7 +3508,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 102,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3531,7 +3527,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 52,
+      "wordCount": 61,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3721,7 +3717,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 32,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -3930,7 +3926,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 32,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4139,7 +4135,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 91,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4158,7 +4154,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 57,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4291,7 +4287,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 82,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4310,7 +4306,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 48,
+      "wordCount": 58,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4538,7 +4534,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4595,7 +4591,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4652,7 +4648,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4709,7 +4705,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4804,7 +4800,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -4861,7 +4857,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5013,7 +5009,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 655,
+      "wordCount": 642,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5051,7 +5047,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 317,
+      "wordCount": 329,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5127,7 +5123,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 101,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5165,7 +5161,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 689,
+      "wordCount": 676,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5260,7 +5256,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 35,
+      "wordCount": 107,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5450,7 +5446,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 311,
+      "wordCount": 321,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5526,7 +5522,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 32,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5735,7 +5731,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5792,7 +5788,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5868,7 +5864,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -5944,7 +5940,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 33,
+      "wordCount": 32,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6153,7 +6149,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6210,8 +6206,8 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 94,
-      "thinRisk": true,
+      "wordCount": 164,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -6229,7 +6225,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 248,
+      "wordCount": 256,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6248,7 +6244,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6305,7 +6301,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6457,7 +6453,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 584,
+      "wordCount": 572,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6476,7 +6472,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 734,
+      "wordCount": 721,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6514,7 +6510,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 318,
+      "wordCount": 328,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6647,7 +6643,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 54,
+      "wordCount": 125,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6666,7 +6662,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 977,
+      "wordCount": 964,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6894,7 +6890,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -6989,7 +6985,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7046,7 +7042,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 63,
+      "wordCount": 62,
       "thinRisk": true,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7133,7 +7129,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 306,
+      "wordCount": 305,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7228,7 +7224,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1551,
+      "wordCount": 1629,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7247,7 +7243,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 464,
+      "wordCount": 455,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7266,7 +7262,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 589,
+      "wordCount": 583,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7285,7 +7281,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1500,
+      "wordCount": 1489,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7304,7 +7300,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1998,
+      "wordCount": 1986,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7338,7 +7334,7 @@
       "canonical": "",
       "hreflangs": [],
       "hasSchema": false,
-      "wordCount": 65,
+      "wordCount": 63,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7357,7 +7353,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 412,
+      "wordCount": 374,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7376,7 +7372,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1005,
+      "wordCount": 1000,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7395,7 +7391,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 525,
+      "wordCount": 505,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7609,7 +7605,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 795,
+      "wordCount": 790,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -7628,7 +7624,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1904,
+      "wordCount": 1875,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

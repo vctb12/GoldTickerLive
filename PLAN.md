@@ -17,6 +17,14 @@ Endless prompts:
 
 ## 🔴 In Progress
 
+### V1-VISUAL stack review follow-up (2026-07-03)
+
+- [x] **PR #488/#490 review feedback pass** - confirmed the pricing "Reference gold prices",
+      localized legacy freshness banner, tracker hero-stats aria-label, welcome-chip fallback, and
+      featured-market caption fixes are already on `claude/v1-tracker-redesign`; fixed the remaining
+      active-language FAQPage JSON-LD gap on country hubs and logged the closure in `PROGRESS.md` +
+      `docs/plans/2026-07-01_v1-visual-session.md`.
+
 ### 20-Phase Design, Functionality & Page/Dead-Code Cleanup (2026-07-01)
 
 Canonical plan:

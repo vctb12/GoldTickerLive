@@ -347,7 +347,7 @@ export const LEARN_ARTICLE = Object.freeze({
   id: 'learn',
   titleKey: 'learn-h1',
   subtitleKey: 'learn-sub',
-  icon: '📚',
+  icon: 'i-book',
   iconLabelKey: 'learnHub.articles.learn.iconLabel',
   metadata: {
     readTime: 8,

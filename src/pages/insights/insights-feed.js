@@ -11,6 +11,7 @@
  */
 
 import { el, clear, setText } from '../../lib/safe-dom.js';
+import { iconUseElement } from '../../components/icon-sprite.js';
 import { observeReveal } from '../../lib/reveal.js';
 import {
   INSIGHTS,
@@ -86,12 +87,16 @@ export function initInsightsFeed(initialLang = 'en') {
 
   function buildCard(item) {
     const lang = state.lang;
+    // `item.icon` is a sprite symbol id; append via createElementNS (safe-dom's
+    // `el()` only accepts nodes it created itself, so attach the SVG directly).
+    const iconWrap = el('span', { class: 'insights-feed-icon', 'aria-hidden': 'true' });
+    iconWrap.appendChild(iconUseElement(item.icon, 'insights-feed-ico'));
     const card = el(
       'article',
       { class: 'insights-feed-card card-interactive', 'data-reveal': '' },
       [
         el('div', { class: 'insights-feed-card-top' }, [
-          el('span', { class: 'insights-feed-icon', 'aria-hidden': 'true' }, item.icon),
+          iconWrap,
           el('span', { class: 'insights-feed-badge' }, categoryLabel(item.category, lang)),
         ]),
         el('h3', { class: 'insights-feed-card-title' }, localized(item, 'title', lang)),

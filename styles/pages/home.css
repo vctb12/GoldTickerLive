@@ -2368,6 +2368,24 @@
 
 [dir='rtl'] .home-social-wrap {
   text-align: center;
+  position: relative;
+  padding: var(--space-6) var(--space-4);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 16%, var(--border-subtle));
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-surface) 84%, transparent),
+      color-mix(in srgb, var(--color-surface) 84%, transparent)
+    ),
+    url('../../assets/brand/guilloche-band-light-1600.webp') center / cover no-repeat;
+}
+
+[data-theme='dark'] .home-social-wrap {
+  background:
+    linear-gradient(180deg, rgb(12 14 20 / 62%), rgb(12 14 20 / 62%)),
+    url('../../assets/brand/guilloche-band-dark-1600.webp') center / cover no-repeat;
 }
 
 @media (width <= 640px) {
@@ -3954,5 +3972,75 @@
 
   .hlc-price {
     font-size: var(--text-3xl);
+  }
+}
+
+/* ── "From the markets" photo strip (V1-VISUAL wave 3) ─────────────────────
+   Horizontal scroll-snap rail of licensed market photographs linking to
+   country hubs. Assets in assets/images/markets/ (register: MANIFEST.md). */
+.market-strip-title {
+  margin: var(--space-6) 0 var(--space-3);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.market-strip {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-block-end: var(--space-2);
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.market-strip-tile {
+  flex: 0 0 auto;
+  inline-size: clamp(180px, 24vw, 236px);
+  scroll-snap-align: start;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+  background: var(--color-surface);
+  text-decoration: none;
+  display: block;
+}
+
+.market-strip-tile img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.market-strip-tile:hover img,
+.market-strip-tile:focus-visible img {
+  transform: scale(1.04);
+}
+
+.market-strip-label {
+  display: block;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.74rem;
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  border-block-start: 1px solid var(--border-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market-strip-tile img,
+  .market-strip-tile:hover img,
+  .market-strip-tile:focus-visible img {
+    transition: none;
+    transform: none;
   }
 }

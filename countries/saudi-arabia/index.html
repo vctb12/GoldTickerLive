@@ -122,7 +122,7 @@
         <div id="cp-hero-price">
           <div class="cp-hero-main">
             <div class="cp-hero-row">
-              <span class="cp-hero-flag">🇸🇦</span>
+              <span class="cp-hero-flag"><svg class="nav-flag" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#f-sa"/></svg></span>
               <div class="cp-hero-labels">
                 <h1 class="cp-hero-title">Reference Gold Price — Saudi Arabia</h1>
               </div>
@@ -143,6 +143,20 @@
             </div>
           </div>
         </div>
+      
+        <figure class="cp-hero-media">
+          <picture>
+            <source type="image/avif" srcset="/assets/images/markets/riyadh-dirah-souq-480.avif 480w, /assets/images/markets/riyadh-dirah-souq-768.avif 768w, /assets/images/markets/riyadh-dirah-souq-960.avif 960w" sizes="(max-width: 960px) 100vw, 920px" />
+            <source type="image/webp" srcset="/assets/images/markets/riyadh-dirah-souq-480.webp 480w, /assets/images/markets/riyadh-dirah-souq-768.webp 768w, /assets/images/markets/riyadh-dirah-souq-960.webp 960w" sizes="(max-width: 960px) 100vw, 920px" />
+            <img src="/assets/images/markets/riyadh-dirah-souq-768.jpg" srcset="/assets/images/markets/riyadh-dirah-souq-480.jpg 480w, /assets/images/markets/riyadh-dirah-souq-768.jpg 768w, /assets/images/markets/riyadh-dirah-souq-960.jpg 960w" sizes="(max-width: 960px) 100vw, 920px" width="768" height="576" loading="lazy" decoding="async" alt="Covered souq alley in Riyadh’s Ad Dirah market district" data-alt-ar="ممر سوق مسقوف في حي الديرة التجاري بالرياض" />
+          </picture>
+          <figcaption class="cp-hero-media-credit">
+            <span class="cp-hero-media-label"><a href="riyadh/" data-label-ar="السوق المميّز: سوق الديرة في الرياض">Featured market: Ad Dirah Souq, Riyadh</a></span>
+            <a href="https://commons.wikimedia.org/wiki/File:Incense_souk_in_downtown_Riyadh_(12754047044).jpg" target="_blank" rel="noopener nofollow">Francisco Anzola · CC BY 2.0</a>
+          </figcaption>
+        </figure>
+
+        <p class="cp-hero-context" data-copy-ar="تُسعَّر أسعار الذهب في السعودية بالريال (SAR) محوَّلةً من سعر الذهب الفوري العالمي. يميل الطلب على المجوهرات إلى عيارَي 21 و18، مع عيار 24 للسبائك؛ والذهب الاستثماري بنقاء 99% فأكثر معفى من الضريبة بينما تخضع المجوهرات لضريبة 15%. وتضيف أسواق الذهب في الديرة بالرياض وفي جدة المصنعية فوق السعر المرجعي المكافئ للسبيكة المعروض في هذه الصفحة.">Saudi gold prices are quoted in riyals (SAR), converted from the global spot rate. Jewellery demand favours 21K and 18K, with 24K for bars; investment gold of at least 99% purity is VAT-exempt while jewellery carries 15% VAT. Riyadh's Ad Dirah souq and Jeddah's gold markets quote retail prices that add making charges above the bullion-equivalent reference shown on this page.</p>
       </section>
 
       <section class="cp-section">
@@ -164,19 +178,18 @@
       initCountryPage({
         countryCode: 'SA',
         currency: 'SAR',
-        flag: '🇸🇦',
         nameEn: 'Saudi Arabia',
         nameAr: 'المملكة العربية السعودية',
         fixedPeg: false,
         decimals: 2,
         timezone: 'Asia/Riyadh',
         relatedCountries: [
-          { file: 'uae.html', nameEn: 'UAE', nameAr: 'الإمارات', flag: '🇦🇪' },
-          { file: 'kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', flag: '🇰🇼' },
-          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', flag: '🇶🇦' },
-          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', flag: '🇧🇭' },
-          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', flag: '🇴🇲' },
-          { file: 'egypt.html', nameEn: 'Egypt', nameAr: 'مصر', flag: '🇪🇬' },
+          { file: 'uae.html', nameEn: 'UAE', nameAr: 'الإمارات', code: 'AE' },
+          { file: 'kuwait.html', nameEn: 'Kuwait', nameAr: 'الكويت', code: 'KW' },
+          { file: 'qatar.html', nameEn: 'Qatar', nameAr: 'قطر', code: 'QA' },
+          { file: 'bahrain.html', nameEn: 'Bahrain', nameAr: 'البحرين', code: 'BH' },
+          { file: 'oman.html', nameEn: 'Oman', nameAr: 'عُمان', code: 'OM' },
+          { file: 'egypt.html', nameEn: 'Egypt', nameAr: 'مصر', code: 'EG' },
         ],
         faqEn: [
           {

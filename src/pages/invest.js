@@ -9,6 +9,7 @@ import { updateTicker } from '../components/ticker.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 
 const LANG_KEY = 'user_prefs';
 let shellCtrl = null;
@@ -202,7 +203,7 @@ const I18N = {
 const PURPOSES = {
   en: {
     hedge: {
-      icon: '🛡️',
+      icon: 'i-lock',
       title: 'Hedge & safety',
       sub: 'Preserve purchasing power and diversify savings',
       adviceTitle: 'Use gold like insurance, not like excitement',
@@ -214,7 +215,7 @@ const PURPOSES = {
       ],
     },
     culture: {
-      icon: '💍',
+      icon: 'i-star',
       title: 'Jewelry & culture',
       sub: 'Wear it, gift it, and still keep value',
       adviceTitle: 'Buy 22K for use, not because it is the “best investment” on paper',
@@ -226,7 +227,7 @@ const PURPOSES = {
       ],
     },
     profit: {
-      icon: '📈',
+      icon: 'i-chart',
       title: 'Tactical trade',
       sub: 'Short-term positioning with strict discipline',
       adviceTitle: 'Short-term gold needs rules, not feelings',
@@ -240,7 +241,7 @@ const PURPOSES = {
   },
   ar: {
     hedge: {
-      icon: '🛡️',
+      icon: 'i-lock',
       title: 'تحوط وأمان',
       sub: 'حماية القوة الشرائية وتنويع المدخرات',
       adviceTitle: 'استخدم الذهب كنوع من التأمين، لا كإثارة',
@@ -252,7 +253,7 @@ const PURPOSES = {
       ],
     },
     culture: {
-      icon: '💍',
+      icon: 'i-star',
       title: 'مجوهرات وثقافة',
       sub: 'تلبسه، تهديه، وتحتفظ بقيمته',
       adviceTitle: 'اشترِ 22K للاستخدام، لا لأنه “أفضل استثمار” نظرياً',
@@ -264,7 +265,7 @@ const PURPOSES = {
       ],
     },
     profit: {
-      icon: '📈',
+      icon: 'i-chart',
       title: 'مضاربة تكتيكية',
       sub: 'تمركز قصير الأجل بانضباط صارم',
       adviceTitle: 'الربح القصير في الذهب يحتاج قواعد لا مشاعر',
@@ -735,6 +736,10 @@ function renderPurposeCards() {
 
   clear(root);
   for (const [key, item] of Object.entries(items)) {
+    // `item.icon` is a sprite symbol id; append via createElementNS (safe-dom's
+    // `el()` only accepts nodes it created itself, so attach the SVG directly).
+    const iconWrap = el('span', { class: 'invest-goal-icon', 'aria-hidden': 'true' });
+    iconWrap.appendChild(iconUseElement(item.icon, 'invest-goal-ico'));
     const btn = el(
       'button',
       {
@@ -743,7 +748,7 @@ function renderPurposeCards() {
         dataset: { purpose: key },
       },
       [
-        el('span', { class: 'invest-goal-icon', 'aria-hidden': 'true' }, [item.icon]),
+        iconWrap,
         el('div', { class: 'invest-goal-title' }, [item.title]),
         el('div', { class: 'invest-goal-sub' }, [item.sub]),
       ]

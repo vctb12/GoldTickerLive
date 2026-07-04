@@ -61,6 +61,10 @@
   --tp-hero-bg-accent: #121830;
   --tp-hero-text: rgb(242 238 221 / 97%);
   --tp-hero-muted: rgb(242 238 221 / 68%);
+
+  /* Small (<18.66px) copy on the dark panel needs >=4.5:1 - 68% lands ~4.2:1
+     against the note-card surface; 86% clears AA with margin. */
+  --tp-hero-muted-strong: rgb(242 238 221 / 86%);
   --tp-hero-faint: rgb(242 238 221 / 42%);
   --tp-hero-border: color-mix(in srgb, var(--color-gold) 28%, transparent);
   --tp-hero-surface: color-mix(in srgb, var(--color-gold) 7%, rgb(255 255 255 / 4%));
@@ -963,8 +967,17 @@ body.tracker-pro-page {
   padding: 0.65rem 0.75rem;
   background: rgb(255 255 255 / 5%);
   border: 1px solid rgb(255 255 255 / 8%);
-  color: var(--tp-hero-muted);
+  color: var(--tp-hero-muted-strong);
   line-height: 1.58;
+}
+
+/* Note items sit on LIGHT subpanel cards, not the dark hero panel — the
+   shared hero tint above rendered them parchment-on-white (axe serious,
+   ~1.14:1). Restate them in surface tokens so both themes pass AA. */
+.tracker-subpanel .tracker-note-item {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
   font-size: 0.82rem;
 }
 
@@ -1060,6 +1073,17 @@ body.tracker-pro-page {
   max-width: 1360px;
   margin: 0 auto;
   padding: 0.4rem var(--page-gutter);
+}
+
+/* The overlay-launcher group sits OUTSIDE the tablist nav (axe
+   aria-required-children) but shares the same strip; on narrow screens the
+   strip wraps so the launchers and workspace badge stay reachable while the
+   tab nav keeps its own horizontal scroll. */
+@media (width <= 768px) {
+  .tracker-modes-wrap {
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+  }
 }
 
 .tracker-modes {
@@ -4991,4 +5015,245 @@ td.tracker-chg-flat {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   V1-VISUAL — Command Center polish (2026-07-01)
+   Hierarchy: the milled live readout is the hero (design-language §4);
+   the h1 masthead and badge strip step back. Sprite icons replace emoji.
+   All new rules use logical properties + tokens only.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Sprite icon primitives ─────────────────────────────────────────── */
+.tracker-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracker-inline-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tp-tab-icon .tracker-ico {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  vertical-align: -0.2rem;
+}
+
+.tracker-trust-icon .tracker-ico {
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.tracker-side-ico {
+  display: inline-block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  flex: 0 0 auto;
+  vertical-align: -0.2rem;
+  margin-inline-end: 0.45rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}
+
+/* Flags rendered inside market/compare/watchlist rows (smaller than nav) */
+.tracker-row-flag {
+  display: inline-block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  vertical-align: -0.2rem;
+  margin-inline-end: 0.4rem;
+}
+
+/* Favorite star: monoline at rest, filled when armed */
+.tracker-star-ico {
+  display: block;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.tracker-icon-btn.is-favorite .tracker-star-ico {
+  fill: currentcolor;
+}
+
+/* ── Hero hierarchy — one bold element (the readout), everything quieter ── */
+.tracker-hero-readout {
+  border-radius: var(--readout-radius);
+  border-color: color-mix(in srgb, var(--color-gold) 32%, transparent);
+  box-shadow: var(--rim-inset), var(--readout-chrome);
+}
+
+.tracker-hero-title {
+  font-size: clamp(1.35rem, 2.4vw, 1.8rem);
+  margin-block-end: var(--space-1);
+}
+
+.tracker-hero-kicker {
+  font-size: 0.65rem;
+  opacity: 0.75;
+}
+
+.tracker-hero-title-sub {
+  margin-block-start: 0;
+  font-size: var(--text-sm);
+}
+
+.tracker-hero-description {
+  font-size: var(--text-sm);
+  margin-block-end: var(--space-4);
+  line-height: var(--leading-normal);
+}
+
+.tracker-badge-row {
+  font-size: 0.92em;
+}
+
+/* Countdown hint reads as part of the live readout context */
+.tracker-hint-countdown {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Side rail tool links ───────────────────────────────────────────── */
+.tracker-side-ul a,
+.tracker-side-link-btn {
+  display: flex;
+  align-items: center;
+}
+
+.tracker-side-label {
+  min-inline-size: 0;
+}
+
+/* ── Quick calculator inside the Planner overlay ────────────────────── */
+.tp-overlay .tracker-inline-calc {
+  padding: var(--space-4);
+}
+
+.tp-overlay .tracker-inline-calc .tracker-panel-head {
+  margin-block-end: var(--space-3);
+}
+
+.tp-overlay .tracker-inline-calc .tracker-panel-head h3 {
+  font-size: var(--text-md);
+  margin: 0;
+}
+
+.tp-overlay .tracker-calc-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: var(--space-3);
+  margin-block-end: var(--space-3);
+}
+
+.tp-overlay .tracker-calc-result {
+  inline-size: 100%;
+}
+
+/* ═══════════════ V1-VISUAL wave 3 — command-center refinement ═══════════════ */
+
+/* 1. Panels that live INSIDE the always-dark hero glass must pin hero ink —
+   they previously inherited theme tokens and went invisible in light mode
+   (quote-metadata title/labels/values rendered dark-on-dark). */
+.tracker-command-meta-card .tracker-addon-title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-ui-xs);
+  font-weight: var(--weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--tp-hero-muted-strong);
+}
+
+.tracker-command-meta-card .quote-meta-panel__label {
+  color: var(--tp-hero-muted);
+}
+
+.tracker-command-meta-card .quote-meta-panel__value {
+  color: var(--tp-hero-text);
+}
+
+.tracker-command-meta-card .realtime-sla-panel__metric {
+  color: var(--tp-hero-muted);
+}
+
+.tracker-command-meta-card .realtime-sla-panel__metric-value {
+  color: var(--tp-hero-text);
+}
+
+/* 2. Milled heading kickers — a foil tick before section headings gives the
+   light panels the same engraved rhythm as the readout. */
+.tracker-panel-head h2,
+.tracker-panel-head .h2,
+.tracker-subpanel-head h3,
+.tracker-subpanel-head .h3 {
+  position: relative;
+  padding-inline-start: 0.7rem;
+}
+
+.tracker-panel-head h2::before,
+.tracker-panel-head .h2::before,
+.tracker-subpanel-head h3::before,
+.tracker-subpanel-head .h3::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block: 0.16em;
+  inline-size: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    180deg,
+    var(--color-gold),
+    color-mix(in srgb, var(--color-gold) 45%, transparent)
+  );
+}
+
+/* 3. Card chrome — warmer hairline and a whisper of depth on light panels,
+   a lifted surface in dark mode, so boxes read as instrument plates. */
+.tracker-panel,
+.tracker-subpanel {
+  border: 1px solid color-mix(in srgb, var(--color-gold) 9%, var(--tp-border));
+  box-shadow: 0 1px 2px rgb(21 17 10 / 4%);
+}
+
+[data-theme='dark'] .tracker-panel,
+[data-theme='dark'] .tracker-subpanel {
+  background: color-mix(in srgb, var(--surface-secondary) 88%, rgb(255 255 255 / 4%));
+  border-color: color-mix(in srgb, var(--color-gold) 14%, var(--tp-border));
+  box-shadow: none;
+}
+
+/* 4. Consistent gold focus ring on the tracker's interactive chrome. */
+.tracker-mode-tab:focus-visible,
+.tracker-overlay-btn:focus-visible,
+.tracker-workspace-badge:focus-visible,
+.tracker-panel button:focus-visible,
+.tracker-panel select:focus-visible,
+.tracker-panel input:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-gold) 75%, transparent);
+  outline-offset: 2px;
 }

@@ -689,3 +689,31 @@ code.method-formula {
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--color-gold-dim, #4a3c10);
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.method-not-icon .method-not-ico {
+  display: block;
+  inline-size: 0.85rem;
+  block-size: 0.85rem;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.info-box__icon .info-box-ico {
+  display: block;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.related-tool-link .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

@@ -1,4 +1,5 @@
 import { COUNTRIES } from '../config/index.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { persistState } from './state.js';
 import { clear, el } from '../lib/safe-dom.js';
 import { formatUnitLabel, tx, _currentSpot, _el, _priceFor, _state } from './_ctx.js';
@@ -105,7 +106,7 @@ export function renderMarkets() {
         'aria-label': tx('favoriteToggle', { name }),
         'aria-pressed': isFav ? 'true' : 'false',
       },
-      '★'
+      iconUseElement('i-star', 'tracker-star-ico')
     );
     button.addEventListener('click', (event) => {
       event.preventDefault();
@@ -123,7 +124,9 @@ export function renderMarkets() {
       el('div', { class: 'tracker-market-top' }, [
         el('div', { class: 'tracker-market-title' }, [
           el('strong', null, [
-            country.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+            flagSymbolForCountry(country.code)
+              ? iconUseElement(flagSymbolForCountry(country.code), 'nav-flag tracker-row-flag')
+              : null,
             name,
           ]),
           el('span', null, cur),

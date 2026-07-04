@@ -253,6 +253,22 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     if (parsed?.shouldCanonicalize) syncUrlFromState(state);
   });
 
+  // Keyboard shortcuts sheet — the static #tp-keyboard-help dialog, opened
+  // with `?` (documented in the hero hint) and closed by Escape, its close
+  // button, or a backdrop click.
+  const keyboardHelp = document.getElementById('tp-keyboard-help');
+  const keyboardHelpClose = document.getElementById('tp-keyboard-help-close');
+  function setKeyboardHelpOpen(open) {
+    if (!keyboardHelp) return;
+    keyboardHelp.hidden = !open;
+    keyboardHelp.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (open) keyboardHelpClose?.focus();
+  }
+  keyboardHelpClose?.addEventListener('click', () => setKeyboardHelpOpen(false));
+  keyboardHelp?.addEventListener('click', (evt) => {
+    if (evt.target === keyboardHelp) setKeyboardHelpOpen(false);
+  });
+
   // Keyboard shortcuts — driven by the tracker-modes registry so the mapping
   // is a single source of truth shared with tests and docs.
   const shortcutMap = getShortcutMap();
@@ -263,10 +279,18 @@ export function mountShell(state, els, onModeChange, onLangChange) {
     // the planner/alerts overlays are mostly inputs, so the form-element guard
     // below would otherwise trap keyboard users in the dialog.
     if (key === 'escape') {
+      if (keyboardHelp && !keyboardHelp.hidden) {
+        setKeyboardHelpOpen(false);
+        return;
+      }
       if (_openPanel) closeOverlay(_openPanel);
       return;
     }
     if (['INPUT', 'TEXTAREA', 'SELECT'].includes(evt.target.tagName)) return;
+    if (evt.key === '?') {
+      setKeyboardHelpOpen(Boolean(keyboardHelp?.hidden));
+      return;
+    }
     if (key === 'r') {
       els.refreshBtn?.click();
       return;

@@ -6,6 +6,7 @@ import { track, EVENTS } from '../lib/analytics.js';
 import { clear, el, escape } from '../lib/safe-dom.js';
 import { resolveLearnHubText } from './content-model.js';
 import { createTocRenderer } from './toc-renderer.js';
+import { iconUseElement } from '../components/icon-sprite.js';
 
 function resolveContainer(container) {
   if (!container) return null;
@@ -301,7 +302,11 @@ export function createArticleRenderer({
           class: 'learn-hub-article-icon',
           'aria-label': t(currentArticle?.iconLabelKey || 'learnHub.articles.learn.iconLabel'),
         },
-        [currentArticle?.icon || '📄']
+        [
+          /^i-[a-z0-9-]+$/.test(currentArticle?.icon || '')
+            ? iconUseElement(currentArticle.icon, 'learn-hub-article-ico')
+            : iconUseElement('i-book', 'learn-hub-article-ico'),
+        ]
       ),
       el('div', { class: 'learn-hub-article-copy' }, [
         el('h1', { class: 'learn-hub-article-title' }, [t(currentArticle.titleKey)]),

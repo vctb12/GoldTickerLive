@@ -718,3 +718,20 @@
   border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   background: linear-gradient(145deg, var(--color-gold-tint), var(--gradient-card));
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.related-tool-link .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Sprite icon inside the article-header badge (replaced the emoji glyph) */
+.learn-hub-article-ico {
+  inline-size: 1.6rem;
+  block-size: 1.6rem;
+  stroke-width: 1.7;
+}

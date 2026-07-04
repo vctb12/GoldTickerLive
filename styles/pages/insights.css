@@ -1256,3 +1256,41 @@
     color-mix(in srgb, var(--color-gold) 3%, transparent) 100%
   );
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.insights-chip-ico {
+  inline-size: 1em;
+  block-size: 1em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.15em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.insights-search-icon .insights-search-ico {
+  display: block;
+  inline-size: 1em;
+  block-size: 1em;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.insights-feed-icon .insights-feed-ico {
+  display: block;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.related-tool-link .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

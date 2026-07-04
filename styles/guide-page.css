@@ -660,3 +660,23 @@
   font-size: 0.88rem;
   line-height: 1.8;
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.guide-journey-step-icon .g-ico {
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.guide-compare-card-title .g-title-ico {
+  display: inline-block;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.2em;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

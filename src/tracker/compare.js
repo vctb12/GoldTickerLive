@@ -1,5 +1,6 @@
 // tracker/compare.js — comparison workspace rendering
 import { COUNTRIES } from '../config/index.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { _state, _el, _priceFor, _currentSpot, tx } from './_ctx.js';
 import { clear, el } from '../lib/safe-dom.js';
 import { buildSourceBadge, getFreshnessModel } from './freshness.js';
@@ -65,7 +66,9 @@ export function renderComparisonWorkspace() {
         el('div', { class: 'comparison-card__header' }, [
           el('div', null, [
             el('h3', { class: 'comparison-card__title' }, [
-              country.flag ? el('span', { 'aria-hidden': 'true' }, `${country.flag} `) : null,
+              flagSymbolForCountry(country.code)
+                ? iconUseElement(flagSymbolForCountry(country.code), 'nav-flag tracker-row-flag')
+                : null,
               name,
             ]),
             el(

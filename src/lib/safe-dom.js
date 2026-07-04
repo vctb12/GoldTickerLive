@@ -37,7 +37,7 @@ export function escape(value) {
  *  Explicitly rejects `javascript:`, `data:`, `vbscript:`, `file:`, and any
  *  other non-allowlisted scheme.
  *
- *  ⚠️ This is for *navigation URLs in the browser only*. It is NOT a
+ *  IMPORTANT: This is for *navigation URLs in the browser only*. It is NOT a
  *  filesystem-path sanitizer — do not pass its output to `fs.*` calls or
  *  to server-side path resolution. */
 export function safeHref(url, attrName = 'href') {
@@ -84,7 +84,14 @@ const ALLOWED_NODE_TYPES = new Set([1, 3, 11]); // Element, Text, DocumentFragme
 const BLOCKED_ATTR_NAMES = new Set(['srcdoc']);
 const URL_ATTR_NAMES = new Set(['href', 'src', 'action', 'formaction', 'poster', 'xlink:href']);
 
-function markTrustedNode(node) {
+/**
+ * Brand a node as safe for `el()` child nesting. EXPORTED FOR A NARROW
+ * CONTRACT: only modules that construct nodes exclusively from trusted
+ * primitives (createElement/createElementNS + setAttribute with sanitized
+ * values — e.g. src/components/icon-sprite.js) may brand their output.
+ * Never brand nodes parsed from strings or received from callers.
+ */
+export function markTrustedNode(node) {
   if (!node || typeof node !== 'object') return node;
   try {
     Object.defineProperty(node, SAFE_DOM_NODE_BRAND, {

@@ -4568,3 +4568,86 @@ button,
     border-radius: var(--radius-lg);
   }
 }
+
+/* ── Hero media band (V1-VISUAL wave 2/3) ───────────────
+   Licensed market photograph on country hubs and city gold-rate pages.
+   Assets: assets/images/markets/* — license register in assets/MANIFEST.md.
+   Bilingual alt/label swap: src/lib/hero-media-alts.js (single global copy —
+   this partial ships via styles/global.css to every consumer template). */
+.cp-hero-media {
+  max-width: 860px;
+  margin: var(--space-5) auto 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.cp-hero-media picture,
+.cp-hero-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.cp-hero-media-credit {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  flex-wrap: wrap;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.7rem;
+  line-height: var(--leading-normal, 1.5);
+  color: var(--color-text-muted);
+  border-block-start: 1px solid var(--border-subtle);
+}
+
+.cp-hero-media-label {
+  font-weight: 600;
+}
+
+.cp-hero-media-label a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cp-hero-media-label a:hover,
+.cp-hero-media-label a:focus-visible {
+  text-decoration: underline;
+}
+
+.cp-hero-media-credit a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cp-hero-media-credit a:hover,
+.cp-hero-media-credit a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Static context paragraph under the hub hero media band */
+.cp-hero-context {
+  max-width: 860px;
+  margin: var(--space-4) auto 0;
+  font-size: 0.92rem;
+  line-height: var(--leading-relaxed, 1.7);
+  color: var(--color-text-muted);
+}
+
+/* ── Guilloche ornament rule (V1-VISUAL wave 3) ─────────────
+   Procedurally generated engraved band (scripts/images/generate-brand-art.py,
+   owned artwork — assets/MANIFEST.md). Decorative only: pair with
+   aria-hidden="true" in markup. */
+.gtl-guilloche-rule {
+  block-size: 52px;
+  border-block: 1px solid var(--border-subtle);
+  background: url('../../assets/brand/guilloche-band-light-1600.webp') center / cover no-repeat;
+  opacity: 0.9;
+}
+
+[data-theme='dark'] .gtl-guilloche-rule {
+  background-image: url('../../assets/brand/guilloche-band-dark-1600.webp');
+}

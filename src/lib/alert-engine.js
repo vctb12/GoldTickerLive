@@ -407,7 +407,7 @@ export function createAlertEngine(options = {}) {
         selected: `${alert.karat}K gold`,
       };
       const scopeLabel = scopeLabels[alert.scope] || alert.scope;
-      const msg = `📊 Gold Alert: Notify me when ${scopeLabel} ${directionText} ${alert.target} — goldtickerlive.com/tracker`;
+      const msg = `Gold Alert: Notify me when ${scopeLabel} ${directionText} ${alert.target} — goldtickerlive.com/tracker`;
       return `https://wa.me/?text=${encodeURIComponent(msg)}`;
     },
 

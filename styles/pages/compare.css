@@ -773,6 +773,33 @@
   outline-offset: 3px;
 }
 
+/* ── V1-VISUAL: sprite flags replacing flag emoji (src/components/icon-sprite.js) ── */
+.compare-chip-flag .compare-flag-ico,
+.compare-td-flag .compare-flag-ico,
+.compare-chart-flag .compare-flag-ico {
+  display: block;
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.compare-td-flag,
+.compare-chart-flag {
+  display: inline-block;
+  vertical-align: -0.2em;
+}
+
+.compare-cheapest-flag .compare-flag-ico {
+  display: block;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.compare-detail-flag .compare-flag-ico {
+  display: block;
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
 /* Premium compare layer: scan-friendly country market surfaces. */
 .compare-hero {
   background: var(--surface-canvas);

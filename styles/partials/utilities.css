@@ -2895,6 +2895,19 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 /* W-1 page-hydrator freshness badge and disclaimer (safe-dom migration) */
+.ph-freshness-warning-ico {
+  display: inline-block;
+  inline-size: 1em;
+  block-size: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .ph-freshness-banner {
   background: var(--color-warning-subtle, #fef9c3);
   border: 1px solid var(--color-warning-border, rgb(245 158 11 / 35%));

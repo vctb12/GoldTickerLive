@@ -25,6 +25,7 @@ import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { getLiveFreshness } from '../lib/live-status.js';
 import { countUp } from '../lib/count-up.js';
@@ -42,6 +43,26 @@ import {
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 const VALID_CODES = new Set(COUNTRIES.map((c) => c.code));
+
+/**
+ * Wrapper span holding the inline-SVG flag for a country (sprite `f-*`
+ * symbols) — flag emoji are banned in UI (they render as "AE" letter pairs on
+ * Windows). safe-dom's `el()` only appends nodes it created itself, so the
+ * SVG from `iconUseElement` (createElementNS) is attached with appendChild.
+ * Falls back to the `i-globe` monoline icon when no flag symbol exists.
+ * @param {string|undefined} code  ISO country code, e.g. 'AE'
+ * @param {string} className       wrapper span class (page CSS sizes the svg)
+ */
+function flagBadge(code, className) {
+  const wrap = el('span', { class: className, 'aria-hidden': 'true' });
+  const symbol = flagSymbolForCountry(code);
+  wrap.appendChild(
+    symbol
+      ? iconUseElement(symbol, 'nav-flag compare-flag-ico')
+      : iconUseElement('i-globe', 'nav-ico compare-flag-ico')
+  );
+  return wrap;
+}
 
 // ── Translations ──────────────────────────────────────────────────────────────
 const T = {
@@ -320,7 +341,7 @@ function renderChips() {
     const isUae = code === 'AE';
     wrap.append(
       el('span', { class: `compare-chip${isUae ? ' compare-chip--ref' : ''}` }, [
-        el('span', { class: 'compare-chip-flag', 'aria-hidden': 'true' }, country.flag || ''),
+        flagBadge(country.code, 'compare-chip-flag'),
         el('span', { class: 'compare-chip-name' }, countryName(country)),
         el(
           'button',
@@ -349,7 +370,8 @@ function renderAddMenu() {
   );
   for (const country of available) {
     select.append(
-      el('option', { value: country.code }, `${country.flag || ''} ${countryName(country)}`.trim())
+      // <option> labels cannot render SVG — text only (no flag emoji).
+      el('option', { value: country.code }, countryName(country))
     );
   }
 }
@@ -368,7 +390,7 @@ function renderCheapest(rows) {
   const country = COUNTRIES.find((c) => c.code === cheapest.code);
   const priceSpan = el('strong', { class: 'compare-cheapest-price', 'data-countup': '1' }, '—');
   wrap.append(
-    el('span', { class: 'compare-cheapest-flag', 'aria-hidden': 'true' }, country?.flag || '🌍'),
+    flagBadge(country?.code, 'compare-cheapest-flag'),
     el('span', { class: 'compare-cheapest-text' }, [
       el('span', { class: 'compare-cheapest-label' }, `${t().cheapestLabel}: `),
       el('span', { class: 'compare-cheapest-country' }, countryName(country || cheapest)),
@@ -462,7 +484,7 @@ function renderTable(rows) {
     // Country
     tr.append(
       el('th', { scope: 'row', class: 'compare-td compare-td--country' }, [
-        el('span', { class: 'compare-td-flag', 'aria-hidden': 'true' }, row.flag),
+        flagBadge(row.code, 'compare-td-flag'),
         el('span', { class: 'compare-td-name' }, countryName(row)),
         isUae ? el('span', { class: 'compare-ref-badge' }, t().refReference) : null,
       ])
@@ -554,7 +576,7 @@ function renderDetailCard(row) {
     { class: `compare-detail-card${row.code === 'AE' ? ' compare-detail-card--ref' : ''}` },
     [
       el('header', { class: 'compare-detail-head' }, [
-        el('span', { class: 'compare-detail-flag', 'aria-hidden': 'true' }, country.flag || ''),
+        flagBadge(country.code, 'compare-detail-flag'),
         el('div', null, [
           el('h3', { class: 'compare-detail-name' }, countryName(country)),
           el('p', { class: 'compare-detail-cur' }, `${row.currency} · ${t().perGram}`),
@@ -655,11 +677,11 @@ function renderDetailChart(a, b) {
 
   const legend = el('div', { class: 'compare-chart-legend' }, [
     el('span', { class: 'compare-chart-key compare-chart-key--a' }, [
-      el('span', { 'aria-hidden': 'true' }, `${a.flag} `),
+      flagBadge(a.code, 'compare-chart-flag'),
       countryName(a),
     ]),
     el('span', { class: 'compare-chart-key compare-chart-key--b' }, [
-      el('span', { 'aria-hidden': 'true' }, `${b.flag} `),
+      flagBadge(b.code, 'compare-chart-flag'),
       countryName(b),
     ]),
   ]);

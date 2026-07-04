@@ -1129,3 +1129,59 @@
     transparent 70%
   );
 }
+
+/* ── V1-VISUAL: sprite icons replacing emoji glyphs (src/components/icon-sprite.js) ── */
+.cp-hero-flag .nav-flag {
+  inline-size: 2.4rem;
+  block-size: 2.4rem;
+}
+
+.cp-related-flag .nav-flag {
+  inline-size: 1.3rem;
+  block-size: 1.3rem;
+}
+
+.cp-mi-title .nav-flag {
+  display: inline-block;
+  inline-size: 1.1em;
+  block-size: 1.1em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.2em;
+}
+
+.related-tool-link .rt-ico {
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  flex: 0 0 auto;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cp-trust-note .cp-note-ico {
+  display: inline-block;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  vertical-align: -0.15em;
+  margin-inline-end: 0.25em;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cp-mi-buy-dot .cp-mi-buy-ico {
+  display: block;
+  inline-size: 1.4rem;
+  block-size: 1.4rem;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cp-mi-buy--favorable .cp-mi-buy-dot {
+  color: var(--color-live);
+}
+
+.cp-mi-buy--elevated .cp-mi-buy-dot {
+  color: var(--color-down);
+}

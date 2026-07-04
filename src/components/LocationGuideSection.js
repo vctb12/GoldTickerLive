@@ -1,5 +1,5 @@
 import { el } from '../lib/safe-dom.js';
-import guides from '../data/location-guides.json';
+import guides from '../data/location-guides.json' with { type: 'json' };
 
 function pickText(item, lang, enKey, arKey) {
   return lang === 'ar' ? item[arKey] || item[enKey] : item[enKey] || item[arKey];

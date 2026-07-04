@@ -86,7 +86,7 @@ export function injectFooter(lang = 'en', depth = 0) {
     <div class="footer-inner">
       <div class="footer-newsletter-inner">
         <div class="footer-newsletter-text">
-          <strong>${isAr ? '📬 النشرة الإخبارية' : '📬 Gold Price Updates'}</strong>
+          <strong>${isAr ? 'النشرة الإخبارية' : 'Gold Price Updates'}</strong>
           <span>${isAr ? 'احصل على تحديثات أسعار الذهب الأسبوعية في صندوق بريدك' : 'Get weekly gold price updates delivered to your inbox'}</span>
         </div>
         <form class="footer-newsletter-form" id="footer-newsletter-form" novalidate aria-label="${isAr ? 'اشتراك النشرة الإخبارية' : 'Newsletter signup'}" data-endpoint="${NEWSLETTER_API_ENDPOINT}" data-formspree="${FORMSPREE_ENDPOINT}">
@@ -130,10 +130,10 @@ export function injectFooter(lang = 'en', depth = 0) {
       <div class="footer-bottom-row">
         <p class="footer-disclaimer">${
           isAr
-            ? 'قيم تقديرية مكافئة للسبيكة فقط. قد تختلف أسعار التجزئة والمجوهرات. ليست نصيحة مالية.'
+            ? 'تقديرات مرجعية مرتبطة بالسعر الفوري فقط. قد تتضمن أسعار التجزئة والمجوهرات المصنعية والعلاوات والضريبة. ليست نصيحة مالية.'
             : 'Spot-linked reference estimates only. Retail and jewellery prices may include making charges, premiums, and tax. Not financial advice.'
         }</p>
-        <p class="footer-copy">© ${year} Gold Ticker Live · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">⚡</span></p>
+        <p class="footer-copy">© ${year} Gold Ticker Live · <a href="${r('../terms.html')}">${isAr ? 'شروط الخدمة' : 'Terms'}</a> · <a href="${r('../privacy.html')}">${isAr ? 'الخصوصية' : 'Privacy'}</a> · <a href="${r('../methodology.html')}">${isAr ? 'المنهجية' : 'Methodology'}</a> · <span class="footer-copy-trigger" id="footer-admin-trigger" aria-hidden="true" style="cursor:default;user-select:none">·</span></p>
       </div>
     </div>
   </div>
@@ -186,7 +186,7 @@ export function injectFooter(lang = 'en', depth = 0) {
   } catch (_) {}
 
   // ── Admin Access Methods (Easter Eggs) ──────────────────────────────────────
-  // Method 3: Triple-click on ⚡ symbol in footer
+  // Method 3: Triple-click on the '·' marker in the footer copyright line
   // Method 4: Keyboard shortcut Ctrl+Shift+A
   // Method 5: Konami code ↑↑↓↓←→←→BA
   _initAdminAccessMethods(depth);
@@ -214,7 +214,7 @@ async function _handleNewsletterSubmit(e, form, isAr) {
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
     _showNewsletterMsg(
       msg,
-      isAr ? '⚠ يرجى إدخال بريد إلكتروني صحيح.' : '⚠ Please enter a valid email address.',
+      isAr ? 'يرجى إدخال بريد إلكتروني صحيح.' : 'Please enter a valid email address.',
       'error'
     );
     if (emailInput) emailInput.focus();
@@ -265,8 +265,8 @@ async function _handleNewsletterSubmit(e, form, isAr) {
         successMsg.className = 'footer-newsletter-success';
         successMsg.setAttribute('role', 'status');
         successMsg.textContent = isAr
-          ? '✅ تحقق من صندوق الوارد لتأكيد اشتراكك.'
-          : '✅ Check your inbox to confirm your subscription.';
+          ? 'تحقق من صندوق الوارد لتأكيد اشتراكك.'
+          : 'Check your inbox to confirm your subscription.';
         formRow.replaceChildren(successMsg);
       }
     } else {
@@ -275,13 +275,13 @@ async function _handleNewsletterSubmit(e, form, isAr) {
       if (serverMsg.toLowerCase().includes('already')) {
         _showNewsletterMsg(
           msg,
-          isAr ? 'ℹ هذا البريد مشترك بالفعل.' : 'ℹ This email is already subscribed.',
+          isAr ? 'هذا البريد مشترك بالفعل.' : 'This email is already subscribed.',
           'info'
         );
       } else {
         _showNewsletterMsg(
           msg,
-          isAr ? '⚠ حدث خطأ. يرجى المحاولة مجدداً.' : '⚠ Something went wrong. Please try again.',
+          isAr ? 'حدث خطأ. يرجى المحاولة مجدداً.' : 'Something went wrong. Please try again.',
           'error'
         );
       }
@@ -293,9 +293,7 @@ async function _handleNewsletterSubmit(e, form, isAr) {
   } catch (_err) {
     _showNewsletterMsg(
       msg,
-      isAr
-        ? '⚠ تعذر الاتصال. يرجى المحاولة لاحقاً.'
-        : '⚠ Could not connect. Please try again later.',
+      isAr ? 'تعذر الاتصال. يرجى المحاولة لاحقاً.' : 'Could not connect. Please try again later.',
       'error'
     );
     if (btn) {
@@ -363,9 +361,8 @@ function _showAdminPopup(adminUrl) {
       }
     </style>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <span style="font-size:22px;line-height:1">⚙️</span>
       <strong style="color:#f1f5f9;font-size:0.9375rem;letter-spacing:-0.01em">GoldAdmin</strong>
-      <button id="gp-admin-popup-close" style="margin-left:auto;background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1;padding:0" aria-label="Close">✕</button>
+      <button id="gp-admin-popup-close" style="margin-left:auto;background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;line-height:1;padding:0" aria-label="Close">&times;</button>
     </div>
     <p style="color:#8ba3c7;font-size:0.8125rem;line-height:1.5;margin-bottom:14px">
       Admin panel access detected. Click below to sign in.
@@ -401,7 +398,7 @@ function _showAdminPopup(adminUrl) {
 function _initAdminAccessMethods(depth) {
   const adminUrl = _getAdminUrl(depth);
 
-  // Method 3: Triple-click on ⚡ footer trigger
+  // Method 3: Triple-click on the '·' footer trigger
   const trigger = document.getElementById('footer-admin-trigger');
   if (trigger) {
     let clicks = 0;
