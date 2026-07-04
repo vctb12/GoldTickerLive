@@ -173,7 +173,7 @@
 }
 
 .chart-panel:hover {
-  border-color: rgb(196 144 46 / 25%);
+  border-color: color-mix(in srgb, var(--color-gold) 25%, transparent);
 }
 
 /* Chart chips — pill style */

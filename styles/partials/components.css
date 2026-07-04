@@ -1436,7 +1436,7 @@ main {
 
 #karat-table tbody tr.row-22k,
 #karat-table tbody tr.row-21k {
-  background: var(--color-surface-2, #fdfbf5);
+  background: var(--color-surface-2, #faf7ee);
 }
 
 /* Numeric columns always right-aligned regardless of dir */
@@ -3786,8 +3786,8 @@ body.has-ticker {
 }
 
 .data-status-banner--offline {
-  background: var(--color-warning-bg, #fef3c7);
-  color: var(--color-warning-text, #92400e);
+  background: var(--color-warning-bg, rgb(245 158 11 / 10%));
+  color: var(--color-warning-text, #7a4f15);
 }
 
 .data-status-banner--error {
@@ -4041,7 +4041,11 @@ body.has-ticker {
 
 /* FAQ accordion RTL — native <details> marker on start side */
 [dir='rtl'] .faq-item[open] .faq-q {
-  background: linear-gradient(270deg, rgb(196 144 46 / 5%), transparent 70%);
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 70%
+  );
 }
 
 /* GCC tabs container RTL */
@@ -4055,7 +4059,11 @@ body.has-ticker {
   border-inline-end: 3px solid var(--color-gold);
   padding-inline-start: 0;
   padding-inline-end: var(--space-3);
-  background: linear-gradient(270deg, rgb(196 144 46 / 5%), transparent 60%);
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 60%
+  );
 }
 
 /* Karat strip label column RTL */
@@ -4195,7 +4203,7 @@ button,
   :root {
     --color-border: #9a8c72;
     --color-text-muted: #5a4d38;
-    --shadow-gold: 0 2px 8px rgb(196 144 46 / 40%);
+    --shadow-gold: 0 2px 8px color-mix(in srgb, var(--color-gold) 40%, transparent);
   }
 
   .gcc-card,

@@ -2560,7 +2560,7 @@
 
 .shop-card:hover {
   transform: translateY(-3px);
-  border-color: rgb(196 144 46 / 45%);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
   box-shadow: var(--shadow-gold-lg), var(--shadow-md);
 }
 
@@ -2595,7 +2595,7 @@
 /* Featured directory cards — richer treatment */
 .featured-card {
   background: var(--gradient-card);
-  border: 1.5px solid rgb(196 144 46 / 28%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xs);
   position: relative;
@@ -2614,7 +2614,7 @@
 
 .featured-card:hover {
   transform: translateY(-3px);
-  border-color: rgb(196 144 46 / 55%);
+  border-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
   box-shadow: var(--shadow-gold-lg), var(--shadow-md);
 }
 
@@ -2654,7 +2654,7 @@
 /* Tab active state — stronger */
 .shops-tab.is-active,
 .shops-tab[aria-selected='true'] {
-  border-color: rgb(196 144 46 / 60%);
+  border-color: color-mix(in srgb, var(--color-gold) 60%, transparent);
   background: var(--color-gold-tint);
   color: var(--color-gold-dark);
   font-weight: var(--weight-bold);
@@ -2665,20 +2665,24 @@
 .shops-control input:not([type='checkbox']):focus,
 .shops-control select:focus {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 /* Controls summary card */
 .shops-controls-summary {
-  border: 1.5px solid rgb(196 144 46 / 22%);
-  background: linear-gradient(135deg, rgb(196 144 46 / 6%) 0%, transparent 70%);
+  border: 1.5px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-gold) 6%, transparent) 0%,
+    transparent 70%
+  );
   border-radius: var(--radius-md);
 }
 
 /* Shops count badge */
 #shops-count {
   background: var(--color-gold-tint);
-  border-color: rgb(196 144 46 / 35%);
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
   box-shadow: var(--shadow-gold);
 }
 

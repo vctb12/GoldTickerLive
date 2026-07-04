@@ -111,7 +111,7 @@
   font-weight: var(--weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #6a5c48);
   flex-shrink: 0;
 }
 
@@ -130,7 +130,7 @@
   padding: 0.4rem 0.7rem;
   border-radius: var(--radius-sm, 6px);
   font-size: 0.82rem;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #6a5c48);
   text-decoration: none;
   transition:
     background 0.15s,
@@ -139,7 +139,7 @@
 }
 
 .method-toc-list li a:hover {
-  background: var(--color-border, #22242a);
+  background: var(--color-border, #d9cfb6);
   color: var(--color-gold);
 }
 
@@ -154,7 +154,7 @@
 .method-section {
   margin-bottom: var(--space-7);
   padding-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border, #22242a);
+  border-bottom: 1px solid var(--color-border, #d9cfb6);
 }
 
 .method-section:last-child {
@@ -181,12 +181,12 @@
 .method-section h3 {
   font-size: var(--text-base);
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e7e5e0);
+  color: var(--color-text, #15110a);
   margin: var(--space-5) 0 var(--space-2);
 }
 
 .method-section p {
-  color: var(--color-text-muted, #aaa);
+  color: var(--color-text-muted, #6a5c48);
   line-height: 1.7;
   margin: 0 0 0.85rem;
 }
@@ -198,11 +198,11 @@
 }
 
 .method-section code {
-  background: var(--color-border, #22242a);
+  background: var(--color-border, #d9cfb6);
   border-radius: var(--radius-xs);
   padding: 0.1em 0.4em;
   font-size: 0.88em;
-  color: var(--color-gold-light, #e8c040);
+  color: var(--color-gold-light, #ddb040);
   font-family: 'SFMono-Regular', 'Consolas', monospace;
 }
 
@@ -221,8 +221,8 @@
 }
 
 .method-source-card {
-  background: var(--color-surface, #141518);
-  border: 1px solid var(--color-border, #22242a);
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #d9cfb6);
   border-radius: var(--radius-lg, 10px);
   padding: 1.1rem;
 }
@@ -236,13 +236,13 @@
 
 .method-source-card-role {
   font-size: 0.82rem;
-  color: var(--color-text, #e7e5e0);
+  color: var(--color-text, #15110a);
   margin-bottom: 0.3rem;
 }
 
 .method-source-card-freq {
   font-size: 0.78rem;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #6a5c48);
   margin-bottom: 0.75rem;
 }
 
@@ -259,7 +259,7 @@
 
 /* Formula block */
 .method-formula-block {
-  background: var(--color-surface, #141518);
+  background: var(--color-surface, #fff);
   border: 1px solid var(--color-gold-dim, #4a3c10);
   border-inline-start: 3px solid var(--color-gold);
   border-radius: var(--radius-md, 8px);
@@ -272,7 +272,7 @@
   font-weight: var(--weight-semibold);
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #6a5c48);
   margin-bottom: var(--space-2);
 }
 
@@ -295,9 +295,9 @@ code.method-formula {
 
 .method-formula-breakdown li {
   padding: 0.45rem 0;
-  border-bottom: 1px solid var(--color-border, #22242a);
+  border-bottom: 1px solid var(--color-border, #d9cfb6);
   font-size: 0.88rem;
-  color: var(--color-text-muted, #aaa);
+  color: var(--color-text-muted, #6a5c48);
   line-height: 1.5;
 }
 
@@ -310,7 +310,7 @@ code.method-formula {
   overflow-x: auto;
   margin: 1rem 0;
   border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--color-border, #22242a);
+  border: 1px solid var(--color-border, #d9cfb6);
 }
 
 .method-karat-table {
@@ -320,8 +320,8 @@ code.method-formula {
 }
 
 .method-karat-table th {
-  background: var(--color-surface, #141518);
-  color: var(--color-text-muted, #888);
+  background: var(--color-surface, #fff);
+  color: var(--color-text-muted, #6a5c48);
   font-size: var(--text-xs);
   font-weight: var(--weight-semibold);
   text-transform: uppercase;
@@ -333,12 +333,12 @@ code.method-formula {
 
 .method-karat-table td {
   padding: 0.6rem 1rem;
-  color: var(--color-text, #e7e5e0);
-  border-top: 1px solid var(--color-border, #22242a);
+  color: var(--color-text, #15110a);
+  border-top: 1px solid var(--color-border, #d9cfb6);
 }
 
 .method-karat-table tr:hover td {
-  background: var(--color-surface, #141518);
+  background: var(--color-surface, #fff);
 }
 
 /* Warning / callout blocks */
@@ -369,14 +369,14 @@ code.method-formula {
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-wider);
-  color: var(--color-text, #e7e5e0);
+  color: var(--color-text, #15110a);
   margin-bottom: var(--space-2);
 }
 
 .method-warning p {
   font-size: 0.88rem;
   margin: 0 0 0.4rem;
-  color: var(--color-text-muted, #aaa);
+  color: var(--color-text-muted, #6a5c48);
 }
 
 .method-warning p:last-child {
@@ -417,7 +417,7 @@ code.method-formula {
   display: block;
   font-size: 0.92rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e7e5e0);
+  color: var(--color-text, #15110a);
   margin-bottom: 0.35rem;
 }
 
@@ -432,7 +432,7 @@ code.method-formula {
   flex-direction: column;
   gap: 0;
   margin: 1.25rem 0;
-  border: 1px solid var(--color-border, #22242a);
+  border: 1px solid var(--color-border, #d9cfb6);
   border-radius: var(--radius-lg, 10px);
   overflow: hidden;
 }
@@ -442,7 +442,7 @@ code.method-formula {
   align-items: center;
   gap: var(--space-4);
   padding: 0.85rem 1.1rem;
-  border-bottom: 1px solid var(--color-border, #22242a);
+  border-bottom: 1px solid var(--color-border, #d9cfb6);
 }
 
 .method-fallback-tier:last-child {
@@ -475,8 +475,8 @@ code.method-formula {
   font-weight: var(--weight-bold);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-text-muted, #888);
-  background: var(--color-border, #22242a);
+  color: var(--color-text-muted, #6a5c48);
+  background: var(--color-border, #d9cfb6);
   border-radius: var(--radius-sm, 6px);
   padding: 0.2rem 0.5rem;
   min-width: 3.2rem;
@@ -487,12 +487,12 @@ code.method-formula {
   flex: 1;
   font-size: 0.9rem;
   font-weight: var(--weight-semibold);
-  color: var(--color-text, #e7e5e0);
+  color: var(--color-text, #15110a);
 }
 
 .method-tier-desc {
   font-size: 0.8rem;
-  color: var(--color-text-muted, #888);
+  color: var(--color-text-muted, #6a5c48);
   text-align: right;
   max-width: 280px;
 }
@@ -536,7 +536,7 @@ code.method-formula {
 
 /* Related tools footer */
 .method-section--tools {
-  border-top: 1px solid var(--color-border, #22242a);
+  border-top: 1px solid var(--color-border, #d9cfb6);
   padding-top: 2rem;
   margin-top: var(--space-4);
 }

@@ -5,7 +5,7 @@ body {
   margin: 2rem auto;
   padding: 0 var(--space-4, 1rem);
   line-height: 1.55;
-  color: var(--color-text, #1a1a1a);
+  color: var(--color-text, #15110a);
   background: var(--surface-page, #fff);
 }
 
@@ -16,7 +16,7 @@ h1 {
 
 .stub-breadcrumbs {
   font-size: 0.9rem;
-  color: var(--color-text-muted, #555);
+  color: var(--color-text-muted, #6a5c48);
   margin-bottom: 0.5rem;
 }
 
@@ -45,23 +45,23 @@ h1 {
 .stub-links a {
   display: block;
   padding: 0.85rem 1rem;
-  background: var(--surface-muted, #f7f6f1);
-  color: var(--color-text, #1a1a1a);
-  border: 1px solid var(--color-border, #e4dfcf);
+  background: var(--surface-muted, #faf7ee);
+  color: var(--color-text, #15110a);
+  border: 1px solid var(--color-border, #d9cfb6);
   border-radius: var(--radius-md, 10px);
   text-decoration: none;
 }
 
 .stub-links a:hover,
 .stub-links a:focus {
-  background: var(--surface-accent, #efe9d4);
-  border-color: var(--color-gold, #c9b26c);
+  background: var(--surface-accent, #fdf8e8);
+  border-color: var(--color-gold, #b07d1f);
 }
 
 .stub-related,
 .stub-lang {
   font-size: 0.9rem;
-  color: var(--color-text-muted, #555);
+  color: var(--color-text-muted, #6a5c48);
   margin-top: 1.2rem;
 }
 

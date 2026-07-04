@@ -268,6 +268,10 @@
   /* ── Common aliases ── */
   --color-white: #fff;
   --color-black: #000;
+
+  /* ── Third-party brand constants (theme-invariant) ── */
+  --brand-whatsapp: #25d366;
+  --brand-whatsapp-strong: #1fba58;
   --color-accent: var(--color-gold-dark);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-1: var(--color-surface);

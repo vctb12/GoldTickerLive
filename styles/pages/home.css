@@ -238,7 +238,11 @@
   border-inline-start: 3px solid var(--color-gold);
   padding-inline-start: var(--space-3);
   padding-block: var(--space-1);
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 60%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 60%
+  );
   border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
 }
 
@@ -839,7 +843,7 @@
     var(--color-gold-bg) 50%,
     var(--surface-canvas) 100%
   );
-  border-top: 1px solid rgb(196 144 46 / 18%);
+  border-top: 1px solid color-mix(in srgb, var(--color-gold) 18%, transparent);
   border-bottom: 1px solid var(--border-subtle);
   padding: var(--space-5) var(--space-5) var(--space-6);
   position: relative;
@@ -1123,7 +1127,7 @@
   flex-shrink: 0;
   border-radius: var(--radius-sm);
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 20%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 20%, transparent);
   color: var(--color-gold-dark);
 }
 
@@ -1195,7 +1199,7 @@
 
 .trust-banner-box {
   background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--surface-accent) 100%);
-  border: 1px solid rgb(196 144 46 / 28%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 28%, transparent);
   border-inline-start: 4px solid var(--color-gold);
   border-radius: var(--radius-lg);
   padding: 1.4rem 1.6rem;
@@ -1306,14 +1310,14 @@
   color: #ece1c8;
 }
 .home-section--trust-banner .trust-banner-content a {
-  color: #f0ca5c;
+  color: var(--color-gold-bright);
   border-bottom-color: rgb(240 202 92 / 45%);
 }
 .home-section--trust-banner .trust-banner-content a:hover {
-  border-bottom-color: #f0ca5c;
+  border-bottom-color: var(--color-gold-bright);
 }
 .home-section--trust-banner .trust-banner-icon {
-  color: #f0ca5c;
+  color: var(--color-gold-bright);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1456,7 +1460,7 @@
   color: var(--color-gold-deep);
   font-weight: var(--weight-bold);
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgb(196 144 46 / 30%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 30%, transparent);
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1669,7 +1673,7 @@
   margin-bottom: 0.35rem;
   border-radius: 0.7rem;
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 22%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
   color: var(--color-gold-dark);
 }
 
@@ -1729,7 +1733,7 @@
     var(--color-gold-bg) 60%,
     rgb(253 250 240 / 80%) 100%
   );
-  border-color: rgb(196 144 46 / 45%);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
@@ -1737,7 +1741,7 @@
 
 .tool-card--primary .tool-card-icon {
   background: linear-gradient(145deg, rgb(255 255 255 / 60%), var(--color-gold-tint));
-  border-color: rgb(196 144 46 / 40%);
+  border-color: color-mix(in srgb, var(--color-gold) 40%, transparent);
 }
 
 .tool-card--primary .tool-card-title {
@@ -1769,7 +1773,7 @@
   margin-top: 2.25rem;
   padding: 1.1rem 1.6rem;
   background: linear-gradient(135deg, var(--color-gold-bg) 0%, var(--color-gold-tint) 100%);
-  border: 1px solid rgb(196 144 46 / 32%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 32%, transparent);
   border-radius: var(--radius-lg);
   font-size: 0.88rem;
   color: var(--text-secondary);
@@ -1868,7 +1872,7 @@
 .country-tile--more {
   background: var(--color-gold-bg);
   color: var(--color-gold-dark);
-  border-color: rgb(196 144 46 / 38%);
+  border-color: color-mix(in srgb, var(--color-gold) 38%, transparent);
   font-weight: var(--weight-bold);
   box-shadow: var(--shadow-xs);
 }
@@ -1901,13 +1905,17 @@
 }
 
 .faq-item[open] {
-  border-color: rgb(196 144 46 / 45%);
+  border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
 .faq-item[open] .faq-q {
   color: var(--color-gold-deep);
-  background: linear-gradient(90deg, rgb(196 144 46 / 5%), transparent 70%);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-gold) 5%, transparent),
+    transparent 70%
+  );
 }
 
 .faq-q {
@@ -2489,7 +2497,7 @@
 
 .x-follow-banner-handle {
   font-weight: var(--weight-bold, 700);
-  color: #fff;
+  color: var(--color-white);
   white-space: nowrap;
 }
 
@@ -2662,7 +2670,7 @@
 }
 
 .explainer-strip-item:hover {
-  border-color: rgb(196 144 46 / 30%);
+  border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
   box-shadow: var(--shadow-sm);
 }
 
@@ -2677,7 +2685,7 @@
   width: 2.8rem;
   height: 2.8rem;
   background: var(--color-gold-bg);
-  border: 1px solid rgb(196 144 46 / 22%);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 22%, transparent);
   border-radius: var(--radius-md);
 }
 
@@ -3286,7 +3294,7 @@
 
 .home-stat-card:hover {
   box-shadow: var(--shadow-md);
-  border-color: rgb(196 144 46 / 35%);
+  border-color: color-mix(in srgb, var(--color-gold) 35%, transparent);
 }
 
 /* Foil top-rule retired (DESIGN-SYSTEM §4) */
@@ -3355,7 +3363,7 @@
   gap: var(--space-1);
   padding: var(--space-3) var(--space-3);
   border-radius: var(--radius-lg, 12px);
-  background: var(--surface-secondary, #f8f9fa);
+  background: var(--surface-secondary, #faf7ee);
   border: 1px solid var(--border-subtle, rgb(0 0 0 / 6%));
   transition:
     transform 0.15s ease,
@@ -3368,11 +3376,11 @@
 }
 
 .price-trend-card--up {
-  border-block-start: 3px solid var(--color-up, #22c55e);
+  border-block-start: 3px solid var(--color-up, #176832);
 }
 
 .price-trend-card--down {
-  border-block-start: 3px solid var(--color-down, #ef4444);
+  border-block-start: 3px solid var(--color-down, #b81428);
 }
 
 .price-trend-month {
@@ -3457,7 +3465,7 @@
 
 .home-chart-section {
   padding-block: var(--space-10) var(--space-12);
-  background: var(--surface-secondary, #f8f9fb);
+  background: var(--surface-secondary, #faf7ee);
   border-block: 1px solid var(--border-subtle, rgb(0 0 0 / 5%));
 }
 
@@ -3499,15 +3507,16 @@
 }
 
 .home-chart-range-btn:hover {
-  background: var(--color-gold-light, #fef9ec);
-  color: var(--color-gold, #c9a84c);
-  border-color: var(--color-gold, #c9a84c);
+  /* Pale-tint hover (the old --color-gold-light fallback intent) with AA text gold */
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold);
 }
 
 .home-chart-range-btn.is-active {
-  background: var(--color-gold, #c9a84c);
-  color: #fff;
-  border-color: var(--color-gold, #c9a84c);
+  background: var(--color-gold);
+  color: var(--color-on-gold);
+  border-color: var(--color-gold);
 }
 
 .home-chart-wrap {

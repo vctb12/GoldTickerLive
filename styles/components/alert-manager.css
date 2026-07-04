@@ -553,7 +553,7 @@
 .alert-mgr-input:focus {
   border-color: var(--color-gold);
   outline: none;
-  box-shadow: 0 0 0 3px rgb(196 144 46 / 12%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 12%, transparent);
 }
 
 /* Tool buttons — pill style */

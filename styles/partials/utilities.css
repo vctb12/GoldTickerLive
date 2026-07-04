@@ -1052,11 +1052,11 @@ body > * {
 
 /* ── Spot bar price direction indicators ── */
 .spot-change-up {
-  color: var(--success, #16a34a);
+  color: var(--color-success);
 }
 
 .spot-change-down {
-  color: var(--danger, var(--color-danger));
+  color: var(--color-danger);
 }
 
 .spot-change-neutral {
@@ -1152,7 +1152,7 @@ body > * {
 
 .methodology-link:hover,
 .methodology-link:focus-visible {
-  color: var(--color-gold, #c89b30);
+  color: var(--color-gold, #b07d1f);
   text-decoration-style: solid;
 }
 
@@ -1629,7 +1629,7 @@ textarea:focus,
   cursor: pointer;
   padding: 0.4rem;
   font-size: 1.1rem;
-  color: var(--color-text-muted, #64748b);
+  color: var(--color-text-muted, #6a5c48);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1643,11 +1643,11 @@ textarea:focus,
 }
 .nav-icon-btn:hover,
 .nav-icon-btn:focus-visible {
-  color: var(--color-text, #1e293b);
+  color: var(--color-text, #15110a);
   background: var(--surface-subtle, rgb(0, 0, 0, 0.04));
 }
 .nav-icon-btn:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color, #2563eb);
+  outline: var(--focus-ring-width) solid var(--focus-ring-color, #b07d1f);
   outline-offset: var(--focus-ring-offset, 2px);
 }
 
@@ -1700,7 +1700,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-text-muted, #64748b);
+  color: var(--color-text-muted, #6a5c48);
   user-select: none;
 }
 details.nav-drawer-group > summary.nav-drawer-group-label::-webkit-details-marker {
@@ -1809,7 +1809,7 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 }
 .nav-search-message {
   padding: 0.75rem 1rem;
-  color: var(--color-text-muted, #64748b);
+  color: var(--color-text-muted, #6a5c48);
   font-size: 0.875rem;
 }
 .nav-search-section-head {
@@ -1818,7 +1818,7 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.5rem 1rem 0.25rem;
-  border-bottom: 1px solid var(--border-subtle, #f1f5f9);
+  border-bottom: 1px solid var(--border-subtle, #ece5d2);
 }
 .nav-search-result,
 .nav-search-recent {
@@ -1827,9 +1827,9 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
   gap: 0.75rem;
   padding: 0.6rem 1rem;
   text-decoration: none;
-  color: var(--color-text, #1e293b);
+  color: var(--color-text, #15110a);
   font-size: 0.875rem;
-  border-bottom: 1px solid var(--border-subtle, #f1f5f9);
+  border-bottom: 1px solid var(--border-subtle, #ece5d2);
   background: none;
   border-left: none;
   border-right: none;
@@ -1859,16 +1859,16 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 }
 .nav-search-result-type {
   font-size: 0.75rem;
-  color: var(--color-text-muted, #94a3b8);
+  color: var(--color-text-muted, #6a5c48);
   margin-top: 0.1rem;
 }
 
 [data-theme='dark'] .nav-search-overlay,
 [data-theme='dark'] .nav-search-dropdown,
 [data-theme='dark'] .nav-search-input {
-  background: var(--color-surface, #0f172a);
-  color: var(--color-text, #e2e8f0);
-  border-color: var(--border-default, #334155);
+  background: var(--color-surface, #0c0e14);
+  color: var(--color-text, #f2eedd);
+  border-color: var(--border-default, #242840);
 }
 
 /* ────────────────────────────────────────────────────────────────────────── */
@@ -2011,7 +2011,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
 }
 
 [data-theme='dark'] .nav-drawer-bottom {
-  border-top-color: var(--border-subtle, #334155);
+  border-top-color: var(--border-subtle, #1a1e30);
 }
 
 .nav-drawer-bottom .nav-icon-btn,
@@ -2043,7 +2043,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
 }
 
 .nav-drawer-cta:hover {
-  background: var(--color-gold-dark, #8c6d24);
+  background: var(--color-gold-dark, #7e5912);
   transform: translateY(-1px);
   box-shadow: 0 4px 16px rgb(176 138 62 / 35%);
   text-decoration: none;
@@ -2083,8 +2083,8 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
 }
 
 [data-theme='dark'] .nav-drawer-search-input {
-  background: var(--color-surface, #1a1a1a);
-  color: var(--text-on-dark, #f5f5f5);
+  background: var(--color-surface, #0c0e14);
+  color: var(--text-on-dark, #fff);
   border-color: rgb(255 255 255 / 12%);
 }
 
@@ -2897,11 +2897,11 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 /* W-1 page-hydrator freshness badge and disclaimer (safe-dom migration) */
 .ph-freshness-banner {
   background: var(--color-warning-subtle, #fef9c3);
-  border: 1px solid var(--color-warning-border, #fde68a);
+  border: 1px solid var(--color-warning-border, rgb(245 158 11 / 35%));
   border-radius: var(--radius-md);
   padding: var(--space-2) var(--space-3);
   font-size: var(--text-xs);
-  color: var(--color-warning-text, #92400e);
+  color: var(--color-warning-text, #7a4f15);
   margin-bottom: var(--space-3);
 }
 
@@ -2934,8 +2934,8 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 .ph-disclaimer {
-  background: var(--surface-secondary, #f8fafc);
-  border: 1px solid var(--border-default, #e2e8f0);
+  background: var(--surface-secondary, #faf7ee);
+  border: 1px solid var(--border-default, #d9cfb6);
   border-radius: var(--radius-md);
   padding: var(--space-3) var(--space-4);
   margin-top: var(--space-4);
@@ -2958,7 +2958,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
   align-items: center;
   gap: 0.35rem;
   padding: var(--space-1) var(--space-2-5, 0.65rem);
-  background: #25d366;
+  background: var(--brand-whatsapp);
   color: var(--color-white);
   border-radius: var(--radius-sm);
   font-weight: 600;
@@ -2967,7 +2967,7 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 .ph-disclaimer-share:hover {
-  background: #1fba58;
+  background: var(--brand-whatsapp-strong);
 }
 [data-freshness-state] {
   font-variant-numeric: tabular-nums;
@@ -3356,8 +3356,8 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 
 .ph-freshness-dot[data-state='live'] {
   animation: freshness-dot-live-glow 2s ease-in-out infinite;
-  background: #22c55e;
-  box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+  background: var(--color-live);
+  box-shadow: 0 0 6px color-mix(in srgb, var(--color-live) 45%, transparent);
   width: 9px;
   height: 9px;
 }
@@ -3365,24 +3365,12 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 @media (prefers-reduced-motion: reduce) {
   .ph-freshness-dot[data-state='live'] {
     animation: none;
-    box-shadow: 0 0 6px rgb(34 197 94 / 45%);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--color-live) 45%, transparent);
   }
 }
 
-/* freshness-badge live — green ring glow */
-.freshness-badge--live {
-  background: linear-gradient(135deg, rgb(34 197 94 / 10%), rgb(34 197 94 / 5%));
-  border-color: rgb(34 197 94 / 35%);
-  color: #16a34a;
-}
-
-[data-theme='dark'] .freshness-badge--live {
-  color: #4ade80;
-}
-
-.freshness-badge--live .freshness-badge__state {
-  color: inherit;
-}
+/* Stale Tailwind-green .freshness-badge--live duplicate removed — the token-based
+   canon (var(--color-live) / var(--color-live-border)) defined earlier now wins. */
 
 /* ═══════════════════════════════════════════════
    Premium UI primitives — toast, purity ring, compare
