@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <script>
+      (function () {
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          var el = document.documentElement;
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>How Gold Is Priced — From the World Market to Your Local Shop | Gold Ticker Live</title>
+    <meta
+      name="description"
+      content="How gold is priced, step by step: the global spot price (XAU/USD), currency conversion and the AED peg, weight and karat, dealer premiums and making charges, VAT — and why retail rarely matches spot. Bilingual EN/AR."
+    />
+    <link rel="canonical" href="https://goldtickerlive.com/market.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/market.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/market.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/market.html?lang=ar" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="How Gold Is Priced — Spot to Street | Gold Ticker Live" />
+    <meta
+      property="og:description"
+      content="Follow a single global number — the spot price — as it becomes the figure on your local jeweller's counter. The chain, the marketplaces, and why retail rarely matches spot."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/market.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How Gold Is Priced — Spot to Street | Gold Ticker Live" />
+    <meta
+      name="twitter:description"
+      content="The gold price chain from global spot to your local counter — and why retail rarely matches spot."
+    />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og-image.png" />
+    <meta property="og:image:alt" content="Gold Ticker Live — how gold is priced, spot to street" />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/market.css" />
+    <link rel="modulepreload" href="./src/pages/market.js" />
+    <link rel="modulepreload" href="./src/components/site-shell.js" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/pages/market.css" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+    <meta name="msvalidate.01" content="E88623E4C36CDC8E8D44913FA9192725" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Market",
+      "item": "https://goldtickerlive.com/market.html"
+    }
+  ]
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Nav + Breadcrumbs (injected by market.js) -->
+    <div class="page-breadcrumbs"></div>
+
+    <main id="main-content">
+      <section class="mkt-hero">
+        <div class="mkt-hero-inner">
+          <p class="mkt-hero-eyebrow" id="market-eyebrow">How gold pricing works</p>
+          <h1 class="mkt-hero-title" id="market-h1">How gold is priced</h1>
+          <p class="mkt-hero-sub" id="market-sub">
+            Follow a single global number — the spot price — as it becomes the figure on your local
+            jeweller's counter. This is the chain, the marketplaces behind it, and why retail rarely
+            matches spot.
+          </p>
+        </div>
+      </section>
+
+      <nav class="mkt-jump" aria-label="Market sections" data-lang-block="en">
+        <span class="mkt-jump-label">Jump to a section</span>
+        <a href="#chain">The price chain</a>
+        <a href="#marketplaces">Who sets the price</a>
+        <a href="#gap">Why local differs</a>
+        <a href="#reading">Reading a quote</a>
+        <a href="#next">Where to go next</a>
+      </nav>
+      <nav class="mkt-jump" aria-label="أقسام الصفحة" data-lang-block="ar" lang="ar" dir="rtl">
+        <span class="mkt-jump-label">الانتقال إلى قسم</span>
+        <a href="#chain">سلسلة التسعير</a>
+        <a href="#marketplaces">من يحدّد السعر</a>
+        <a href="#gap">لماذا يختلف المحلي</a>
+        <a href="#reading">قراءة التسعيرة</a>
+        <a href="#next">إلى أين بعد ذلك</a>
+      </nav>
+
+      <!-- ── 1. The price chain ─────────────────────────────────────────── -->
+      <section class="mkt-section" id="chain" aria-labelledby="chain-title-en chain-title-ar">
+        <div class="mkt-inner">
+          <div data-lang-block="en">
+            <p class="mkt-eyebrow">Spot → your counter</p>
+            <h2 class="mkt-section-title" id="chain-title-en">The price chain</h2>
+            <p class="mkt-lede">
+              One worldwide price becomes a local one through a handful of predictable steps. Each
+              step only adds to the number — the gold underneath never changes.
+            </p>
+            <ol class="mkt-chain">
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">1</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">Global spot price (XAU/USD)</h3>
+                  <p class="mkt-step-text">
+                    One price for a troy ounce of pure gold, quoted in US dollars, moving through the
+                    day while world markets are open. Everything else is derived from it.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">2</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">Convert the currency</h3>
+                  <p class="mkt-step-text">
+                    The dollar price is converted into the local currency. In the UAE the dirham is
+                    pegged to the dollar at 3.6725, so dirham gold tracks dollar gold almost exactly;
+                    a floating currency adds its own swing.
+                    <span class="mkt-step-note"
+                      >See <a href="glossary.html#term-aed-peg">the dirham peg</a>.</span
+                    >
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">3</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">Convert the weight and purity</h3>
+                  <p class="mkt-step-text">
+                    The per-ounce price is divided by 31.1035 to reach a per-gram price, then scaled
+                    by karat: 24K is near pure, 22K about 91.6%, 21K about 87.5%, and 18K is 75%
+                    gold.
+                    <span class="mkt-step-note"
+                      >Do this for a real weight in the
+                      <a href="calculator.html">calculator</a>.</span
+                    >
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">4</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">Add the dealer premium and making charge</h3>
+                  <p class="mkt-step-text">
+                    Fabrication, design labour and the shop's margin are added on top of the metal
+                    value. Coins and small bars carry a higher premium than large bars; jewellery
+                    adds a making charge, often quoted per gram.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">5</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">Add VAT and local factors</h3>
+                  <p class="mkt-step-text">
+                    Any applicable tax and import duty, plus local supply, demand and shop
+                    competition, nudge the figure up or down before it reaches the label.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">6</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">The counter price</h3>
+                  <p class="mkt-step-text">
+                    What you actually pay. It sits above the spot and reference price — the gap is
+                    the making, the margin and the tax, not a different or better gold.
+                    <span class="mkt-step-note">Reference is not the same as retail.</span>
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="mkt-eyebrow">من السعر الفوري إلى واجهة المحل</p>
+            <h2 class="mkt-section-title" id="chain-title-ar">سلسلة التسعير</h2>
+            <p class="mkt-lede">
+              يتحوّل رقم عالمي واحد إلى رقم محلي عبر خطوات قليلة متوقَّعة. وكل خطوة تضيف إلى الرقم فقط —
+              أما الذهب نفسه فلا يتغيّر.
+            </p>
+            <ol class="mkt-chain">
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">١</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">السعر الفوري العالمي (XAU/USD)</h3>
+                  <p class="mkt-step-text">
+                    سعر واحد للأونصة التروية من الذهب الخالص، يُسعَّر بالدولار الأمريكي، ويتحرّك خلال
+                    اليوم ما دامت الأسواق العالمية مفتوحة. وكل ما عداه مُشتقّ منه.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">٢</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">تحويل العملة</h3>
+                  <p class="mkt-step-text">
+                    يُحوَّل السعر بالدولار إلى العملة المحلية. وفي الإمارات، الدرهم مربوط بالدولار عند
+                    3.6725، فيتحرّك الذهب بالدرهم مع الذهب بالدولار على نحو شبه تام؛ أما العملة
+                    المتغيّرة فتضيف تقلّبها الخاص.
+                    <span class="mkt-step-note"
+                      >انظر <a href="glossary.html#term-aed-peg">ربط الدرهم</a>.</span
+                    >
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">٣</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">تحويل الوزن والنقاء</h3>
+                  <p class="mkt-step-text">
+                    يُقسَم سعر الأونصة على 31.1035 للوصول إلى سعر الجرام، ثم يُضرب في عامل العيار: عيار
+                    24 شبه خالص، وعيار 22 نحو 91.6%، وعيار 21 نحو 87.5%، وعيار 18 يساوي 75% ذهباً.
+                    <span class="mkt-step-note"
+                      >طبّق ذلك على وزن حقيقي في
+                      <a href="calculator.html">الحاسبة</a>.</span
+                    >
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">٤</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">إضافة علاوة التاجر وأجور الصياغة</h3>
+                  <p class="mkt-step-text">
+                    تُضاف أجور التصنيع والتصميم وهامش المحل فوق قيمة المعدن. وتحمل العملات والسبائك
+                    الصغيرة علاوة أعلى من السبائك الكبيرة؛ أما المجوهرات فتضيف أجرة صياغة تُحتسب غالباً
+                    لكل جرام.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">٥</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">إضافة الضريبة والعوامل المحلية</h3>
+                  <p class="mkt-step-text">
+                    أي ضريبة أو رسوم استيراد مطبَّقة، إضافةً إلى العرض والطلب المحلي والمنافسة بين
+                    المحلات، ترفع الرقم أو تخفضه قبل أن يصل إلى بطاقة السعر.
+                  </p>
+                </div>
+              </li>
+              <li class="mkt-step">
+                <span class="mkt-step-num" aria-hidden="true">٦</span>
+                <div class="mkt-step-body">
+                  <h3 class="mkt-step-title">سعر واجهة المحل</h3>
+                  <p class="mkt-step-text">
+                    ما تدفعه فعلاً. وهو أعلى من السعر الفوري والمرجعي — والفارق هو الصياغة والهامش
+                    والضريبة، لا ذهب مختلف أو أفضل.
+                    <span class="mkt-step-note">السعر المرجعي ليس هو سعر التجزئة.</span>
+                  </p>
+                </div>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 2. Who sets the world price ────────────────────────────────── -->
+      <section
+        class="mkt-section"
+        id="marketplaces"
+        aria-labelledby="mkt-title-en mkt-title-ar"
+      >
+        <div class="mkt-inner">
+          <div data-lang-block="en">
+            <p class="mkt-eyebrow">Marketplaces &amp; sessions</p>
+            <h2 class="mkt-section-title" id="mkt-title-en">Who sets the world price</h2>
+            <p class="mkt-lede">
+              No single exchange "owns" gold. A few global marketplaces, trading around the clock,
+              together set the price everyone else references.
+            </p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">Wholesale heart</p>
+                <h3 class="mkt-card-title">London (LBMA / OTC)</h3>
+                <p class="mkt-card-text">
+                  Most physical wholesale gold changes hands over-the-counter through London. The
+                  twice-daily <a href="glossary.html#term-lbma">LBMA</a> Gold Price auction is the
+                  benchmark used in contracts and valuations worldwide.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">Futures &amp; discovery</p>
+                <h3 class="mkt-card-title">New York (COMEX)</h3>
+                <p class="mkt-card-text">
+                  Gold futures on COMEX are where much short-term price discovery happens, letting
+                  participants trade and hedge expected prices without moving physical metal.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">Physical demand</p>
+                <h3 class="mkt-card-title">Shanghai (SGE)</h3>
+                <p class="mkt-card-text">
+                  The Shanghai Gold Exchange anchors the world's largest physical gold market, giving
+                  Asian demand a direct voice in the global picture.
+                </p>
+              </div>
+            </div>
+
+            <div class="mkt-sessions" aria-label="Approximate trading sessions">
+              <div class="mkt-session">
+                <p class="mkt-session-name">Asia</p>
+                <p class="mkt-session-hours">~01:00–09:00 GMT</p>
+                <p class="mkt-session-note">Shanghai and Hong Kong open the trading day.</p>
+              </div>
+              <div class="mkt-session">
+                <p class="mkt-session-name">London</p>
+                <p class="mkt-session-hours">~08:00–17:00 GMT</p>
+                <p class="mkt-session-note">Deepest wholesale liquidity; the LBMA auctions.</p>
+              </div>
+              <div class="mkt-session">
+                <p class="mkt-session-name">New York</p>
+                <p class="mkt-session-hours">~13:00–22:00 GMT</p>
+                <p class="mkt-session-note">Overlaps London, then carries the day to a close.</p>
+              </div>
+            </div>
+
+            <p class="mkt-callout">
+              Because these sessions overlap and hand off, gold trades almost continuously on
+              weekdays and pauses over the weekend. Prices on this site update through the trading
+              day but are a spot-linked reference, not a live exchange feed —
+              <a href="methodology.html">see how we source them</a>.
+            </p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="mkt-eyebrow">الأسواق والجلسات</p>
+            <h2 class="mkt-section-title" id="mkt-title-ar">من يحدّد السعر العالمي</h2>
+            <p class="mkt-lede">
+              لا توجد بورصة واحدة "تملك" الذهب. فبضعة أسواق عالمية، تتداول على مدار الساعة، تحدّد معاً
+              السعر الذي يرجع إليه الجميع.
+            </p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">قلب سوق الجملة</p>
+                <h3 class="mkt-card-title">لندن (LBMA / خارج البورصة)</h3>
+                <p class="mkt-card-text">
+                  تُتداول معظم كميات الذهب المادي بالجملة خارج البورصة عبر لندن. ومزاد سعر الذهب
+                  <a href="glossary.html#term-lbma">LBMA</a> مرتين يومياً هو المرجع المستخدم في العقود
+                  والتقييمات حول العالم.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">العقود الآجلة واكتشاف السعر</p>
+                <h3 class="mkt-card-title">نيويورك (COMEX)</h3>
+                <p class="mkt-card-text">
+                  عقود الذهب الآجلة في COMEX هي حيث يجري كثير من اكتشاف السعر قصير الأجل، إذ تتيح
+                  للمشاركين التداول والتحوّط للأسعار المتوقّعة دون نقل معدن مادي.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <p class="mkt-card-kicker">الطلب المادي</p>
+                <h3 class="mkt-card-title">شنغهاي (SGE)</h3>
+                <p class="mkt-card-text">
+                  بورصة شنغهاي للذهب هي مرتكز أكبر سوق للذهب المادي في العالم، وتمنح الطلب الآسيوي صوتاً
+                  مباشراً في الصورة العالمية.
+                </p>
+              </div>
+            </div>
+
+            <div class="mkt-sessions" aria-label="جلسات التداول التقريبية">
+              <div class="mkt-session">
+                <p class="mkt-session-name">آسيا</p>
+                <p class="mkt-session-hours">~01:00–09:00 بتوقيت غرينتش</p>
+                <p class="mkt-session-note">تفتتح شنغهاي وهونغ كونغ يوم التداول.</p>
+              </div>
+              <div class="mkt-session">
+                <p class="mkt-session-name">لندن</p>
+                <p class="mkt-session-hours">~08:00–17:00 بتوقيت غرينتش</p>
+                <p class="mkt-session-note">أعمق سيولة بالجملة؛ ومزادات LBMA.</p>
+              </div>
+              <div class="mkt-session">
+                <p class="mkt-session-name">نيويورك</p>
+                <p class="mkt-session-hours">~13:00–22:00 بتوقيت غرينتش</p>
+                <p class="mkt-session-note">تتداخل مع لندن ثم تحمل اليوم إلى إغلاقه.</p>
+              </div>
+            </div>
+
+            <p class="mkt-callout">
+              ولأن هذه الجلسات تتداخل وتتسلّم إحداها من الأخرى، يُتداول الذهب على نحو شبه متواصل في أيام
+              الأسبوع ويتوقّف في عطلة نهاية الأسبوع. والأسعار على هذا الموقع تُحدَّث خلال يوم التداول
+              لكنها مرجع مرتبط بالسعر الفوري، وليست بثاً حياً من البورصة —
+              <a href="methodology.html">اطّلع على مصادرنا</a>.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 3. Why local differs ───────────────────────────────────────── -->
+      <section class="mkt-section" id="gap" aria-labelledby="gap-title-en gap-title-ar">
+        <div class="mkt-inner">
+          <div data-lang-block="en">
+            <p class="mkt-eyebrow">Reference vs retail</p>
+            <h2 class="mkt-section-title" id="gap-title-en">Why your local price differs from spot</h2>
+            <p class="mkt-lede">
+              The reference price you see here tracks the global market. The number at the counter
+              almost always sits above it — for reasons that have nothing to do with the gold being
+              different.
+            </p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Premiums &amp; making charges</h3>
+                <p class="mkt-card-text">
+                  Fabrication, design and dealer margin sit on top of the metal value —
+                  <a href="glossary.html#term-making-charge">the making charge</a> for jewellery, a
+                  premium for coins and bars.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Product form</h3>
+                <p class="mkt-card-text">
+                  A coin or a crafted chain costs more per gram than a plain bar of the same weight
+                  and purity. Workmanship has a price.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Tax &amp; duties</h3>
+                <p class="mkt-card-text">
+                  VAT and import duties apply in some places and not others, and often treat bullion
+                  and jewellery differently.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Local supply &amp; demand</h3>
+                <p class="mkt-card-text">
+                  Shop competition, wedding- and festival-season demand, and stock levels all move
+                  the local number day to day.
+                </p>
+              </div>
+            </div>
+            <p class="mkt-callout">
+              This is why we label our figures "spot-linked reference," never "the price you'll pay."
+              To weigh countries against each other or estimate a specific piece, use
+              <a href="compare.html">Compare</a> and the <a href="calculator.html">Calculator</a>.
+            </p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="mkt-eyebrow">المرجعي مقابل التجزئة</p>
+            <h2 class="mkt-section-title" id="gap-title-ar">لماذا يختلف سعرك المحلي عن السعر الفوري</h2>
+            <p class="mkt-lede">
+              السعر المرجعي الذي تراه هنا يتتبّع السوق العالمي. أما الرقم على الواجهة فيكون أعلى منه
+              دائماً تقريباً — لأسباب لا علاقة لها باختلاف الذهب نفسه.
+            </p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">العلاوات وأجور الصياغة</h3>
+                <p class="mkt-card-text">
+                  تُضاف أجور التصنيع والتصميم وهامش التاجر فوق قيمة المعدن —
+                  <a href="glossary.html#term-making-charge">أجور الصياغة</a> للمجوهرات، وعلاوة
+                  للعملات والسبائك.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">شكل المنتج</h3>
+                <p class="mkt-card-text">
+                  العملة أو السلسلة المصنوعة تكلّف أكثر لكل جرام من سبيكة عادية بالوزن والنقاء نفسيهما.
+                  فللصنعة ثمن.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">الضرائب والرسوم</h3>
+                <p class="mkt-card-text">
+                  تُطبَّق ضريبة القيمة المضافة ورسوم الاستيراد في بعض الأماكن دون غيرها، وكثيراً ما
+                  تعامل السبائك والمجوهرات معاملة مختلفة.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">العرض والطلب المحلي</h3>
+                <p class="mkt-card-text">
+                  المنافسة بين المحلات، وطلب مواسم الأعراس والأعياد، ومستويات المخزون، كلها تحرّك الرقم
+                  المحلي من يوم لآخر.
+                </p>
+              </div>
+            </div>
+            <p class="mkt-callout">
+              لهذا نصف أرقامنا بأنها "مرجع مرتبط بالسعر الفوري"، لا "السعر الذي ستدفعه". ولموازنة الدول
+              ببعضها أو تقدير قطعة بعينها، استخدم <a href="compare.html">المقارنة</a> و<a
+                href="calculator.html"
+                >الحاسبة</a
+              >.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 4. Reading a quote ─────────────────────────────────────────── -->
+      <section class="mkt-section" id="reading" aria-labelledby="read-title-en read-title-ar">
+        <div class="mkt-inner">
+          <div data-lang-block="en">
+            <p class="mkt-eyebrow">Price literacy</p>
+            <h2 class="mkt-section-title" id="read-title-en">Reading a gold quote</h2>
+            <p class="mkt-lede">A few habits make any gold price easier to read.</p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Per gram vs per ounce</h3>
+                <p class="mkt-card-text">
+                  International quotes are per troy ounce (31.1035 g); Gulf retail is usually per
+                  gram. Convert one to the other before you compare.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Bid vs ask (the spread)</h3>
+                <p class="mkt-card-text">
+                  Dealers buy at the lower bid and sell at the higher ask. The gap is part of their
+                  margin — expect to sell back below what you paid.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">Premium over spot</h3>
+                <p class="mkt-card-text">
+                  How much a product costs above its pure-metal value. If you are buying for the
+                  metal, a lower premium keeps you closer to spot.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">The karat stamp</h3>
+                <p class="mkt-card-text">
+                  999, 916, 875 or 750 tells you the purity — and therefore how much of the price is
+                  actually gold. <a href="glossary.html#term-fineness">More on fineness</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="mkt-eyebrow">فهم الأسعار</p>
+            <h2 class="mkt-section-title" id="read-title-ar">كيف تقرأ تسعيرة الذهب</h2>
+            <p class="mkt-lede">عادات قليلة تجعل قراءة أي سعر للذهب أسهل.</p>
+            <div class="mkt-grid">
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">لكل جرام مقابل لكل أونصة</h3>
+                <p class="mkt-card-text">
+                  التسعيرات العالمية لكل أونصة تروية (31.1035 جراماً)؛ أما التجزئة في الخليج فعادةً لكل
+                  جرام. حوّل أحدهما إلى الآخر قبل المقارنة.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">الشراء مقابل البيع (الفارق)</h3>
+                <p class="mkt-card-text">
+                  يشتري التجار بسعر الشراء الأدنى ويبيعون بسعر البيع الأعلى. وهذا الفارق جزء من هامشهم —
+                  فتوقّع أن تبيع بأقل مما دفعت.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">العلاوة فوق السعر الفوري</h3>
+                <p class="mkt-card-text">
+                  كم يكلّف المنتج فوق قيمته المعدنية الخالصة. وإن كنت تشتري من أجل المعدن، فالعلاوة
+                  الأدنى تبقيك أقرب إلى السعر الفوري.
+                </p>
+              </div>
+              <div class="mkt-card">
+                <h3 class="mkt-card-title">ختم العيار</h3>
+                <p class="mkt-card-text">
+                  الأرقام 999 أو 916 أو 875 أو 750 تدلّك على النقاء — وبالتالي على مقدار ما هو ذهب فعلاً
+                  من السعر. <a href="glossary.html#term-fineness">المزيد عن النقاء</a>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── 5. Where to go next ────────────────────────────────────────── -->
+      <section class="mkt-section" id="next" aria-labelledby="next-title-en next-title-ar">
+        <div class="mkt-inner">
+          <div data-lang-block="en">
+            <p class="mkt-eyebrow">Put it to use</p>
+            <h2 class="mkt-section-title" id="next-title-en">Where to go next</h2>
+            <div class="mkt-router">
+              <a class="mkt-router-card" href="tracker.html">
+                <h3 class="mkt-router-title">Live tracker</h3>
+                <p class="mkt-router-text">Spot-linked reference prices, updated through the day.</p>
+              </a>
+              <a class="mkt-router-card" href="calculator.html">
+                <h3 class="mkt-router-title">Calculator</h3>
+                <p class="mkt-router-text">Value a specific weight and karat in seconds.</p>
+              </a>
+              <a class="mkt-router-card" href="compare.html">
+                <h3 class="mkt-router-title">Compare countries</h3>
+                <p class="mkt-router-text">Reference prices side by side across markets.</p>
+              </a>
+              <a class="mkt-router-card" href="heatmap.html">
+                <h3 class="mkt-router-title">World map</h3>
+                <p class="mkt-router-text">A retail-estimate heatmap, country by country.</p>
+              </a>
+              <a class="mkt-router-card" href="glossary.html">
+                <h3 class="mkt-router-title">Glossary</h3>
+                <p class="mkt-router-text">Every term on this page, defined plainly.</p>
+              </a>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="mkt-eyebrow">طبّقها عملياً</p>
+            <h2 class="mkt-section-title" id="next-title-ar">إلى أين تذهب بعد ذلك</h2>
+            <div class="mkt-router">
+              <a class="mkt-router-card" href="tracker.html">
+                <h3 class="mkt-router-title">المتتبع المباشر</h3>
+                <p class="mkt-router-text">أسعار مرجعية مرتبطة بالسعر الفوري، تُحدَّث خلال اليوم.</p>
+              </a>
+              <a class="mkt-router-card" href="calculator.html">
+                <h3 class="mkt-router-title">الحاسبة</h3>
+                <p class="mkt-router-text">قيّم وزناً وعياراً محدّدين في ثوانٍ.</p>
+              </a>
+              <a class="mkt-router-card" href="compare.html">
+                <h3 class="mkt-router-title">قارن الدول</h3>
+                <p class="mkt-router-text">أسعار مرجعية جنباً إلى جنب عبر الأسواق.</p>
+              </a>
+              <a class="mkt-router-card" href="heatmap.html">
+                <h3 class="mkt-router-title">خريطة العالم</h3>
+                <p class="mkt-router-text">خريطة حرارية لتقديرات التجزئة، دولةً دولة.</p>
+              </a>
+              <a class="mkt-router-card" href="glossary.html">
+                <h3 class="mkt-router-title">مسرد المصطلحات</h3>
+                <p class="mkt-router-text">كل مصطلح في هذه الصفحة، مشروحاً ببساطة.</p>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="mkt-foot">
+        <p class="mkt-disclaimer">
+          This page is for education only and is not financial advice. Prices shown elsewhere on Gold
+          Ticker Live are spot-linked reference estimates, not live dealer quotes; retail and
+          jewellery prices add making charges, premiums and tax on top of the reference.
+        </p>
+      </div>
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
+    <script type="module" src="./src/pages/market.js"></script>
+  </body>
+</html>

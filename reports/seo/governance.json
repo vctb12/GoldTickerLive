@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-04T20:49:49.851Z",
+  "generatedAt": "2026-07-04T20:52:02.470Z",
   "summary": {
     "groups": {
-      "core": 46,
+      "core": 47,
       "countries": 0,
       "cities": 0,
       "markets": 0,
       "content": 0
     },
     "totals": {
-      "htmlPages": 46,
-      "indexablePages": 12,
+      "htmlPages": 47,
+      "indexablePages": 13,
       "thinRiskPages": 0,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
@@ -438,6 +438,25 @@
       ],
       "hasSchema": true,
       "wordCount": 2047,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
+      "path": "market.html",
+      "group": "core",
+      "noindex": false,
+      "title": "How Gold Is Priced — From the World Market to Your Local Shop | Gold Ticker Live",
+      "description": "How gold is priced, step by step: the global spot price (XAU/USD), currency conversion and the AED peg, weight and karat, dealer premiums and making charges, VAT — and why retail rarely matches spot. Bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/market.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 1670,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
