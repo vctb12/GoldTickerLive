@@ -267,14 +267,14 @@ function localizeStaticTrackerCopy() {
   setInlineLinkText(
     document.getElementById('tp-readout-disclaimer'),
     trackerTx('readout.disclaimer'),
-    'methodology.html#spot-vs-retail',
+    'methodology.html#not-included',
     trackerTx('readout.disclaimerLink')
   );
 
   setInlineLinkText(
     document.getElementById('tp-hero-copy'),
     trackerTx('heroCopy'),
-    'methodology.html#spot-vs-retail',
+    'methodology.html#not-included',
     trackerTx('heroCopyLink')
   );
 
@@ -432,7 +432,7 @@ function localizeStaticTrackerCopy() {
   setInlineLinkText(
     document.getElementById('tp-compare-board-copy'),
     trackerTx('compare.boardCopy'),
-    'methodology.html#spot-vs-retail',
+    'methodology.html#not-included',
     trackerTx('compare.boardCopyLink')
   );
   const monthLabel = document.querySelector('.tracker-history-month-field > span');
