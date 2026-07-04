@@ -38,6 +38,8 @@ const LOCAL_DICTS = [
   ['src/pages/invest.js', 'I18N'],
   ['src/pages/heatmap.js', 'T'],
   ['src/pages/portfolio.js', 'T'],
+  ['src/pages/glossary.js', 'T'],
+  ['src/pages/market.js', 'T'],
   ['src/pages/dubai-gold-price.js', 'T'],
 ];
 

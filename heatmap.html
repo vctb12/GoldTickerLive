@@ -2,9 +2,11 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <!-- gtl-theme-preinit: set theme before first paint to avoid a flash (mirrors src/components/nav.js) -->
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
     <script>
       (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
         try {
           var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
           var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
@@ -14,20 +16,32 @@
               : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
                 ? 'dark'
                 : 'light';
-          var el = document.documentElement;
           el.setAttribute('data-theme', resolved);
           el.setAttribute('data-theme-mode', mode);
         } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
       })();
     </script>
     <script src="assets/analytics.js" defer></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>Gold Price World Map — Retail Estimates by Country | Gold Ticker Live</title>
+    <title>Gold Price World Map — Retail by Country | Gold Ticker Live</title>
     <meta
       name="description"
-      content="Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets."
+      content="Interactive world map of all-in gold retail estimates per gram — spot-linked reference plus VAT and making charges across the GCC and Arab world."
     />
     <link rel="canonical" href="https://goldtickerlive.com/heatmap.html" />
     <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/heatmap.html" />
@@ -69,6 +83,7 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/heatmap.css" />
+    <link rel="stylesheet" href="./styles/components/edu.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
@@ -99,7 +114,7 @@
   "@type": "WebApplication",
   "name": "Gold Price World Map",
   "url": "https://goldtickerlive.com/heatmap.html",
-  "description": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+  "description": "Interactive world map of all-in gold retail estimates per gram — spot-linked reference plus VAT and making charges across the GCC and Arab world.",
   "applicationCategory": "FinanceApplication",
   "operatingSystem": "Any (web browser)",
   "browserRequirements": "Requires JavaScript",
@@ -212,6 +227,337 @@
             piece, its making charge and the daily rate board.
           </li>
         </ul>
+      </section>
+
+      <!-- Gold market drivers — static educational hub (edu-* system) -->
+      <!-- Gold market drivers — educational overview. Static, general, historical tendencies. Not live data, not a forecast, not financial advice. Appended inside <main> below the interactive price map. -->
+
+      <section class="edu-section" id="market-context" aria-labelledby="intro-h-en intro-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Market context</p>
+            <h2 class="edu-heading" id="intro-h-en">What moves the gold price?</h2>
+            <p class="edu-lede">Gold has no single driver. Its price reflects several forces at once — the US dollar, interest rates, inflation, central banks, and moments of stress — and those forces can reinforce or cancel each other. The notes below describe how gold has <em>historically</em> tended to react to each one.</p>
+            <p class="edu-disclaimer">This is a static educational overview, not live market data and not a forecast. Everything here describes typical, general tendencies observed in the past. They do not always hold, and they are not predictions of where the price will go next.</p>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">سياق السوق</p>
+            <h2 class="edu-heading" id="intro-h-ar">ما الذي يُحرّك سعر الذهب؟</h2>
+            <p class="edu-lede">ليس للذهب مُحرّك واحد. يعكس سعره عدة قوى في آنٍ واحد — الدولار الأمريكي، وأسعار الفائدة، والتضخم، والبنوك المركزية، ولحظات التوتر — وقد يُعزّز بعضها بعضاً أو يُلغيه. تصف الملاحظات أدناه كيف <em>مال</em> الذهب تاريخياً إلى التفاعل مع كلٍّ منها.</p>
+            <p class="edu-disclaimer">هذه نظرة تعليمية ثابتة، وليست بيانات سوق حيّة ولا تنبؤاً. كل ما هنا يصف ميولاً عامة معتادة رُصدت في الماضي؛ فهي لا تصحّ دائماً وليست توقّعاً لِما سيؤول إليه السعر لاحقاً.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="legend" aria-labelledby="legend-h-en legend-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">How to read the tags</p>
+            <h2 class="edu-heading" id="legend-h-en">The colour key</h2>
+            <p class="edu-lede">Each driver below is tagged by how it has usually leaned. The tag is a general historical bias, not a guarantee for any given day.</p>
+            <div class="edu-legend">
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--supportive"></span> Usually supportive</span>
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--pressure"></span> Usually pressure</span>
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--mixed"></span> Mixed</span>
+            </div>
+            <ul class="edu-list">
+              <li><strong>Usually supportive</strong> — a force that has typically helped gold prices.</li>
+              <li><strong>Usually pressure</strong> — a force that has typically weighed on gold prices.</li>
+              <li><strong>Mixed</strong> — a force that can push either way depending on the context.</li>
+            </ul>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">كيفية قراءة الوسوم</p>
+            <h2 class="edu-heading" id="legend-h-ar">دليل الألوان</h2>
+            <p class="edu-lede">كل مُحرّك أدناه موسوم بحسب ميله المعتاد. والوسم هو ميل تاريخي عام، وليس ضمانة في أي يوم بعينه.</p>
+            <div class="edu-legend">
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--supportive"></span> داعم عادةً</span>
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--pressure"></span> ضاغط عادةً</span>
+              <span class="edu-legend-item"><span class="edu-legend-dot edu-legend-dot--mixed"></span> متباين</span>
+            </div>
+            <ul class="edu-list">
+              <li><strong>داعم عادةً</strong> — قوة مالت تاريخياً إلى مساندة أسعار الذهب.</li>
+              <li><strong>ضاغط عادةً</strong> — قوة مالت تاريخياً إلى الضغط على أسعار الذهب.</li>
+              <li><strong>متباين</strong> — قوة قد تدفع في أيٍّ من الاتجاهين حسب السياق.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="key-drivers" aria-labelledby="drivers-h-en drivers-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">The forces</p>
+            <h2 class="edu-heading" id="drivers-h-en">Key gold price drivers</h2>
+            <p class="edu-lede">Nine forces that commentators most often connect to gold, with the direction each has usually leaned. Read them together, not one at a time.</p>
+            <div class="edu-driver-grid">
+              <article class="edu-driver" data-bias="pressure">
+                <span class="edu-driver-tag">Usually pressure</span>
+                <h3 class="edu-driver-title">US dollar strength</h3>
+                <p class="edu-driver-text">Gold is priced in US dollars, so a stronger dollar makes it more expensive in other currencies and often coincides with softer demand. When the dollar weakens, gold has historically found more support. This is a tendency, not a rule, and it can break during periods of stress.</p>
+              </article>
+              <article class="edu-driver" data-bias="pressure">
+                <span class="edu-driver-tag">Usually pressure</span>
+                <h3 class="edu-driver-title">Real interest rates</h3>
+                <p class="edu-driver-text">Real yields are interest rates minus expected inflation. When real yields rise, the opportunity cost of holding gold — which pays no interest — goes up, and gold has often struggled. Falling real yields have tended to be more supportive.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">Usually supportive</span>
+                <h3 class="edu-driver-title">Inflation expectations</h3>
+                <p class="edu-driver-text">Gold is widely seen as a store of value, so rising inflation expectations often increase interest in it as a hedge. The relationship is loose, and it has worked better over long horizons than from one month to the next.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">Usually supportive</span>
+                <h3 class="edu-driver-title">Central bank demand</h3>
+                <p class="edu-driver-text">When central banks add gold to their reserves over sustained periods, that steady official buying can underpin prices. This demand tends to move slowly and is driven by reserve policy rather than the short-term price.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">Usually supportive</span>
+                <h3 class="edu-driver-title">Geopolitical &amp; financial stress</h3>
+                <p class="edu-driver-text">In times of conflict, crisis, or market turmoil, investors often seek perceived safe havens, and gold is a traditional one. These safe-haven moves can be sharp, but they may fade once tensions ease.</p>
+              </article>
+              <article class="edu-driver" data-bias="mixed">
+                <span class="edu-driver-tag">Mixed</span>
+                <h3 class="edu-driver-title">ETF &amp; investment flows</h3>
+                <p class="edu-driver-text">Gold-backed ETFs let investors gain exposure without holding metal. Sustained inflows can add support, while heavy outflows can add pressure, so the effect depends entirely on the direction of the flows.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">Usually supportive</span>
+                <h3 class="edu-driver-title">Jewelry demand (India, China, GCC)</h3>
+                <p class="edu-driver-text">Physical demand from large markets such as India, China, and the GCC — often tied to wedding and festival seasons — provides a recurring source of buying. It tends to be price-sensitive and seasonal rather than a fast mover.</p>
+              </article>
+              <article class="edu-driver" data-bias="mixed">
+                <span class="edu-driver-tag">Mixed</span>
+                <h3 class="edu-driver-title">Mine supply</h3>
+                <p class="edu-driver-text">New gold from mines is fairly inelastic and changes only slowly, so supply rarely drives short-term moves. Over longer periods, constrained or rising output can matter at the margin.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">Usually supportive</span>
+                <h3 class="edu-driver-title">Recession &amp; rate-cut expectations</h3>
+                <p class="edu-driver-text">Expectations of an economic slowdown and lower interest rates can help gold on two fronts: falling yields reduce its opportunity cost, and caution increases safe-haven interest. As always, this is a historical tendency, not a guarantee.</p>
+              </article>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">القوى</p>
+            <h2 class="edu-heading" id="drivers-h-ar">أبرز مُحرّكات سعر الذهب</h2>
+            <p class="edu-lede">تسع قوى يربطها المحلّلون بالذهب أكثر من غيرها، مع الاتجاه الذي مالت إليه كلٌّ منها عادةً. اقرأها مجتمعةً لا واحدةً تلو الأخرى.</p>
+            <div class="edu-driver-grid">
+              <article class="edu-driver" data-bias="pressure">
+                <span class="edu-driver-tag">ضاغط عادةً</span>
+                <h3 class="edu-driver-title">قوة الدولار الأمريكي</h3>
+                <p class="edu-driver-text">يُسعَّر الذهب بالدولار الأمريكي، لذا فإن قوة الدولار تجعله أغلى بالعملات الأخرى وكثيراً ما تتزامن مع ضعف الطلب. وعندما يضعف الدولار، وجد الذهب تاريخياً دعماً أكبر. هذا ميل لا قاعدة ثابتة، وقد ينكسر في أوقات التوتر.</p>
+              </article>
+              <article class="edu-driver" data-bias="pressure">
+                <span class="edu-driver-tag">ضاغط عادةً</span>
+                <h3 class="edu-driver-title">أسعار الفائدة الحقيقية</h3>
+                <p class="edu-driver-text">العائد الحقيقي هو سعر الفائدة مطروحاً منه التضخم المتوقّع. وحين ترتفع العوائد الحقيقية، ترتفع كلفة الفرصة البديلة لحيازة الذهب الذي لا يُدرّ فائدة، وكثيراً ما يتعثّر. أما تراجع العوائد الحقيقية فقد مال إلى أن يكون أكثر دعماً.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">داعم عادةً</span>
+                <h3 class="edu-driver-title">توقّعات التضخم</h3>
+                <p class="edu-driver-text">يُنظر إلى الذهب على نطاق واسع بوصفه مخزناً للقيمة، لذا كثيراً ما تزيد توقّعات ارتفاع التضخم الإقبال عليه كأداة تحوّط. والعلاقة فضفاضة، وقد عملت على المدى الطويل أفضل من عملها من شهرٍ لآخر.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">داعم عادةً</span>
+                <h3 class="edu-driver-title">طلب البنوك المركزية</h3>
+                <p class="edu-driver-text">حين تضيف البنوك المركزية الذهب إلى احتياطاتها على مدى فترات ممتدة، فإن هذا الشراء الرسمي المطّرد قد يسند الأسعار. ويميل هذا الطلب إلى التحرّك ببطء، مدفوعاً بسياسة الاحتياطي لا بالسعر قصير الأجل.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">داعم عادةً</span>
+                <h3 class="edu-driver-title">التوترات الجيوسياسية والمالية</h3>
+                <p class="edu-driver-text">في أوقات النزاعات أو الأزمات أو اضطراب الأسواق، كثيراً ما يبحث المستثمرون عن ملاذاتٍ آمنة، والذهب ملاذ تقليدي. وقد تكون هذه التحرّكات حادّة، لكنها قد تتلاشى بمجرّد أن تهدأ التوترات.</p>
+              </article>
+              <article class="edu-driver" data-bias="mixed">
+                <span class="edu-driver-tag">متباين</span>
+                <h3 class="edu-driver-title">تدفّقات الصناديق والاستثمار</h3>
+                <p class="edu-driver-text">تتيح صناديق المؤشرات المغطّاة بالذهب التعرّض له دون حيازة المعدن. فالتدفّقات الداخلة المستمرة قد تضيف دعماً، بينما قد تضيف التدفّقات الخارجة الكبيرة ضغطاً، فالأثر يتوقّف تماماً على اتجاه التدفّقات.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">داعم عادةً</span>
+                <h3 class="edu-driver-title">الطلب على المصوغات (الهند والصين والخليج)</h3>
+                <p class="edu-driver-text">يوفّر الطلب المادي من أسواق كبرى مثل الهند والصين ودول الخليج — وكثيراً ما يرتبط بمواسم الأعراس والأعياد — مصدر شراء متكرّراً. ويميل إلى الحساسية للسعر والموسمية أكثر من كونه محرّكاً سريعاً.</p>
+              </article>
+              <article class="edu-driver" data-bias="mixed">
+                <span class="edu-driver-tag">متباين</span>
+                <h3 class="edu-driver-title">المعروض من المناجم</h3>
+                <p class="edu-driver-text">الذهب الجديد من المناجم قليل المرونة ولا يتغيّر إلا ببطء، لذا نادراً ما يقود المعروض التحرّكات قصيرة الأجل. وعلى المدى الأطول قد يكون لتقيّد الإنتاج أو ارتفاعه أثر هامشي.</p>
+              </article>
+              <article class="edu-driver" data-bias="supportive">
+                <span class="edu-driver-tag">داعم عادةً</span>
+                <h3 class="edu-driver-title">توقّعات الركود وخفض الفائدة</h3>
+                <p class="edu-driver-text">قد تساعد توقّعات تباطؤ الاقتصاد وخفض أسعار الفائدة الذهبَ من جهتين: تراجع العوائد يقلّل كلفة الفرصة البديلة، والحذر يزيد الإقبال على الملاذ الآمن. وكالعادة، هذا ميل تاريخي لا ضمانة.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="how-to-read" aria-labelledby="read-h-en read-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Putting it together</p>
+            <h2 class="edu-heading" id="read-h-en">How to read this</h2>
+            <div class="edu-card">
+              <h3 class="edu-card-title">No single indicator predicts the price</h3>
+              <p class="edu-card-text">These forces act at the same time and often pull in opposite directions, so no single indicator predicts the gold price. Gold can rise even while the dollar is strong if stress or central-bank buying is high, and it can drift lower in a calm market despite firm inflation. Treat each driver as one input among many, and weigh them together rather than in isolation.</p>
+              <p class="edu-verdict">Read the drivers as a whole — no one signal decides the outcome.</p>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">الربط بين العوامل</p>
+            <h2 class="edu-heading" id="read-h-ar">كيف تقرأ هذا</h2>
+            <div class="edu-card">
+              <h3 class="edu-card-title">لا مؤشّر واحد يتنبّأ بالسعر</h3>
+              <p class="edu-card-text">تعمل هذه القوى في وقتٍ واحد وكثيراً ما تتجاذب في اتجاهات متعاكسة، لذا لا يوجد مؤشّر واحد يتنبّأ بسعر الذهب. فقد يرتفع الذهب حتى مع قوة الدولار إذا اشتدّ التوتر أو زاد شراء البنوك المركزية، وقد ينزلق هبوطاً في سوق هادئة رغم ثبات التضخم. تعامل مع كل عامل بوصفه مُدخلاً بين مُدخلات كثيرة، ووازِنها مجتمعةً لا منفردة.</p>
+              <p class="edu-verdict">اقرأ المُحرّكات ككلٍّ — فلا إشارة واحدة تحسم النتيجة.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="asset-relationships" aria-labelledby="assets-h-en assets-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Correlations</p>
+            <h2 class="edu-heading" id="assets-h-en">Asset relationships</h2>
+            <p class="edu-lede">How gold has often related to other markets. <span class="edu-chip">General tendencies</span> These are patterns observed in the past, not fixed rules — relationships weaken, strengthen, or reverse over time.</p>
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Asset</th>
+                    <th scope="col">Typical relationship to gold</th>
+                    <th scope="col">Note</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">US dollar</th>
+                    <td>Often inverse</td>
+                    <td>When the dollar strengthens, gold often softens, and vice versa.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Real yields</th>
+                    <td>Often inverse</td>
+                    <td>Higher real yields raise the cost of holding non-yielding gold.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Silver</th>
+                    <td>Often moves with gold</td>
+                    <td>Tends to follow gold but with larger, more volatile swings.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Oil</th>
+                    <td>Loose, inflation-linked</td>
+                    <td>Connected mainly through the inflation channel; the link is weak.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">S&amp;P 500</th>
+                    <td>Low / variable</td>
+                    <td>Little steady relationship; the two can diverge in crises.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Bitcoin</th>
+                    <td>Unstable correlation</td>
+                    <td>Sometimes called &lsquo;digital gold&rsquo;, but far more volatile and the correlation shifts.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">10Y Treasury yield</th>
+                    <td>Often inverse</td>
+                    <td>Higher long-term yields tend to pressure gold.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Inflation</th>
+                    <td>Supportive over long run</td>
+                    <td>Has tended to help gold across long horizons, not day to day.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">الارتباطات</p>
+            <h2 class="edu-heading" id="assets-h-ar">علاقات الأصول</h2>
+            <p class="edu-lede">كيف ارتبط الذهب غالباً بأسواق أخرى. <span class="edu-chip">ميول عامة</span> هذه أنماط رُصدت في الماضي، وليست قواعد ثابتة — إذ تضعف العلاقات أو تقوى أو تنعكس مع الوقت.</p>
+            <div class="edu-table-wrap">
+              <table class="edu-table">
+                <thead>
+                  <tr>
+                    <th scope="col">الأصل</th>
+                    <th scope="col">العلاقة المعتادة بالذهب</th>
+                    <th scope="col">ملاحظة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">الدولار الأمريكي</th>
+                    <td>عكسية غالباً</td>
+                    <td>حين يقوى الدولار كثيراً ما يلين الذهب، والعكس صحيح.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">العوائد الحقيقية</th>
+                    <td>عكسية غالباً</td>
+                    <td>ارتفاع العوائد الحقيقية يرفع كلفة حيازة الذهب الذي لا يُدرّ عائداً.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">الفضة</th>
+                    <td>تتحرّك مع الذهب غالباً</td>
+                    <td>تميل إلى مجاراة الذهب لكن بتقلّبات أكبر وأشدّ.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">النفط</th>
+                    <td>فضفاضة ومرتبطة بالتضخم</td>
+                    <td>يرتبط أساساً عبر قناة التضخم، والصلة ضعيفة.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">مؤشّر S&amp;P 500</th>
+                    <td>منخفضة/متغيّرة</td>
+                    <td>لا علاقة ثابتة تُذكر، وقد يتباعدان في الأزمات.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">بيتكوين</th>
+                    <td>ارتباط غير مستقر</td>
+                    <td>يُسمّى أحياناً &laquo;الذهب الرقمي&raquo;، لكنه أشدّ تقلّباً بكثير والارتباط متغيّر.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">عائد سندات الخزانة لأجل 10 سنوات</th>
+                    <td>عكسية غالباً</td>
+                    <td>ارتفاع العوائد طويلة الأجل يميل إلى الضغط على الذهب.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">التضخم</th>
+                    <td>داعم على المدى الطويل</td>
+                    <td>مال إلى مساندة الذهب عبر آمادٍ طويلة، لا يوماً بيوم.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="edu-section" id="closing" aria-labelledby="close-h-en close-h-ar">
+        <div class="edu-inner">
+          <div data-lang-block="en">
+            <p class="edu-eyebrow">Before you act</p>
+            <h2 class="edu-heading" id="close-h-en">The bottom line</h2>
+            <p class="edu-disclaimer">This overview is educational market context describing general, historical tendencies in how gold has reacted to different forces. It is not live data, not a forecast, and not financial advice. Past patterns do not always repeat and can change. Always check current market data and consider your own circumstances before making any decision.</p>
+            <div class="edu-card">
+              <h3 class="edu-card-title">Learn more</h3>
+              <p class="edu-card-text">Read our <a href="/learn.html">gold basics guide</a> to understand karats, weights, and pricing, or <a href="/compare.html">compare gold prices</a> across sources.</p>
+            </div>
+          </div>
+          <div data-lang-block="ar" lang="ar" dir="rtl">
+            <p class="edu-eyebrow">قبل أن تقرّر</p>
+            <h2 class="edu-heading" id="close-h-ar">الخلاصة</h2>
+            <p class="edu-disclaimer">هذه النظرة سياق تعليمي للسوق يصف ميولاً عامة وتاريخية في تفاعل الذهب مع قوى مختلفة. وهي ليست بيانات حيّة ولا تنبؤاً ولا نصيحة مالية. الأنماط السابقة لا تتكرّر دائماً وقد تتغيّر. تحقّق دائماً من بيانات السوق الحالية وراعِ ظروفك الخاصة قبل اتخاذ أي قرار.</p>
+            <div class="edu-card">
+              <h3 class="edu-card-title">تعلّم المزيد</h3>
+              <p class="edu-card-text">اطّلع على <a href="/learn.html">دليل أساسيات الذهب</a> لفهم العيارات والأوزان والتسعير، أو <a href="/compare.html">قارِن أسعار الذهب</a> بين المصادر.</p>
+            </div>
+          </div>
+        </div>
       </section>
 
       <p class="heatmap-disclaimer" id="heatmap-disclaimer">

@@ -421,6 +421,11 @@ function detectPageType(filePath, _content) {
   }
   if (relativePath.includes('/calculator') || relativePath.includes('/tools')) return 'tool';
 
+  // learn.html and methodology.html are long-form editorial pages (og:type=article,
+  // ~2,000 words) — the site's strongest E-E-A-T surfaces. They previously carried
+  // only BreadcrumbList; classify them as articles so they also get Article schema.
+  if (relativePath === 'learn.html' || relativePath === 'methodology.html') return 'article';
+
   return 'generic';
 }
 

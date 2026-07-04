@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-04T19:38:22.529Z",
+  "generatedAt": "2026-07-04T20:55:18.910Z",
   "summary": {
     "groups": {
-      "core": 46,
+      "core": 48,
       "countries": 0,
       "cities": 0,
       "markets": 0,
       "content": 0
     },
     "totals": {
-      "htmlPages": 46,
-      "indexablePages": 12,
-      "thinRiskPages": 1,
+      "htmlPages": 48,
+      "indexablePages": 14,
+      "thinRiskPages": 0,
       "duplicateRiskClusters": 0,
       "missingCanonical": 0,
       "missingHreflang": 0,
@@ -20,12 +20,7 @@
       "requiredNoindexViolations": 0
     },
     "risks": {
-      "thinRisk": [
-        {
-          "path": "compare.html",
-          "words": 108
-        }
-      ],
+      "thinRisk": [],
       "duplicateRisk": [],
       "missingCanonical": [],
       "missingHreflang": [],
@@ -312,8 +307,8 @@
       "path": "compare.html",
       "group": "core",
       "noindex": false,
-      "title": "Compare Gold Prices by Country — GCC &amp; Arab World | Gold Ticker Live",
-      "description": "Compare reference gold prices and all-in retail estimates across the UAE, GCC and the wider Arab world. Sortable table, country chips, side-by-side detail and a cheapest-to-buy callout.",
+      "title": "Gold Price Comparison — GCC &amp; Arab World | Gold Ticker Live",
+      "description": "Compare reference gold prices and all-in retail estimates across the UAE, GCC and wider Arab world — sortable table, country chips and a cheapest-to-buy view.",
       "canonical": "https://goldtickerlive.com/compare.html",
       "hreflangs": [
         "x-default",
@@ -321,8 +316,8 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 108,
-      "thinRisk": true,
+      "wordCount": 3584,
+      "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
       "missingSchema": false
@@ -392,11 +387,30 @@
       "missingSchema": false
     },
     {
+      "path": "glossary.html",
+      "group": "core",
+      "noindex": false,
+      "title": "Gold Glossary — Key Gold Pricing, Purity &amp; Market Terms | Gold Ticker Live",
+      "description": "A plain-English gold glossary: spot vs reference price, making charges, karat and purity, troy ounce, bullion, XAU/USD, LBMA, the AED peg and more — explained clearly, bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/glossary.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 1874,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
       "path": "heatmap.html",
       "group": "core",
       "noindex": false,
-      "title": "Gold Price World Map — Retail Estimates by Country | Gold Ticker Live",
-      "description": "Interactive world map of gold prices: all-in retail estimates per gram — spot-linked reference plus VAT and typical making charges — across the GCC, Arab world and global markets.",
+      "title": "Gold Price World Map — Retail by Country | Gold Ticker Live",
+      "description": "Interactive world map of all-in gold retail estimates per gram — spot-linked reference plus VAT and making charges across the GCC and Arab world.",
       "canonical": "https://goldtickerlive.com/heatmap.html",
       "hreflangs": [
         "x-default",
@@ -404,7 +418,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 195,
+      "wordCount": 1882,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -423,7 +437,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1638,
+      "wordCount": 1676,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -433,7 +447,7 @@
       "path": "learn.html",
       "group": "core",
       "noindex": false,
-      "title": "Gold Knowledge Hub — Learn, Market Insights &amp; Investing | Gold Ticker Live",
+      "title": "Gold Knowledge Hub — Guides &amp; Investing | Gold Ticker Live",
       "description": "Gold knowledge hub: karats, purity, AED peg, Zakat, spot vs retail, market insights, and a rational investing guide — bilingual EN/AR for UAE and GCC buyers.",
       "canonical": "https://goldtickerlive.com/learn.html",
       "hreflangs": [
@@ -442,7 +456,26 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 1971,
+      "wordCount": 2047,
+      "thinRisk": false,
+      "missingCanonical": false,
+      "missingHreflang": false,
+      "missingSchema": false
+    },
+    {
+      "path": "market.html",
+      "group": "core",
+      "noindex": false,
+      "title": "How Gold Is Priced — From the World Market to Your Local Shop | Gold Ticker Live",
+      "description": "How gold is priced, step by step: the global spot price (XAU/USD), currency conversion and the AED peg, weight and karat, dealer premiums and making charges, VAT — and why retail rarely matches spot. Bilingual EN/AR.",
+      "canonical": "https://goldtickerlive.com/market.html",
+      "hreflangs": [
+        "x-default",
+        "en",
+        "ar"
+      ],
+      "hasSchema": true,
+      "wordCount": 1670,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,
@@ -486,8 +519,8 @@
       "path": "portfolio.html",
       "group": "core",
       "noindex": false,
-      "title": "Gold Portfolio Tracker — Value Your Holdings | Gold Ticker Live",
-      "description": "Track your gold holdings privately in your browser: weight, karat, purchase date and cost, valued against the spot-linked reference price. No account, nothing uploaded.",
+      "title": "Gold Portfolio Tracker — Value Holdings | Gold Ticker Live",
+      "description": "Track your gold holdings privately in your browser — weight, karat and cost valued against the spot-linked reference price. No account, nothing uploaded.",
       "canonical": "https://goldtickerlive.com/portfolio.html",
       "hreflangs": [
         "x-default",
@@ -495,7 +528,7 @@
         "ar"
       ],
       "hasSchema": true,
-      "wordCount": 188,
+      "wordCount": 2482,
       "thinRisk": false,
       "missingCanonical": false,
       "missingHreflang": false,

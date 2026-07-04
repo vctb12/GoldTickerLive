@@ -160,7 +160,10 @@
 }
 
 .legal-section a {
-  color: var(--color-gold);
+  /* --color-gold (#b07d1f) is a value-signal accent only and fails WCAG AA
+     (~3.5:1) as small text on the light legal surface. Use the AA-locked,
+     theme-aware text gold (matches the site-wide `a` default in base.css). */
+  color: var(--color-gold-dark);
   text-decoration: underline;
   text-underline-offset: 2px;
 }

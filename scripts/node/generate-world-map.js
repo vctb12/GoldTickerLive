@@ -320,6 +320,48 @@ function main() {
     return { code, x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 };
   });
 
+  // ── Graticule + map frame ──────────────────────────────────────────────────
+  // The visible latitude band (Antarctica is excluded, so the map runs roughly
+  // from the southern tip of South America to northern Greenland). Sampling
+  // finely keeps the Natural Earth curves smooth.
+  const LAT_MIN = -56;
+  const LAT_MAX = 84;
+  const LON_MIN = -180;
+  const LON_MAX = 180;
+  const STEP = 2; // degrees per sampled point
+
+  const projectLine = (points) => {
+    let d = '';
+    for (const [lon, lat] of points) {
+      const [x, y] = toPx(projectNaturalEarth(lon, lat));
+      d += (d === '' ? 'M' : 'L') + fmt(x) + ',' + fmt(y);
+    }
+    return d;
+  };
+
+  // Graticule: meridians every 30° longitude, parallels every 30° latitude.
+  let graticule = '';
+  for (let lon = LON_MIN; lon <= LON_MAX; lon += 30) {
+    const pts = [];
+    for (let lat = LAT_MIN; lat <= LAT_MAX; lat += STEP) pts.push([lon, lat]);
+    graticule += projectLine(pts);
+  }
+  for (let lat = -30; lat <= 60; lat += 30) {
+    const pts = [];
+    for (let lon = LON_MIN; lon <= LON_MAX; lon += STEP) pts.push([lon, lat]);
+    graticule += projectLine(pts);
+  }
+
+  // Map frame ("sphere"): the curved outline of the visible projection, used to
+  // fill the ocean and draw a crisp edge. Traced clockwise: top, right, bottom,
+  // left, then closed.
+  const frame = [];
+  for (let lon = LON_MIN; lon <= LON_MAX; lon += STEP) frame.push([lon, LAT_MAX]);
+  for (let lat = LAT_MAX; lat >= LAT_MIN; lat -= STEP) frame.push([LON_MAX, lat]);
+  for (let lon = LON_MAX; lon >= LON_MIN; lon -= STEP) frame.push([lon, LAT_MIN]);
+  for (let lat = LAT_MIN; lat <= LAT_MAX; lat += STEP) frame.push([LON_MIN, lat]);
+  const framePath = projectLine(frame) + 'Z';
+
   const banner = [
     '// GENERATED FILE — do not edit by hand.',
     '// Produced by scripts/node/generate-world-map.js from world-atlas@2.0.2',
@@ -341,6 +383,13 @@ function main() {
 
   const body = [
     `export const WORLD_VIEWBOX = '0 0 ${MAP_WIDTH} ${height}';`,
+    '',
+    '// Curved outline of the visible Natural Earth projection — fills the ocean',
+    '// and draws the map edge.',
+    `export const WORLD_SPHERE = '${framePath}';`,
+    '',
+    '// Graticule: 30° meridians + parallels, for a subtle lat/long grid.',
+    `export const WORLD_GRATICULE = '${graticule}';`,
     '',
     '// Merged landmass for countries the site does not track (non-interactive backdrop).',
     `export const WORLD_BACKGROUND = '${backgroundPath}';`,
