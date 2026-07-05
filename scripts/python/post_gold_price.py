@@ -1448,9 +1448,16 @@ def post_tweet(text, post_type='hourly'):
     )
     try:
         response = client.create_tweet(text=text)
+        # tweepy>=4 returns response.data as a plain dict ({"id": ..., "text": ...}),
+        # so the old hasattr(response.data, "id") was always False and tweet_id
+        # stayed None on every post (breaking run reconciliation). Read the id
+        # defensively: dict access first, then attribute fallback.
         tweet_id = None
-        if hasattr(response, "data") and response.data and hasattr(response.data, "id"):
-            tweet_id = str(response.data.id)
+        data = getattr(response, "data", None)
+        if data is not None:
+            raw_id = data.get("id") if isinstance(data, dict) else getattr(data, "id", None)
+            if raw_id is not None:
+                tweet_id = str(raw_id)
         if tweet_id:
             print(f"✅ Tweet posted successfully — X post ID: {tweet_id}")
         else:
