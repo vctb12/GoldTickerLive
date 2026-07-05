@@ -17,11 +17,12 @@ const ALLOWED_RANGES = new Set(['24H', '7D', '30D', '90D', '1Y', '3Y', '5Y', 'AL
 const ISO_COUNTRY_CODE = /^[A-Za-z]{2}$/;
 const METHODOLOGY_FRAGMENTS = new Set([
   '',
-  'spot-vs-retail',
-  'formula',
-  'sources',
-  'freshness',
-  'karats',
+  'not-included',
+  'live-formula',
+  'gold-data',
+  'fx-rates',
+  'freshness-states',
+  'karat-conversion',
 ]);
 
 /**
