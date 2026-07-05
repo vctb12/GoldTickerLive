@@ -41,6 +41,9 @@ const LOCAL_DICTS = [
   ['src/pages/glossary.js', 'T'],
   ['src/pages/market.js', 'T'],
   ['src/pages/dubai-gold-price.js', 'T'],
+  ['src/pages/submit-shop.js', 'T'],
+  ['src/pages/terms.js', 'T'],
+  ['src/pages/privacy.js', 'T'],
 ];
 
 const propKey = (p) => (p.key.type === 'Identifier' ? p.key.name : p.key.value);
