@@ -344,6 +344,11 @@ html[lang='ar'] .mkt-jump[data-lang-block='en'] {
   color: var(--color-gold-dark, var(--color-gold));
 }
 
+/* Flip the "go here" arrow for RTL: → (U+2192) becomes ← (U+2190) in Arabic. */
+html[lang='ar'] .mkt-router-title::after {
+  content: ' \2190';
+}
+
 .mkt-router-text {
   margin: 0;
   font-size: var(--text-sm);
