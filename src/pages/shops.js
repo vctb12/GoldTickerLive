@@ -93,6 +93,7 @@ const REGIONS = {
 
 const TXT = {
   en: {
+    docTitle: 'Gold Shops & Markets Directory by Region | Gold Ticker Live',
     kicker: 'Shops by region',
     title: 'Explore Gold Shops & Known Gold Markets',
     lead: 'Browse directory listings across countries covered on Gold Ticker Live. Use filters to narrow by region, country, city, and specialty. Shop information is for reference, and business details are shown where available.',
@@ -249,6 +250,7 @@ const TXT = {
     compareMaxReached: 'Maximum 3 shops for comparison',
   },
   ar: {
+    docTitle: 'دليل محلات وأسواق الذهب حسب المنطقة | Gold Ticker Live',
     kicker: 'محلات حسب المنطقة',
     title: 'استكشف محلات الذهب والأسواق المعروفة',
     lead: 'تصفح إدراجات الدليل ضمن الدول التي يغطيها Gold Ticker Live. استخدم الفلاتر حسب المنطقة والدولة والمدينة والتخصص. معلومات المحلات مرجعية، وتظهر تفاصيل النشاط حيثما كانت متاحة.',
@@ -982,6 +984,7 @@ function closeModal({ clearShopParam = true } = {}) {
 function applyStaticText() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = t('docTitle');
 
   document.getElementById('shops-kicker').textContent = t('kicker');
   document.getElementById('shops-title').textContent = t('title');

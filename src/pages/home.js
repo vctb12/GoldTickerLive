@@ -1031,6 +1031,7 @@ function applyLangToPage() {
   const isAr = lang === 'ar';
   document.documentElement.lang = lang;
   document.documentElement.dir = isAr ? 'rtl' : 'ltr';
+  document.title = tx('docTitle');
   hydrateHomeI18n();
 
   setTextById('hero-live-label', tx('heroLive'));

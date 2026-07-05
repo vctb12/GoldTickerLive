@@ -865,6 +865,7 @@ export const TRANSLATIONS = {
     'home.actionMarketLabel': 'How gold is priced',
     'home.actionMarketDesc':
       'Spot, making charges, VAT — how a reference price becomes a shop quote.',
+    'home.docTitle': 'Gold Ticker Live — Reference Gold Prices UAE & GCC Today',
     'home.snapshotKicker': 'Market snapshot',
     'home.snapshotTitle': 'Reference context for mobile',
     'home.snapshotUaeLabel': 'UAE reference',
@@ -2283,6 +2284,7 @@ export const TRANSLATIONS = {
     'home.actionMarketKicker': 'التسعير',
     'home.actionMarketLabel': 'كيف يُسعّر الذهب',
     'home.actionMarketDesc': 'الفوري ورسوم الصياغة والضريبة — كيف يصبح السعر المرجعي سعر محل.',
+    'home.docTitle': 'Gold Ticker Live — أسعار الذهب المرجعية للإمارات والخليج',
     'home.snapshotKicker': 'ملخص السوق',
     'home.snapshotTitle': 'سياق مرجعي مناسب للموبايل',
     'home.snapshotUaeLabel': 'مرجع الإمارات',
