@@ -89,6 +89,7 @@ function shopVsRefT(key) {
 // ── Translations ────────────────────────────────────────────────────────────
 const T = {
   en: {
+    docTitle: 'Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live',
     pageTitle: 'Gold Calculator',
     pageSub: 'Spot-linked reference estimates · Multiple karats · AED & USD',
     spotLabel: 'Spot:',
@@ -226,6 +227,7 @@ const T = {
     skip_to_main: 'Skip to main content',
   },
   ar: {
+    docTitle: 'حاسبة الذهب — القيمة والخردة والزكاة | Gold Ticker Live',
     pageTitle: 'حاسبة الذهب',
     pageSub: 'تقديرات مرجعية مرتبطة بالسعر الفوري · عيارات متعددة · درهم ودولار',
     spotLabel: 'السعر الفوري:',
@@ -1235,6 +1237,7 @@ function applyLang() {
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = t('docTitle');
   populateKaratSelects();
   populateUnitSelects();
   refreshMobileDockForActiveTab();

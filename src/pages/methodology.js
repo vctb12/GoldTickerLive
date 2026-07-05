@@ -13,6 +13,7 @@ const STATE = { lang: 'en' };
 
 const T = {
   en: {
+    docTitle: 'Data Sources & Methodology | Gold Ticker Live',
     'method-hero-tag': 'Transparency & Trust',
     'method-h1': 'Data Sources & Methodology',
     'method-sub':
@@ -54,6 +55,7 @@ const T = {
     'disclaimer-h2': 'Disclaimer',
   },
   ar: {
+    docTitle: 'مصادر البيانات والمنهجية | Gold Ticker Live',
     'method-hero-tag': 'الشفافية والثقة',
     'method-h1': 'مصادر البيانات والمنهجية',
     'method-sub': 'كيف نحسب كل سعر تراه — خطوة بخطوة، مع الإسناد الكامل للمصادر.',
@@ -102,7 +104,9 @@ function t(key) {
 function applyLanguage() {
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = t('docTitle');
   Object.keys(T.en).forEach((key) => {
+    // `docTitle` is a virtual key (no matching element id) — used only above.
     const el = document.getElementById(key);
     if (el) el.textContent = t(key);
   });
