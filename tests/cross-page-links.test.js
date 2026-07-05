@@ -83,8 +83,8 @@ test('buildMethodologyHref supports fragment and lang', async () => {
   const mod = await loadModule();
   assert.equal(mod.buildMethodologyHref(), 'methodology.html');
   assert.equal(
-    mod.buildMethodologyHref({ fragment: 'spot-vs-retail', lang: 'ar' }),
-    'methodology.html?lang=ar#spot-vs-retail'
+    mod.buildMethodologyHref({ fragment: 'not-included', lang: 'ar' }),
+    'methodology.html?lang=ar#not-included'
   );
   assert.equal(mod.buildMethodologyHref({ fragment: 'bogus' }), 'methodology.html');
 });
