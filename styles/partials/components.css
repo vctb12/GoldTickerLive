@@ -2493,8 +2493,11 @@ main {
 }
 
 .btn-primary:hover {
-  background: var(--color-gold);
-  border-color: var(--color-gold);
+  /* Keep the darker gold on hover: --color-gold (#b07d1f) under the near-white
+     label failed WCAG AA in light theme (~3.42:1); --color-gold-dark reaches
+     ~5.97:1. Hover feedback stays via the lift + shadow. */
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-gold-lg), var(--shadow-md);
 }
