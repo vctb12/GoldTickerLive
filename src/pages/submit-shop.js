@@ -27,7 +27,6 @@ const T = {
     errorShopName: 'Shop name is required.',
     success:
       'Your shop has been submitted and is pending moderation. The Gold Ticker Live team will review it before any public listing appears.',
-    successAr: null,
     error:
       'Could not submit right now. Please try again — no listing is published until it is reviewed.',
   },
