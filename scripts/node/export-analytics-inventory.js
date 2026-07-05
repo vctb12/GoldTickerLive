@@ -35,17 +35,17 @@ async function main() {
 
   if (CHECK_ONLY) {
     if (!fs.existsSync(OUTPUT_ABS)) {
-      console.warn(
+      console.error(
         `[analytics-inventory] ${OUTPUT_REL} is missing. Run \`node scripts/node/export-analytics-inventory.js\`.`
       );
-      return;
+      process.exit(1);
     }
     const existing = fs.readFileSync(OUTPUT_ABS, 'utf8');
     if (normalize(existing) !== normalize(text)) {
-      console.warn(
+      console.error(
         `[analytics-inventory] ${OUTPUT_REL} is stale. Run \`node scripts/node/export-analytics-inventory.js\`.`
       );
-      return;
+      process.exit(1);
     }
     console.log(`[analytics-inventory] check ok (${report.totals.events} events)`);
     return;
