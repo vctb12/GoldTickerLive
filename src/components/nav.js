@@ -1026,6 +1026,7 @@ function _injectMobileBottomNav(lang, _depth) {
     .map((item) => {
       const isActive = !item.action && typeof item.href === 'string' && isPageMatch(item.href);
       const cls = 'mobile-bottom-nav-item' + (isActive ? ' is-active' : '');
+      const ariaCurrent = isActive ? ' aria-current="page"' : '';
 
       if (item.action === 'menu') {
         return `<button class="${cls}" data-mobile-nav="menu" type="button" aria-label="${item.label}" aria-expanded="false" aria-controls="nav-drawer">
@@ -1034,7 +1035,7 @@ function _injectMobileBottomNav(lang, _depth) {
         </button>`;
       }
 
-      return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}" aria-label="${item.label}">
+      return `<a href="${item.href}" class="${cls}" data-mobile-nav="${item.key}" aria-label="${item.label}"${ariaCurrent}>
         <span class="mobile-bottom-nav-icon" aria-hidden="true">${iconSvg(item.icon)}</span>
         <span class="mobile-bottom-nav-label">${item.label}</span>
       </a>`;
