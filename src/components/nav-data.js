@@ -72,6 +72,12 @@ const RAW_NAV_DATA = {
         label: 'Learn',
         description: 'Guides, karats and market basics',
       },
+      {
+        key: 'glossary',
+        href: '/glossary.html',
+        label: 'Glossary',
+        description: 'Key gold terms explained',
+      },
     ],
     canonicalSurfaces: [
       '/index.html',
@@ -260,6 +266,12 @@ const RAW_NAV_DATA = {
         href: '/learn.html',
         label: 'تعلّم',
         description: 'أدلة وعيارات وأساسيات السوق',
+      },
+      {
+        key: 'glossary',
+        href: '/glossary.html',
+        label: 'المسرد',
+        description: 'شرح المصطلحات الرئيسية',
       },
     ],
     canonicalSurfaces: [
