@@ -222,11 +222,20 @@ test('NAV_DATA primary flag membership matches across locales per group', async 
   }
 });
 
-test('NAV_DATA primary links cover the flat 6-link bar (CTA covers the tracker)', async () => {
+test('NAV_DATA primary links cover the flat 7-link bar (CTA covers the tracker)', async () => {
   const { NAV_DATA } = await loadNav();
   for (const lang of ['en', 'ar']) {
     const keys = NAV_DATA[lang].primaryLinks.map((l) => l.key);
-    assert.deepEqual(keys, ['calculator', 'compare', 'heatmap', 'portfolio', 'shops', 'learn']);
+    // Glossary promoted to the top bar per the 2026-07-06 owner brief (§5.6).
+    assert.deepEqual(keys, [
+      'calculator',
+      'compare',
+      'heatmap',
+      'portfolio',
+      'shops',
+      'learn',
+      'glossary',
+    ]);
   }
 });
 
