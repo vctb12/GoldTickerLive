@@ -58,3 +58,91 @@ test('initMotionBoot is safe to call in Node (no document)', async () => {
   const { initMotionBoot } = await loadMotionBoot();
   assert.doesNotThrow(() => initMotionBoot());
 });
+
+test('isSameDocumentHashLink: same path+query, different hash is same-document', async () => {
+  const { isSameDocumentHashLink } = await loadMotionBoot();
+  global.location = { origin: 'https://goldtickerlive.com', pathname: '/learn.html', search: '' };
+  const url = new URL('https://goldtickerlive.com/learn.html#karats');
+  assert.equal(isSameDocumentHashLink(url), true);
+  delete global.location;
+});
+
+test('isSameDocumentHashLink: different path is not same-document', async () => {
+  const { isSameDocumentHashLink } = await loadMotionBoot();
+  global.location = { origin: 'https://goldtickerlive.com', pathname: '/learn.html', search: '' };
+  const url = new URL('https://goldtickerlive.com/methodology.html#x');
+  assert.equal(isSameDocumentHashLink(url), false);
+  delete global.location;
+});
+
+test('isSameDocumentHashLink: no location global never throws', async () => {
+  const { isSameDocumentHashLink } = await loadMotionBoot();
+  delete global.location;
+  const url = new URL('https://goldtickerlive.com/learn.html#karats');
+  assert.doesNotThrow(() => isSameDocumentHashLink(url));
+  assert.equal(isSameDocumentHashLink(url), false);
+});
+
+test('isSameOriginNavLink: excludes same-document hash anchors (the learn.html guide-card bug)', async () => {
+  const { isSameOriginNavLink } = await loadMotionBoot();
+  global.location = {
+    origin: 'https://goldtickerlive.com',
+    pathname: '/learn.html',
+    search: '',
+    href: 'https://goldtickerlive.com/learn.html',
+  };
+  const anchor = {
+    tagName: 'A',
+    href: 'https://goldtickerlive.com/learn.html#karats',
+    getAttribute: (name) => (name === 'href' ? '/learn.html#karats' : null),
+    hasAttribute: () => false,
+  };
+  assert.equal(
+    isSameOriginNavLink(anchor),
+    false,
+    'same-document hash anchors must never be wrapped in a view transition'
+    );
+  delete global.location;
+});
+
+test('isSameOriginNavLink: still hijacks real cross-page same-origin links', async () => {
+  const { isSameOriginNavLink } = await loadMotionBoot();
+  global.location = {
+    origin: 'https://goldtickerlive.com',
+    pathname: '/learn.html',
+    search: '',
+    href: 'https://goldtickerlive.com/learn.html',
+  };
+  const anchor = {
+    tagName: 'A',
+    href: 'https://goldtickerlive.com/methodology.html',
+    getAttribute: (name) => (name === 'href' ? '/methodology.html' : null),
+    hasAttribute: () => false,
+  };
+  assert.equal(isSameOriginNavLink(anchor), true);
+  delete global.location;
+});
+
+test('isSameOriginNavLink: rejects bare-hash, mailto, tel, download, cross-origin, non-anchor', async () => {
+  const { isSameOriginNavLink } = await loadMotionBoot();
+  global.location = {
+    origin: 'https://goldtickerlive.com',
+    pathname: '/learn.html',
+    search: '',
+    href: 'https://goldtickerlive.com/learn.html',
+  };
+  const make = (href, extra = {}) => ({
+    tagName: 'A',
+    href: new URL(href, global.location.href).href,
+    getAttribute: (name) => (name === 'href' ? href : null),
+    hasAttribute: (name) => Boolean(extra[name]),
+  });
+  assert.equal(isSameOriginNavLink(make('#top')), false);
+  assert.equal(isSameOriginNavLink(make('mailto:a@b.com')), false);
+  assert.equal(isSameOriginNavLink(make('tel:+1234')), false);
+  assert.equal(isSameOriginNavLink(make('/methodology.html', { download: true })), false);
+  assert.equal(isSameOriginNavLink(make('https://example.com/x')), false);
+  assert.equal(isSameOriginNavLink({ tagName: 'DIV' }), false);
+  assert.equal(isSameOriginNavLink(null), false);
+  delete global.location;
+});
