@@ -594,18 +594,20 @@ ${spriteMarkupIfAbsent()}
     }
 
     function _currentMode() {
-      const m = themeBtn.getAttribute('data-theme-mode') || 'auto';
-      return THEME_CYCLE.includes(m) ? m : 'auto';
+      const m = themeBtn.getAttribute('data-theme-mode') || 'dark';
+      return THEME_CYCLE.includes(m) ? m : 'dark';
     }
 
     try {
       const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
       const saved = prefs.theme;
-      const initial = THEME_CYCLE.includes(saved) ? saved : 'auto';
+      // Brand default is DARK (premium revamp 2026-07-06) — mirrors the
+      // pre-paint snippet in inject-theme-preinit.js. Saved prefs still win.
+      const initial = THEME_CYCLE.includes(saved) ? saved : 'dark';
       _applyTheme(initial);
     } catch (e) {
       console.warn('theme init', e);
-      _applyTheme('auto');
+      _applyTheme('dark');
     }
 
     // Live-follow system preference while in "auto" mode.

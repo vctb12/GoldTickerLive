@@ -4,7 +4,7 @@
 .method-hero {
   background:
     radial-gradient(ellipse 60% 55% at 80% 20%, rgb(184 137 44 / 18%) 0%, transparent 55%),
-    linear-gradient(148deg, #05060b 0%, #0e1220 40%, #0c1428 70%, #05060b 100%);
+    linear-gradient(148deg, #0b0b0d 0%, #16151a 40%, #18161c 70%, #0b0b0d 100%);
   border-block-end: 1px solid rgb(212 168 64 / 14%);
   color: #f0edd8;
   padding: var(--space-8) var(--space-5) 3rem;

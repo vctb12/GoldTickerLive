@@ -56,9 +56,9 @@
   --tp-shell: min(var(--content-max-width), calc(100% - 2 * var(--page-gutter)));
 
   /* Phase 2–3: Hero terminal — midnight gold (aligned to --gradient-hero-dark) */
-  --tp-hero-bg-deep: #05060b;
-  --tp-hero-bg-mid: #0e1220;
-  --tp-hero-bg-accent: #121830;
+  --tp-hero-bg-deep: #0b0b0d;
+  --tp-hero-bg-mid: #16151a;
+  --tp-hero-bg-accent: #1e1b16;
   --tp-hero-text: rgb(242 238 221 / 97%);
   --tp-hero-muted: rgb(242 238 221 / 68%);
 
@@ -75,7 +75,7 @@
   --tp-hero-glow-violet: rgb(88 48 160 / 10%);
 
   /* Chart terminal inset */
-  --tp-chart-bg: #080a10;
+  --tp-chart-bg: #0e0e11;
   --tp-snapshot: #0d7680; /* local-snapshot source badge — distinct from live/warning semantics */
   --tp-snapshot-strong: #40bfc8;
   --tp-chart-border: color-mix(in srgb, var(--color-gold) 18%, var(--border-subtle));
@@ -4423,7 +4423,7 @@ td.tracker-chg-flat {
 }
 
 [data-theme='dark'] .tracker-chart-wrap {
-  --tp-chart-bg: #040508;
+  --tp-chart-bg: #09090b;
   --tp-chart-border: color-mix(in srgb, var(--color-gold) 22%, var(--border-default));
 }
 

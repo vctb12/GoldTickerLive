@@ -6,7 +6,7 @@
 .insights-hero {
   background:
     radial-gradient(ellipse 70% 60% at 50% 0%, rgb(184 137 44 / 16%) 0%, transparent 65%),
-    linear-gradient(148deg, #05060b 0%, #0e1220 40%, #0c1428 70%, #05060b 100%);
+    linear-gradient(148deg, #0b0b0d 0%, #16151a 40%, #18161c 70%, #0b0b0d 100%);
   border-block-end: 1px solid rgb(212 168 64 / 14%);
   padding: 4rem 1.5rem 3.5rem;
   text-align: center;
