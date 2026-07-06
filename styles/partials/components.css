@@ -675,8 +675,11 @@
    Global Footer — 5-column dark premium
    ═══════════════════════════════════════════════ */
 .site-footer-global {
-  background: linear-gradient(180deg, #141418 0%, #0f0f12 40%, #0b0b0d 100%);
-  color: rgb(240 237 216 / 70%);
+  /* Surface + ink must both follow the theme: the premium layer at the end of
+     this file re-skins the background with light-resolving surface tokens, so
+     any dark-era hardcoded white ink here goes near-invisible in light mode. */
+  background: color-mix(in srgb, var(--surface-primary) 92%, var(--surface-secondary));
+  color: var(--color-text-muted);
   margin-top: auto;
   position: relative;
 }
@@ -694,7 +697,7 @@
 
 .footer-top {
   padding: 3.5rem 1.5rem 2.5rem;
-  border-bottom: 1px solid rgb(255 255 255 / 6%);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .footer-inner {
@@ -722,12 +725,12 @@
   font-size: 1.2rem;
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-tight);
-  color: var(--text-on-dark);
+  color: var(--text-primary);
 }
 
 .footer-tagline {
   font-size: 0.8rem;
-  opacity: 0.65;
+  color: var(--color-text-faint);
   line-height: var(--leading-normal);
   max-width: 22ch;
 }
@@ -754,7 +757,7 @@
 
 .footer-col--links a {
   font-size: 0.84rem;
-  color: rgb(255 255 255 / 58%);
+  color: var(--color-text-muted);
   text-decoration: none;
   transition:
     color var(--transition-md),
@@ -763,7 +766,7 @@
 }
 
 .footer-col--links a:hover {
-  color: var(--color-gold-light);
+  color: var(--text-accent);
   transform: translateX(2px);
 }
 
@@ -776,7 +779,7 @@
 /* Newsletter section */
 .footer-newsletter {
   padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid rgb(255 255 255 / 8%);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .footer-newsletter-inner {
@@ -796,12 +799,12 @@
 }
 
 .footer-newsletter-text strong {
-  color: var(--text-on-dark);
+  color: var(--text-primary);
   font-size: var(--text-sm);
 }
 
 .footer-newsletter-text span {
-  color: rgb(255 255 255 / 55%);
+  color: var(--color-text-muted);
   font-size: 0.78rem;
 }
 
@@ -814,9 +817,9 @@
 .footer-newsletter-form input[type='email'] {
   padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-sm, 8px);
-  border: 1px solid rgb(255 255 255 / 15%);
-  background: rgb(255 255 255 / 8%);
-  color: var(--text-on-dark);
+  border: 1px solid var(--border-strong);
+  background: var(--surface-primary);
+  color: var(--text-primary);
   font-size: 0.8rem;
   min-width: 200px;
   outline: none;
@@ -828,7 +831,7 @@
 }
 
 .footer-newsletter-form input[type='email']::placeholder {
-  color: rgb(255 255 255 / 35%);
+  color: var(--color-text-faint);
 }
 
 .footer-newsletter-form button {
@@ -850,19 +853,19 @@
 }
 
 .footer-newsletter-msg--error {
-  color: #f87171;
+  color: var(--color-error);
 }
 
 .footer-newsletter-msg--info {
-  color: #93c5fd;
+  color: var(--color-text-muted);
 }
 
 .footer-newsletter-msg--success {
-  color: #86efac;
+  color: var(--color-success);
 }
 
 .footer-newsletter-success {
-  color: #86efac;
+  color: var(--color-success);
   font-size: 0.85rem;
   padding: var(--space-2) 0;
 }
@@ -897,7 +900,7 @@
   gap: var(--space-2);
   flex-wrap: wrap;
   font-size: 0.77rem;
-  color: rgb(255 255 255 / 45%);
+  color: var(--color-text-muted);
 }
 
 .footer-sources span {
@@ -905,7 +908,7 @@
 }
 
 .footer-sources a {
-  color: var(--color-gold-light);
+  color: var(--text-accent);
   text-decoration: none;
 }
 
@@ -922,25 +925,26 @@
 }
 
 .footer-disclaimer {
+  /* Trust copy — must stay AA-readable, never opacity-dimmed */
   font-size: 0.72rem;
-  opacity: 0.45;
+  color: var(--color-text-faint);
   line-height: 1.6;
   max-width: 65ch;
 }
 
 .footer-copy {
   font-size: 0.78rem;
-  color: rgb(255 255 255 / 40%);
+  color: var(--color-text-faint);
   white-space: nowrap;
 }
 
 .footer-copy a {
-  color: rgb(255 255 255 / 45%);
+  color: var(--color-text-muted);
   text-decoration: none;
 }
 
 .footer-copy a:hover {
-  color: var(--color-gold);
+  color: var(--text-accent);
 }
 
 @media (width <= 960px) {
