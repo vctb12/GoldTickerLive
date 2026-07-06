@@ -180,6 +180,8 @@ const STATE = {
   spotSource: 'cached/fallback',
   rates: {},
   freshness: { goldUpdatedAt: null },
+  status: { goldStale: false, fxStale: false },
+  fxMeta: { lastUpdateUtc: null, nextUpdateUtc: 0 },
   karat: '22',
   selected: null,
   goldPriceUsdPerOz: 0,

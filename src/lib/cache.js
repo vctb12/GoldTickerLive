@@ -86,6 +86,15 @@ function safeSet(key, value) {
  * @param {object} STATE  The shared page-level state object (mutated in place).
  */
 export function loadState(STATE) {
+  // Defensive: not every page-level state object declares the nested
+  // containers this loader writes into (compare/heatmap/portfolio shipped
+  // without `status`/`fxMeta`). A missing container must never crash init —
+  // that TypeError aborted whole-page boot for returning visitors whose
+  // localStorage held a cached price (P0-1, 2026-07-06).
+  STATE.status = STATE.status || {};
+  STATE.freshness = STATE.freshness || {};
+  STATE.fxMeta = STATE.fxMeta || {};
+
   // Gold price — newest of primary/fallback slots (see getFallbackGoldPrice)
   const gold = getFallbackGoldPrice();
   if (gold) {
