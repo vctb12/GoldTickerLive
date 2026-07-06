@@ -55,7 +55,7 @@ test.describe('Mobile smoke', () => {
     await expect(
       page.locator('#shops-mobile-quick-filters .shops-quick-filter-chip').first()
     ).toBeVisible();
-    await expect(page.locator('[data-listing-tab="verified_shop"]')).toBeVisible();
+    await expect(page.locator('[data-listing-tab="shops"]')).toBeVisible();
     await page.locator('#shops-filter-toggle').click();
     await expect(page.locator('#shops-filter-panel')).toHaveClass(/is-open/);
     await expectNoHorizontalOverflow(page, '/shops.html');
