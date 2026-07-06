@@ -84,9 +84,36 @@ Single branch `feat/ui-overhaul`; each concern is its own commit and reverts ind
 light theme is the untouched parchment system, so reverting the theme commit only changes the
 default/toggle mechanics, not light-mode rendering.
 
+## Feature lane (v3 §5) — status
+
+- **Nav search — SHIPPED + VERIFIED.** `initNavSearch` existed but had zero call sites (the control
+  was dead everywhere); `injectNav` now invokes it. The index also gained bilingual city entries
+  (the engine always ranked a `city` type that was never emitted — `دبي`/`Doha`/`Riyadh` returned
+  nothing). Verified in Chromium: button + `/` + Ctrl/Cmd-K open the overlay, EN + AR queries return
+  results, Enter navigates, recents persist, Esc closes (`after-nav-search{,-ar}.png`).
+- **Portfolio — VERIFIED round-trip.** Add → persists (localStorage v1 schema) → survives reload →
+  edit reflected → delete restores empty state; boots with nav under seeded returning-visitor cache
+  (`after-portfolio-roundtrip.png`).
+- **Heatmap — VERIFIED.** 33 keyboard-operable countries, 29-option jump select, 29-row table
+  fallback; jump-to-AE selects + aria-presses (`after-heatmap-verify.png`).
+- **P1 polish — SHIPPED.** Glossary in the top nav (EN/AR); calculator Tracker-Handoff card
+  re-gridded (copy dominates, bounded stacked action rail — was 1fr/auto with a far-right button
+  row); shops sticky filter scoped to mobile (the desktop panel pinned ~400px of 80%-glass over the
+  featured cards — the reported overlap); shops trust-review text verified rendering as plain banner
+  copy after the skeleton-clear fix.
+- **Save-to-account — STAGED, BLOCKED on §11.2 (deliberate).** The sandbox's Supabase access reaches
+  only an unrelated project (`lulqcytwhtjdsbzslpiw`); the production project the site reads
+  (`nebdpxjazlnsrfmlpgeq`, `src/config/supabase.js`) is unreachable from here, so per-user RLS
+  cannot be applied or verified, and shipping signup/account UI without that verification is the
+  brief's hard-stop. What ships instead: `supabase/migrations/005_saved_calculations.sql` — a staged
+  RED-ZONE migration in the repo's 002-lockdown pattern: `saved_calculations` with RLS enabled **and
+  forced**, four owner-only policies (`user_id = auth.uid()`) for select/insert/update/delete,
+  anon/public fully revoked, no PII beyond the `auth.users` FK, bounded label/payload checks, plus
+  in-file verification queries (`pg_policies`) and the two-account isolation test script. Owner
+  applies it per `OWNER_REVIEW.md`, runs the verification, and only then re-enables signup; the
+  client flow is a follow-up PR once the table is live.
+
 ## Notes
 
 - `docs/design-language.md` should gain a short dual-theme section (light default, premium dark
   option) in a follow-up.
-- Remaining v3 lanes tracked outside this report: account save (Supabase auth + RLS report), nav
-  search wiring, portfolio/heatmap verification rounds, P1 polish list.
