@@ -897,6 +897,11 @@ ${spriteMarkupIfAbsent()}
     }
   });
 
+  // ── Nav search overlay — engine itself lazy-loads on first interaction.
+  // (Search index URLs are root-absolute and the site deploys at the domain
+  // root, so the default basePath is correct at every page depth.)
+  initNavSearch();
+
   // ── Apply site-level feature flags (async — runs after current call stack) ─
   applyFeatureFlags().catch((err) => {
     console.warn('[nav] Failed to apply feature flags:', err);
