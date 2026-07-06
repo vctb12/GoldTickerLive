@@ -875,3 +875,16 @@ svg {
     display: none;
   }
 }
+
+/* ── Premium revamp (2026-07-06): muted antique gold for LARGE display headings
+   on the dark identity only. Body/data/fine print stay near-white ink — gold is
+   never used for small text (AA discipline, see reports/design/DESIGN_SPEC.md). ── */
+[data-theme='dark'] h1,
+[data-theme='dark'] .guide-hero-title {
+  color: var(--color-gold-antique, #b5945c);
+}
+
+[data-theme='dark'] h1 .hero-title-sub,
+[data-theme='dark'] h1 small {
+  color: var(--color-text-muted); /* subtitles stay ink — one gold voice per block */
+}

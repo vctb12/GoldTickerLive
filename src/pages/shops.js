@@ -1009,6 +1009,10 @@ function applyStaticText() {
   if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
   if (trustEl) {
     trustEl.textContent = t('trustDate').replace('{date}', dateStr);
+    // Clear the first-paint skeleton chrome — without this the filled date
+    // renders inside a fixed-width shimmer block and clips/overlaps.
+    trustEl.classList.remove('skeleton-inline', 'shell-skeleton-freshness-strip');
+    trustEl.removeAttribute('aria-busy');
   }
 
   // Directory-reviewed label in filter bar (separate from hero trust banner)
