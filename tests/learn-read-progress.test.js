@@ -121,6 +121,19 @@ test('learn-hub-ui.js no longer slash-strips the stored id, and tracks via canon
   assert.match(ui, /addEventListener\('hashchange'/, 'deep links / back-forward must mark reads');
 });
 
+test('learn-hub "related tools" links use safeHref-safe root-relative hrefs (not dead links)', () => {
+  const ui = read('src/pages/learn-hub-ui.js');
+  // Bare-relative hrefs are dropped by safe-dom safeHref() -> href-less dead links.
+  for (const bare of ['calculator.html', 'glossary.html', 'market.html', 'methodology.html']) {
+    assert.doesNotMatch(
+      ui,
+      new RegExp(`href:\\s*'${bare.replace('.', '\\.')}'`),
+      `related-tool link "${bare}" must be root-relative ("/${bare}") to survive safeHref`
+    );
+    assert.match(ui, new RegExp(`href:\\s*'/${bare.replace('.', '\\.')}'`));
+  }
+});
+
 test('motion-boot.js swallows the aborted view-transition and skips same-document nav', () => {
   const boot = read('src/lib/motion-boot.js');
   // Aborted-transition promises are handled (no uncaught InvalidStateError).

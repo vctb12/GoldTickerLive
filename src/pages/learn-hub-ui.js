@@ -183,24 +183,27 @@ export function mountLearnHubCatalog(options) {
       emptyState,
       el('div', { class: 'learn-hub-related-row' }, [
         el('span', { class: 'learn-hub-related-label' }, t(lang, 'learn.relatedLabel')),
+        // Root-relative hrefs: safe-dom's safeHref() drops bare-relative URLs
+        // ("calculator.html"), which would silently render these as dead
+        // (href-less) links after hydration. Leading "/" keeps them clickable.
         el(
           'a',
-          { href: 'calculator.html', class: 'related-tool-link' },
+          { href: '/calculator.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedCalc')
         ),
         el(
           'a',
-          { href: 'glossary.html', class: 'related-tool-link' },
+          { href: '/glossary.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedGlossary')
         ),
         el(
           'a',
-          { href: 'market.html', class: 'related-tool-link' },
+          { href: '/market.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedMarket')
         ),
         el(
           'a',
-          { href: 'methodology.html', class: 'related-tool-link' },
+          { href: '/methodology.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedMethod')
         ),
       ]),

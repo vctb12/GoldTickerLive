@@ -225,10 +225,10 @@ function renderCatalog() {
   <div class="learn-hub-sections">${sections}</div>
   <div class="learn-hub-related-row">
     <span class="learn-hub-related-label">${esc(tx('learn.relatedLabel'))}</span>
-    <a href="calculator.html" class="related-tool-link">${esc(tx('learn.relatedCalc'))}</a>
-    <a href="glossary.html" class="related-tool-link">${esc(tx('learn.relatedGlossary'))}</a>
-    <a href="market.html" class="related-tool-link">${esc(tx('learn.relatedMarket'))}</a>
-    <a href="methodology.html" class="related-tool-link">${esc(tx('learn.relatedMethod'))}</a>
+    <a href="/calculator.html" class="related-tool-link">${esc(tx('learn.relatedCalc'))}</a>
+    <a href="/glossary.html" class="related-tool-link">${esc(tx('learn.relatedGlossary'))}</a>
+    <a href="/market.html" class="related-tool-link">${esc(tx('learn.relatedMarket'))}</a>
+    <a href="/methodology.html" class="related-tool-link">${esc(tx('learn.relatedMethod'))}</a>
   </div>
 </section>`;
 }
