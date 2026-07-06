@@ -3,18 +3,18 @@
 ```yaml
 date: 2026-07-06
 brief: owner "Premium Dark/Gold Design Revamp" (frontend design lane)
-status: Phase 1 shipped — tokens + theme default + display serif
+status: v3 revision — dual-theme (LIGHT default, premium dark option) + display serif
 supersedes:
   the 2026-06-29 "extend warm parchment, no re-theme" gate decision and the matching guidance in
   docs/design-language.md — superseded BY OWNER for the dark identity. The parchment palette
   survives intact as the explicit LIGHT theme behind the toggle.
 ```
 
-## Identity
+## Identity (v3)
 
-Dark is the brand default. New visitors get the premium near-black/gold theme; the pre-paint script
-still honors a saved `light`/`auto` preference, and the toggle continues to work. The warm-parchment
-light theme is unchanged.
+**Dual theme. Light (warm ivory/parchment) is the default**; first visit honors the OS preference
+('auto'); the premium layered near-black/gold below is the dark OPTION behind the toggle, and the
+choice persists. Both themes must hold WCAG 2.1 AA on every pair.
 
 ## Palette (dark theme — the premium identity)
 
@@ -67,13 +67,13 @@ colour alone). The freshness state machine and all trust chips are untouched.
 - **UI/data:** Source Sans 3 unchanged; prices keep `tabular-nums` (`--font-feature-tabular`).
 - Scale: existing Major-Third modular scale retained.
 
-## Theme default mechanics
+## Theme default mechanics (v3)
 
-- `scripts/node/inject-theme-preinit.js` + `generate-internal-index-stubs.js`: unset preference now
-  resolves to `dark` (was `auto`); saved `light`/`auto` prefs still honored.
-- `styles/critical.css`: dark-first first paint (`:root` = dark, `[data-theme='light']` override);
-  hero scaffolds flipped the same way. No-JS users get dark.
-- `manifest.json` background `#0b0b0d`.
+- Unset preference resolves to `auto` (OS preference) in all three deciders (pre-paint snippet, stub
+  generator, nav.js runtime); saved prefs win; toggle cycles auto→light→dark and persists.
+- `styles/critical.css`: light-first first paint with `[data-theme='dark']` + OS-dark no-JS
+  fallbacks carrying the premium near-black values.
+- `manifest.json` background `#fdfbf5`.
 
 ## Surfaces & depth
 

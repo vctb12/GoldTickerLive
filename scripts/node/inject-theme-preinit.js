@@ -45,7 +45,7 @@ const SNIPPET = [
   "        el.classList.add('js');",
   '        try {',
   "          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');",
-  "          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'dark';",
+  "          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';",
   '          var resolved =',
   "            mode === 'light' || mode === 'dark'",
   '              ? mode',
