@@ -14,5 +14,5 @@
 #   2. Update docs/environment-variables.md if the package needs a new secret.
 
 requests==2.34.2
-tweepy==4.16.0
+tweepy==4.17.0
 supabase==2.31.0
