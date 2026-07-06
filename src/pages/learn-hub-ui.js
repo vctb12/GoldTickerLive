@@ -15,11 +15,17 @@ import { TRANSLATIONS } from '../config/translations.js';
 import {
   LEARN_GUIDE_CATEGORIES,
   countTotalGuides,
+  countReadGuides,
+  guideHrefForHash,
   getLearnProgress,
   markGuideRead,
 } from '../config/learn-hub-catalog.js';
 import { el } from '../lib/safe-dom.js';
 import { observeReveal } from '../lib/reveal.js';
+
+// One live `hashchange` listener at a time — remounts (language toggle) replace it
+// rather than stacking duplicates.
+let activeHashHandler = null;
 
 function t(lang, key, vars = {}) {
   let s = TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en[key] ?? key;
@@ -36,6 +42,10 @@ function renderGuideCard(guide, lang) {
     'a',
     {
       href,
+      // Canonical identity for read-tracking. Stored/compared verbatim so the
+      // counter round-trips across reloads (an earlier slash-stripped id never
+      // matched the catalog and left "Read 0 of 9" stuck at zero).
+      'data-guide-href': guide.href,
       class: `card card--bordered learn-guide-card card-interactive${read ? ' learn-guide-card--read' : ''}`,
     },
     [
@@ -99,9 +109,7 @@ export function mountLearnHubCatalog(options) {
   if (!root) return;
 
   const total = countTotalGuides();
-  const readCount = getLearnProgress().filter((h) =>
-    LEARN_GUIDE_CATEGORIES.some((c) => c.guides.some((g) => g.href === h))
-  ).length;
+  const readCount = countReadGuides(getLearnProgress());
 
   const eyebrow = el('p', { class: 'learn-hub-eyebrow' }, t(lang, 'learn.hubEyebrow'));
   const intro = el('p', { class: 'learn-hub-intro' }, t(lang, 'learn.hubIntro'));
@@ -175,24 +183,27 @@ export function mountLearnHubCatalog(options) {
       emptyState,
       el('div', { class: 'learn-hub-related-row' }, [
         el('span', { class: 'learn-hub-related-label' }, t(lang, 'learn.relatedLabel')),
+        // Root-relative hrefs: safe-dom's safeHref() drops bare-relative URLs
+        // ("calculator.html"), which would silently render these as dead
+        // (href-less) links after hydration. Leading "/" keeps them clickable.
         el(
           'a',
-          { href: 'calculator.html', class: 'related-tool-link' },
+          { href: '/calculator.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedCalc')
         ),
         el(
           'a',
-          { href: 'glossary.html', class: 'related-tool-link' },
+          { href: '/glossary.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedGlossary')
         ),
         el(
           'a',
-          { href: 'market.html', class: 'related-tool-link' },
+          { href: '/market.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedMarket')
         ),
         el(
           'a',
-          { href: 'methodology.html', class: 'related-tool-link' },
+          { href: '/methodology.html', class: 'related-tool-link' },
           t(lang, 'learn.relatedMethod')
         ),
       ]),
@@ -201,15 +212,46 @@ export function mountLearnHubCatalog(options) {
 
   renderSections();
 
-  root.querySelectorAll('.learn-guide-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const href = card.getAttribute('href')?.replace(/^\//, '') ?? '';
-      if (href) {
-        markGuideRead(href);
-        card.classList.add('learn-guide-card--read');
-      }
+  // Read-progress tracking. The guide cards deep-link to in-page anchors
+  // (e.g. /learn.html#karats), so a click is a same-document hash navigation that
+  // does NOT reload the page — the counter must update live here, and also
+  // recompute from storage on the next full load. Stored ids are the canonical
+  // `guide.href` so they match the catalog on read-back.
+  function refreshReadState() {
+    const read = new Set(getLearnProgress());
+    root.querySelectorAll('.learn-guide-card').forEach((card) => {
+      const cardHref = card.getAttribute('data-guide-href');
+      card.classList.toggle('learn-guide-card--read', Boolean(cardHref) && read.has(cardHref));
     });
+    progress.textContent = t(lang, 'learn.progress', {
+      read: countReadGuides([...read]),
+      total,
+    });
+  }
+
+  // Delegated click handler on the per-render sections host: survives filter
+  // re-renders and language remounts without stranding or leaking listeners.
+  sectionsHost.addEventListener('click', (event) => {
+    const card = event.target?.closest?.('.learn-guide-card');
+    if (!card || !sectionsHost.contains(card)) return;
+    const cardHref = card.getAttribute('data-guide-href');
+    if (!cardHref) return;
+    markGuideRead(cardHref);
+    refreshReadState();
   });
+
+  // Also mark a guide read when its anchor becomes the active hash — covers deep
+  // links (/learn.html#karats opened directly) and browser back/forward, where no
+  // card click fires. Idempotent (markGuideRead dedupes); one listener at a time.
+  if (activeHashHandler) window.removeEventListener('hashchange', activeHashHandler);
+  activeHashHandler = () => {
+    const href = guideHrefForHash(location.hash);
+    if (!href) return;
+    markGuideRead(href);
+    refreshReadState();
+  };
+  window.addEventListener('hashchange', activeHashHandler);
+  activeHashHandler();
 
   // Belt-and-suspenders: guarantee the whole hub is visible after mount.
   ensureRevealed(root);

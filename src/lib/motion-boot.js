@@ -18,7 +18,13 @@ function isSameOriginNavLink(anchor) {
     return false;
   try {
     const url = new URL(anchor.href, location.href);
-    return url.origin === location.origin && !anchor.hasAttribute('download');
+    if (url.origin !== location.origin || anchor.hasAttribute('download')) return false;
+    // Same-document navigation (only the hash differs) is an in-page scroll, not a
+    // cross-document load. Running a cross-document view transition for it is
+    // pointless and can leave reveal-animated content stuck mid-fade — let the
+    // browser handle it natively (matches the early-return for `#`-only hrefs).
+    if (url.pathname === location.pathname && url.search === location.search) return false;
+    return true;
   } catch {
     return false;
   }
@@ -38,9 +44,18 @@ function initViewTransitions() {
 
     e.preventDefault();
     const destination = anchor.href;
-    document.startViewTransition(() => {
+    const transition = document.startViewTransition(() => {
       window.location.href = destination;
     });
+    // Navigating away unloads this document, which aborts the pending transition
+    // and rejects its promises with `InvalidStateError: Transition was aborted
+    // because of invalid state`. That abort is expected — swallow it so it never
+    // surfaces as an uncaught promise rejection in the console.
+    if (transition) {
+      transition.ready?.catch(() => {});
+      transition.finished?.catch(() => {});
+      transition.updateCallbackDone?.catch(() => {});
+    }
   });
 }
 
