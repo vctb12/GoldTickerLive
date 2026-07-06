@@ -601,6 +601,8 @@ ${spriteMarkupIfAbsent()}
     try {
       const prefs = JSON.parse(localStorage.getItem('user_prefs') || '{}');
       const saved = prefs.theme;
+      // v3 brief: LIGHT default, dark optional. First visit honors the OS
+      // preference ('auto'); saved prefs win. Mirrors inject-theme-preinit.js.
       const initial = THEME_CYCLE.includes(saved) ? saved : 'auto';
       _applyTheme(initial);
     } catch (e) {
@@ -894,6 +896,11 @@ ${spriteMarkupIfAbsent()}
       closeDrawer();
     }
   });
+
+  // ── Nav search overlay — engine itself lazy-loads on first interaction.
+  // (Search index URLs are root-absolute and the site deploys at the domain
+  // root, so the default basePath is correct at every page depth.)
+  initNavSearch();
 
   // ── Apply site-level feature flags (async — runs after current call stack) ─
   applyFeatureFlags().catch((err) => {

@@ -1877,7 +1877,7 @@ details.nav-drawer-group[open] .nav-drawer-group-caret {
 [data-theme='dark'] .nav-search-overlay,
 [data-theme='dark'] .nav-search-dropdown,
 [data-theme='dark'] .nav-search-input {
-  background: var(--color-surface, #0c0e14);
+  background: var(--color-surface, #141418);
   color: var(--color-text, #f2eedd);
   border-color: var(--border-default, #242840);
 }
@@ -2094,7 +2094,7 @@ body.has-spot-bar .site-nav[data-nav-hidden='true'] {
 }
 
 [data-theme='dark'] .nav-drawer-search-input {
-  background: var(--color-surface, #0c0e14);
+  background: var(--color-surface, #141418);
   color: var(--text-on-dark, #fff);
   border-color: rgb(255 255 255 / 12%);
 }

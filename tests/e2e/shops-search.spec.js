@@ -143,10 +143,10 @@ test.describe('Shops directory page', () => {
   test('listing tabs render and sponsored disclosure is visible on sponsored tab', async ({
     page,
   }) => {
-    const verifiedTab = page.locator('[data-listing-tab="verified_shop"]');
+    const shopsTab = page.locator('[data-listing-tab="shops"]');
     const marketsTab = page.locator('[data-listing-tab="market_cluster"]');
     const sponsoredTab = page.locator('[data-listing-tab="sponsor"]');
-    await expect(verifiedTab).toBeVisible();
+    await expect(shopsTab).toBeVisible();
     await expect(marketsTab).toBeVisible();
     await expect(sponsoredTab).toBeVisible();
 

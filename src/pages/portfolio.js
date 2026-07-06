@@ -237,6 +237,8 @@ const STATE = {
   spotSource: 'cached/fallback',
   rates: {},
   freshness: { goldUpdatedAt: null },
+  status: { goldStale: false, fxStale: false },
+  fxMeta: { lastUpdateUtc: null, nextUpdateUtc: 0 },
   history: [],
   goldPriceUsdPerOz: 0,
   portfolio: { version: 1, currency: 'AED', holdings: [] },

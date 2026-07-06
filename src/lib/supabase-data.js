@@ -16,12 +16,49 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../config/supabase.js';
 
 /**
+ * Canonical listing types the shops page understands, keyed by the variants a
+ * remote row might plausibly carry (admin tooling / manual inserts). Unknown
+ * values fall through to null so the page derives the type from flags instead
+ * of silently hiding the listing behind a tab that never matches.
+ */
+const LISTING_TYPE_ALIASES = {
+  verified_shop: 'verified_shop',
+  verified: 'verified_shop',
+  sponsor: 'sponsor',
+  sponsored: 'sponsor',
+  market_cluster: 'market_cluster',
+  market_area: 'market_cluster',
+  market: 'market_cluster',
+  cluster: 'market_cluster',
+  pending_unverified: 'pending_unverified',
+  pending: 'pending_unverified',
+  unverified: 'pending_unverified',
+};
+
+function normalizeListingType(raw) {
+  if (!raw) return null;
+  const key = String(raw)
+    .trim()
+    .toLowerCase()
+    .replace(/[\s-]+/g, '_');
+  return LISTING_TYPE_ALIASES[key] || null;
+}
+
+/** Strict truthiness for flags that may arrive as Postgres text booleans. */
+function flagIsTrue(value) {
+  return value === true || value === 1 || value === 'true' || value === 't';
+}
+
+/**
  * Map a Supabase row (snake_case) to the client-side shop object (camelCase)
  * expected by the shops page renderer.
  */
 function mapRow(row) {
+  const verified = flagIsTrue(row.verified ?? row.is_verified);
+  const sponsored = flagIsTrue(row.sponsored ?? row.is_sponsored);
   const listingType =
-    row.listing_type || (row.sponsored ? 'sponsor' : row.verified ? 'verified_shop' : null);
+    normalizeListingType(row.listing_type ?? row.listingType) ||
+    (sponsored ? 'sponsor' : verified ? 'verified_shop' : null);
   return {
     id: row.id,
     slug: row.slug || row.id,
@@ -35,9 +72,9 @@ function mapRow(row) {
     email: row.email || '',
     website: row.website || '',
     detailsAvailability: row.details_availability || 'limited',
-    featured: Boolean(row.featured),
-    verified: Boolean(row.verified),
-    sponsored: Boolean(row.sponsored),
+    featured: flagIsTrue(row.featured),
+    verified,
+    sponsored,
     listingType,
     listing_type: listingType,
     confidence: Number.isFinite(Number(row.confidence)) ? Number(row.confidence) : undefined,

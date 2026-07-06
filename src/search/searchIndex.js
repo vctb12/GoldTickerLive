@@ -32,6 +32,26 @@ function buildIndex() {
     });
   }
 
+  // Cities — bilingual, from each country's canonical city list (the engine's
+  // TYPE_BOOST always ranked cities but the index never emitted them, so
+  // queries like "دبي"/"Doha" returned nothing). Dubai has a dedicated page;
+  // every other city deep-links into its country's compare view.
+  for (const c of COUNTRIES) {
+    const code = c.code.toLowerCase();
+    const countryUrl = code === 'ae' ? '/compare.html' : `/compare.html#compare=ae,${code}&k=22`;
+    for (const city of c.cities || []) {
+      entries.push({
+        type: 'city',
+        slug: city.slug,
+        label: `${city.nameEn} Gold Price`,
+        labelAr: `سعر الذهب في ${city.nameAr}`,
+        url: city.slug === 'dubai' ? '/dubai-gold-price.html' : countryUrl,
+        icon: navIconSymbol(c.code),
+        keywords: [city.nameEn, city.nameAr, c.nameEn, c.nameAr],
+      });
+    }
+  }
+
   // Karats
   for (const k of KARATS) {
     entries.push({

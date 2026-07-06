@@ -26,6 +26,7 @@
 
   /* ── Phase 3: Richer metallic gold palette ── */
   --color-gold: #b07d1f; /* Phase 1: desaturated/deepened struck-metal gold — value signal only, never a fill; only ever a graphical object (dot/ring/border) at ≥3:1, never small text */
+  --color-gold-antique: #8a6d2f; /* muted antique gold — LARGE headings only (≥24px / 18.5px bold); AA-large on light surfaces */
   --color-gold-light: #ddb040;
   --color-gold-bright: #f0ca5c;
   --color-gold-dark: #7e5912; /* text/accent gold — darkened for AA on tinted surfaces (surface-2/3) */
@@ -153,8 +154,8 @@
     rgb(221 176 64 / 5%) 50%,
     rgb(196 144 46 / 3%) 100%
   );
-  --gradient-dark: linear-gradient(155deg, #07080c 0%, #0e1220 50%, #07080c 100%);
-  --gradient-hero-dark: linear-gradient(145deg, #07080c 0%, #0e1428 35%, #121830 65%, #07080c 100%);
+  --gradient-dark: linear-gradient(155deg, #0b0b0d 0%, #16151a 50%, #0b0b0d 100%);
+  --gradient-hero-dark: linear-gradient(145deg, #0b0b0d 0%, #18161c 35%, #1e1b16 65%, #0b0b0d 100%);
   --gradient-surface: linear-gradient(180deg, #fff 0%, #fefcf7 100%);
   --gradient-paper: linear-gradient(180deg, #fefdf9 0%, #f9f4e8 100%);
   --gradient-hero-light: linear-gradient(160deg, #fefdf9 0%, #fbf7ed 40%, #f7f1e2 100%);
@@ -207,7 +208,11 @@
   --font-arabic: 'Cairo', 'Source Sans 3', system-ui, sans-serif;
   --font-main: var(--font-latin);
   --font-mono: 'SF Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-  --font-display: var(--font-main);
+
+  /* Premium revamp (2026-07-06): editorial display serif for headings; Cairo takes
+     over under [dir='rtl'] (Playfair has no Arabic). UI/data stay on the grotesque. */
+  --font-serif-display: 'Playfair Display', 'Cairo', georgia, serif;
+  --font-display: var(--font-serif-display);
   --font-numeric: var(--font-latin);
   --font-sans: var(--font-main);
   --font-feature-tabular: 'tnum' 1, 'lnum' 1;
@@ -401,17 +406,18 @@
      mode. Mirrors the OS-pref fallback block below. */
   color-scheme: dark;
 
-  --color-bg: #060708;
-  --color-surface: #0c0e14;
-  --color-surface-2: #141720;
-  --color-surface-3: #1b1e2c;
-  --color-border: #242840;
-  --color-border-subtle: #1a1e30;
+  --color-bg: #0b0b0d; /* premium base — layered near-black, not dead #000 */
+  --color-surface: #141418; /* raised surface 1 */
+  --color-surface-2: #1c1c22; /* raised surface 2 */
+  --color-surface-3: #26262c; /* raised surface 3 — zebra/skeleton */
+  --color-border: #2e2b24; /* warm hairline — reads as low-alpha gold on black */
+  --color-border-subtle: #211f1b;
   --color-text: #f2eedd;
   --color-text-muted: #a09890;
-  --color-text-faint: #8f857a; /* WCAG AA ≥4.5:1 on all dark surfaces incl. surface-3 */
+  --color-text-faint: #988e83; /* WCAG AA ≥4.5:1 on all dark surfaces incl. the raised #26262c surface-3 (4.68:1) */
   --color-ink-data: #f7f3e6; /* Phase 1: brightest readout ink on dark — live spot price value */
   --color-gold: #ddb040;
+  --color-gold-antique: #b5945c; /* muted antique gold — large headings only on dark */
   --color-gold-light: #f0ca5c;
   --color-gold-bright: #fad97a;
   --color-gold-dark: #c4902e;
@@ -451,22 +457,22 @@
   --color-success-bg: rgb(74 222 128 / 12%);
   --color-on-gold: #1a1305;
   --border-muted: #1e2336;
-  --surface-canvas: #060708;
-  --surface-primary: #0c0e14;
-  --surface-secondary: #141720;
-  --surface-tertiary: #1b1e2c;
+  --surface-canvas: #0b0b0d;
+  --surface-primary: #141418;
+  --surface-secondary: #1c1c22;
+  --surface-tertiary: #26262c;
   --surface-accent: #100e08;
   --surface-glass: rgb(12 14 20 / 90%);
-  --surface-elevated: #141720;
-  --surface-muted: #141720;
+  --surface-elevated: #1c1c22;
+  --surface-muted: #1c1c22;
   --surface-code: #0d1117;
   --text-primary: #f2eedd;
   --text-secondary: #a09890;
   --text-tertiary: var(--color-text-faint);
   --text-accent: var(--color-gold-light);
-  --border-default: #242840;
-  --border-subtle: #1a1e30;
-  --border-strong: #303550;
+  --border-default: #2e2b24;
+  --border-subtle: #211f1b;
+  --border-strong: #3d3830;
   --border-accent: var(--color-gold);
   --shadow-xs: 0 1px 2px rgb(0 0 0 / 25%);
   --shadow-sm: 0 1px 4px rgb(0 0 0 / 35%), 0 2px 10px rgb(0 0 0 / 18%);
@@ -481,11 +487,11 @@
   --rim-inset:
     inset 0 1px 0 rgb(255 255 255 / 6%), inset 0 -1px 0 rgb(0 0 0 / 40%); /* Phase 1: struck edge on dark */
 
-  --gradient-surface: linear-gradient(180deg, #0c0e14 0%, #090b10 100%);
-  --gradient-paper: linear-gradient(180deg, #0c0e14 0%, #08090e 100%);
-  --gradient-hero-light: linear-gradient(160deg, #08090e 0%, #0e1326 40%, #121830 100%);
-  --gradient-card: linear-gradient(160deg, #0e1018 0%, #0a0c12 100%);
-  --gradient-section-alt: linear-gradient(180deg, #141720 0%, #0c0e14 100%);
+  --gradient-surface: linear-gradient(180deg, #141418 0%, #090b10 100%);
+  --gradient-paper: linear-gradient(180deg, #141418 0%, #0f0f12 100%);
+  --gradient-hero-light: linear-gradient(160deg, #0f0f12 0%, #0e1326 40%, #1e1b16 100%);
+  --gradient-card: linear-gradient(160deg, #0e1018 0%, #101014 100%);
+  --gradient-section-alt: linear-gradient(180deg, #1c1c22 0%, #141418 100%);
   --color-accent: var(--color-gold-light);
   --color-accent-strong: var(--color-gold-bright);
   --color-surface-raised: var(--color-surface-2);
@@ -509,36 +515,37 @@
    a light flash for OS-dark users; phase 29 can DRY this duplication. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --color-bg: #060708;
-    --color-surface: #0c0e14;
-    --color-surface-2: #141720;
-    --color-surface-3: #1b1e2c;
-    --color-border: #242840;
-    --color-border-subtle: #1a1e30;
+    --color-bg: #0b0b0d; /* premium base — layered near-black, not dead #000 */
+    --color-surface: #141418; /* raised surface 1 */
+    --color-surface-2: #1c1c22; /* raised surface 2 */
+    --color-surface-3: #26262c; /* raised surface 3 — zebra/skeleton */
+    --color-border: #2e2b24; /* warm hairline — reads as low-alpha gold on black */
+    --color-border-subtle: #211f1b;
     --color-text: #f2eedd;
     --color-text-muted: #a09890;
-    --color-text-faint: #8f857a;
+    --color-text-faint: #988e83; /* AA on raised dark surface-3 */
     --color-ink-data: #f7f3e6; /* Phase 1: readout ink for no-JS dark-OS first paint */
     --color-gold: #ddb040;
+    --color-gold-antique: #b5945c; /* muted antique gold — large headings only on dark */
     --color-gold-light: #f0ca5c;
     --color-gold-bright: #fad97a;
     --color-gold-bg: #100e08;
     --color-gold-tint: #0c0a06;
-    --surface-canvas: #060708;
-    --surface-primary: #0c0e14;
-    --surface-secondary: #141720;
-    --surface-tertiary: #1b1e2c;
+    --surface-canvas: #0b0b0d;
+    --surface-primary: #141418;
+    --surface-secondary: #1c1c22;
+    --surface-tertiary: #26262c;
     --surface-accent: #100e08;
     --surface-glass: rgb(12 14 20 / 90%);
     --text-primary: #f2eedd;
     --text-secondary: #a09890;
-    --text-tertiary: #8f857a;
-    --border-default: #242840;
-    --border-subtle: #1a1e30;
-    --border-strong: #303550;
+    --text-tertiary: #988e83;
+    --border-default: #2e2b24;
+    --border-subtle: #211f1b;
+    --border-strong: #3d3830;
     --color-accent: var(--color-gold-light);
     --color-accent-strong: var(--color-gold-bright);
-    --color-surface-raised: #141720;
+    --color-surface-raised: #1c1c22;
     --color-text-secondary: #a09890;
 
     /* Status / accent tokens — mirror the [data-theme='dark'] block so that

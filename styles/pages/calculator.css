@@ -226,7 +226,11 @@
 
 .calc-tracker-handoff {
   display: grid;
-  grid-template-columns: 1fr auto;
+
+  /* Copy column dominates; the action rail is bounded so the three buttons
+     stack instead of forming one wide far-right row that crushed the copy. */
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 240px);
+  align-items: start;
   gap: var(--space-4);
   margin-top: var(--space-4);
   padding: var(--space-4);
@@ -248,10 +252,13 @@
 
 .calc-tracker-handoff__actions {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: var(--space-2);
-  align-items: center;
-  justify-content: flex-end;
+  align-items: stretch;
+}
+
+.calc-tracker-handoff__actions .btn {
+  justify-content: center;
 }
 
 .calc-tracker-handoff__note {
@@ -443,10 +450,6 @@
 @media (width <= 720px) {
   .calc-tracker-handoff {
     grid-template-columns: 1fr;
-  }
-
-  .calc-tracker-handoff__actions {
-    justify-content: stretch;
   }
 }
 

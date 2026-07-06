@@ -2459,21 +2459,12 @@
   }
 }
 
-/* Session 5 — sticky filters (all viewports), city groups */
-@media (width >= 641px) {
-  .shops-controls {
-    position: sticky;
-    top: calc(var(--nav-height, 64px) + var(--spot-bar-height, 0px));
-    z-index: 35;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-
-    /* --surface-glass flips per theme (and covers the OS-pref fallback), so the
-       sticky bar no longer needs a hardcoded light/dark pair. */
-    background: var(--surface-glass);
-    border-bottom: 1px solid var(--color-border);
-  }
-}
+/* Session 5 sticky filters, scoped down to mobile only (the ≤640px block
+   above): on desktop the filter panel auto-expands, so the sticky region was
+   the entire ~400px controls panel pinned at 80% glass opacity for the whole
+   page scroll — featured market cards ghosted through it ("overlaps/clips"
+   P1 bug). Desktop keeps the panel in normal flow; mobile keeps the slim
+   collapsed sticky bar where it actually pays for itself. */
 
 .shops-city-group {
   margin-bottom: var(--space-6);

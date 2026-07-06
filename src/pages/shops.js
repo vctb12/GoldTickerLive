@@ -34,7 +34,15 @@ import {
  * replaced by Supabase data once it loads.
  */
 let SHOPS = [...FALLBACK_SHOPS];
-const DEFAULT_LISTING_TAB = 'verified_shop';
+/*
+ * Default tab is the combined directory ("Shops" = verified_shop +
+ * pending_unverified). The old default keyed on `verified_shop` alone, but the
+ * curated dataset carries no verified flags, so the landing tab rendered 0
+ * listings while the facets advertised 27 — and the 13 direct (unverified)
+ * shops were unreachable from every tab. Verification stays honest at the
+ * card level (status chips + Verified badge only for true verified_shop).
+ */
+const DEFAULT_LISTING_TAB = 'shops';
 
 const STATE = {
   lang: 'en',
@@ -221,7 +229,7 @@ const TXT = {
       'Listings are for discovery only and have not been independently verified — details may be outdated. Reference prices shown are spot-based estimates, not actual shop prices; retail quotes include making charges, dealer margins, and taxes. Always confirm prices, hours, and availability directly with the shop before visiting or purchasing.',
     spotVsRetailLinkText: 'Why shop prices differ from spot →',
     methodologyLinkText: 'How we calculate prices →',
-    tabVerified: 'Verified Shops',
+    tabShops: 'Shops',
     tabMarkets: 'Gold Markets',
     tabSponsored: 'Sponsored',
     sponsoredDisclosure:
@@ -238,7 +246,7 @@ const TXT = {
       'Claim submitted. We will review and contact you if verification is needed.',
     whatsApp: 'WhatsApp',
     loadingListings: 'Loading listings…',
-    loadingListingsBody: 'Fetching verified shops, markets, and sponsored placements.',
+    loadingListingsBody: 'Fetching shops, gold markets, and sponsored placements.',
     loadErrorTitle: 'Could not refresh live listings',
     loadErrorBody: 'Showing local fallback data for now. Please try again shortly.',
     genericError: 'Something went wrong. Please try again.',
@@ -376,7 +384,7 @@ const TXT = {
       'هذه الإدراجات للاكتشاف فقط ولم يتم التحقق منها بشكل مستقل — قد تكون التفاصيل قديمة. الأسعار المعروضة تقديرية مبنية على السعر الفوري وليست أسعار محلات فعلية؛ تشمل أسعار التجزئة المصنعية وهامش التاجر والضرائب. احرص دائماً على تأكيد الأسعار والأوقات والتوفر مباشرة مع المحل قبل الزيارة أو الشراء.',
     spotVsRetailLinkText: 'لماذا تختلف أسعار المحلات عن السعر الفوري ←',
     methodologyLinkText: 'كيف نحسب الأسعار →',
-    tabVerified: 'محلات موثقة',
+    tabShops: 'المحلات',
     tabMarkets: 'أسواق الذهب',
     tabSponsored: 'نتائج ممولة',
     sponsoredDisclosure:
@@ -392,7 +400,7 @@ const TXT = {
     claimListingThanks: 'تم إرسال طلب الملكية وسنتواصل معك عند الحاجة للتحقق.',
     whatsApp: 'واتساب',
     loadingListings: 'جارٍ تحميل الإدراجات…',
-    loadingListingsBody: 'يتم جلب المحلات الموثقة والأسواق والنتائج الممولة.',
+    loadingListingsBody: 'يتم جلب المحلات وأسواق الذهب والنتائج الممولة.',
     loadErrorTitle: 'تعذّر تحديث الإدراجات المباشرة',
     loadErrorBody: 'يتم عرض بيانات احتياطية حالياً. يرجى المحاولة لاحقاً.',
     genericError: 'حدث خطأ ما. يرجى المحاولة مرة أخرى.',
@@ -503,8 +511,20 @@ function listingType(shop) {
   return 'pending_unverified';
 }
 
+/**
+ * Whether a shop belongs on a directory tab. The 'shops' tab is the combined
+ * direct-listing view (verified + pending) so no listing type is ever
+ * unreachable; the other tabs match their listing type exactly.
+ */
+function tabMatchesShop(tab, shop) {
+  if (!tab) return true;
+  const type = listingType(shop);
+  if (tab === 'shops') return type === 'verified_shop' || type === 'pending_unverified';
+  return type === tab;
+}
+
 const LISTING_TAB_LABELS = {
-  verified_shop: 'tabVerified',
+  shops: 'tabShops',
   market_cluster: 'tabMarkets',
   sponsor: 'tabSponsored',
 };
@@ -1009,6 +1029,10 @@ function applyStaticText() {
   if (trustLabelEl) trustLabelEl.textContent = t('trustLabel');
   if (trustEl) {
     trustEl.textContent = t('trustDate').replace('{date}', dateStr);
+    // Clear the first-paint skeleton chrome — without this the filled date
+    // renders inside a fixed-width shimmer block and clips/overlaps.
+    trustEl.classList.remove('skeleton-inline', 'shell-skeleton-freshness-strip');
+    trustEl.removeAttribute('aria-busy');
   }
 
   // Directory-reviewed label in filter bar (separate from hero trust banner)
@@ -1085,10 +1109,10 @@ function applyStaticText() {
   document.getElementById('shops-nearme-btn').lastChild.textContent = t('nearmeButton');
   document.getElementById('shops-guides-heading').textContent = t('resourcesTitle');
   document.getElementById('shops-controls-count').textContent = t('count')(SHOPS.length);
-  const tabVerified = document.getElementById('shops-tab-verified');
+  const tabShops = document.getElementById('shops-tab-shops');
   const tabMarkets = document.getElementById('shops-tab-markets');
   const tabSponsored = document.getElementById('shops-tab-sponsored');
-  if (tabVerified) tabVerified.textContent = t('tabVerified');
+  if (tabShops) tabShops.textContent = t('tabShops');
   if (tabMarkets) tabMarkets.textContent = t('tabMarkets');
   if (tabSponsored) tabSponsored.textContent = t('tabSponsored');
   const sponsoredDisclosure = document.getElementById('shops-sponsored-disclosure');
@@ -1263,7 +1287,7 @@ function filterShops() {
     if (STATE.specialty !== 'all' && !(shop.specialties || []).includes(STATE.specialty))
       return false;
     if (STATE.verifiedOnly && !(shop.phone || shop.website)) return false;
-    if (STATE.listingTab && listingType(shop) !== STATE.listingTab) return false;
+    if (!tabMatchesShop(STATE.listingTab, shop)) return false;
 
     if (!q) return true;
 
@@ -1760,10 +1784,10 @@ function renderMobileQuickFilters() {
       disabled: isAtDefaults,
     },
     {
-      key: 'listing:verified_shop',
-      label: t('tabVerified'),
+      key: 'listing:shops',
+      label: t('tabShops'),
       type: 'tab',
-      active: STATE.listingTab === 'verified_shop',
+      active: STATE.listingTab === 'shops',
     },
     {
       key: 'listing:market_cluster',
@@ -2270,8 +2294,12 @@ function init() {
   if (_pSpec) STATE.specialty = _pSpec;
   if (_pSearch) STATE.search = _pSearch;
   if (_pVerified) STATE.verifiedOnly = true;
-  if (['verified_shop', 'market_cluster', 'sponsor'].includes(_pListing)) {
+  if (['shops', 'market_cluster', 'sponsor'].includes(_pListing)) {
     STATE.listingTab = _pListing;
+  } else if (_pListing === 'verified_shop') {
+    // Legacy deep-link value from when the default tab keyed on verified_shop
+    // alone; the combined directory tab is its honest superset.
+    STATE.listingTab = 'shops';
   }
   if (_pLang === 'ar' || _pLang === 'en') STATE.lang = _pLang;
 
@@ -2419,6 +2447,18 @@ init();
     if (remote && Array.isArray(remote) && remote.length > 0) {
       SHOPS = remote;
       setCompareShops(SHOPS);
+      // If the still-default tab would render nothing with the new data while
+      // other tabs have listings, land on the first non-empty tab instead of a
+      // dead empty state (never override an explicit user tab choice).
+      if (
+        STATE.listingTab === DEFAULT_LISTING_TAB &&
+        !SHOPS.some((shop) => tabMatchesShop(DEFAULT_LISTING_TAB, shop))
+      ) {
+        const fallbackTab = ['market_cluster', 'sponsor'].find((tab) =>
+          SHOPS.some((shop) => tabMatchesShop(tab, shop))
+        );
+        if (fallbackTab) STATE.listingTab = fallbackTab;
+      }
       buildFilters();
       updateHeaderStats();
       populatePopularChips();

@@ -1,8 +1,9 @@
 /* Phase 49: Critical CSS — optimized above-fold rendering tokens */
 :root {
+  /* v3 dual-theme: LIGHT is the default; dark is the option. Mirrors
+     tokens.css --color-bg — keep in sync. */
   color-scheme: light;
 
-  /* Mirrors tokens.css --color-bg (#fdfbf5, Phase 1 cooled parchment) — keep in sync. */
   --tp-bg: #fdfbf5;
   --tp-text: #15110a;
 
@@ -14,14 +15,12 @@
     sans-serif;
 }
 
-/* Dark first-paint tokens — mirror tokens.css so dark-mode / OS-dark users do not
-   get a white flash before global.css + the pre-paint theme script settle.
-   [data-theme] is set by the inline <head> script before first paint; the
-   :root:not([data-theme]) media block covers OS-dark when JS is disabled. */
+/* Dark first-paint tokens — explicit-dark users and OS-dark 'auto' visitors
+   get the premium near-black without a light flash. */
 [data-theme='dark'] {
   color-scheme: dark;
 
-  --tp-bg: #060708;
+  --tp-bg: #0b0b0d;
   --tp-text: #f2eedd;
   --tp-accent: #ddb040;
 }
@@ -30,7 +29,7 @@
   :root:not([data-theme]) {
     color-scheme: dark;
 
-    --tp-bg: #060708;
+    --tp-bg: #0b0b0d;
     --tp-text: #f2eedd;
     --tp-accent: #ddb040;
   }
@@ -72,7 +71,7 @@ a {
     box-shadow 0.18s ease;
 }
 
-/* Above-fold scaffolding: light hero for redesign v3 (warm ivory) */
+/* Above-fold scaffolding: light hero default; premium near-black under dark */
 .hero,
 .calc-hero,
 .method-hero,
@@ -82,13 +81,11 @@ a {
   min-height: 220px;
 }
 
-/* Dark first-paint hero scaffold — matches home.css's [data-theme='dark'] .hero
-   (#08090e) so the above-fold block isn't a bright rectangle during FOUC. */
 [data-theme='dark'] .hero,
 [data-theme='dark'] .calc-hero,
 [data-theme='dark'] .method-hero,
 [data-theme='dark'] .insights-hero {
-  background: #08090e;
+  background: #0f0f12;
   color: #f2eedd;
 }
 
@@ -97,7 +94,7 @@ a {
   :root:not([data-theme]) .calc-hero,
   :root:not([data-theme]) .method-hero,
   :root:not([data-theme]) .insights-hero {
-    background: #08090e;
+    background: #0f0f12;
     color: #f2eedd;
   }
 }
