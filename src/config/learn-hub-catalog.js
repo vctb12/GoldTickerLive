@@ -126,3 +126,34 @@ export function markGuideRead(href) {
 export function countTotalGuides() {
   return LEARN_GUIDE_CATEGORIES.reduce((n, c) => n + c.guides.length, 0);
 }
+
+/**
+ * How many featured guide CARDS count as read, given the stored progress list.
+ *
+ * Counts cards (not unique hrefs) so the tally can reach the copy's "of 9" total
+ * and stays consistent with the per-card read styling: two cards that deep-link to
+ * the same anchor (e.g. both `#pricing` cards) both flip to read when that anchor
+ * is visited. Naturally deduped (Set) and capped at the total (iterates the fixed
+ * catalog), so re-visits never double-count and the value can never exceed 9 of 9.
+ * Unknown/stale stored ids are ignored.
+ */
+export function countReadGuides(readList) {
+  const read = new Set(Array.isArray(readList) ? readList : []);
+  return LEARN_GUIDE_CATEGORIES.reduce(
+    (n, cat) => n + cat.guides.filter((g) => read.has(g.href)).length,
+    0
+  );
+}
+
+/**
+ * Resolve an in-page hash (e.g. `#karats`) to the canonical guide href
+ * (`/learn.html#karats`) when it matches a featured guide, else null. Lets the hub
+ * mark a guide read from a deep link or back/forward navigation, where the guide
+ * cards are same-document anchors rather than standalone pages.
+ */
+export function guideHrefForHash(hash) {
+  if (!hash || hash.length < 2) return null;
+  const href = `/learn.html${hash}`;
+  const known = LEARN_GUIDE_CATEGORIES.some((c) => c.guides.some((g) => g.href === href));
+  return known ? href : null;
+}
