@@ -59,10 +59,10 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
-| Phase                                              | Branch                                  | Status      | PR  | Notes                                           |
-| -------------------------------------------------- | --------------------------------------- | ----------- | --- | ----------------------------------------------- |
-| Revamp Phase 9 — Metadata/canonical + icons/social | `claude/revamp-phase-09-metadata-icons` | in-progress | —   | canonical audit + favicon/OG/Twitter icon fixes |
-| Master Tracker (this doc)                          | `claude/revamp-master-tracker`          | in-progress | —   | Being created now                               |
+| Phase                                           | Branch                            | Status      | PR  | Notes                                     |
+| ----------------------------------------------- | --------------------------------- | ----------- | --- | ----------------------------------------- |
+| Revamp Phase 14 — Core Web Vitals + perf script | `claude/revamp-phase-14-cwv-perf` | in-progress | —   | scripts/perf/ offline CWV runner + report |
+| Master Tracker (this doc)                       | `claude/revamp-master-tracker`    | in-progress | —   | Being created now                         |
 
 ---
 
@@ -80,11 +80,11 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 30-Revamp | 6     | Unified freshness/fallback labeling      | done        | #543 — https://github.com/vctb12/GoldTickerLive/pull/543 | shops spot-bar vs ticker freshness bug fixed+verified |
 | 30-Revamp | 7     | Methodology source-of-truth + deep links | done        | #544 — https://github.com/vctb12/GoldTickerLive/pull/544 | methodology parity exact; portfolio/calc deep-links   |
 | 30-Revamp | 8     | Secondary provider cross-validation      | done        | #545 — https://github.com/vctb12/GoldTickerLive/pull/545 | flagged OFF; +8 tests; enable = owner-gated           |
-| 30-Revamp | 9     | Metadata/canonical + icons/social        | in-progress | —                                                        | canonical audit + favicon/OG/Twitter icon fixes       |
-| 30-Revamp | 10    | hreflang & bilingual SEO                 | not-started | —                                                        | Adopt PR #536 `?lang=ar` model                        |
-| 30-Revamp | 11    | Structured data completion               | not-started | —                                                        | Breadcrumb/ItemList/FAQ/Article                       |
-| 30-Revamp | 12    | Sitemap gap closure                      | not-started | —                                                        | Reconcile PR #536 (do not duplicate)                  |
-| 30-Revamp | 13    | Internal linking & crawl                 | not-started | —                                                        | Orphan detection, breadcrumbs                         |
+| 30-Revamp | 9     | Metadata/canonical + icons/social        | done        | #546 — https://github.com/vctb12/GoldTickerLive/pull/546 | favicon 404 not-repro; twitter:site handle added      |
+| 30-Revamp | 10    | hreflang & bilingual SEO                 | done        | #547 — https://github.com/vctb12/GoldTickerLive/pull/547 | hreflang 14/14 reciprocal; AR-pre-render deferred     |
+| 30-Revamp | 11    | Structured data completion               | done        | #548 — https://github.com/vctb12/GoldTickerLive/pull/548 | methodology FAQPage schema via inject-schema          |
+| 30-Revamp | 12    | Sitemap gap closure                      | done        | #549 — https://github.com/vctb12/GoldTickerLive/pull/549 | sitemap complete; cleared stale governance.json       |
+| 30-Revamp | 13    | Internal linking & crawl                 | done        | #550 — https://github.com/vctb12/GoldTickerLive/pull/550 | no orphans; L-1/L-2/L-3 routed to owning phases       |
 | 30-Revamp | 14    | Core Web Vitals + perf script            | not-started | —                                                        | `scripts/perf/` offline runner                        |
 | 30-Revamp | 15    | Asset & image pipeline                   | not-started | —                                                        | webp/avif, srcset, width/height                       |
 | 30-Revamp | 16    | JS delivery + SW audit                   | not-started | —                                                        | `sw.js` recommend-only (owner-gated)                  |
@@ -272,3 +272,4 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 2026-07-07 | Claude Code | Created tracker; indexed 30-Revamp (1–30) + continuation (31–46) + 50-Plan (00–50) + Audit Waves (0–7) + Roadmap (1–21). Phases 1–3 done (#537/#538/#539); Phase 4 in-progress.                         |
 | 2026-07-07 | Claude Code | Phase 4 done (#541), Phase 5 done (#542, compare+heatmap AR trust-note parity); tracker PR #540. Phase 6 in-progress.                                                                                   |
 | 2026-07-07 | Claude Code | Track B complete: Phase 6 (#543 shops freshness bug fixed+verified), 7 (#544 methodology parity), 8 (#545 cross-validation flagged). Rows 1-9 status reconciled. Suite 1286->1294. Phase 9 in-progress. |
+| 2026-07-07 | Claude Code | Track C complete: Phase 9 (#546 twitter:site), 10 (#547 hreflang audit), 11 (#548 methodology FAQPage), 12 (#549 sitemap+governance), 13 (#550 linking audit). Phase 14 in-progress.                    |
