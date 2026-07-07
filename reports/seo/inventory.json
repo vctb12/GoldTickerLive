@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-07-04",
+  "generatedAtDate": "2026-07-07",
   "summary": {
     "totalHtmlFiles": 16,
     "withCanonical": 14,
@@ -360,7 +360,8 @@
       ],
       "jsonLdTypes": [
         "Article",
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "FAQPage"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null
