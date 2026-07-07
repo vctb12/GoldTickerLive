@@ -108,9 +108,9 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Source       | Phase | Short Name                            | Status      | PR  | Scope/Blocker Note                                                  |
 | ------------ | ----- | ------------------------------------- | ----------- | --- | ------------------------------------------------------------------- |
 | Continuation | 31| Heatmap spot/retail lens toggle       | done | #568 | Only genuinely-new heatmap delta (heatmap already shipped)          |
-| Continuation | 32| Metals data-layer foundation (silver) | in-progress | —   | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
-| Continuation | 33    | Silver on tracker + calculator        | not-started | —   | Metal switcher default gold                                         |
-| Continuation | 34    | Silver SEO + landing page             | not-started | —   | New silver page + schema/sitemap                                    |
+| Continuation | 32| Metals data-layer foundation (silver) | done | #569 | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
+| Continuation | 33| Silver on tracker + calculator        | done | #570 | Metal switcher default gold                                         |
+| Continuation | 34| Silver SEO + landing page             | in-progress | —   | New silver page + schema/sitemap                                    |
 | Continuation | 35    | Platinum + Palladium rollout          | not-started | —   | Only after silver clean                                             |
 | Continuation | 36    | Crypto price-history plumbing         | not-started | —   | BTC/USD (opt ETH) into history infra; no UI                         |
 | Continuation | 37    | Gold-crypto correlation view          | not-started | —   | Correlation≠causation; NOT a prediction                             |
