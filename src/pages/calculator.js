@@ -1178,7 +1178,11 @@ function applyLang() {
   renderCalculatorTrustAddons();
   set('calc-country-link', t('country_link'));
   document.querySelectorAll('.calc-copy-btn').forEach((btn) => {
-    if (btn.id === 'calc-copy-link-btn' || btn.id === 'calc-copy-image-btn') {
+    if (
+      btn.id === 'calc-copy-link-btn' ||
+      btn.id === 'calc-copy-image-btn' ||
+      btn.id === 'calc-share-btn'
+    ) {
       return;
     }
     const isSave = btn.classList.contains('calc-save-btn');
@@ -1186,6 +1190,13 @@ function applyLang() {
     btn.textContent = label;
     btn.setAttribute('aria-label', label);
   });
+  const shareBtn = document.getElementById('calc-share-btn');
+  if (shareBtn) {
+    shareBtn.replaceChildren(
+      iconUseElement('i-share', 'calc-btn-ico'),
+      ` ${STATE.lang === 'ar' ? 'مشاركة' : 'Share'}`
+    );
+  }
   set('calc-copy-link-btn', STATE.lang === 'ar' ? 'نسخ الرابط' : 'Copy Link');
   const copyImageBtn = document.getElementById('calc-copy-image-btn');
   if (copyImageBtn) {
@@ -1719,22 +1730,53 @@ function initCopyBtn() {
       }
       if (!window.html2canvas) return;
       const canvas = await window.html2canvas(card, { backgroundColor: '#ffffff', scale: 2 });
-      if (navigator.clipboard?.write) {
+      const downloadImage = () => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL('image/png');
+        link.download = 'gold-calculator-result.png';
+        link.click();
+      };
+      // Prefer copying the image to the clipboard where supported; otherwise always fall back to a
+      // download so every browser (Firefox, insecure contexts, older Safari) still gets the image.
+      if (navigator.clipboard?.write && window.ClipboardItem) {
         canvas.toBlob(async (blob) => {
-          if (!blob) return;
+          if (!blob) {
+            downloadImage();
+            return;
+          }
           try {
-            if (window.ClipboardItem) {
-              await navigator.clipboard.write([new window.ClipboardItem({ [blob.type]: blob })]);
-              return;
-            }
-            throw new Error('Clipboard image API unavailable');
+            await navigator.clipboard.write([new window.ClipboardItem({ [blob.type]: blob })]);
           } catch {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = 'gold-calculator-result.png';
-            link.click();
+            downloadImage();
           }
         });
+      } else {
+        downloadImage();
+      }
+    });
+  }
+
+  const shareBtn = document.getElementById('calc-share-btn');
+  if (shareBtn && typeof navigator.share === 'function') {
+    // Native share sheet (mobile). Only surfaced when the Web Share API exists — the copy-link /
+    // copy-image buttons remain the fallback everywhere else. No dependency, no network.
+    shareBtn.hidden = false;
+    shareBtn.addEventListener('click', async () => {
+      const link = `${location.origin}${location.pathname}${location.search}`;
+      const main = document.getElementById('calc-share-card-main')?.textContent?.trim() || '';
+      const value = document.getElementById('calc-share-card-meta')?.textContent?.trim() || '';
+      const text = [main, value].filter((s) => s && s !== '—').join(' · ');
+      try {
+        await navigator.share({
+          title:
+            STATE.lang === 'ar'
+              ? 'حاسبة الذهب — Gold Ticker Live'
+              : 'Gold Ticker Live — gold calculator',
+          text: text || undefined,
+          url: link,
+        });
+      } catch {
+        // User canceled the share sheet, or share failed — no-op (copy buttons remain available).
       }
     });
   }
