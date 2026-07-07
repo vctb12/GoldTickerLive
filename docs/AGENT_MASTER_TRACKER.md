@@ -107,8 +107,8 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Source       | Phase | Short Name                            | Status      | PR  | Scope/Blocker Note                                                  |
 | ------------ | ----- | ------------------------------------- | ----------- | --- | ------------------------------------------------------------------- |
-| Continuation | 31| Heatmap spot/retail lens toggle       | in-progress | —   | Only genuinely-new heatmap delta (heatmap already shipped)          |
-| Continuation | 32    | Metals data-layer foundation (silver) | not-started | —   | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
+| Continuation | 31| Heatmap spot/retail lens toggle       | done | #568 | Only genuinely-new heatmap delta (heatmap already shipped)          |
+| Continuation | 32| Metals data-layer foundation (silver) | in-progress | —   | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
 | Continuation | 33    | Silver on tracker + calculator        | not-started | —   | Metal switcher default gold                                         |
 | Continuation | 34    | Silver SEO + landing page             | not-started | —   | New silver page + schema/sitemap                                    |
 | Continuation | 35    | Platinum + Palladium rollout          | not-started | —   | Only after silver clean                                             |
