@@ -595,6 +595,13 @@
   line-height: 1.5;
 }
 
+.calc-disclaimer a {
+  color: var(--text-accent);
+
+  /* Inline links within disclaimer text — underline so they're distinguishable by more than colour (WCAG 1.4.1 / axe link-in-text-block). */
+  text-decoration: underline;
+}
+
 /* ── Responsive ───────────────────────────────────── */
 @media (width <= 480px) {
   .calc-card {
