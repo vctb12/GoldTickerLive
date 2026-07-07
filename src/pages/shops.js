@@ -125,12 +125,12 @@ const TXT = {
     allCountries: 'All countries',
     allCities: 'All cities',
     allSpecialties: 'All specialties',
-    verifiedOnly: 'Verified details only',
+    verifiedOnly: 'With contact details',
     verifiedHelp: 'Show listings with phone or website details only',
     count: (n) => `${n} listing${n === 1 ? '' : 's'}`,
     activeFilters: (value) => `Filters: ${value}`,
     noFilters: 'Showing all listings',
-    verifiedFilterLabel: 'verified details only',
+    verifiedFilterLabel: 'with contact details',
     emptyTitle: 'No listings match your filters',
     emptyText: 'Try clearing one filter or searching with a broader term.',
     emptyTextQuery: (query) =>
@@ -282,12 +282,12 @@ const TXT = {
     allCountries: 'كل الدول',
     allCities: 'كل المدن',
     allSpecialties: 'كل التخصصات',
-    verifiedOnly: 'تفاصيل موثقة فقط',
+    verifiedOnly: 'تتضمن بيانات تواصل',
     verifiedHelp: 'اعرض الإدراجات التي تتضمن هاتفاً أو موقعاً فقط',
     count: (n) => `${n} نتيجة`,
     activeFilters: (value) => `الفلاتر: ${value}`,
     noFilters: 'عرض جميع الإدراجات',
-    verifiedFilterLabel: 'تفاصيل موثقة فقط',
+    verifiedFilterLabel: 'تتضمن بيانات تواصل',
     emptyTitle: 'لا توجد إدراجات مطابقة',
     emptyText: 'جرّب إلغاء أحد الفلاتر أو استخدام كلمات أوسع في البحث.',
     emptyTextQuery: (query) =>
@@ -460,6 +460,14 @@ function detailsAvailabilityRank(value) {
 function contactQualityScore(shop) {
   if (shop.contactQuality === 'high') return 3;
   if (shop.contactQuality === 'medium') return 2;
+  if (shop.contactQuality === 'low') return 1;
+  // No preset field: derive honestly from the contact channels this listing actually carries
+  // (phone / website / email) instead of returning a constant.
+  const channels = [shop.phone, shop.website, shop.email].filter(
+    (v) => v && String(v).trim() !== ''
+  ).length;
+  if (channels >= 2) return 3;
+  if (channels === 1) return 2;
   return 1;
 }
 
@@ -471,13 +479,17 @@ function contactQualityLabel(shop) {
 }
 
 function calculateConfidenceBadge(shop) {
-  let score = shop.confidence || 50;
+  // A per-shop "details confidence" score is only honest when the data actually carries one. The
+  // static directory has no `confidence`/`verified`/`contactQuality` fields, so this returned a
+  // constant 50% on every listing — a precise-looking number that measured nothing. Return null
+  // when there's no real score so the UI can omit the badge; live data with a real `confidence`
+  // still renders it. Colours map to defined tokens (--color-up / --color-amber / --color-down).
+  if (shop.confidence == null) return null;
+  let score = shop.confidence;
   if (shop.verified) score = Math.min(100, score + 10);
-  if (shop.contactQuality === 'high') score = Math.min(100, score + 5);
-  if (shop.contactQuality === 'low') score = Math.max(0, score - 5);
-  if (score >= 90) return { level: 'high', label: `${score}%`, color: 'green' };
-  if (score >= 70) return { level: 'medium', label: `${score}%`, color: 'amber' };
-  return { level: 'low', label: `${score}%`, color: 'red' };
+  if (score >= 75) return { level: 'high', label: `${score}%`, color: 'up' };
+  if (score >= 45) return { level: 'medium', label: `${score}%`, color: 'amber' };
+  return { level: 'low', label: `${score}%`, color: 'down' };
 }
 
 function isMarketArea(shop) {
@@ -878,7 +890,9 @@ function openModal(shop) {
     ? `<span class="modal-cluster-badge">${t('marketCluster')}</span>`
     : '';
   const listingTypeBadge = `<span class="modal-listing-type ${isCluster ? 'modal-listing-type--market' : 'modal-listing-type--store'}">${listingTypeLabel(shop)}</span>`;
-  const confidenceBadgeHTML = `<span class="modal-confidence-badge modal-confidence-${esc(confidenceBadge.level)}" style="--confidence-color: var(--color-${esc(confidenceBadge.color)})">${t('detailsConfidence')}: ${esc(confidenceBadge.label)}</span>`;
+  const confidenceBadgeHTML = confidenceBadge
+    ? `<span class="modal-confidence-badge modal-confidence-${esc(confidenceBadge.level)}" style="--confidence-color: var(--color-${esc(confidenceBadge.color)})">${t('detailsConfidence')}: ${esc(confidenceBadge.label)}</span>`
+    : '';
 
   document.getElementById('shops-modal-body').innerHTML = `
     <div class="modal-head">
@@ -1452,14 +1466,22 @@ function buildShopCardMarkup(shop) {
               <span>${t('category')}</span>
               <strong>${listingTypeLabel(shop)}</strong>
             </p>
-            <p class="shop-confidence-item">
+            ${
+              confidenceBadge
+                ? `<p class="shop-confidence-item">
               <span>${t('detailsConfidence')}</span>
               <strong class="shop-signal shop-signal--${esc(confidenceBadge.level)}" style="--confidence-color: var(--color-${esc(confidenceBadge.color)})">${esc(confidenceBadge.label)}</strong>
-            </p>
-            <p class="shop-confidence-item">
+            </p>`
+                : ''
+            }
+            ${
+              shop.phone || shop.website || shop.email
+                ? `<p class="shop-confidence-item">
               <span>${t('contactQuality')}</span>
               <strong>${qualityLabel}</strong>
-            </p>
+            </p>`
+                : ''
+            }
           </div>
         </section>
 

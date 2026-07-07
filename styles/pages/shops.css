@@ -90,7 +90,9 @@
   }
 }
 
-.shops-hero-inner::before {
+/* Subtle dot texture fill — separate pseudo-element from the ::before foil line above, which it
+   previously clobbered by also being ::before at equal specificity. */
+.shops-hero-inner::after {
   content: '';
   position: absolute;
   inset: 0;
