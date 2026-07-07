@@ -5,14 +5,14 @@
   "source_type": "spot_reference",
   "raw_symbol": "XAU",
   "quote_currency": "USD",
-  "xau_usd_per_oz": 4132.2002,
-  "usd_per_gram_24k": 132.853321,
-  "aed_per_gram_24k": 487.9038,
+  "xau_usd_per_oz": 4135.2002,
+  "usd_per_gram_24k": 132.949773,
+  "aed_per_gram_24k": 488.258,
   "aed_peg": 3.6725,
-  "timestamp_utc": "2026-07-07T04:00:09Z",
+  "timestamp_utc": "2026-07-07T04:06:09Z",
   "timestamp_source": "provider",
-  "fetched_at_utc": "2026-07-07T04:00:22Z",
-  "freshness_seconds": 13,
+  "fetched_at_utc": "2026-07-07T04:06:17Z",
+  "freshness_seconds": 8,
   "max_freshness_seconds": 900,
   "is_fresh": true,
   "is_fallback": false,
@@ -23,21 +23,21 @@
   "raw_provider_confidence": null,
   "notes": "gold-api.com spot/reference price. Monitored with provider fallback.",
   "source": "gold_api_com",
-  "source_updated_at_gmt": "07-07-2026 04:00:09 am",
+  "source_updated_at_gmt": "07-07-2026 04:06:09 am",
   "gold": {
-    "ounce_usd": 4132.2,
-    "ounce_aed": 15175.51,
-    "gram_aed": 487.9,
+    "ounce_usd": 4135.2,
+    "ounce_aed": 15186.52,
+    "gram_aed": 488.26,
     "day_low_usd": null,
     "day_high_usd": null,
-    "ask_usd": 4132.2,
-    "bid_usd": 4132.2
+    "ask_usd": 4135.2,
+    "bid_usd": 4135.2
   },
   "karats_aed_per_gram": {
-    "24k": 487.9,
-    "22k": 447.25,
-    "21k": 426.92,
-    "18k": 365.93
+    "24k": 488.26,
+    "22k": 447.57,
+    "21k": 427.23,
+    "18k": 366.19
   },
   "status": "ok"
 }
