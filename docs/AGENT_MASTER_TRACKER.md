@@ -116,8 +116,8 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Continuation | 37    | Gold-crypto correlation view          | done | #574   | Correlation math + model layer, pilot OFF; correlation≠causation    |
 | Continuation | 38    | N-locale i18n scaffolding             | done | #575   | Additive locale registry + translate helper; EN/AR provably unchanged |
 | Continuation | 39    | French pilot UI                       | done | #576   | fr live+LTR; curated core-pages dict (src/i18n/fr-pilot.js), EN fallback |
-| Continuation | 40    | Urdu pilot UI                         | in-progress | —   | Reuse AR RTL infra                                                  |
-| Continuation | 41    | Content translation policy + FR batch | not-started | —   | MT+human-review; no auto-only indexed                               |
+| Continuation | 40    | Urdu pilot UI                         | done | #577   | ur live+RTL (reuses AR infra); dict parity with fr-pilot; EN fallback |
+| Continuation | 41    | Content translation policy + FR batch | in-progress | —   | MT+human-review; no auto-only indexed                               |
 | Continuation | 42    | PWA hardening/installability          | not-started | —   | 'mobile app' deliverable; RN out of scope; sw.js recommend-only     |
 | Continuation | 43    | Descriptive market-analysis module    | not-started | —   | Template-based ai-drafts.js; no LLM; NO forecasts                   |
 | Continuation | 44    | White-label static branding spike     | not-started | —   | Demo only; no tenants/billing                                       |
@@ -279,3 +279,4 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 2026-07-07 | Claude Code | Phase 37 done (#574 correlation math + gold-crypto model layer, pilot OFF, correlation≠causation enforced in every model; stacked on #573). Suite 1291→1307 (+16). Phase 38 (N-locale i18n scaffolding) in-progress.                                                                                            |
 | 2026-07-07 | Claude Code | Phase 38 done (#575 additive locale registry src/config/locales.js + translate helper src/lib/i18n.js; resolveLocale proven byte-identical to legacy `x==='ar'?'ar':'en'`; translate proven equal to inline chain across every real key; +11 tests). Phase 39 (French pilot UI) in-progress.                     |
 | 2026-07-07 | Claude Code | Phase 39 done (#576 fr activated LTR; curated ~60-key core-pages dict src/i18n/fr-pilot.js kept out of parity-guarded translations.js; withFrenchPilot() + EN fallback; reference-estimate framing preserved in FR; +5 tests; stacked on #575). Phase 40 (Urdu pilot, RTL, reuse AR infra) in-progress.        |
+| 2026-07-07 | Claude Code | Phase 40 done (#577 ur activated RTL reusing AR dir infra; src/i18n/ur-pilot.js parity with fr key set; withUrduPilot()+EN fallback; framing preserved in UR; +6 tests; stacked on #576). i18n chain 38→39→40. Phase 41 (content translation policy + first FR batch) in-progress.                             |
