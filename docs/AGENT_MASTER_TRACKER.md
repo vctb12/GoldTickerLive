@@ -101,13 +101,13 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 30-Revamp | 27| Shops directory                          | done | #564                                                     | Data-quality badges, ItemList                           |
 | 30-Revamp | 28| Learn hub & glossary + content lint      | done | #565                                                     | `scripts/content/` lint                                 |
 | 30-Revamp | 29| Additive growth (flags only)             | done | #566                                                     | Embed/RSS/CSV behind flags; no billing                  |
-| 30-Revamp | 30| Regression, rollout & observability      | in-progress | —                                                        | Smoke matrix, rollback plan                             |
+| 30-Revamp | 30| Regression, rollout & observability      | done | #567                                                     | Smoke matrix, rollback plan                             |
 
 ### B. Continuation Phases 31–45 (roadmap-wishlist, same plan doc) — POST-30
 
 | Source       | Phase | Short Name                            | Status      | PR  | Scope/Blocker Note                                                  |
 | ------------ | ----- | ------------------------------------- | ----------- | --- | ------------------------------------------------------------------- |
-| Continuation | 31    | Heatmap spot/retail lens toggle       | not-started | —   | Only genuinely-new heatmap delta (heatmap already shipped)          |
+| Continuation | 31| Heatmap spot/retail lens toggle       | in-progress | —   | Only genuinely-new heatmap delta (heatmap already shipped)          |
 | Continuation | 32    | Metals data-layer foundation (silver) | not-started | —   | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
 | Continuation | 33    | Silver on tracker + calculator        | not-started | —   | Metal switcher default gold                                         |
 | Continuation | 34    | Silver SEO + landing page             | not-started | —   | New silver page + schema/sitemap                                    |
