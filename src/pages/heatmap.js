@@ -97,6 +97,7 @@ const T = {
     disclaimer:
       'Gold value per gram is globally identical in USD — the map colors reflect local VAT and typical making charges only. All figures are spot-linked reference estimates, not final retail quotes or financial advice.',
     methodology: 'How prices work →',
+    trustNote: 'Spot-linked reference estimates — not final retail quotes.',
     freshness: {
       live: 'Live',
       delayed: 'Delayed',
@@ -160,6 +161,7 @@ const T = {
     disclaimer:
       'قيمة الذهب لكل جرام متطابقة عالمياً بالدولار — ألوان الخريطة تعكس الضريبة المحلية وأجور الصياغة المعتادة فقط. جميع الأرقام تقديرات مرجعية مرتبطة بالسعر الفوري، وليست أسعار تجزئة نهائية ولا نصيحة مالية.',
     methodology: 'كيف تُحسب الأسعار ←',
+    trustNote: 'تقديرات مرجعية مرتبطة بالسعر الفوري — وليست أسعار تجزئة نهائية.',
     freshness: {
       live: 'مباشر',
       delayed: 'متأخر',
@@ -815,6 +817,7 @@ function applyLang() {
   set('heatmap-how-2', dict.how2);
   set('heatmap-how-3', dict.how3);
   set('heatmap-disclaimer', dict.disclaimer);
+  set('heatmap-trust-text', dict.trustNote);
   const methodLink = document.getElementById('heatmap-methodology');
   if (methodLink) methodLink.textContent = dict.methodology;
   const svg = document.querySelector('.heatmap-svg');
