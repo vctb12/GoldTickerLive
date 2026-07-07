@@ -95,9 +95,9 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 30-Revamp | 21| Homepage overhaul                        | done | #558                                                     | Visual-regression gated                                 |
 | 30-Revamp | 22| Tracker page polish (in-place)           | done | #559                                                     | 99KB file; chart-vs-spot parity (R-04)                  |
 | 30-Revamp | 23| Calculator UX + export/share             | done | #560                                                     | Reconcile PR #535                                       |
-| 30-Revamp | 24| Compare tool (in-place)                  | in-progress | —                                                        | 74KB file                                               |
-| 30-Revamp | 25    | World heatmap polish                     | not-started | —                                                        | Legend/keyboard/table fallback                          |
-| 30-Revamp | 26    | Portfolio tracker                        | not-started | —                                                        | Preserve honest-gain rules + fixture                    |
+| 30-Revamp | 24| Compare tool (in-place)                  | done | #561                                                     | 74KB file                                               |
+| 30-Revamp | 25| World heatmap polish                     | done | #562                                                     | Legend/keyboard/table fallback                          |
+| 30-Revamp | 26| Portfolio tracker                        | in-progress | —                                                        | Preserve honest-gain rules + fixture                    |
 | 30-Revamp | 27    | Shops directory                          | not-started | —                                                        | Data-quality badges, ItemList                           |
 | 30-Revamp | 28    | Learn hub & glossary + content lint      | not-started | —                                                        | `scripts/content/` lint                                 |
 | 30-Revamp | 29    | Additive growth (flags only)             | not-started | —                                                        | Embed/RSS/CSV behind flags; no billing                  |
