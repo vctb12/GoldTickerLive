@@ -119,8 +119,8 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Continuation | 40    | Urdu pilot UI                         | done | #577   | ur live+RTL (reuses AR infra); dict parity with fr-pilot; EN fallback |
 | Continuation | 41    | Content translation policy + FR batch | done | #578   | noindex-until-reviewed enforced in code; first FR methodology batch |
 | Continuation | 42    | PWA hardening/installability          | done | #579   | manifest id/dir + manifest-audit + install-controller; sw.js recommend-only |
-| Continuation | 43    | Descriptive market-analysis module    | in-progress | —   | Template-based ai-drafts.js; no LLM; NO forecasts                   |
-| Continuation | 44    | White-label static branding spike     | not-started | —   | Demo only; no tenants/billing                                       |
+| Continuation | 43    | Descriptive market-analysis module    | done | #580   | Client template-based market-analysis; no LLM/forecasts; guard-enforced |
+| Continuation | 44    | White-label static branding spike     | in-progress | —   | Demo only; no tenants/billing                                       |
 | Continuation | 45    | Decision brief (white-label/AI/RN)    | not-started | —   | docs-only                                                           |
 | Continuation | 46    | Roadmap wishlist reconciliation       | not-started | —   | After 45; verify gold-api multi-metal, keep ai-drafts template-only |
 
@@ -282,3 +282,4 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 2026-07-07 | Claude Code | Phase 40 done (#577 ur activated RTL reusing AR dir infra; src/i18n/ur-pilot.js parity with fr key set; withUrduPilot()+EN fallback; framing preserved in UR; +6 tests; stacked on #576). i18n chain 38→39→40. Phase 41 (content translation policy + first FR batch) in-progress.                             |
 | 2026-07-07 | Claude Code | Phase 41 done (#578 content-translation policy + governance src/i18n/translation-status.js: MT_ONLY_INDEXABLE=false, noindex-until-human-reviewed enforced; first FR methodology content batch ships pending→not indexed; 31.1035/3.6725/formula/reference framing preserved in FR; +7 tests; stacked on #577). Phase 42 (PWA hardening) in-progress.  |
 | 2026-07-07 | Claude Code | Phase 42 done (#579 PWA hardening: manifest.json +id/+dir; src/pwa/manifest-audit.js installability auditor; src/pwa/install-controller.js reusable DI A2HS controller; sw.js untouched, offline-precache/nav-preload recommend-only; +12 tests; branched off main). Phase 43 (descriptive market-analysis, template-only, NO forecasts) in-progress. |
+| 2026-07-07 | Claude Code | Phase 43 done (#580 src/analysis/market-analysis.js client template-based descriptive analysis; buildMarketAnalysis + assertDescriptiveOnly guard rejecting forecast/advice/invented-cause; mirrors backend ai-drafts honesty; bilingual; +9 tests; branched off main). Phase 44 (white-label branding spike, demo-only) in-progress. |
