@@ -54,9 +54,18 @@ const T = {
     mapAria: 'World map of gold retail estimates by country',
     mapHint: 'Hover, tap or use the keyboard to explore countries. Full data in the table below.',
     legendTitle: 'All-in retail estimate (USD per gram)',
+    legendTitleSpot: 'Spot-linked gold value (USD per gram)',
     legendNoData: 'No data',
     legendLower: 'Lower',
     legendHigher: 'Higher',
+    lensLabel: 'Colour map by',
+    lensRetail: 'Retail estimate',
+    lensSpot: 'Spot value',
+    lensSpotLegend: 'Identical worldwide',
+    lensRetailCaption:
+      'Darker gold = a higher all-in retail estimate. The differences come from local VAT and typical making charges — the underlying gold is the same everywhere.',
+    lensSpotCaption:
+      'Every market shows the same shade: gold’s spot-linked value per gram is identical worldwide in USD. Switch to the retail lens to see where local VAT and making charges raise the price.',
     jumpLabel: 'Jump to a country',
     jumpPlaceholder: 'Pick a country…',
     groups: {
@@ -117,9 +126,18 @@ const T = {
     mapHint:
       'مرّر المؤشر أو انقر أو استخدم لوحة المفاتيح لاستكشاف الدول. البيانات الكاملة في الجدول أدناه.',
     legendTitle: 'التقدير الشامل للتجزئة (دولار لكل جرام)',
+    legendTitleSpot: 'قيمة الذهب المرتبطة بالسعر الفوري (دولار لكل جرام)',
     legendNoData: 'لا تتوفر بيانات',
     legendLower: 'أقل',
     legendHigher: 'أعلى',
+    lensLabel: 'تلوين الخريطة حسب',
+    lensRetail: 'تقدير التجزئة',
+    lensSpot: 'القيمة الفورية',
+    lensSpotLegend: 'متطابقة عالمياً',
+    lensRetailCaption:
+      'الذهبي الأغمق = تقدير تجزئة شامل أعلى. الفروق ناتجة عن الضريبة المحلية والمصنعية المعتادة — الذهب نفسه واحد في كل مكان.',
+    lensSpotCaption:
+      'كل الأسواق تظهر بنفس الدرجة: قيمة غرام الذهب المرتبطة بالسعر الفوري متطابقة عالمياً بالدولار. بدّل إلى عدسة التجزئة لترى أين ترفع الضريبة والمصنعية السعر.',
     jumpLabel: 'الانتقال إلى دولة',
     jumpPlaceholder: 'اختر دولة…',
     groups: {
@@ -183,6 +201,7 @@ const STATE = {
   status: { goldStale: false, fxStale: false },
   fxMeta: { lastUpdateUtc: null, nextUpdateUtc: 0 },
   karat: '22',
+  lens: 'retail', // 'retail' = all-in estimate (varies) | 'spot' = pure gold value (uniform worldwide)
   selected: null,
   goldPriceUsdPerOz: 0,
   mapData: null, // lazily imported world-map-data.js module
@@ -398,13 +417,19 @@ async function mountMap() {
 function paintMap() {
   if (!STATE.mapData) return;
   const rows = currentRows();
-  const domain = computeDomain(rows);
+  const spot = isSpotLens();
+  // Spot lens has no gradient (gold's USD value is identical worldwide) — every market with data
+  // gets the same uniform bucket; the retail lens keeps the equal-interval domain.
+  const domain = spot ? null : computeDomain(rows);
   const index = fillIndex(rows, domain);
   const dict = t();
+  const lensLabel = spot ? dict.spotRef : dict.retailEst;
 
   for (const [code, nodes] of STATE.mapNodes) {
     const entry = index.get(code);
-    const bucket = entry ? entry.bucket : null;
+    const value = entry ? (spot ? entry.row.spotUsdPerGram : entry.row.retailUsdPerGram) : null;
+    const hasData = value != null;
+    const bucket = !hasData ? null : spot ? SPOT_UNIFORM_BUCKET : entry.bucket;
     const primary = nodes[0];
     primary.classList.remove(
       'heatmap-b0',
@@ -417,11 +442,10 @@ function paintMap() {
     primary.classList.add(bucket == null ? 'heatmap-nodata' : `heatmap-b${bucket}`);
     const country = COUNTRIES.find((c) => c.code === code);
     const name = country ? countryName(country) : code;
-    const valueText =
-      entry && entry.row.retailUsdPerGram != null
-        ? `${fmtUsd(entry.row.retailUsdPerGram)} ${dict.perGram} (${STATE.karat}K)`
-        : dict.unavailable;
-    primary.setAttribute('aria-label', `${name} — ${dict.retailEst}: ${valueText}`);
+    const valueText = hasData
+      ? `${fmtUsd(value)} ${dict.perGram} (${STATE.karat}K)`
+      : dict.unavailable;
+    primary.setAttribute('aria-label', `${name} — ${lensLabel}: ${valueText}`);
     primary.setAttribute('aria-pressed', STATE.selected === code ? 'true' : 'false');
     for (const node of nodes) node.classList.toggle('heatmap-selected', STATE.selected === code);
   }
@@ -449,14 +473,17 @@ function showTooltipFor(target, pointerEvent) {
   const dict = t();
 
   clear(tip);
+  const spot = isSpotLens();
+  const primaryValue = row ? (spot ? row.spotUsdPerGram : row.retailUsdPerGram) : null;
   tip.appendChild(el('span', { class: 'heatmap-tip-name' }, [countryName(country)]));
-  if (row && row.retailUsdPerGram != null) {
+  if (primaryValue != null) {
     tip.appendChild(
       el('span', { class: 'heatmap-tip-value' }, [
-        `${fmtUsd(row.retailUsdPerGram)} ${dict.perGram} · ${STATE.karat}K`,
+        `${fmtUsd(primaryValue)} ${dict.perGram} · ${STATE.karat}K`,
       ])
     );
-    if (row.retailLocalPerGram != null && row.currency !== 'USD') {
+    // Local-currency line only makes sense for the retail lens (spot value is quoted in USD).
+    if (!spot && row.retailLocalPerGram != null && row.currency !== 'USD') {
       tip.appendChild(
         el('span', { class: 'heatmap-tip-local' }, [
           formatPrice(row.retailLocalPerGram, row.currency, row.decimals),
@@ -499,13 +526,29 @@ function renderLegend() {
   if (!host) return;
   const dict = t();
   const rows = currentRows();
-  const domain = computeDomain(rows);
+  const spot = isSpotLens();
+  const domain = spot ? null : computeDomain(rows);
   clear(host);
   host.appendChild(
-    el('span', { class: 'heatmap-legend-title', id: 'heatmap-legend-title' }, [dict.legendTitle])
+    el('span', { class: 'heatmap-legend-title', id: 'heatmap-legend-title' }, [
+      spot ? dict.legendTitleSpot : dict.legendTitle,
+    ])
   );
   const scale = el('div', { class: 'heatmap-legend-scale', role: 'list' });
-  if (!domain) {
+  if (spot) {
+    // One uniform swatch — the spot value is identical for every market.
+    scale.appendChild(
+      el('span', { class: 'heatmap-legend-stop', role: 'listitem' }, [
+        el('span', {
+          class: `heatmap-legend-swatch heatmap-b${SPOT_UNIFORM_BUCKET}`,
+          'aria-hidden': 'true',
+        }),
+        el('span', { class: 'heatmap-legend-range' }, [
+          `${fmtUsd(spotUsdPerGramNow(rows), 1)} ${dict.perGram} · ${dict.lensSpotLegend}`,
+        ]),
+      ])
+    );
+  } else if (!domain) {
     scale.appendChild(el('span', { class: 'heatmap-legend-waiting' }, [dict.waiting]));
   } else {
     const stops = legendStops(domain);
@@ -527,6 +570,16 @@ function renderLegend() {
     ])
   );
   host.appendChild(scale);
+  // Lens explainer — states plainly why the map varies (retail) or is uniform (spot).
+  host.appendChild(
+    el('p', { class: 'heatmap-lens-note' }, [spot ? dict.lensSpotCaption : dict.lensRetailCaption])
+  );
+}
+
+/** The single spot-linked gold value per gram (USD) — identical across markets for the active karat. */
+function spotUsdPerGramNow(rows) {
+  const withSpot = (rows || []).find((r) => r.spotUsdPerGram != null);
+  return withSpot ? withSpot.spotUsdPerGram : 0;
 }
 
 // ── Karat switcher ────────────────────────────────────────────────────────────
@@ -550,6 +603,45 @@ function renderKarats() {
           },
         },
         [`${code}K`]
+      )
+    );
+  }
+}
+
+// Bucket the spot lens paints every market with — a single mid-high gold shade, since gold's
+// spot-linked value per gram is identical worldwide in USD (there is no meaningful gradient).
+const SPOT_UNIFORM_BUCKET = 3;
+
+/** True when the map is coloured by pure spot value (uniform) rather than the all-in retail estimate. */
+function isSpotLens() {
+  return STATE.lens === 'spot';
+}
+
+// ── Lens switcher (colour map by retail estimate vs pure spot value) ───────────
+function renderLens() {
+  const host = document.getElementById('heatmap-lens');
+  if (!host) return;
+  const dict = t();
+  host.setAttribute('aria-label', dict.lensLabel);
+  clear(host);
+  for (const [code, labelKey] of [
+    ['retail', 'lensRetail'],
+    ['spot', 'lensSpot'],
+  ]) {
+    host.appendChild(
+      el(
+        'button',
+        {
+          type: 'button',
+          class: `heatmap-lens-btn${STATE.lens === code ? ' is-active' : ''}`,
+          'aria-pressed': STATE.lens === code ? 'true' : 'false',
+          onclick: () => {
+            if (STATE.lens === code) return;
+            STATE.lens = code;
+            render();
+          },
+        },
+        [dict[labelKey]]
       )
     );
   }
@@ -826,6 +918,7 @@ function applyLang() {
 function render() {
   renderSpotBadge();
   renderKarats();
+  renderLens();
   renderLegend();
   renderJumpSelect();
   renderDetail();
