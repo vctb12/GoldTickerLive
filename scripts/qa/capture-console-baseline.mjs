@@ -21,7 +21,7 @@
 import { chromium } from 'playwright';
 import http from 'node:http';
 import { createReadStream, existsSync, statSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
-import { extname, join, resolve } from 'node:path';
+import { extname, join, resolve, sep } from 'node:path';
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -57,14 +57,32 @@ function resolveChromium() {
 }
 
 function startServer(dir) {
+  const root = resolve(dir);
   const server = http.createServer((req, res) => {
     let urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
     if (urlPath.endsWith('/')) urlPath += 'index.html';
-    let filePath = join(dir, urlPath);
-    if (existsSync(filePath) && statSync(filePath).isDirectory()) filePath = join(filePath, 'index.html');
-    if (!existsSync(filePath)) { res.writeHead(404); res.end('not found'); return; }
-    res.writeHead(200, { 'Content-Type': MIME[extname(filePath)] || 'application/octet-stream' });
-    createReadStream(filePath).pipe(res);
+    // Contain the request path inside `root` before it reaches any filesystem call — resolve()
+    // collapses `..`, and the prefix check rejects traversal (CodeQL js/path-injection).
+    const filePath = resolve(root, '.' + (urlPath.startsWith('/') ? urlPath : '/' + urlPath));
+    if (filePath !== root && !filePath.startsWith(root + sep)) {
+      res.writeHead(403);
+      res.end('forbidden');
+      return;
+    }
+    let target = filePath;
+    if (existsSync(target) && statSync(target).isDirectory()) target = join(target, 'index.html');
+    if (target !== root && !target.startsWith(root + sep)) {
+      res.writeHead(403);
+      res.end('forbidden');
+      return;
+    }
+    if (!existsSync(target)) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': MIME[extname(target)] || 'application/octet-stream' });
+    createReadStream(target).pipe(res);
   });
   return new Promise((res) => server.listen(PORT, () => res(server)));
 }
