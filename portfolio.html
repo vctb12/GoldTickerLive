@@ -670,7 +670,11 @@
     </main>
 
     <!-- Add/edit/confirm dialog (content rendered by portfolio.js) -->
-    <dialog class="portfolio-dialog" id="portfolio-dialog"></dialog>
+    <dialog
+      class="portfolio-dialog"
+      id="portfolio-dialog"
+      aria-labelledby="portfolio-dialog-title"
+    ></dialog>
 
     <script>
       if ('serviceWorker' in navigator) {

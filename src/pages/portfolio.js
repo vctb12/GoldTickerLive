@@ -729,7 +729,7 @@ function openForm(editId = null) {
   if (!dialog) return;
   clear(dialog);
 
-  const title = el('h2', { class: 'portfolio-dialog-title' }, [
+  const title = el('h2', { id: 'portfolio-dialog-title', class: 'portfolio-dialog-title' }, [
     editing ? dict.editHolding : dict.addHolding,
   ]);
 
@@ -882,7 +882,9 @@ function confirmDialog({ title, body, onConfirm }) {
   const dialog = document.getElementById('portfolio-dialog');
   if (!dialog) return;
   clear(dialog);
-  dialog.appendChild(el('h2', { class: 'portfolio-dialog-title' }, [title]));
+  dialog.appendChild(
+    el('h2', { id: 'portfolio-dialog-title', class: 'portfolio-dialog-title' }, [title])
+  );
   if (body) dialog.appendChild(el('p', { class: 'portfolio-dialog-body' }, [body]));
   dialog.appendChild(
     el('div', { class: 'portfolio-form-actions' }, [
