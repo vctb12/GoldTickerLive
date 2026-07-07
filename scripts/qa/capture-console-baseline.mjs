@@ -28,11 +28,24 @@ function arg(name, fallback) {
   return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 
-const SERVE_DIR = resolve(arg('serve', 'dist'));
+// Contain any operator-supplied path inside the repo root, so a stray --serve/--out can't route a
+// filesystem call outside the project (CodeQL js/path-injection treats argv as a taint source).
+function containedPath(rel, base = process.cwd()) {
+  const root = resolve(base);
+  const p = resolve(root, rel);
+  if (p !== root && !p.startsWith(root + sep)) {
+    throw new Error(`path '${rel}' escapes ${root}`);
+  }
+  return p;
+}
+
+const SERVE_DIR = containedPath(arg('serve', 'dist'));
 const PORT = Number(arg('port', '8199'));
-const OUT_DIR = resolve(arg('out', 'reports/qa'));
+const OUT_DIR = containedPath(arg('out', 'reports/qa'));
 const EXTERNAL_BASE = arg('base', '');
 const SETTLE_MS = Number(arg('settle', '1500'));
+// Filename component from argv — restrict to a safe charset before it reaches a path.
+const STAMP = String(arg('stamp', 'baseline')).replace(/[^A-Za-z0-9._-]/g, '_');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -144,7 +157,7 @@ async function main() {
   if (server) server.close();
 
   mkdirSync(OUT_DIR, { recursive: true });
-  const stamp = arg('stamp', 'baseline');
+  const stamp = STAMP;
   writeFileSync(join(OUT_DIR, `console-${stamp}.json`), JSON.stringify(results, null, 2));
 
   // Markdown summary
