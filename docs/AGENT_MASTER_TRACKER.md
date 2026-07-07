@@ -122,7 +122,7 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Continuation | 43    | Descriptive market-analysis module    | done | #580   | Client template-based market-analysis; no LLM/forecasts; guard-enforced |
 | Continuation | 44    | White-label static branding spike     | done | #581   | Demo-only branding config; flag OFF/inert; no tenants/billing        |
 | Continuation | 45    | Decision brief (white-label/AI/RN)    | done | #582   | docs-only; 3 recommendations w/ named revisit triggers               |
-| Continuation | 46    | Roadmap wishlist reconciliation       | in-progress | —   | After 45; verify gold-api multi-metal, keep ai-drafts template-only |
+| Continuation | 46    | Roadmap wishlist reconciliation       | done | #583   | Reconciled 21 roadmap items; verified gold-api readiness + ai-drafts template-only |
 
 ### C. 50-Phase Master Plan — `docs/revamp/MASTER-50-PHASE-PLAN.md` (status from `docs/revamp/PROGRESS.md`)
 
@@ -285,3 +285,4 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 2026-07-07 | Claude Code | Phase 43 done (#580 src/analysis/market-analysis.js client template-based descriptive analysis; buildMarketAnalysis + assertDescriptiveOnly guard rejecting forecast/advice/invented-cause; mirrors backend ai-drafts honesty; bilingual; +9 tests; branched off main). Phase 44 (white-label branding spike, demo-only) in-progress. |
 | 2026-07-07 | Claude Code | Phase 44 done (#581 src/branding/brand-config.js WHITE_LABEL_ENABLED=false spike; real brand + 2 demo skins; resolveBrandKey inert while off; --brand-* namespace not live --color-*; scope guard asserts no tenant/billing; +6 tests; branched off main). Phase 45 (decision brief, docs-only) in-progress. |
 | 2026-07-07 | Claude Code | Phase 45 done (#582 docs/decisions/PHASE-45-decision-brief.md: white-label=spike-only, AI=descriptive-templates-no-LLM/forecasts, RN=stay-PWA; each w/ named revisit trigger; docs-only; branched off main). Continuation phases 31-45 all shipped as PRs #568-#582. POST-45 (roadmap wishlist reconciliation, #46) in-progress. |
+| 2026-07-07 | Claude Code | POST-45 done (#583 docs/decisions/POST-45-roadmap-reconciliation.md: reconciled all 21 roadmap items to continuation status; verified gold-api multi-metal data-layer ready (live feed owner-gated) + ai-drafts template-only enforced in code+policy; listed open $0 work + owner unblock actions). **CONTINUATION RUN COMPLETE: phases 31-46 → PRs #568-#583, all gated green, none merged (awaiting owner review).** |
