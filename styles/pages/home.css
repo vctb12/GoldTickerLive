@@ -965,7 +965,11 @@
   max-width: 220px;
   padding: 0.35rem 0.55rem;
   border-radius: var(--radius-sm);
-  background: var(--color-gray-900, #1a1a1a);
+
+  /* Intentional theme-invariant dark tooltip surface (paired with the fixed white text below);
+     stays dark in both themes. Was `var(--color-gray-900, #1a1a1a)` but --color-gray-900 is not
+     defined anywhere, so it silently relied on this literal — make the intent explicit. */
+  background: #1a1a1a;
   color: var(--color-white);
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);

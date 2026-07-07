@@ -1,0 +1,262 @@
+{
+  "structure": {
+    "h1Count": 1,
+    "sections": [
+      "hero-headline",
+      "home-chart-title",
+      "home-trend-title",
+      "home-tools-title",
+      "home-quick-convert-title",
+      "karat-strip-title",
+      "trust-strip",
+      "trust-banner-title",
+      "gcc-section-title",
+      "tools-title",
+      "home-stats-section",
+      "next-step-title",
+      "countries-quick",
+      "markets-title",
+      "home-section",
+      "how-it-works",
+      "methodology",
+      "methodology-reference",
+      "location-guides",
+      "location-guides-title",
+      "faq"
+    ],
+    "headingOutline": [
+      {
+        "level": 1,
+        "text": "Gold Prices Today UAE, GCC & Arab World"
+      },
+      {
+        "level": 2,
+        "text": "Gold Price Chart"
+      },
+      {
+        "level": 2,
+        "text": "Price History"
+      },
+      {
+        "level": 2,
+        "text": "Start from what you need"
+      },
+      {
+        "level": 3,
+        "text": "Quick convert"
+      },
+      {
+        "level": 2,
+        "text": "Live reference prices by karat"
+      },
+      {
+        "level": 3,
+        "text": "About Our Prices"
+      },
+      {
+        "level": 2,
+        "text": "Live Gold Prices"
+      },
+      {
+        "level": 2,
+        "text": "Everything You Need"
+      },
+      {
+        "level": 3,
+        "text": "Live Tracker"
+      },
+      {
+        "level": 3,
+        "text": "Gold Calculator"
+      },
+      {
+        "level": 3,
+        "text": "UAE Gold Prices"
+      },
+      {
+        "level": 3,
+        "text": "Find Gold Shops"
+      },
+      {
+        "level": 3,
+        "text": "Browse Countries"
+      },
+      {
+        "level": 3,
+        "text": "World Gold Map"
+      },
+      {
+        "level": 3,
+        "text": "Portfolio Tracker"
+      },
+      {
+        "level": 3,
+        "text": "Learn & Glossary"
+      },
+      {
+        "level": 3,
+        "text": "Gold Insights"
+      },
+      {
+        "level": 3,
+        "text": "Methodology"
+      },
+      {
+        "level": 3,
+        "text": "Gold Investing Guide"
+      },
+      {
+        "level": 2,
+        "text": "Gold Ticker Live by the numbers"
+      },
+      {
+        "level": 2,
+        "text": "What should I check next?"
+      },
+      {
+        "level": 3,
+        "text": "UAE buying guide"
+      },
+      {
+        "level": 3,
+        "text": "Dubai gold rate guide"
+      },
+      {
+        "level": 3,
+        "text": "GCC comparison"
+      },
+      {
+        "level": 3,
+        "text": "Spot vs retail"
+      },
+      {
+        "level": 2,
+        "text": "Browse by Country"
+      },
+      {
+        "level": 2,
+        "text": "Major Gold Markets"
+      },
+      {
+        "level": 3,
+        "text": "Dubai Gold Souk"
+      },
+      {
+        "level": 3,
+        "text": "Riyadh Gold Market"
+      },
+      {
+        "level": 3,
+        "text": "Kuwait Gold Souk"
+      },
+      {
+        "level": 3,
+        "text": "Khan el-Khalili"
+      },
+      {
+        "level": 3,
+        "text": "From the markets"
+      },
+      {
+        "level": 2,
+        "text": "Methodology at a glance"
+      },
+      {
+        "level": 2,
+        "text": "Reference methodology"
+      },
+      {
+        "level": 3,
+        "text": "How to compare with a shop quote"
+      },
+      {
+        "level": 2,
+        "text": "City buying guides"
+      },
+      {
+        "level": 2,
+        "text": "Location guide starter set"
+      },
+      {
+        "level": 3,
+        "text": "Dubai"
+      },
+      {
+        "level": 4,
+        "text": "Dubai — Quote verification checklist"
+      },
+      {
+        "level": 3,
+        "text": "Riyadh"
+      },
+      {
+        "level": 4,
+        "text": "Riyadh — Quote verification checklist"
+      },
+      {
+        "level": 3,
+        "text": "Kuwait City"
+      },
+      {
+        "level": 4,
+        "text": "Kuwait City — Quote verification checklist"
+      },
+      {
+        "level": 2,
+        "text": "Common Questions"
+      },
+      {
+        "level": 2,
+        "text": "Explore"
+      },
+      {
+        "level": 3,
+        "text": "Price tools"
+      },
+      {
+        "level": 3,
+        "text": "Markets"
+      },
+      {
+        "level": 3,
+        "text": "Learn & trust"
+      }
+    ],
+    "landmarks": {
+      "nav": 1,
+      "main": 1,
+      "footer": 1
+    },
+    "counts": {
+      "img": 12,
+      "buttons": 25,
+      "links": 145
+    }
+  },
+  "viewports": {
+    "mobile-light": {
+      "pageHeight": 10903,
+      "screenshotBytes": 113470
+    },
+    "mobile-dark": {
+      "pageHeight": 10903,
+      "screenshotBytes": 119595
+    },
+    "tablet-light": {
+      "pageHeight": 9592,
+      "screenshotBytes": 180910
+    },
+    "tablet-dark": {
+      "pageHeight": 9592,
+      "screenshotBytes": 300347
+    },
+    "desktop-light": {
+      "pageHeight": 8131,
+      "screenshotBytes": 243379
+    },
+    "desktop-dark": {
+      "pageHeight": 8131,
+      "screenshotBytes": 278350
+    }
+  }
+}
