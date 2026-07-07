@@ -428,7 +428,7 @@
 
 .alert-mgr-card-btn--wa:hover {
   background: #dcf8c6;
-  border-color: #25d366;
+  border-color: var(--brand-whatsapp); /* was #25d366 — identical value, theme-invariant token */
 }
 
 /* ─── Trigger dialog (native <dialog>) ───────────────────────────────── */
