@@ -97,9 +97,9 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 30-Revamp | 23| Calculator UX + export/share             | done | #560                                                     | Reconcile PR #535                                       |
 | 30-Revamp | 24| Compare tool (in-place)                  | done | #561                                                     | 74KB file                                               |
 | 30-Revamp | 25| World heatmap polish                     | done | #562                                                     | Legend/keyboard/table fallback                          |
-| 30-Revamp | 26| Portfolio tracker                        | in-progress | —                                                        | Preserve honest-gain rules + fixture                    |
-| 30-Revamp | 27    | Shops directory                          | not-started | —                                                        | Data-quality badges, ItemList                           |
-| 30-Revamp | 28    | Learn hub & glossary + content lint      | not-started | —                                                        | `scripts/content/` lint                                 |
+| 30-Revamp | 26| Portfolio tracker                        | done | #563                                                     | Preserve honest-gain rules + fixture                    |
+| 30-Revamp | 27| Shops directory                          | done | #564                                                     | Data-quality badges, ItemList                           |
+| 30-Revamp | 28| Learn hub & glossary + content lint      | in-progress | —                                                        | `scripts/content/` lint                                 |
 | 30-Revamp | 29    | Additive growth (flags only)             | not-started | —                                                        | Embed/RSS/CSV behind flags; no billing                  |
 | 30-Revamp | 30    | Regression, rollout & observability      | not-started | —                                                        | Smoke matrix, rollback plan                             |
 
