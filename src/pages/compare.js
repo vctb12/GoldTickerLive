@@ -495,9 +495,12 @@ function renderTable(rows) {
       ])
     );
     if (!row.available) {
+      // Country <th> and the currency <td> already occupy the first two columns, so the
+      // "unavailable" cell spans the remaining COLUMNS.length - 2 (was - 1, which overran the
+      // table by one column and broke row/column alignment — WCAG 1.3.1).
       const td = el(
         'td',
-        { class: 'compare-td compare-td--unavailable', colspan: String(COLUMNS.length - 1) },
+        { class: 'compare-td compare-td--unavailable', colspan: String(COLUMNS.length - 2) },
         t().unavailable
       );
       tr.append(el('td', { class: 'compare-td' }, row.currency), td);
