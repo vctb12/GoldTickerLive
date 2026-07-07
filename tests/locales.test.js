@@ -11,17 +11,18 @@ const assert = require('node:assert/strict');
 
 const LOC = new URL('../src/config/locales.js', `file://${__filename}`).href;
 
-test('locales: en/ar are active, fr/ur are declared but parked', async () => {
+test('locales: en/ar/fr are active (fr live in Phase 39), ur still parked', async () => {
   const { LOCALES, ACTIVE_LOCALE_CODES, SUPPORTED_LOCALE_CODES, isActiveLocale } = await import(
     LOC
   );
   assert.equal(LOCALES.en.enabled, true);
   assert.equal(LOCALES.ar.enabled, true);
-  assert.equal(LOCALES.fr.enabled, false);
-  assert.equal(LOCALES.ur.enabled, false);
-  assert.deepEqual(ACTIVE_LOCALE_CODES, ['en', 'ar']);
+  assert.equal(LOCALES.fr.enabled, true); // Phase 39 — French pilot activated.
+  assert.equal(LOCALES.ur.enabled, false); // Phase 40 — still parked.
+  assert.deepEqual(ACTIVE_LOCALE_CODES, ['en', 'ar', 'fr']);
   assert.deepEqual(SUPPORTED_LOCALE_CODES.sort(), ['ar', 'en', 'fr', 'ur']);
-  assert.equal(isActiveLocale('fr'), false);
+  assert.equal(isActiveLocale('fr'), true);
+  assert.equal(isActiveLocale('ur'), false);
   assert.equal(isActiveLocale('ar'), true);
 });
 
@@ -37,20 +38,25 @@ test('locales: direction metadata matches the app (ar/ur rtl, en/fr ltr)', async
   assert.equal(getLocaleDir('zz'), 'ltr');
 });
 
-test('locales: resolveLocale is byte-identical to the legacy binary for every input', async () => {
+test('locales: EN/AR resolution is unchanged; fr now resolves to fr', async () => {
   const { resolveLocale, DEFAULT_LOCALE } = await import(LOC);
   assert.equal(DEFAULT_LOCALE, 'en');
-  const legacy = (x) => (x === 'ar' ? 'ar' : 'en');
-  const inputs = ['ar', 'en', '', 'AR', 'EN', 'fr', 'ur', 'xx', 'arabic', null, undefined];
-  for (const input of inputs) {
-    assert.equal(resolveLocale(input), legacy(input), `resolveLocale(${JSON.stringify(input)})`);
+  // EN/AR (and everything not-yet-active) behave exactly as the legacy `x === 'ar' ? 'ar' : 'en'`.
+  const enArLegacy = (x) => (x === 'ar' ? 'ar' : 'en');
+  for (const input of ['ar', 'en', '', 'AR', 'EN', 'xx', 'arabic', null, undefined]) {
+    assert.equal(
+      resolveLocale(input),
+      enArLegacy(input),
+      `resolveLocale(${JSON.stringify(input)})`
+    );
   }
+  // Phase 39: French is live, so the resolver now returns it (exact-match only).
+  assert.equal(resolveLocale('fr'), 'fr');
 });
 
-test('locales: parked pilots resolve to the default until enabled', async () => {
+test('locales: still-parked pilots resolve to the default until enabled', async () => {
   const { resolveLocale } = await import(LOC);
-  // fr/ur are declared but disabled → not yet returned by the resolver.
-  assert.equal(resolveLocale('fr'), 'en');
+  // ur is declared but disabled → not yet returned by the resolver.
   assert.equal(resolveLocale('ur'), 'en');
 });
 
