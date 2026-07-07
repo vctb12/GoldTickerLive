@@ -72,26 +72,26 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Source    | Phase | Short Name                               | Status      | PR                                                       | Scope/Blocker Note                                      |
 | --------- | ----- | ---------------------------------------- | ----------- | -------------------------------------------------------- | ------------------------------------------------------- |
-| 30-Revamp | 1     | Baseline & rollback fences               | done        | #537 — https://github.com/vctb12/GoldTickerLive/pull/537 | Plan, phase index, console harness, EN+AR baseline      |
-| 30-Revamp | 2     | Runtime error audit (register)           | done        | #538 — https://github.com/vctb12/GoldTickerLive/pull/538 | 0 uncaught errors; 6 items carried forward              |
-| 30-Revamp | 3     | Dependency/security/secrets audit        | done        | #539 — https://github.com/vctb12/GoldTickerLive/pull/539 | npm audit clean; S-2/S-3 owner-gated recs               |
-| 30-Revamp | 4     | Data-source resilience audit             | done        | #541 — https://github.com/vctb12/GoldTickerLive/pull/541 | Provider/fallback state diagram                         |
-| 30-Revamp | 5     | Spot-vs-retail hardening                 | done        | #542 — https://github.com/vctb12/GoldTickerLive/pull/542 | compare+heatmap AR trust-note parity fix                |
-| 30-Revamp | 6     | Unified freshness/fallback labeling      | done        | #543 — https://github.com/vctb12/GoldTickerLive/pull/543 | shops spot-bar vs ticker freshness bug fixed+verified   |
-| 30-Revamp | 7     | Methodology source-of-truth + deep links | done        | #544 — https://github.com/vctb12/GoldTickerLive/pull/544 | methodology parity exact; portfolio/calc deep-links     |
-| 30-Revamp | 8     | Secondary provider cross-validation      | done        | #545 — https://github.com/vctb12/GoldTickerLive/pull/545 | flagged OFF; +8 tests; enable = owner-gated             |
-| 30-Revamp | 9     | Metadata/canonical + icons/social        | done        | #546 — https://github.com/vctb12/GoldTickerLive/pull/546 | favicon 404 not-repro; twitter:site handle added        |
-| 30-Revamp | 10    | hreflang & bilingual SEO                 | done        | #547 — https://github.com/vctb12/GoldTickerLive/pull/547 | hreflang 14/14 reciprocal; AR-pre-render deferred       |
-| 30-Revamp | 11    | Structured data completion               | done        | #548 — https://github.com/vctb12/GoldTickerLive/pull/548 | methodology FAQPage schema via inject-schema            |
-| 30-Revamp | 12    | Sitemap gap closure                      | done        | #549 — https://github.com/vctb12/GoldTickerLive/pull/549 | sitemap complete; cleared stale governance.json         |
-| 30-Revamp | 13    | Internal linking & crawl                 | done        | #550 — https://github.com/vctb12/GoldTickerLive/pull/550 | no orphans; L-1/L-2/L-3 routed to owning phases         |
-| 30-Revamp | 14    | Core Web Vitals + perf script            | done        | #551 — https://github.com/vctb12/GoldTickerLive/pull/551 | npm run perf; all pages within budget; CLS<=0.016       |
-| 30-Revamp | 15    | Asset & image pipeline                   | done        | #552 — https://github.com/vctb12/GoldTickerLive/pull/552 | image pipeline best-practice; avif 5-56% savings        |
-| 30-Revamp | 16    | JS delivery + SW audit                   | done        | #553 — https://github.com/vctb12/GoldTickerLive/pull/553 | Leaflet already lazy; sw.js best-practice (owner-gated) |
-| 30-Revamp | 17    | Design-token consolidation               | in-progress | —                                                        | hex->tokens; dual-theme parity                          |
-| 30-Revamp | 18    | Global shell & navigation                | not-started | —                                                        | Wire nav search to bilingual search                     |
-| 30-Revamp | 19    | Accessibility conformance                | not-started | —                                                        | axe-core, AA contrast, keyboard/ARIA                    |
-| 30-Revamp | 20    | RTL & bilingual polish                   | not-started | —                                                        | Logical props, bidi glyph (R-02)                        |
+| 30-Revamp | 1| Baseline & rollback fences               | done | #537                                                     | Plan, phase index, console harness, EN+AR baseline      |
+| 30-Revamp | 2| Runtime error audit (register)           | done | #538                                                     | 0 uncaught errors; 6 items carried forward              |
+| 30-Revamp | 3| Dependency/security/secrets audit        | done | #539                                                     | npm audit clean; S-2/S-3 owner-gated recs               |
+| 30-Revamp | 4| Data-source resilience audit             | done | #541                                                     | Provider/fallback state diagram                         |
+| 30-Revamp | 5| Spot-vs-retail hardening                 | done | #542                                                     | compare+heatmap AR trust-note parity fix                |
+| 30-Revamp | 6| Unified freshness/fallback labeling      | done | #543                                                     | shops spot-bar vs ticker freshness bug fixed+verified   |
+| 30-Revamp | 7| Methodology source-of-truth + deep links | done | #544                                                     | methodology parity exact; portfolio/calc deep-links     |
+| 30-Revamp | 8| Secondary provider cross-validation      | done | #545                                                     | flagged OFF; +8 tests; enable = owner-gated             |
+| 30-Revamp | 9| Metadata/canonical + icons/social        | done | #546                                                     | favicon 404 not-repro; twitter:site handle added        |
+| 30-Revamp | 10| hreflang & bilingual SEO                 | done | #547                                                     | hreflang 14/14 reciprocal; AR-pre-render deferred       |
+| 30-Revamp | 11| Structured data completion               | done | #548                                                     | methodology FAQPage schema via inject-schema            |
+| 30-Revamp | 12| Sitemap gap closure                      | done | #549                                                     | sitemap complete; cleared stale governance.json         |
+| 30-Revamp | 13| Internal linking & crawl                 | done | #550                                                     | no orphans; L-1/L-2/L-3 routed to owning phases         |
+| 30-Revamp | 14| Core Web Vitals + perf script            | done | #551                                                     | npm run perf; all pages within budget; CLS<=0.016       |
+| 30-Revamp | 15| Asset & image pipeline                   | done | #552                                                     | image pipeline best-practice; avif 5-56% savings        |
+| 30-Revamp | 16| JS delivery + SW audit                   | done | #553                                                     | Leaflet already lazy; sw.js best-practice (owner-gated) |
+| 30-Revamp | 17| Design-token consolidation               | done | #554                                                     | hex->tokens; dual-theme parity                          |
+| 30-Revamp | 18| Global shell & navigation                | done | #555                                                     | Wire nav search to bilingual search                     |
+| 30-Revamp | 19| Accessibility conformance                | done | #556                                                     | axe-core, AA contrast, keyboard/ARIA                    |
+| 30-Revamp | 20| RTL & bilingual polish                   | in-progress | —                                                        | Logical props, bidi glyph (R-02)                        |
 | 30-Revamp | 21    | Homepage overhaul                        | not-started | —                                                        | Visual-regression gated                                 |
 | 30-Revamp | 22    | Tracker page polish (in-place)           | not-started | —                                                        | 99KB file; chart-vs-spot parity (R-04)                  |
 | 30-Revamp | 23    | Calculator UX + export/share             | not-started | —                                                        | Reconcile PR #535                                       |
