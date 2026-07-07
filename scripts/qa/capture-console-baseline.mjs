@@ -11,41 +11,35 @@
  * shipped bundle, not raw source. Writes JSON + a Markdown summary under reports/qa/.
  *
  * Usage:
- *   node scripts/qa/capture-console-baseline.mjs                # serve dist/, capture all pages EN+AR
- *   node scripts/qa/capture-console-baseline.mjs --serve dist --port 8199 --out reports/qa
- *   node scripts/qa/capture-console-baseline.mjs --base https://goldtickerlive.com  # against a live URL
+ *   node scripts/qa/capture-console-baseline.mjs                       # serve dist/, all pages EN+AR
+ *   node scripts/qa/capture-console-baseline.mjs --serve public --stamp foo
+ *   node scripts/qa/capture-console-baseline.mjs --base https://goldtickerlive.com --pages index.html
  *
- * Chromium is resolved from PLAYWRIGHT_CHROMIUM_EXECUTABLE, then /opt/pw-browsers, then the
- * Playwright default. Requires the `playwright` package (already a dev dependency).
+ * Security: filesystem paths never derive from untrusted input. `--serve` is an allowlist, the
+ * output dir is a constant, `--stamp` is charset-restricted, and the local server resolves requests
+ * against an in-memory file map built from a fixed-root walk (req.url only indexes the map, it never
+ * reaches a filesystem call). Chromium is resolved from PLAYWRIGHT_CHROMIUM_EXECUTABLE, then
+ * /opt/pw-browsers, then the Playwright default.
  */
 import { chromium } from 'playwright';
 import http from 'node:http';
 import { createReadStream, existsSync, statSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
-import { extname, join, resolve, sep } from 'node:path';
+import { extname, join, resolve, sep, relative } from 'node:path';
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
   return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
 }
 
-// Contain any operator-supplied path inside the repo root, so a stray --serve/--out can't route a
-// filesystem call outside the project (CodeQL js/path-injection treats argv as a taint source).
-function containedPath(rel, base = process.cwd()) {
-  const root = resolve(base);
-  const p = resolve(root, rel);
-  if (p !== root && !p.startsWith(root + sep)) {
-    throw new Error(`path '${rel}' escapes ${root}`);
-  }
-  return p;
-}
-
-const SERVE_DIR = containedPath(arg('serve', 'dist'));
+// --serve is restricted to an allowlist so the served root is always a constant string literal
+// (never tainted). Output dir is constant; the stamp is charset-restricted before use in a path.
+const SERVE_ARG = arg('serve', 'dist');
+const SERVE_DIR = ['dist', 'public'].includes(SERVE_ARG) ? SERVE_ARG : 'dist';
+const OUT_DIR = 'reports/qa';
+const STAMP = String(arg('stamp', 'baseline')).replace(/[^A-Za-z0-9_-]/g, '_');
 const PORT = Number(arg('port', '8199'));
-const OUT_DIR = containedPath(arg('out', 'reports/qa'));
 const EXTERNAL_BASE = arg('base', '');
 const SETTLE_MS = Number(arg('settle', '1500'));
-// Filename component from argv — restrict to a safe charset before it reaches a path.
-const STAMP = String(arg('stamp', 'baseline')).replace(/[^A-Za-z0-9._-]/g, '_');
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -69,39 +63,43 @@ function resolveChromium() {
   return undefined; // let Playwright resolve its default
 }
 
-function startServer(dir) {
+// Walk a fixed root once and map each URL path -> absolute file path. Request handling then only
+// does a Map lookup on req.url, so untrusted request data never flows into a filesystem call.
+function loadTree(dir) {
   const root = resolve(dir);
+  const map = new Map();
+  const walk = (d) => {
+    for (const name of readdirSync(d)) {
+      const full = join(d, name);
+      if (statSync(full).isDirectory()) walk(full);
+      else map.set('/' + relative(root, full).split(sep).join('/'), full);
+    }
+  };
+  walk(root);
+  return map;
+}
+
+function startServer(tree) {
   const server = http.createServer((req, res) => {
     let urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
     if (urlPath.endsWith('/')) urlPath += 'index.html';
-    // Contain the request path inside `root` before it reaches any filesystem call — resolve()
-    // collapses `..`, and the prefix check rejects traversal (CodeQL js/path-injection).
-    const filePath = resolve(root, '.' + (urlPath.startsWith('/') ? urlPath : '/' + urlPath));
-    if (filePath !== root && !filePath.startsWith(root + sep)) {
-      res.writeHead(403);
-      res.end('forbidden');
-      return;
-    }
-    let target = filePath;
-    if (existsSync(target) && statSync(target).isDirectory()) target = join(target, 'index.html');
-    if (target !== root && !target.startsWith(root + sep)) {
-      res.writeHead(403);
-      res.end('forbidden');
-      return;
-    }
-    if (!existsSync(target)) {
+    const file = tree.get(urlPath); // req.url only indexes the prebuilt map — no fs call on user data
+    if (!file) {
       res.writeHead(404);
       res.end('not found');
       return;
     }
-    res.writeHead(200, { 'Content-Type': MIME[extname(target)] || 'application/octet-stream' });
-    createReadStream(target).pipe(res);
+    res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
+    createReadStream(file).pipe(res);
   });
   return new Promise((res) => server.listen(PORT, () => res(server)));
 }
 
-function listPages(dir) {
-  return readdirSync(dir).filter((f) => f.endsWith('.html')).sort();
+function listPages(tree) {
+  return [...tree.keys()]
+    .filter((k) => /^\/[^/]+\.html$/.test(k))
+    .map((k) => k.slice(1))
+    .sort();
 }
 
 async function capturePage(browser, url) {
@@ -130,14 +128,18 @@ async function capturePage(browser, url) {
 async function main() {
   const base = EXTERNAL_BASE || `http://localhost:${PORT}`;
   let server = null;
-  if (!EXTERNAL_BASE) {
+  let pages;
+  if (EXTERNAL_BASE) {
+    pages = arg('pages', 'index.html').split(',');
+  } else {
     if (!existsSync(SERVE_DIR)) {
       console.error(`serve dir not found: ${SERVE_DIR} (run npm run build first)`);
       process.exit(2);
     }
-    server = await startServer(SERVE_DIR);
+    const tree = loadTree(SERVE_DIR);
+    server = await startServer(tree);
+    pages = listPages(tree);
   }
-  const pages = EXTERNAL_BASE ? (arg('pages', 'index.html').split(',')) : listPages(SERVE_DIR);
   const execPath = resolveChromium();
   const browser = await chromium.launch({ executablePath: execPath, args: ['--no-sandbox'] });
 
@@ -157,8 +159,7 @@ async function main() {
   if (server) server.close();
 
   mkdirSync(OUT_DIR, { recursive: true });
-  const stamp = STAMP;
-  writeFileSync(join(OUT_DIR, `console-${stamp}.json`), JSON.stringify(results, null, 2));
+  writeFileSync(join(OUT_DIR, `console-${STAMP}.json`), JSON.stringify(results, null, 2));
 
   // Markdown summary
   const lines = ['# Runtime console capture', '', `Base: \`${base}\` · pages × {en, ar}`, ''];
@@ -171,7 +172,6 @@ async function main() {
     lines.push(`| ${r.page} | ${r.locale} | ${r.consoleErrors.length} | ${r.pageErrors.length} | ${failed} |`);
   }
   lines.push('', `**Total console.error + pageerror across all pages/locales: ${totalErr}**`, '');
-  // Detail of any non-empty records
   const dirty = results.filter((r) => r.consoleErrors.length || r.pageErrors.length || r.failedResponses.length || r.requestFailures.length);
   if (dirty.length) {
     lines.push('## Details (non-clean pages)', '');
@@ -184,8 +184,8 @@ async function main() {
       lines.push('');
     }
   }
-  writeFileSync(join(OUT_DIR, `console-${stamp}.md`), lines.join('\n'));
-  console.log(`Wrote ${join(OUT_DIR, `console-${stamp}.json`)} and .md · total errors: ${totalErr}`);
+  writeFileSync(join(OUT_DIR, `console-${STAMP}.md`), lines.join('\n'));
+  console.log(`Wrote ${join(OUT_DIR, `console-${STAMP}.json`)} and .md · total errors: ${totalErr}`);
 }
 
 main().catch((e) => { console.error(e); process.exit(1); });
