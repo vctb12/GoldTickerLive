@@ -110,10 +110,10 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Continuation | 31| Heatmap spot/retail lens toggle       | done | #568 | Only genuinely-new heatmap delta (heatmap already shipped)          |
 | Continuation | 32| Metals data-layer foundation (silver) | done | #569 | Verify gold-api.com XAG/XPT/XPD; gold math byte-identical           |
 | Continuation | 33| Silver on tracker + calculator        | done | #570 | Metal switcher default gold                                         |
-| Continuation | 34| Silver SEO + landing page             | in-progress | —   | New silver page + schema/sitemap                                    |
-| Continuation | 35    | Platinum + Palladium rollout          | not-started | —   | Only after silver clean                                             |
-| Continuation | 36    | Crypto price-history plumbing         | not-started | —   | BTC/USD (opt ETH) into history infra; no UI                         |
-| Continuation | 37    | Gold-crypto correlation view          | not-started | —   | Correlation≠causation; NOT a prediction                             |
+| Continuation | 34| Silver SEO + landing page             | done | #571   | Docs-only landing spec; blocked on owner XAG feed                    |
+| Continuation | 35    | Platinum + Palladium rollout          | done | #572   | Docs-only Pt/Pd rollout spec; blocked on owner feed                 |
+| Continuation | 36    | Crypto price-history plumbing         | done | #573   | BTC/ETH normalisers into history infra; no UI; pilot OFF            |
+| Continuation | 37    | Gold-crypto correlation view          | in-progress | —   | Correlation≠causation; NOT a prediction; blocked on crypto feed     |
 | Continuation | 38    | N-locale i18n scaffolding             | not-started | —   | EN/AR unchanged; de-risk refactor                                   |
 | Continuation | 39    | French pilot UI                       | not-started | —   | Core pages, LTR                                                     |
 | Continuation | 40    | Urdu pilot UI                         | not-started | —   | Reuse AR RTL infra                                                  |
@@ -274,3 +274,5 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | 2026-07-07 | Claude Code | Track B complete: Phase 6 (#543 shops freshness bug fixed+verified), 7 (#544 methodology parity), 8 (#545 cross-validation flagged). Rows 1-9 status reconciled. Suite 1286->1294. Phase 9 in-progress. |
 | 2026-07-07 | Claude Code | Track C complete: Phase 9 (#546 twitter:site), 10 (#547 hreflang audit), 11 (#548 methodology FAQPage), 12 (#549 sitemap+governance), 13 (#550 linking audit). Phase 14 in-progress.                    |
 | 2026-07-07 | Claude Code | Track D complete: Phase 14 (#551 perf runner npm run perf), 15 (#552 image audit), 16 (#553 JS/SW audit). Phase 17 in-progress.                                                                         |
+| 2026-07-07 | Claude Code | Tracks E–H complete: 17 (#554), 18 (#555), 19 (#556 a11y-axe), 20 (#557 RTL), 21 (#558 home+visual baseline), 22 (#559), 23 (#560), 24 (#561), 25 (#562), 26 (#563), 27 (#564 shops honesty), 28 (#565 content-lint, CodeQL fix 9ff4b5f), 29 (#566 growth flags), 30 (#567 qa:regression).                     |
+| 2026-07-07 | Claude Code | Continuation optional/metals: 31 (#568 heatmap lens), 32 (#569 metals foundation), 33 (#570 silver tracker/calc), 34 (#571 silver SEO docs), 35 (#572 Pt/Pd docs), 36 (#573 crypto plumbing, pilot OFF). Suite 1291. Phase 37 in-progress (blocked on owner crypto feed → likely scaffold).                    |
