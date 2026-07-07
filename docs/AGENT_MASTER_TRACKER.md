@@ -59,10 +59,10 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
-| Phase                                         | Branch                                         | Status      | PR  | Notes                                       |
-| --------------------------------------------- | ---------------------------------------------- | ----------- | --- | ------------------------------------------- |
-| Revamp Phase 4 — Data-source resilience audit | `claude/revamp-phase-04-datasource-resilience` | in-progress | —   | Provider/fallback state diagram (docs-only) |
-| Master Tracker (this doc)                     | `claude/revamp-master-tracker`                 | in-progress | —   | Being created now                           |
+| Phase                                              | Branch                                  | Status      | PR  | Notes                                           |
+| -------------------------------------------------- | --------------------------------------- | ----------- | --- | ----------------------------------------------- |
+| Revamp Phase 9 — Metadata/canonical + icons/social | `claude/revamp-phase-09-metadata-icons` | in-progress | —   | canonical audit + favicon/OG/Twitter icon fixes |
+| Master Tracker (this doc)                          | `claude/revamp-master-tracker`          | in-progress | —   | Being created now                               |
 
 ---
 
@@ -70,38 +70,38 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ### A. Net-new 30-Phase Revamp — `docs/plans/2026-07-07_30-phase-revamp.md` (ACTIVE)
 
-| Source    | Phase | Short Name                               | Status      | PR                                                       | Scope/Blocker Note                                     |
-| --------- | ----- | ---------------------------------------- | ----------- | -------------------------------------------------------- | ------------------------------------------------------ |
-| 30-Revamp | 1     | Baseline & rollback fences               | done        | #537 — https://github.com/vctb12/GoldTickerLive/pull/537 | Plan, phase index, console harness, EN+AR baseline     |
-| 30-Revamp | 2     | Runtime error audit (register)           | done        | #538 — https://github.com/vctb12/GoldTickerLive/pull/538 | 0 uncaught errors; 6 items carried forward             |
-| 30-Revamp | 3     | Dependency/security/secrets audit        | done        | #539 — https://github.com/vctb12/GoldTickerLive/pull/539 | npm audit clean; S-2/S-3 owner-gated recs              |
-| 30-Revamp | 4     | Data-source resilience audit             | in-progress | —                                                        | Provider/fallback state diagram                        |
-| 30-Revamp | 5     | Spot-vs-retail hardening                 | not-started | —                                                        | Reconcile w/ PR #535 shops/calc                        |
-| 30-Revamp | 6     | Unified freshness/fallback labeling      | not-started | —                                                        | Fixes shops price-bar vs ticker bug; R-01 "9-min Live" |
-| 30-Revamp | 7     | Methodology source-of-truth + deep links | not-started | —                                                        | Verify formulas = code (no math change)                |
-| 30-Revamp | 8     | Secondary provider cross-validation      | not-started | —                                                        | Behind flag; enabling live is owner-gated              |
-| 30-Revamp | 9     | Metadata/canonical + icons/social        | not-started | —                                                        | favicon.svg 404 fix (P2-1)                             |
-| 30-Revamp | 10    | hreflang & bilingual SEO                 | not-started | —                                                        | Adopt PR #536 `?lang=ar` model                         |
-| 30-Revamp | 11    | Structured data completion               | not-started | —                                                        | Breadcrumb/ItemList/FAQ/Article                        |
-| 30-Revamp | 12    | Sitemap gap closure                      | not-started | —                                                        | Reconcile PR #536 (do not duplicate)                   |
-| 30-Revamp | 13    | Internal linking & crawl                 | not-started | —                                                        | Orphan detection, breadcrumbs                          |
-| 30-Revamp | 14    | Core Web Vitals + perf script            | not-started | —                                                        | `scripts/perf/` offline runner                         |
-| 30-Revamp | 15    | Asset & image pipeline                   | not-started | —                                                        | webp/avif, srcset, width/height                        |
-| 30-Revamp | 16    | JS delivery + SW audit                   | not-started | —                                                        | `sw.js` recommend-only (owner-gated)                   |
-| 30-Revamp | 17    | Design-token consolidation               | not-started | —                                                        | hex→tokens, dual-theme parity                          |
-| 30-Revamp | 18    | Global shell & navigation                | not-started | —                                                        | Wire nav search to bilingual search                    |
-| 30-Revamp | 19    | Accessibility conformance                | not-started | —                                                        | axe-core, AA contrast, keyboard/ARIA                   |
-| 30-Revamp | 20    | RTL & bilingual polish                   | not-started | —                                                        | Logical props, bidi glyph (R-02)                       |
-| 30-Revamp | 21    | Homepage overhaul                        | not-started | —                                                        | Visual-regression gated                                |
-| 30-Revamp | 22    | Tracker page polish (in-place)           | not-started | —                                                        | 99KB file; chart-vs-spot parity (R-04)                 |
-| 30-Revamp | 23    | Calculator UX + export/share             | not-started | —                                                        | Reconcile PR #535                                      |
-| 30-Revamp | 24    | Compare tool (in-place)                  | not-started | —                                                        | 74KB file                                              |
-| 30-Revamp | 25    | World heatmap polish                     | not-started | —                                                        | Legend/keyboard/table fallback                         |
-| 30-Revamp | 26    | Portfolio tracker                        | not-started | —                                                        | Preserve honest-gain rules + fixture                   |
-| 30-Revamp | 27    | Shops directory                          | not-started | —                                                        | Data-quality badges, ItemList                          |
-| 30-Revamp | 28    | Learn hub & glossary + content lint      | not-started | —                                                        | `scripts/content/` lint                                |
-| 30-Revamp | 29    | Additive growth (flags only)             | not-started | —                                                        | Embed/RSS/CSV behind flags; no billing                 |
-| 30-Revamp | 30    | Regression, rollout & observability      | not-started | —                                                        | Smoke matrix, rollback plan                            |
+| Source    | Phase | Short Name                               | Status      | PR                                                       | Scope/Blocker Note                                    |
+| --------- | ----- | ---------------------------------------- | ----------- | -------------------------------------------------------- | ----------------------------------------------------- |
+| 30-Revamp | 1     | Baseline & rollback fences               | done        | #537 — https://github.com/vctb12/GoldTickerLive/pull/537 | Plan, phase index, console harness, EN+AR baseline    |
+| 30-Revamp | 2     | Runtime error audit (register)           | done        | #538 — https://github.com/vctb12/GoldTickerLive/pull/538 | 0 uncaught errors; 6 items carried forward            |
+| 30-Revamp | 3     | Dependency/security/secrets audit        | done        | #539 — https://github.com/vctb12/GoldTickerLive/pull/539 | npm audit clean; S-2/S-3 owner-gated recs             |
+| 30-Revamp | 4     | Data-source resilience audit             | done        | #541 — https://github.com/vctb12/GoldTickerLive/pull/541 | Provider/fallback state diagram                       |
+| 30-Revamp | 5     | Spot-vs-retail hardening                 | done        | #542 — https://github.com/vctb12/GoldTickerLive/pull/542 | compare+heatmap AR trust-note parity fix              |
+| 30-Revamp | 6     | Unified freshness/fallback labeling      | done        | #543 — https://github.com/vctb12/GoldTickerLive/pull/543 | shops spot-bar vs ticker freshness bug fixed+verified |
+| 30-Revamp | 7     | Methodology source-of-truth + deep links | done        | #544 — https://github.com/vctb12/GoldTickerLive/pull/544 | methodology parity exact; portfolio/calc deep-links   |
+| 30-Revamp | 8     | Secondary provider cross-validation      | done        | #545 — https://github.com/vctb12/GoldTickerLive/pull/545 | flagged OFF; +8 tests; enable = owner-gated           |
+| 30-Revamp | 9     | Metadata/canonical + icons/social        | in-progress | —                                                        | canonical audit + favicon/OG/Twitter icon fixes       |
+| 30-Revamp | 10    | hreflang & bilingual SEO                 | not-started | —                                                        | Adopt PR #536 `?lang=ar` model                        |
+| 30-Revamp | 11    | Structured data completion               | not-started | —                                                        | Breadcrumb/ItemList/FAQ/Article                       |
+| 30-Revamp | 12    | Sitemap gap closure                      | not-started | —                                                        | Reconcile PR #536 (do not duplicate)                  |
+| 30-Revamp | 13    | Internal linking & crawl                 | not-started | —                                                        | Orphan detection, breadcrumbs                         |
+| 30-Revamp | 14    | Core Web Vitals + perf script            | not-started | —                                                        | `scripts/perf/` offline runner                        |
+| 30-Revamp | 15    | Asset & image pipeline                   | not-started | —                                                        | webp/avif, srcset, width/height                       |
+| 30-Revamp | 16    | JS delivery + SW audit                   | not-started | —                                                        | `sw.js` recommend-only (owner-gated)                  |
+| 30-Revamp | 17    | Design-token consolidation               | not-started | —                                                        | hex→tokens, dual-theme parity                         |
+| 30-Revamp | 18    | Global shell & navigation                | not-started | —                                                        | Wire nav search to bilingual search                   |
+| 30-Revamp | 19    | Accessibility conformance                | not-started | —                                                        | axe-core, AA contrast, keyboard/ARIA                  |
+| 30-Revamp | 20    | RTL & bilingual polish                   | not-started | —                                                        | Logical props, bidi glyph (R-02)                      |
+| 30-Revamp | 21    | Homepage overhaul                        | not-started | —                                                        | Visual-regression gated                               |
+| 30-Revamp | 22    | Tracker page polish (in-place)           | not-started | —                                                        | 99KB file; chart-vs-spot parity (R-04)                |
+| 30-Revamp | 23    | Calculator UX + export/share             | not-started | —                                                        | Reconcile PR #535                                     |
+| 30-Revamp | 24    | Compare tool (in-place)                  | not-started | —                                                        | 74KB file                                             |
+| 30-Revamp | 25    | World heatmap polish                     | not-started | —                                                        | Legend/keyboard/table fallback                        |
+| 30-Revamp | 26    | Portfolio tracker                        | not-started | —                                                        | Preserve honest-gain rules + fixture                  |
+| 30-Revamp | 27    | Shops directory                          | not-started | —                                                        | Data-quality badges, ItemList                         |
+| 30-Revamp | 28    | Learn hub & glossary + content lint      | not-started | —                                                        | `scripts/content/` lint                               |
+| 30-Revamp | 29    | Additive growth (flags only)             | not-started | —                                                        | Embed/RSS/CSV behind flags; no billing                |
+| 30-Revamp | 30    | Regression, rollout & observability      | not-started | —                                                        | Smoke matrix, rollback plan                           |
 
 ### B. Continuation Phases 31–45 (roadmap-wishlist, same plan doc) — POST-30
 
@@ -252,6 +252,9 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | #540 | Master Tracker | Canonical cross-plan tracker                      | 2026-07-07 |
 | #541 | 30-Revamp 4    | Data-source resilience map + state diagram        | 2026-07-07 |
 | #542 | 30-Revamp 5    | Spot-vs-retail parity fix (compare+heatmap)       | 2026-07-07 |
+| #543 | 30-Revamp 6    | Shops spot-bar vs ticker freshness fix            | 2026-07-07 |
+| #544 | 30-Revamp 7    | Methodology parity + tool deep-links              | 2026-07-07 |
+| #545 | 30-Revamp 8    | Secondary-provider cross-validation (flagged)     | 2026-07-07 |
 
 ## Skipped / Superseded Items
 
@@ -264,7 +267,8 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Maintenance Log
 
-| Date       | Actor       | Change                                                                                                                                                                          |
-| ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-07-07 | Claude Code | Created tracker; indexed 30-Revamp (1–30) + continuation (31–46) + 50-Plan (00–50) + Audit Waves (0–7) + Roadmap (1–21). Phases 1–3 done (#537/#538/#539); Phase 4 in-progress. |
-| 2026-07-07 | Claude Code | Phase 4 done (#541), Phase 5 done (#542, compare+heatmap AR trust-note parity); tracker PR #540. Phase 6 in-progress.                                                           |
+| Date       | Actor       | Change                                                                                                                                                                                                  |
+| ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-07 | Claude Code | Created tracker; indexed 30-Revamp (1–30) + continuation (31–46) + 50-Plan (00–50) + Audit Waves (0–7) + Roadmap (1–21). Phases 1–3 done (#537/#538/#539); Phase 4 in-progress.                         |
+| 2026-07-07 | Claude Code | Phase 4 done (#541), Phase 5 done (#542, compare+heatmap AR trust-note parity); tracker PR #540. Phase 6 in-progress.                                                                                   |
+| 2026-07-07 | Claude Code | Track B complete: Phase 6 (#543 shops freshness bug fixed+verified), 7 (#544 methodology parity), 8 (#545 cross-validation flagged). Rows 1-9 status reconciled. Suite 1286->1294. Phase 9 in-progress. |
