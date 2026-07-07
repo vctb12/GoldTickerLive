@@ -32,7 +32,7 @@ const SERVE_DIR = resolve(arg('serve', 'dist'));
 const PORT = Number(arg('port', '8199'));
 const OUT_DIR = resolve(arg('out', 'reports/qa'));
 const EXTERNAL_BASE = arg('base', '');
-const SETTLE_MS = Number(arg('settle', '2500'));
+const SETTLE_MS = Number(arg('settle', '1500'));
 
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -85,7 +85,9 @@ async function capturePage(browser, url) {
   page.on('response', (r) => { if (r.status() >= 400) rec.failedResponses.push(`${r.status()} ${r.url()}`); });
   page.on('requestfailed', (r) => rec.requestFailures.push(`${r.failure()?.errorText || 'failed'} ${r.url()}`));
   try {
-    await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+    // 'load' (not 'networkidle') so blocked external fetches (gold-API / FX / Supabase in a
+    // no-egress sandbox) don't stall the crawl waiting for an idle that never comes.
+    await page.goto(url, { waitUntil: 'load', timeout: 20000 });
   } catch (e) {
     rec.pageErrors.push(`navigation: ${e.message.split('\n')[0]}`);
   }
