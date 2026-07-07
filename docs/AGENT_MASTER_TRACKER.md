@@ -244,11 +244,14 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Recently Opened PRs
 
-| PR   | Phase       | Title                                             | Opened     |
-| ---- | ----------- | ------------------------------------------------- | ---------- |
-| #537 | 30-Revamp 1 | Baseline & rollback fences                        | 2026-07-07 |
-| #538 | 30-Revamp 2 | Runtime error audit & defect register             | 2026-07-07 |
-| #539 | 30-Revamp 3 | Dependency/security/secrets audit + CSP inventory | 2026-07-07 |
+| PR   | Phase          | Title                                             | Opened     |
+| ---- | -------------- | ------------------------------------------------- | ---------- |
+| #537 | 30-Revamp 1    | Baseline & rollback fences                        | 2026-07-07 |
+| #538 | 30-Revamp 2    | Runtime error audit & defect register             | 2026-07-07 |
+| #539 | 30-Revamp 3    | Dependency/security/secrets audit + CSP inventory | 2026-07-07 |
+| #540 | Master Tracker | Canonical cross-plan tracker                      | 2026-07-07 |
+| #541 | 30-Revamp 4    | Data-source resilience map + state diagram        | 2026-07-07 |
+| #542 | 30-Revamp 5    | Spot-vs-retail parity fix (compare+heatmap)       | 2026-07-07 |
 
 ## Skipped / Superseded Items
 
@@ -264,3 +267,4 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Date       | Actor       | Change                                                                                                                                                                          |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-07-07 | Claude Code | Created tracker; indexed 30-Revamp (1–30) + continuation (31–46) + 50-Plan (00–50) + Audit Waves (0–7) + Roadmap (1–21). Phases 1–3 done (#537/#538/#539); Phase 4 in-progress. |
+| 2026-07-07 | Claude Code | Phase 4 done (#541), Phase 5 done (#542, compare+heatmap AR trust-note parity); tracker PR #540. Phase 6 in-progress.                                                           |
