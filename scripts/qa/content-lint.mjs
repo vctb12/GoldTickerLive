@@ -32,10 +32,13 @@ const PLACEHOLDER_RE = /\b(lorem ipsum|TODO|FIXME|XXX+|TBD|coming soon|PLACEHOLD
 const DOUBLED_RE = /\b(the|a|an|of|to|and|is|in|for|on|with|that|it)\s+\1\b/gi;
 
 function stripAttrsAndTags(html) {
-  // crude text extraction: drop scripts/styles, tags → space; keep comments separate elsewhere
+  // Crude text extraction: drop scripts/styles, tags → space; comments handled separately.
+  // Closing tags use `</tag[^>]*>` so they also match `</script >` / `</style\n>` (CodeQL
+  // bad-HTML-filtering-regexp). This is dev-time text extraction over trusted repo files, not a
+  // security sanitiser, but the robust form is correct regardless.
   return html
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<script\b[\s\S]*?<\/script[^>]*>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style[^>]*>/gi, ' ')
     .replace(/<!--[\s\S]*?-->/g, ' ')
     .replace(/<[^>]+>/g, ' ');
 }
