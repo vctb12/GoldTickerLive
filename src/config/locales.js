@@ -34,8 +34,9 @@ export const LOCALES = {
   // French pilot — activated in Phase 39 (LTR). Ships a curated core-pages dictionary
   // (see src/i18n/fr-pilot.js); uncovered keys fall back to English via the translate helper.
   fr: { code: 'fr', endonym: 'Français', englishName: 'French', dir: 'ltr', enabled: true },
-  // Parked pilot — declared, disabled. Flipped on in Phase 40 (ur, reuses AR RTL infra).
-  ur: { code: 'ur', endonym: 'اردو', englishName: 'Urdu', dir: 'rtl', enabled: false },
+  // Urdu pilot — activated in Phase 40 (RTL, reuses the same rtl infra as Arabic).
+  // Curated core-pages dictionary in src/i18n/ur-pilot.js; uncovered keys fall back to English.
+  ur: { code: 'ur', endonym: 'اردو', englishName: 'Urdu', dir: 'rtl', enabled: true },
 };
 
 /** Every declared locale code, active or parked. */
