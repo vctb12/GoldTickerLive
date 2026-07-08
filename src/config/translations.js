@@ -1993,8 +1993,8 @@ export const TRANSLATIONS = {
     'tracker.briefHeadline': 'الذهب عند {spot} لكل أوقية تروي — {source}',
     'tracker.briefBody':
       'عيار 24 في الإمارات: {aed24} درهم/غ. العرض المحدد: {karat} قيراط بعملة {currency} لكل {unit}. مصدر الصرف: open.er-api.com (مع ربط الدرهم الثابت 3.6725). السجل: متوسطات LBMA الشهرية من 2019 حتى {lastMonth} مع لقطات الجلسة.',
-    'tracker.pagination.prev': 'السابق ←',
-    'tracker.pagination.next': '→ التالي',
+    'tracker.pagination.prev': 'السابق →',
+    'tracker.pagination.next': '← التالي',
     'tracker.pagination.prevLabel': 'الصفحة السابقة',
     'tracker.pagination.nextLabel': 'الصفحة التالية',
     'tracker.pagination.page': 'صفحة {page} / {total}',

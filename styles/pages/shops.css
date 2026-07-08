@@ -1339,7 +1339,7 @@
 
   .shops-modal-close {
     top: 0.8rem;
-    right: 0.8rem;
+    inset-inline-end: 0.8rem;
     font-size: var(--text-2xl);
   }
 
@@ -1441,7 +1441,9 @@
 .shops-modal-close {
   position: absolute;
   top: 1.2rem;
-  right: 1.2rem;
+
+  /* Logical inset — flips to the inline-start automatically under [dir='rtl']. */
+  inset-inline-end: 1.2rem;
   background: none;
   border: none;
   font-size: 1.8rem;
@@ -1458,11 +1460,6 @@
 
 .shops-modal-close:hover {
   color: var(--text-primary);
-}
-
-[dir='rtl'] .shops-modal-close {
-  right: auto;
-  left: 1.2rem;
 }
 
 #shops-modal-title {
@@ -2293,7 +2290,7 @@
   font-size: 0.85rem;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  text-align: left;
+  text-align: start;
 }
 
 .shops-nearme-status--info {
@@ -2308,7 +2305,7 @@
 
 .shops-nearme-results {
   margin-top: 1.25rem;
-  text-align: left;
+  text-align: start;
 }
 
 .nearme-intro {
