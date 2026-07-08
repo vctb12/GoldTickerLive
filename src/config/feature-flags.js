@@ -14,6 +14,16 @@ export const FEATURE_FLAGS = Object.freeze({
    * not change the peg/troy math or the displayed price, only add a review signal.
    */
   CROSS_VALIDATION_ENABLED: false,
+
+  /**
+   * Stale-price protection (Phase 50). When `true`, the freshness state a quote may claim is clamped
+   * by `../lib/stale-price-guard.js`: a quote whose age cannot be TRUSTED from the provider's own
+   * data timestamp (missing timestamp, or an implausible future timestamp that would otherwise clamp
+   * to age 0) can no longer be presented as `live`/`cached`. Downgrade-only — it never makes a quote
+   * look fresher, never overrides age-based truth, and never alters the price itself. OFF until the
+   * owner approves enabling it on the live price path.
+   */
+  STALE_PRICE_GUARD_ENABLED: false,
 });
 
 /**
