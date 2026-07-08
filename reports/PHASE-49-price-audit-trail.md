@@ -47,10 +47,24 @@ This is a library module only. It is **not yet wired into any page** — a futur
 the trail behind a "How is this calculated?" affordance on the tracker/calculator. Shipping the
 verified derivation engine first keeps the change small and reviewable.
 
+## Review follow-up (Cursor Bugbot)
+
+Three valid issues raised on the PR were fixed:
+
+1. **Steps disagreed with the shown math (Medium).** Outputs were derived from the full-precision
+   spot while inputs were shown rounded, so multiplying the displayed figures could land on a
+   different last digit. The trail now **chains the displayed (rounded) value forward** at every
+   step — each `output` is computed from the exact figure shown as the previous step's `output`, so
+   a reader who multiplies the shown numbers by hand reproduces every output exactly.
+2. **"Fixed peg" label always shown (Low).** `isAedPeg` / the `(fixed peg)` note now apply only when
+   the rate actually equals the peg — a custom AED `fxRate` is no longer mislabelled as the peg.
+3. **Unavailable render dropped the disclaimer (Low).** `renderPriceAuditTrail` now carries the
+   reference-estimate framing (localised) even for the unavailable case.
+
 ## Verification
 
-- `node --test tests/price-audit-trail.test.js` → 8/8 pass
-- `npm test` → 1400/1400 pass
+- `node --test tests/price-audit-trail.test.js` → 10/10 pass
+- `npm test` → 1402/1402 pass
 - `npm run lint` → clean
 - `npm run build` → success
 - `npm run validate` → exit 0 (pre-existing seo-governance staleness warning is unrelated to this
