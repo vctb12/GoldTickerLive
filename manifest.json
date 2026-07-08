@@ -13,25 +13,25 @@
   "lang": "en",
   "icons": [
     {
-      "src": "favicon.svg",
+      "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "assets/favicon-192x192.png",
+      "src": "/favicon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/favicon-512x512.png",
+      "src": "/favicon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "assets/favicon-512-maskable.png",
+      "src": "/favicon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -47,7 +47,7 @@
       "url": "/tracker.html",
       "icons": [
         {
-          "src": "assets/favicon-192x192.png",
+          "src": "/favicon-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -59,7 +59,7 @@
       "url": "/calculator.html",
       "icons": [
         {
-          "src": "assets/favicon-192x192.png",
+          "src": "/favicon-192x192.png",
           "sizes": "192x192"
         }
       ]
