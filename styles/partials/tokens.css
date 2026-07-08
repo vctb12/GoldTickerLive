@@ -78,6 +78,7 @@
   --color-success: #137a36; /* AA ≥4.5:1 as text on white/tinted light surfaces */
   --color-success-bg: #dcfce7;
   --color-on-gold: #1a1305; /* text placed directly on gold backgrounds */
+  --color-btn-primary-text: #fff8e8; /* CSS token cleanup: warm off-white text on gold-dark buttons — previously duplicated as a raw hex literal in styles/partials/components.css and styles/pages/compare.css; identical value, centralised here */
 
   /* ── Semantic surfaces ── */
   --surface-canvas: var(--color-bg);
