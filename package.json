@@ -68,7 +68,8 @@
     "changelog:write": "node scripts/node/changelog.js --write",
     "changelog:since": "node scripts/node/changelog.js --since",
     "security": "npm audit && npm outdated",
-    "prepare": "husky"
+    "prepare": "husky",
+    "perf": "node scripts/perf/measure-cwv.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

@@ -1,0 +1,167 @@
+[
+  {
+    "name": "home",
+    "path": "index.html",
+    "lcpMs": 316,
+    "cls": 0,
+    "checks": {
+      "script": {
+        "usedKb": 393,
+        "limitKb": 600,
+        "over": false
+      },
+      "stylesheet": {
+        "usedKb": 239.7,
+        "limitKb": 400,
+        "over": false
+      },
+      "image": {
+        "usedKb": 17.7,
+        "limitKb": 500,
+        "over": false
+      },
+      "font": {
+        "usedKb": 104.8,
+        "limitKb": 200,
+        "over": false
+      },
+      "total": {
+        "usedKb": 827.8,
+        "limitKb": 1800,
+        "over": false
+      }
+    }
+  },
+  {
+    "name": "tracker",
+    "path": "tracker.html",
+    "lcpMs": 488,
+    "cls": 0.016,
+    "checks": {
+      "script": {
+        "usedKb": 475.6,
+        "limitKb": 800,
+        "over": false
+      },
+      "stylesheet": {
+        "usedKb": 283.2,
+        "limitKb": 500,
+        "over": false
+      },
+      "image": {
+        "usedKb": 4.6,
+        "limitKb": 500,
+        "over": false
+      },
+      "font": {
+        "usedKb": 51.3,
+        "limitKb": 200,
+        "over": false
+      },
+      "total": {
+        "usedKb": 1022.5,
+        "limitKb": 2000,
+        "over": false
+      }
+    }
+  },
+  {
+    "name": "calculator",
+    "path": "calculator.html",
+    "lcpMs": 164,
+    "cls": 0,
+    "checks": {
+      "script": {
+        "usedKb": 362.8,
+        "limitKb": 600,
+        "over": false
+      },
+      "stylesheet": {
+        "usedKb": 198.3,
+        "limitKb": 400,
+        "over": false
+      },
+      "image": {
+        "usedKb": 2.3,
+        "limitKb": 500,
+        "over": false
+      },
+      "font": {
+        "usedKb": 51.3,
+        "limitKb": 200,
+        "over": false
+      },
+      "total": {
+        "usedKb": 616.1,
+        "limitKb": 1800,
+        "over": false
+      }
+    }
+  },
+  {
+    "name": "compare",
+    "path": "compare.html",
+    "lcpMs": 204,
+    "cls": 0.014,
+    "checks": {
+      "script": {
+        "usedKb": 340.3,
+        "limitKb": 600,
+        "over": false
+      },
+      "stylesheet": {
+        "usedKb": 199.5,
+        "limitKb": 400,
+        "over": false
+      },
+      "image": {
+        "usedKb": 2.3,
+        "limitKb": 500,
+        "over": false
+      },
+      "font": {
+        "usedKb": 51.3,
+        "limitKb": 200,
+        "over": false
+      },
+      "total": {
+        "usedKb": 594.7,
+        "limitKb": 1800,
+        "over": false
+      }
+    }
+  },
+  {
+    "name": "country",
+    "path": "dubai-gold-price.html",
+    "lcpMs": 84,
+    "cls": 0,
+    "checks": {
+      "script": {
+        "usedKb": 305.9,
+        "limitKb": 600,
+        "over": false
+      },
+      "stylesheet": {
+        "usedKb": 182.8,
+        "limitKb": 400,
+        "over": false
+      },
+      "image": {
+        "usedKb": 2.3,
+        "limitKb": 500,
+        "over": false
+      },
+      "font": {
+        "usedKb": 51.3,
+        "limitKb": 200,
+        "over": false
+      },
+      "total": {
+        "usedKb": 542.4,
+        "limitKb": 1800,
+        "over": false
+      }
+    }
+  }
+]
