@@ -2,6 +2,7 @@ import { COUNTRIES } from '../config/countries.js';
 import { SHOPS as FALLBACK_SHOPS } from '../../data/shops.js';
 import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
 import { updateTicker } from '../components/ticker.js';
+import { updateSpotBar } from '../components/spotBar.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
@@ -2325,6 +2326,16 @@ function init() {
       uae18k: aedGram('18'),
       updatedAt: cachedGold.updatedAt || null,
       // Cached fallback data is, by definition, not a live response.
+      hasLiveFailure: true,
+    });
+    // Feed the shared sticky spot bar from the SAME cached snapshot as the ticker,
+    // so it never shows offline "—" while the ticker shows the (cached) price. Both
+    // widgets now read one freshness/snapshot source. hasLiveFailure keeps the bar
+    // honestly labelled cached/fallback (never "Live") for committed-cache data.
+    updateSpotBar({
+      xauUsd: spot,
+      aed24kGram: aedGram('24'),
+      updatedAt: cachedGold.updatedAt || null,
       hasLiveFailure: true,
     });
   }
