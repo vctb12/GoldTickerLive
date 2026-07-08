@@ -627,7 +627,9 @@
   content: '';
   inline-size: 0.75rem;
   block-size: 0.75rem;
-  border-radius: var(--radius-xs, 3px);
+
+  /* --radius-xs is defined (4px); the old `, 3px` fallback was dead and mismatched the token. */
+  border-radius: var(--radius-xs);
 }
 
 .compare-chart-key--a::before {
