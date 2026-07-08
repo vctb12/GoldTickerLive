@@ -141,13 +141,46 @@
   gap: var(--space-3);
 }
 
-.heatmap-karat {
+.heatmap-karat,
+.heatmap-lens {
   display: inline-flex;
   gap: var(--space-1);
   padding: var(--space-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-pill);
   background: var(--color-surface-1);
+}
+
+.heatmap-lens-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.heatmap-lens-btn:hover {
+  color: var(--color-text);
+}
+
+.heatmap-lens-btn.is-active {
+  background: var(--color-gold-dark);
+  color: var(--color-surface);
+}
+
+.heatmap-lens-note {
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  max-width: 60ch;
 }
 
 .heatmap-karat-btn {
