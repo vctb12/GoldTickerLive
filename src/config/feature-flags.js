@@ -14,6 +14,14 @@ export const FEATURE_FLAGS = Object.freeze({
    * not change the peg/troy math or the displayed price, only add a review signal.
    */
   CROSS_VALIDATION_ENABLED: false,
+
+  /**
+   * Data-source health dashboard (Phase 48). When `true`, a diagnostics panel can render the
+   * per-provider health snapshot (success rate, median/p95 latency, timeouts, rate-limits, trip
+   * state) plus the current freshness state — a read-only operator/observability view. OFF by
+   * default; it surfaces no user-facing price and changes nothing about the pricing math.
+   */
+  DATASOURCE_HEALTH_DASHBOARD_ENABLED: false,
 });
 
 /**
