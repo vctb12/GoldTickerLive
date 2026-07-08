@@ -21,6 +21,9 @@
   --tp-text-muted: var(--text-secondary);
   --tp-text-faint: var(--text-tertiary);
 
+  /* Layout offsets */
+  --toast-offset-base: 46px; /* toast-stack base clearance above the mobile controls strip */
+
   /* Gold / accent palette */
   --tp-gold: var(--color-gold);
   --tp-gold-light: var(--color-gold-light);
