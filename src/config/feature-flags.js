@@ -14,6 +14,16 @@ export const FEATURE_FLAGS = Object.freeze({
    * not change the peg/troy math or the displayed price, only add a review signal.
    */
   CROSS_VALIDATION_ENABLED: false,
+
+  /**
+   * Localized numeric input on the calculator (Phase 55). When `true`, the calculator reads weight /
+   * amount fields with `parseLocalizedNumber` (from `../lib/weight-units.js`) instead of `parseFloat`,
+   * so an Arabic-UI visitor who types native Arabic-Indic (٠-٩) / Persian-Urdu (۰-۹) numerals — or a
+   * thousands separator — gets a result instead of a silently blank one. For plain ASCII input the
+   * parser is a strict superset of `parseFloat`, so OFF is byte-for-byte the current behavior. OFF
+   * until the owner reviews the localized-input UX.
+   */
+  LOCALIZED_NUMERAL_INPUT_ENABLED: false,
 });
 
 /**
