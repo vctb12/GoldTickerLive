@@ -29,8 +29,8 @@ references them and Vite doesn't parse manifest JSON for assets.
 paths) and `manifest.json` references them with **absolute** paths (`/favicon.svg`,
 `/favicon-192x192.png`, `/favicon-512x512.png`, `/favicon-512-maskable.png`, and the two shortcut
 icons). Verified after `npm run build`: all four icons resolve from dist root and the built manifest
-points at them. A test (`tests/pwa-manifest-audit.test.js`, extended) asserts every manifest icon
-`src` is absolute so this can't regress.
+points at them. A test (`tests/manifest-icons-absolute.test.js`) asserts every manifest icon `src`
+is absolute **and** that each referenced file exists in `public/`, so this can't regress.
 
 ## 3. Homepage / tracker history stops at 2025-08 ⚠️ mechanism shipped — needs owner data
 
