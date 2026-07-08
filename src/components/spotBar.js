@@ -15,6 +15,17 @@
  */
 
 import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
+import { TRANSLATIONS } from '../config/translations.js';
+import { translate } from '../lib/i18n.js';
+import {
+  downgradeFreshnessForDivergence,
+  DEFAULT_DIVERGENCE_THRESHOLD_PCT,
+} from '../lib/quote-providers/cross-validation.js';
+import {
+  isCrossValidationActive,
+  maybeRunSecondarySpotCheck,
+  getLastCrossValidationEvaluation,
+} from '../lib/quote-providers/secondary-spot-check.js';
 
 let _barEl = null;
 let _prevXauUsd = null;
@@ -149,10 +160,30 @@ export function updateSpotBar(data = {}) {
       });
       // Market-closed overlay: never surface "Live" for a closed market (per
       // docs/freshness-contract.md). getLiveFreshness stays pure data-freshness.
-      const key = applyMarketClosedOverlay(fresh.key);
+      let key = applyMarketClosedOverlay(fresh.key);
+      let title = freshnessLabel(key, _currentLang);
+
+      // Secondary-source cross-validation (T1.1) — OFF by default, dormant unless
+      // FEATURE_FLAGS.CROSS_VALIDATION_ENABLED is on or `?debug=true` forces the display.
+      // Lazy + throttled + fire-and-forget: reads the last cached evaluation synchronously
+      // so it never blocks this render or fetches on every poll. If a reference second
+      // source disagrees beyond the threshold, downgrade "live" → "delayed" so a number a
+      // second source contradicts is never shown as unlabelled "Live" (AGENTS.md rule 2).
+      if (isCrossValidationActive()) {
+        maybeRunSecondarySpotCheck({ primaryUsd: data.xauUsd });
+        const evaluation = getLastCrossValidationEvaluation();
+        const downgraded = downgradeFreshnessForDivergence(key, evaluation);
+        if (downgraded !== key) {
+          key = downgraded;
+          title = translate(TRANSLATIONS, _currentLang, 'crossValidation.divergence.tooltip', {
+            vars: { pct: DEFAULT_DIVERGENCE_THRESHOLD_PCT },
+          });
+        }
+      }
+
       _barEl.setAttribute('data-freshness', key);
       el.textContent = `${fresh.timeText} · ${fresh.ageText}`;
-      el.setAttribute('title', freshnessLabel(key, _currentLang));
+      el.setAttribute('title', title);
     }
   } else if (data.updatedAt === null) {
     _barEl.setAttribute('data-freshness', 'unavailable');
