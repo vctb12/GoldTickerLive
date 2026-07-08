@@ -192,7 +192,7 @@ const T = {
     trust_method_link: 'Full methodology',
     copy_result: 'Copy result',
     copied_result: 'Copied!',
-    save_result: 'Save to account',
+    save_result: 'Save calculation',
     saved_result: 'Saved',
     save_requires_auth: 'Sign in to sync this result across devices?',
     aed_label: '24K AED/g:',
@@ -328,7 +328,7 @@ const T = {
     trust_method_link: 'المنهجية الكاملة',
     copy_result: 'نسخ النتيجة',
     copied_result: 'تم النسخ!',
-    save_result: 'حفظ في الحساب',
+    save_result: 'حفظ العملية',
     saved_result: 'تم الحفظ',
     save_requires_auth: 'هل تريد تسجيل الدخول لمزامنة هذه النتيجة عبر الأجهزة؟',
     aed_label: 'عيار 24 درهم/غرام:',
@@ -1402,32 +1402,40 @@ function wireInputs() {
   ['buy-amount', 'buy-currency', 'buy-karat'].forEach((id) => on(id, calcBuying));
   ['conv-amount', 'conv-from'].forEach((id) => on(id, calcConvert));
 
-  // Quick weight preset chips
+  // Quick weight preset chips. Scope to #calc-weight-presets: the value-mode
+  // toggle buttons (val-mode-weight / val-mode-aed) share the .calc-preset-chip
+  // class, so a global querySelectorAll would (a) bind this handler to the mode
+  // buttons and (b) strip their is-active state on every preset click / weight
+  // edit — corrupting the mode toggle. Keep the two chip groups isolated.
   const weightInput = document.getElementById('val-weight');
   const unitSelect = document.getElementById('val-unit');
-  document.querySelectorAll('.calc-preset-chip').forEach((chip) => {
+  const weightPresetChips = document.querySelectorAll('#calc-weight-presets .calc-preset-chip');
+  weightPresetChips.forEach((chip) => {
     chip.addEventListener('click', () => {
       const w = chip.dataset.weight;
       const u = chip.dataset.unit;
       if (weightInput && w) {
+        // A "Quick weight" preset always expresses a weight → make sure the tool
+        // is in weight mode so the click yields a visible weight-based result
+        // even if the user was in "AED → Weight" mode.
+        if (STATE.valueMode !== 'weight') {
+          STATE.valueMode = 'weight';
+          applyValueModeUi();
+        }
         weightInput.value = w;
         if (unitSelect && u) unitSelect.value = u;
-        // Update active state
-        document
-          .querySelectorAll('.calc-preset-chip')
-          .forEach((c) => c.classList.remove('is-active'));
+        // Update active state (scoped to the weight presets only)
+        weightPresetChips.forEach((c) => c.classList.remove('is-active'));
         chip.classList.add('is-active');
         calcValue();
       }
     });
   });
 
-  // Clear active chip when user manually edits weight
+  // Clear active preset chip when user manually edits weight
   if (weightInput) {
     weightInput.addEventListener('input', () => {
-      document
-        .querySelectorAll('.calc-preset-chip')
-        .forEach((c) => c.classList.remove('is-active'));
+      weightPresetChips.forEach((c) => c.classList.remove('is-active'));
     });
   }
 
