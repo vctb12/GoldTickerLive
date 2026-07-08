@@ -1,0 +1,334 @@
+[
+  {
+    "url": "http://localhost:8199/404.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "404.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/404.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "404.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/calculator.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "calculator.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/calculator.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "calculator.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/compare.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "compare.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/compare.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "compare.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/dubai-gold-price.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "dubai-gold-price.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/dubai-gold-price.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "dubai-gold-price.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/glossary.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "glossary.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/glossary.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "glossary.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/heatmap.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "heatmap.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/heatmap.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "heatmap.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/index.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "index.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/index.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "index.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/learn.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "learn.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/learn.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "learn.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/market.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "market.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/market.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "market.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/methodology.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "methodology.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/methodology.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "methodology.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/offline.html",
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_CONNECTION_RESET",
+      "Failed to load resource: net::ERR_CONNECTION_RESET"
+    ],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [
+      "net::ERR_CONNECTION_RESET https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE",
+      "net::ERR_CONNECTION_RESET https://www.clarity.ms/tag/w4e0nhdxt5"
+    ],
+    "page": "offline.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/offline.html?lang=ar",
+    "consoleErrors": [
+      "Failed to load resource: net::ERR_CONNECTION_RESET",
+      "Failed to load resource: net::ERR_CONNECTION_RESET"
+    ],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [
+      "net::ERR_CONNECTION_RESET https://www.googletagmanager.com/gtag/js?id=G-K3GNY9M8TE",
+      "net::ERR_CONNECTION_RESET https://www.clarity.ms/tag/w4e0nhdxt5"
+    ],
+    "page": "offline.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/portfolio.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "portfolio.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/portfolio.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "portfolio.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/privacy.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "privacy.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/privacy.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "privacy.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/shops.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "shops.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/shops.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "shops.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/terms.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "terms.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/terms.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "terms.html",
+    "locale": "ar"
+  },
+  {
+    "url": "http://localhost:8199/tracker.html",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "tracker.html",
+    "locale": "en"
+  },
+  {
+    "url": "http://localhost:8199/tracker.html?lang=ar",
+    "consoleErrors": [],
+    "consoleWarnings": [],
+    "pageErrors": [],
+    "failedResponses": [],
+    "requestFailures": [],
+    "page": "tracker.html",
+    "locale": "ar"
+  }
+]
