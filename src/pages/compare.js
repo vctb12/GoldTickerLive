@@ -101,6 +101,7 @@ const T = {
     disclaimer:
       'Gold value per gram is globally identical in USD — differences below come from local VAT and typical making charges. All figures are spot-linked reference estimates, not final retail quotes or financial advice.',
     methodology: 'How prices work →',
+    trustNote: 'Spot-linked reference estimates — not final retail quotes.',
     unavailable: 'Unavailable',
     freshness: {
       live: 'Live',
@@ -147,6 +148,7 @@ const T = {
     disclaimer:
       'قيمة غرام الذهب متطابقة عالمياً بالدولار — الفروق أدناه ناتجة عن الضريبة المحلية والمصنعية المعتادة. جميع الأرقام تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية ولا نصيحة مالية.',
     methodology: 'كيف تُحتسب الأسعار ←',
+    trustNote: 'تقديرات مرجعية مرتبطة بالسعر الفوري — وليست أسعار تجزئة نهائية.',
     unavailable: 'غير متاح',
     freshness: {
       live: 'مباشر',
@@ -752,6 +754,7 @@ function applyLang() {
   set('compare-sub', dict.sub);
   set('compare-selected-label', dict.selected);
   set('compare-disclaimer', dict.disclaimer);
+  set('compare-trust-text', dict.trustNote);
   const addLabel = document.querySelector('#compare-add-btn .compare-add-label');
   if (addLabel) addLabel.textContent = dict.addCountry;
   const methodLink = document.getElementById('compare-methodology');
