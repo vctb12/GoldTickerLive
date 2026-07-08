@@ -36,9 +36,14 @@ function num(value, fallback = 0) {
   return Number.isFinite(value) ? value : fallback;
 }
 
-function pct(rate) {
-  // successRate is a 0..1 fraction; render as an integer percent.
-  return Math.round(num(rate, 1) * 100);
+/**
+ * Success rate as an integer percent, or `null` when there's no data to report. Never invents a
+ * "100%": with zero attempts (or a stub snapshot with no `successRate`) the rate is unknown, so a
+ * Degraded row shows "—" rather than a misleading perfect score.
+ */
+function pct(rate, attempts) {
+  if (!(num(attempts) > 0) || !Number.isFinite(rate)) return null;
+  return Math.round(rate * 100);
 }
 
 /** Map one health snapshot into a display row (defensive against missing fields). */
@@ -52,7 +57,7 @@ function toRow(snapshot, lang) {
     statusKey: status.key,
     statusLabel: status[lang],
     attempts: num(s.attempts),
-    successRatePct: pct(s.successRate),
+    successRatePct: pct(s.successRate, s.attempts),
     medianLatencyMs: num(s.medianLatencyMs),
     p95LatencyMs: num(s.p95LatencyMs),
     // Phase-47 diagnostics — default to 0 when running against an older snapshot shape.
@@ -110,7 +115,7 @@ export function renderDatasourceHealthDashboard(model) {
       (r) => `<tr data-health="${r.statusKey}">
       <td>${escapeText(r.providerId)}</td>
       <td>${escapeText(r.statusLabel)}</td>
-      <td>${r.successRatePct}%</td>
+      <td>${r.successRatePct === null ? '—' : `${r.successRatePct}%`}</td>
       <td>${r.medianLatencyMs}/${r.p95LatencyMs} ms</td>
       <td>${r.timeoutCount} / ${r.rateLimitedCount}</td>
     </tr>`

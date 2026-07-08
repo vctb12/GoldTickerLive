@@ -77,6 +77,20 @@ test('dashboard: forward-compatible with pre-Phase-47 snapshots (missing fields 
   assert.equal(row.successRatePct, 50);
 });
 
+test('dashboard: no attempts → success rate is null (no misleading 100%)', async () => {
+  const { buildDatasourceHealthModel, renderDatasourceHealthDashboard } = await import(MOD);
+  // Minimal stub used elsewhere in the pricing engine: degraded, zero attempts.
+  const model = buildDatasourceHealthModel({ providers: [{ providerId: 'x', healthy: false }] });
+  const row = model.rows[0];
+  assert.equal(row.attempts, 0);
+  assert.equal(row.successRatePct, null); // NOT 100
+  assert.equal(row.statusKey, 'unhealthy');
+  // Render (forced on) shows an em dash, not "100%".
+  const html = renderDatasourceHealthDashboard({ ...model, enabled: true });
+  assert.match(html, /—/);
+  assert.doesNotMatch(html, /100%/);
+});
+
 test('dashboard: overall degraded when any provider is unhealthy', async () => {
   const { buildDatasourceHealthModel } = await import(MOD);
   const model = buildDatasourceHealthModel({ providers: [RICH, OLD] });
