@@ -300,6 +300,8 @@ export function createArticleRenderer({
         'div',
         {
           class: 'learn-hub-article-icon',
+          // aria-label is only permitted on elements with a role; expose the decorative icon wrapper as an image (axe aria-prohibited-attr).
+          role: 'img',
           'aria-label': t(currentArticle?.iconLabelKey || 'learnHub.articles.learn.iconLabel'),
         },
         [
