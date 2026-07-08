@@ -32,6 +32,9 @@ let _prevXauUsd = null;
 let _currentLang = 'en';
 let _resizeObserver = null;
 let _resizeHandler = null;
+// Last data applied to the bar, so the cross-validation check can trigger a re-render when its async
+// result lands after the render that kicked it off (surfaces that render the bar only once).
+let _lastSpotData = null;
 
 function syncSpotBarHeight() {
   if (!_barEl) return;
@@ -123,6 +126,7 @@ export function injectSpotBar(lang = 'en', depth = 0) {
 
 export function updateSpotBar(data = {}) {
   if (!_barEl) return;
+  _lastSpotData = data;
   if (data.xauUsd != null) {
     const el = _barEl.querySelector('[data-spot-value="xau"]');
     if (el) {
@@ -170,7 +174,14 @@ export function updateSpotBar(data = {}) {
       // source disagrees beyond the threshold, downgrade "live" → "delayed" so a number a
       // second source contradicts is never shown as unlabelled "Live" (AGENTS.md rule 2).
       if (isCrossValidationActive()) {
-        maybeRunSecondarySpotCheck({ primaryUsd: data.xauUsd });
+        // Fire-and-forget; when the async result flips the divergence state, re-render this bar so
+        // the downgrade lands even on surfaces that render the spot bar only once (no price poll).
+        maybeRunSecondarySpotCheck({
+          primaryUsd: data.xauUsd,
+          onResolved: () => {
+            if (_lastSpotData) updateSpotBar(_lastSpotData);
+          },
+        });
         const evaluation = getLastCrossValidationEvaluation();
         const downgraded = downgradeFreshnessForDivergence(key, evaluation);
         if (downgraded !== key) {

@@ -110,16 +110,32 @@ export function getLastCrossValidationEvaluation() {
  * synchronous readers. Fire-and-forget: safe to call on every render tick — it no-ops unless the
  * feature is active and the throttle window has elapsed.
  *
- * `?debug=true` short-circuits to a forced `under-review` so the downgraded label can be previewed
- * live, without fetching or a real divergence.
+ * Because the reference fetch resolves *after* the synchronous render that kicked it off, the caller
+ * would otherwise keep showing the pre-check label until its next render — and many surfaces render
+ * the spot bar only once (no price poll). `onResolved` closes that gap: it fires once, after the
+ * async evaluation settles, **only when the `under-review` state actually changed** vs. the value the
+ * caller last read, so the consumer can re-render and apply (or clear) the downgrade. Re-entrant
+ * calls from inside `onResolved` hit the in-flight / throttle guards and never re-fire it, so there
+ * is no render loop.
  *
- * @param {{ primaryUsd?: number, thresholdPct?: number, now?: number }} [opts]
+ * `?debug=true` short-circuits to a forced `under-review` so the downgraded label can be previewed
+ * live, without fetching or a real divergence (the caller reads it synchronously — no `onResolved`).
+ *
+ * @param {{
+ *   primaryUsd?: number,
+ *   thresholdPct?: number,
+ *   now?: number,
+ *   enabled?: boolean,
+ *   onResolved?: (evaluation: typeof _lastEvaluation) => void,
+ * }} [opts]  `enabled` defaults to the build flag; pass it only to exercise the async path in tests.
  * @returns {Promise<typeof _lastEvaluation>}
  */
 export function maybeRunSecondarySpotCheck({
   primaryUsd,
   thresholdPct = DEFAULT_DIVERGENCE_THRESHOLD_PCT,
   now = Date.now(),
+  enabled = isCrossValidationEnabled(),
+  onResolved,
 } = {}) {
   if (isCrossValidationDebugForced()) {
     _lastEvaluation = {
@@ -134,7 +150,7 @@ export function maybeRunSecondarySpotCheck({
     return Promise.resolve(_lastEvaluation);
   }
 
-  if (!isCrossValidationEnabled()) return Promise.resolve(_lastEvaluation);
+  if (!enabled) return Promise.resolve(_lastEvaluation);
 
   const primary = Number(primaryUsd);
   if (!Number.isFinite(primary) || primary <= 0) return Promise.resolve(_lastEvaluation);
@@ -142,6 +158,10 @@ export function maybeRunSecondarySpotCheck({
   if (_inFlight) return _inFlight;
   if (now - _lastCheckAt < SECONDARY_CHECK_MIN_INTERVAL_MS) return Promise.resolve(_lastEvaluation);
   _lastCheckAt = now;
+
+  // Captured before the async check so we can tell the caller whether the label it just rendered is
+  // now out of date (under-review flipped) and a re-render is warranted.
+  const prevUnderReview = _lastEvaluation.underReview === true;
 
   _inFlight = ensureFreeGoldReference()
     .then((records) => {
@@ -170,6 +190,20 @@ export function maybeRunSecondarySpotCheck({
         source: null,
       };
       return _lastEvaluation;
+    })
+    .then((evaluation) => {
+      if (
+        typeof onResolved === 'function' &&
+        (evaluation.underReview === true) !== prevUnderReview
+      ) {
+        // A consumer re-render must never break the cross-check promise chain.
+        try {
+          onResolved(evaluation);
+        } catch {
+          /* swallow — a presentation error is not the checker's concern */
+        }
+      }
+      return evaluation;
     })
     .finally(() => {
       _inFlight = null;
