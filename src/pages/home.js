@@ -432,8 +432,6 @@ function renderHeroCard() {
     });
 
     priceEl.classList.remove('hlc-price--loading');
-
-    priceEl.classList.remove('hlc-price--loading');
   }
 
   const directionEl = document.getElementById('hlc-direction');
@@ -1514,11 +1512,14 @@ async function init() {
       });
       tab.classList.add('is-active');
       tab.setAttribute('aria-selected', 'true');
+      // Keep the tabpanel's accessible name pointed at the active tab (ARIA tabs pattern).
+      document.getElementById('gcc-quick-grid')?.setAttribute('aria-labelledby', tab.id);
       renderGCCGrid();
     });
     if (tab.dataset.region === homeRegion) {
       tab.classList.add('is-active');
       tab.setAttribute('aria-selected', 'true');
+      document.getElementById('gcc-quick-grid')?.setAttribute('aria-labelledby', tab.id);
     }
   });
 

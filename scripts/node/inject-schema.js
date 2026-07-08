@@ -220,6 +220,37 @@ function extractDetailsFaq(content, itemClass) {
 }
 
 /**
+ * Extract Q&A pairs from a visible `<dl>` FAQ inside a section (e.g. the methodology
+ * "Frequently asked questions": `<dt>` = question, `<dd>` = answer). Constrained to the
+ * given section id so unrelated `<dl>`s on the page aren't captured. Keeps only the
+ * canonical-English items (skips any question containing Arabic characters).
+ * @param {string} content
+ * @param {string} sectionId - id of the wrapping `<section>` (e.g. 'method-faq')
+ */
+function extractDlFaq(content, sectionId) {
+  const secMatch = content.match(
+    new RegExp(`<section[^>]*id="${sectionId}"[^>]*>([\\s\\S]*?)<\\/section>`, 'i')
+  );
+  if (!secMatch) return [];
+  const strip = (s) =>
+    s
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  const re = /<dt[^>]*>([\s\S]*?)<\/dt>\s*<dd[^>]*>([\s\S]*?)<\/dd>/gi;
+  const faqItems = [];
+  let match = re.exec(secMatch[1]);
+  while (match) {
+    const q = strip(match[1]);
+    if (q && !/[؀-ۿ]/.test(q)) {
+      faqItems.push({ q, a: strip(match[2]) });
+    }
+    match = re.exec(secMatch[1]);
+  }
+  return faqItems;
+}
+
+/**
  * Dataset schema for price data pages.
  * @param {Object} options
  */
@@ -479,6 +510,16 @@ function generateSchemasForPage(filePath, content) {
   // (English) twin only.
   if (content.includes('dubai-faq-item')) {
     const faqItems = extractDetailsFaq(content, 'dubai-faq-item');
+    if (faqItems.length > 0) {
+      schemas.push(getFAQPageSchema(faqItems));
+    }
+  }
+
+  // Methodology's <dl>-based "Frequently asked questions" (id=method-faq) also gets
+  // FAQPage schema built from its visible Q&A (canonical English), so the strongest
+  // trust page is eligible for the FAQ rich result like the country pages are.
+  if (content.includes('id="method-faq"')) {
+    const faqItems = extractDlFaq(content, 'method-faq');
     if (faqItems.length > 0) {
       schemas.push(getFAQPageSchema(faqItems));
     }

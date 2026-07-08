@@ -195,6 +195,15 @@
   padding: var(--space-5) var(--space-5) 0;
 }
 
+/* The "Mobile flow" primer (Choose a tool → enter values → review) is touch
+   onboarding. On desktop the tabs + form are already fully visible, so the
+   3-step card only adds ~230px of length between the tabs and the tool. */
+@media (width >= 641px) {
+  .calc-flow {
+    display: none;
+  }
+}
+
 .calc-flow-inner {
   max-width: 900px;
   margin-inline: auto;
@@ -593,6 +602,13 @@
   padding-top: 0.75rem;
   margin-top: 1rem;
   line-height: 1.5;
+}
+
+.calc-disclaimer a {
+  color: var(--text-accent);
+
+  /* Inline links within disclaimer text — underline so they're distinguishable by more than colour (WCAG 1.4.1 / axe link-in-text-block). */
+  text-decoration: underline;
 }
 
 /* ── Responsive ───────────────────────────────────── */

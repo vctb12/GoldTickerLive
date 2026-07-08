@@ -101,6 +101,7 @@ const T = {
     disclaimer:
       'Gold value per gram is globally identical in USD — differences below come from local VAT and typical making charges. All figures are spot-linked reference estimates, not final retail quotes or financial advice.',
     methodology: 'How prices work →',
+    trustNote: 'Spot-linked reference estimates — not final retail quotes.',
     unavailable: 'Unavailable',
     freshness: {
       live: 'Live',
@@ -147,6 +148,7 @@ const T = {
     disclaimer:
       'قيمة غرام الذهب متطابقة عالمياً بالدولار — الفروق أدناه ناتجة عن الضريبة المحلية والمصنعية المعتادة. جميع الأرقام تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار تجزئة نهائية ولا نصيحة مالية.',
     methodology: 'كيف تُحتسب الأسعار ←',
+    trustNote: 'تقديرات مرجعية مرتبطة بالسعر الفوري — وليست أسعار تجزئة نهائية.',
     unavailable: 'غير متاح',
     freshness: {
       live: 'مباشر',
@@ -495,9 +497,12 @@ function renderTable(rows) {
       ])
     );
     if (!row.available) {
+      // Country <th> and the currency <td> already occupy the first two columns, so the
+      // "unavailable" cell spans the remaining COLUMNS.length - 2 (was - 1, which overran the
+      // table by one column and broke row/column alignment — WCAG 1.3.1).
       const td = el(
         'td',
-        { class: 'compare-td compare-td--unavailable', colspan: String(COLUMNS.length - 1) },
+        { class: 'compare-td compare-td--unavailable', colspan: String(COLUMNS.length - 2) },
         t().unavailable
       );
       tr.append(el('td', { class: 'compare-td' }, row.currency), td);
@@ -752,6 +757,7 @@ function applyLang() {
   set('compare-sub', dict.sub);
   set('compare-selected-label', dict.selected);
   set('compare-disclaimer', dict.disclaimer);
+  set('compare-trust-text', dict.trustNote);
   const addLabel = document.querySelector('#compare-add-btn .compare-add-label');
   if (addLabel) addLabel.textContent = dict.addCountry;
   const methodLink = document.getElementById('compare-methodology');

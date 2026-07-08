@@ -909,7 +909,9 @@
 
 .footer-sources a {
   color: var(--text-accent);
-  text-decoration: none;
+
+  /* Inline within a text block — underline so the link is distinguishable by more than colour (WCAG 1.4.1 / axe link-in-text-block). */
+  text-decoration: underline;
 }
 
 .footer-sep {
@@ -940,7 +942,9 @@
 
 .footer-copy a {
   color: var(--color-text-muted);
-  text-decoration: none;
+
+  /* Inline within a text block — underline so the link is distinguishable by more than colour (WCAG 1.4.1 / axe link-in-text-block). */
+  text-decoration: underline;
 }
 
 .footer-copy a:hover {

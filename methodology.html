@@ -108,6 +108,38 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does my shop quote differ?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Retail prices add making charges, VAT, design premiums, and dealer margins. Our numbers are spot-linked reference metal value — use the spot vs retail guide and calculator to compare transparently."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fresh is the data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Gold spot is committed hourly during market hours to data/gold_price.json ; the browser re-fetches about every 90 seconds. FX updates roughly daily. Check the freshness chip on each surface."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is AED pricing special?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We hardcode the official 3.6725 AED/USD peg — never a floating FX quote — so UAE gram prices move deterministically with XAU/USD."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Data Sources & Methodology | Gold Ticker Live",
   "description": "How Gold Ticker Live calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",

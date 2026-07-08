@@ -65,6 +65,8 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GoldTickerLive" />
+    <meta name="twitter:creator" content="@GoldTickerLive" />
     <meta name="twitter:title" content="Gold Ticker Live — Reference Gold Prices for GCC &amp; the Arab World" />
     <meta
       name="twitter:description"
@@ -661,7 +663,7 @@
                 22K per gram in local currency · freshness shown live
               </p>
             </div>
-            <a href="tracker.html" class="section-link" id="gcc-see-all"></a>
+            <a href="tracker.html" class="section-link" id="gcc-see-all">See all countries →</a>
           </div>
           <!-- Region tabs for filtering prices -->
           <div class="gcc-region-tabs" role="tablist" aria-label="Filter gold prices by region">
@@ -699,7 +701,14 @@
               Global (24+)
             </button>
           </div>
-            <div class="gcc-grid" id="gcc-quick-grid" role="tabpanel" aria-live="polite">
+            <div
+              class="gcc-grid"
+              id="gcc-quick-grid"
+              role="tabpanel"
+              aria-labelledby="gcc-tab-gcc"
+              tabindex="0"
+              aria-live="polite"
+            >
             <!-- Filled by home.js -->
             <div class="gcc-card skeleton-card">
               <div class="skeleton-flag"></div>
@@ -877,20 +886,20 @@
               </p>
             </div>
           </div>
-          <div class="home-stats-grid" aria-label="Gold Ticker Live stats">
-            <article class="home-stat-card">
+          <div class="home-stats-grid" role="list" aria-label="Gold Ticker Live stats">
+            <article class="home-stat-card" role="listitem">
               <strong class="home-stat-value" id="home-stat-1-value">24+</strong>
               <span class="home-stat-label" id="home-stat-1-label">Countries</span>
             </article>
-            <article class="home-stat-card">
+            <article class="home-stat-card" role="listitem">
               <strong class="home-stat-value" id="home-stat-2-value">7</strong>
               <span class="home-stat-label" id="home-stat-2-label">Karats</span>
             </article>
-            <article class="home-stat-card">
+            <article class="home-stat-card" role="listitem">
               <strong class="home-stat-value" id="home-stat-3-value">EN / AR</strong>
               <span class="home-stat-label" id="home-stat-3-label">Bilingual</span>
             </article>
-            <article class="home-stat-card">
+            <article class="home-stat-card" role="listitem">
               <strong class="home-stat-value" id="home-stat-4-value">Free</strong>
               <span class="home-stat-label" id="home-stat-4-label">Forever</span>
             </article>
@@ -1334,7 +1343,12 @@
         </div>
       </section>
 
-      <section id="methodology" class="home-section home-section--methodology" data-reveal>
+      <section
+        id="methodology"
+        class="home-section home-section--methodology"
+        aria-labelledby="home-methodology-title"
+        data-reveal
+      >
         <div class="home-section-inner">
           <div class="section-intro">
             <div>
@@ -1351,7 +1365,12 @@
         </div>
       </section>
 
-      <section id="location-guides" class="home-section home-section--location-guides" data-reveal>
+      <section
+        id="location-guides"
+        class="home-section home-section--location-guides"
+        aria-labelledby="home-location-guides-title"
+        data-reveal
+      >
         <div class="home-section-inner">
           <div class="section-intro">
             <div>

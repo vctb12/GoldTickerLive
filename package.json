@@ -12,6 +12,7 @@
     "generate-internal-stubs": "node scripts/node/generate-internal-index-stubs.js",
     "build": "node scripts/node/generate-internal-index-stubs.js && node scripts/node/extract-baseline.js && node scripts/node/normalize-shops.js && node scripts/node/render-learn-static-fallback.mjs && node scripts/node/inject-theme-preinit.js && node scripts/node/inject-schema.js && node build/generateSitemap.js && vite build",
     "generate-learn-fallback": "node scripts/node/render-learn-static-fallback.mjs",
+    "content-lint": "node scripts/qa/content-lint.mjs",
     "extract-baseline": "node scripts/node/extract-baseline.js",
     "normalize-shops": "node scripts/node/normalize-shops.js",
     "release:package": "node scripts/node/package-release.js",
@@ -69,10 +70,12 @@
     "changelog:write": "node scripts/node/changelog.js --write",
     "changelog:since": "node scripts/node/changelog.js --since",
     "security": "npm audit && npm outdated",
-    "prepare": "husky"
+    "prepare": "husky",
+    "perf": "node scripts/perf/measure-cwv.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
+    "axe-core": "^4.12.1",
     "eslint": "^10.6.0",
     "husky": "^9.1.7",
     "linkinator": "^7.6.1",

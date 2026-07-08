@@ -1,0 +1,151 @@
+[
+  {
+    "page": "home",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "page": "home",
+    "theme": "dark",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1
+      }
+    ]
+  },
+  {
+    "page": "tracker",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "page": "tracker",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "calculator",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "page": "calculator",
+    "theme": "dark",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 2
+      }
+    ]
+  },
+  {
+    "page": "shops",
+    "theme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 2
+      }
+    ]
+  },
+  {
+    "page": "shops",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "compare",
+    "theme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 8
+      }
+    ]
+  },
+  {
+    "page": "compare",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "heatmap",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "page": "heatmap",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "portfolio",
+    "theme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1
+      }
+    ]
+  },
+  {
+    "page": "portfolio",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "methodology",
+    "theme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 41
+      }
+    ]
+  },
+  {
+    "page": "methodology",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "learn",
+    "theme": "light",
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1
+      }
+    ]
+  },
+  {
+    "page": "learn",
+    "theme": "dark",
+    "violations": []
+  },
+  {
+    "page": "country",
+    "theme": "light",
+    "violations": []
+  },
+  {
+    "page": "country",
+    "theme": "dark",
+    "violations": []
+  }
+]

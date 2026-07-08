@@ -64,6 +64,8 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GoldTickerLive" />
+    <meta name="twitter:creator" content="@GoldTickerLive" />
     <meta name="twitter:title" content="Gold Calculator — Value, Scrap, Zakat | Gold Ticker Live" />
     <meta
       name="twitter:description"
@@ -169,7 +171,7 @@
           <p class="calc-disclaimer" id="calc-trust-note">
             Calculator outputs are spot-linked reference estimates — not final retail jewelry quotes.
             Actual shop prices add making charges, premiums, and taxes.
-            <a href="methodology.html">Spot vs retail explained →</a>
+            <a href="methodology.html#not-included">Spot vs retail explained →</a>
             · <a href="methodology.html">Full methodology →</a>
           </p>
           <div class="calc-hero-breakdown" id="calc-hero-breakdown">
@@ -438,7 +440,7 @@
                 data-target="val-result-value"
                 type="button"
               >
-                Save to account
+                Save calculation
               </button>
             </div>
             <div class="calc-result-breakdown" id="val-result-breakdown"></div>
@@ -450,6 +452,7 @@
             </p>
             <div class="calc-result-note" id="val-nisab-indicator" role="status" aria-live="polite"></div>
             <div class="calc-result-actions">
+              <button class="calc-copy-btn calc-share-native-btn" id="calc-share-btn" type="button" hidden><svg class="calc-btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-share"/></svg> Share</button>
               <button class="calc-copy-btn" id="calc-copy-link-btn" type="button">Copy Link</button>
               <button class="calc-copy-btn" id="calc-copy-image-btn" type="button"><svg class="calc-btn-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-camera"/></svg> Copy as image</button>
             </div>
@@ -553,7 +556,7 @@
                 data-target="scrap-result-dealer"
                 type="button"
               >
-                Save to account
+                Save calculation
               </button>
             </div>
             <div class="calc-result-secondary">
@@ -638,7 +641,7 @@
                 data-target="zakat-result-value"
                 type="button"
               >
-                Save to account
+                Save calculation
               </button>
             </div>
             <div class="calc-result-breakdown" id="zakat-result-breakdown"></div>
@@ -707,7 +710,7 @@
                 data-target="buy-result-grams"
                 type="button"
               >
-                Save to account
+                Save calculation
               </button>
             </div>
             <div class="calc-result-breakdown" id="buy-result-breakdown"></div>
@@ -761,7 +764,7 @@
               data-target="conv-results"
               type="button"
             >
-              Save to account
+              Save calculation
             </button>
           </div>
         </div>

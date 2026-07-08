@@ -169,7 +169,7 @@
           </div>
           <p class="portfolio-trust-note">
             <span id="portfolio-privacy">Stored only on this device — holdings are never uploaded.</span>
-            <a id="portfolio-methodology" href="methodology.html">How prices work →</a>
+            <a id="portfolio-methodology" href="methodology.html#live-formula">How prices work →</a>
           </p>
         </div>
       </section>
@@ -670,7 +670,11 @@
     </main>
 
     <!-- Add/edit/confirm dialog (content rendered by portfolio.js) -->
-    <dialog class="portfolio-dialog" id="portfolio-dialog"></dialog>
+    <dialog
+      class="portfolio-dialog"
+      id="portfolio-dialog"
+      aria-labelledby="portfolio-dialog-title"
+    ></dialog>
 
     <script>
       if ('serviceWorker' in navigator) {
