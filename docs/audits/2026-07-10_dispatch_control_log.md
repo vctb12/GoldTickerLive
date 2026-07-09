@@ -26,12 +26,15 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 2 branches, 3 commits, 2 PRs (both CI-green).
+**Work produced this run:** 5 branches, 6 commits, 5 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                          |
 | ---------------------------------------------- | --------------- | -------- | ----------------------------------------------------------- |
-| `cowork/2026-07-10-autonomous-audit-crosswalk` | 2               | **#614** | Playwright pass (docs-only)                                 |
+| `cowork/2026-07-10-autonomous-audit-crosswalk` | 3               | **#614** | Playwright pass (docs-only)                                 |
 | `cowork/phase-37-hindi-pilot`                  | 1               | **#616** | all pass (Playwright, lighthouse, CodeQL, Analyze×3, Build) |
+| `cowork/dp1-learn-progress-e2e`                | 1               | **#617** | DP-1 — learn counter + console browser-verified (chromium)  |
+| `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | DP-2 — 15 e2e pass; first-party console/network clean       |
+| `cowork/dp3-pricing-invariants`                | 1               | **#621** | DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
 
 ---
 
@@ -61,17 +64,17 @@ in canonical tracker · **verified** = re-tested by me this run · **in-flight**
 
 ### Lane C — Critical console errors (campaign 06)
 
-| Ph  | Name                                                                    | Status                              | Evidence                                                                                                                                                                    |
-| --- | ----------------------------------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 06  | Console error sweep — learn `InvalidStateError` (view-transition abort) | done (prior) + **verified by test** | `motion-boot.js` swallows abort; test _"motion-boot.js swallows the aborted view-transition"_ passes. Hardening PR **#612** open. ⚠️ **Not** browser-DOM-verified (see §4). |
+| Ph  | Name                                                                    | Status                                           | Evidence                                                                                                                                                    |
+| --- | ----------------------------------------------------------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 06  | Console error sweep — learn `InvalidStateError` (view-transition abort) | done (prior) + **verified by browser (PR #617)** | `motion-boot.js` swallows abort; e2e `learn-progress.spec.js` asserts zero InvalidStateError in chromium; full-site sweep #620. Hardening PR **#612** open. |
 
 ### Lane D — Learn hub progress + UX (campaign 07–09)
 
-| Ph  | Name                        | Status                              | Evidence                                                                                                                       |
-| --- | --------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 07  | Learn "Read 0 of 9" counter | done (prior) + **verified by test** | click/hashchange/scroll-dwell + legacy-id migration; `tests/learn-read-progress.test.js` 18 pass. ⚠️ Not browser-DOM-verified. |
-| 08  | Learn hub UX polish         | done (prior)                        | Section F + #565                                                                                                               |
-| 09  | Guide page QA               | done (prior)                        | #565 content-lint                                                                                                              |
+| Ph  | Name                        | Status                                           | Evidence                                                                                                           |
+| --- | --------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| 07  | Learn "Read 0 of 9" counter | done (prior) + **verified by browser (PR #617)** | e2e asserts counter 0→≥1 on click + persists across reload in chromium; unit `learn-read-progress.test.js` 18 pass |
+| 08  | Learn hub UX polish         | done (prior)                                     | Section F + #565                                                                                                   |
+| 09  | Guide page QA               | done (prior)                                     | #565 content-lint                                                                                                  |
 
 ### Lane E — Navigation / Mobile / RTL / Design (campaign 10, 32, 50–52)
 
@@ -173,43 +176,58 @@ in canonical tracker · **verified** = re-tested by me this run · **in-flight**
 
 ## 4. Known learn-hub bugs — verification honesty
 
-Both flagged bugs are **verified-fixed by automated tests, NOT by a manual browser DOM check**:
+**UPDATE (DP-1, PR #617): both bugs are now VERIFIED-BY-BROWSER.** A real headless-chromium run
+(local Playwright, `tests/e2e/learn-progress.spec.js`) drove `learn.html` end-to-end — **1 passed
+(1.3s)** — and confirmed:
 
-- **Read 0 of 9 counter:** proven by `tests/learn-read-progress.test.js` (18 pass) exercising the
-  click/hashchange/scroll-dwell + migration logic. CI Playwright (which loads the pages) is green. I
-  did **not** open a real browser and watch the counter increment to N — that requires the
-  interactive browser tooling, which needs per-app owner authorization unavailable in this
-  non-interactive session.
-- **InvalidStateError (view-transition abort):** proven by the `motion-boot.js` swallow test + CI
-  Playwright green. Same caveat: no manual console observation.
+- **Read N of M counter:** hydrates at **0**, increments to **≥1** on a guide-card click (live, no
+  reload), and **persists across a full reload** (recomputed from `localStorage`). Also covered by
+  `tests/learn-read-progress.test.js` (18 pass) at the unit level.
+- **InvalidStateError (view-transition abort):** the spec asserted **zero**
+  `InvalidStateError`/"Transition was aborted" console or page errors across hydration, click-nav,
+  and reload. Also covered by the `motion-boot.js` swallow unit test.
 
-**Status: VERIFIED-BY-TEST, not VERIFIED-BY-BROWSER.** A browser-DOM confirmation is the honest next
-step if a stronger guarantee is required (see proposed packet DP-2).
+**Status: VERIFIED-BY-BROWSER (chromium) + VERIFIED-BY-TEST.** The earlier honesty caveat is
+resolved. Firefox/webkit run the same spec in CI.
 
 ---
 
-## 5. Next 5 dispatch packets (priority order, stabilize-first)
+## 5. Dispatch packets — progress + next
 
-1. **DP-1 — Browser-DOM verification of learn-hub fixes.** Run `vite preview` + drive `learn.html`
-   with the interactive browser tool: click guide cards, assert the "Read N of 9" counter increments
-   and persists across reload, and assert **zero** `InvalidStateError` in the console. Upgrades Lane
-   C/D from verified-by-test to verified-by-browser. (Blocked only if browser tooling stays
-   unauthorized — then documented as such.)
-2. **DP-2 — Full-site console-error + broken-link sweep.** `npm run build` + `preview`, walk the 15
-   root pages (EN + AR/RTL) at 390/768/1440px, capture console errors, layout overflow, stale
-   timestamps, currency formatting. Pure stabilization; no feature work.
-3. **DP-3 — Pricing/data-integrity guardrail regression lock (safe, $0).** Add/verify unit tests
-   asserting the AED peg = 3.6725, troy oz = 31.1034768 g, karat ratios, and that every
-   derived/cached/fallback value carries a visible label. Landing tests only — no production feed or
-   workflow edits (those stay gated). Complements open PRs #599/#591/#594.
-4. **DP-4 — Navigation / mobile / RTL micro-audit (in-place).** Re-test nav active-states, mobile
-   menu, tap targets, and mixed EN/AR bidi at 390px against current code; ship only genuine,
-   smallest-diff fixes as one PR. Do not re-do the shipped #555/#557 work.
-5. **DP-5 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.** A
-   docs-only packet that gives the owner an exact, ordered merge/enable sequence and the precise
-   `gold-price-fetch.yml` change required — so the single biggest gated bottleneck can be cleared in
-   one decision. No workflow edits made; recommendation only.
+### Completed this run
 
-Rationale: DP-1→DP-4 verify and harden **core stability** before any expansion; DP-5 unblocks the
+1. **DP-1 — Browser-DOM verification of learn-hub fixes → DONE, PR #617.** Local Playwright/chromium
+   (installed the browser binary): `tests/e2e/learn-progress.spec.js` drives `learn.html`, asserts
+   the "Read N of M" counter hydrates at 0, increments to ≥1 on a card click, **persists across
+   reload**, and that **zero** `InvalidStateError`/"Transition was aborted" errors fire. **1 passed
+   (1.3s).** Upgrades Lanes C/D from verified-by-test to **verified-by-browser**.
+2. **DP-2 — Full-site console/broken-link sweep → DONE, PR #620.** Swept 22 page loads (EN +
+   AR/RTL): 18 fully clean; `npm run check-links` all-resolve (62 files). The 4 non-clean were all
+   handled third-party enhancements, not bugs: shops renders **61 cards despite the cross-origin
+   Supabase 404** (graceful fallback confirmed); `/ar/` is a phantom URL nothing links to (sitemap 0
+   entries); dubai "timeout" + GA aborts are analytics beacons. Locked in by
+   `tests/e2e/console-clean.spec.js` (**15 passed**, first-party pageerror + same-origin 4xx = 0).
+3. **DP-3 — Pricing/data-integrity regression lock → DONE, PR #621.**
+   `tests/pricing-invariants.test.js` pins `AED_PEG === 3.6725` and `TROY_OZ_GRAMS === 31.1035` on
+   the **real exports** (pricing-engine tests only used local copies), karat purity `= code/24`, and
+   **constant↔disclaimer copy sync** (every 3.67xx / 31.10xx token in EN+AR copy must equal the
+   constant). +5 tests, suite 1407→1412. Note: the contract's alternate troy value `31.1034768` is
+   NOT what the site uses — code + all copy consistently use `31.1035`; the lock pins the value
+   actually in production to prevent drift.
+
+### Next 3 packets (still stabilize-first)
+
+4. **DP-4 — Navigation / mobile / RTL micro-audit (in-place).** Drive nav active-states, mobile menu
+   open/close, tap-target sizes, and mixed EN/AR bidi at 390/768px against current code with the
+   working local chromium; ship only genuine smallest-diff fixes (if any) + an e2e guard. Do not
+   re-do shipped #555/#557 work.
+5. **DP-5 — Freshness/label-honesty e2e guard.** Assert every derived/cached/fallback/delayed value
+   on the price surfaces carries its visible freshness label and that spot vs retail stays visibly
+   separated — the core trust-layer promise — as a browser regression test. $0, no gated surface.
+6. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
+   Docs-only: exact ordered merge/enable sequence + the precise `gold-price-fetch.yml` change
+   required, so the biggest owner-gated cluster can be cleared in one decision. No workflow edits.
+
+Rationale: DP-1→DP-5 verify and harden **core stability** before any expansion; DP-6 unblocks the
 largest owner-gated cluster without touching a gated surface. Shiny features
 (silver/crypto/API/premium) stay parked behind their owner gates.
