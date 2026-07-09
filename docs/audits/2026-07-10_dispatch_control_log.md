@@ -26,15 +26,16 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 5 branches, 6 commits, 5 PRs.
+**Work produced this run:** 6 branches, 9 commits, 6 PRs.
 
-| Branch                                         | Commits vs main | PR       | CI                                                          |
-| ---------------------------------------------- | --------------- | -------- | ----------------------------------------------------------- |
-| `cowork/2026-07-10-autonomous-audit-crosswalk` | 3               | **#614** | Playwright pass (docs-only)                                 |
-| `cowork/phase-37-hindi-pilot`                  | 1               | **#616** | all pass (Playwright, lighthouse, CodeQL, Analyze×3, Build) |
-| `cowork/dp1-learn-progress-e2e`                | 1               | **#617** | DP-1 — learn counter + console browser-verified (chromium)  |
-| `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | DP-2 — 15 e2e pass; first-party console/network clean       |
-| `cowork/dp3-pricing-invariants`                | 1               | **#621** | DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
+| Branch                                         | Commits vs main | PR       | CI                                                             |
+| ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
+| `cowork/2026-07-10-autonomous-audit-crosswalk` | 5               | **#614** | Playwright pass (docs-only)                                    |
+| `cowork/phase-37-hindi-pilot`                  | 1               | **#616** | ✅ all pass (Playwright, lighthouse, CodeQL, Analyze×3, Build) |
+| `cowork/dp1-learn-progress-e2e`                | 1               | **#617** | ✅ DP-1 — learn counter + console browser-verified (chromium)  |
+| `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | ✅ DP-2 — 15 e2e pass; first-party console/network clean       |
+| `cowork/dp3-pricing-invariants`                | 1               | **#621** | ✅ DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
+| `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3 |
 
 ---
 
@@ -215,16 +216,30 @@ resolved. Firefox/webkit run the same spec in CI.
    NOT what the site uses — code + all copy consistently use `31.1035`; the lock pins the value
    actually in production to prevent drift.
 
+4. **DP-4 — Navigation / mobile / RTL micro-audit → DONE, PR #622.** Browser sweep at 390px (EN+AR,
+   14 pages): **zero horizontal overflow anywhere**, nav toggle present everywhere. Found + fixed a
+   **real RTL bug**: `terms/privacy/methodology` ignored the `?lang=` URL param on first load, so
+   `?lang=ar` (which the site's hreflang + switcher generate) rendered a broken LTR/English shell
+   with Arabic fragments. Fix honors `?lang=` first (mirrors home/content-page-boot precedence);
+   English body unchanged. Locked by `tests/e2e/lang-param.spec.js` (26 assertions, 13 pages ×
+   EN/AR). VERIFIED: 7/7 CI incl. Playwright ×3 browsers; lint/test 1407/validate/build green.
+
+### Open follow-up finding (from DP-4)
+
+- **DP-4b — `tracker.html` `?lang=` (query) ignored; locale lives in the URL hash.** Same
+  user-facing symptom as the DP-4 pages but a different mechanism: `src/tracker/state.js` reads
+  `lang` only from the URL **hash** params and returns early when there is no hash, so
+  `tracker.html?lang=ar` (query, as the switcher/hreflang emit) stays English. Deliberately **not**
+  fixed in #622 — the flagship's hash-state system (deep-links, 99KB) makes it higher-risk and it
+  deserves its own scoped PR + e2e. Status: **not-started**, safe, $0.
+
 ### Next 3 packets (still stabilize-first)
 
-4. **DP-4 — Navigation / mobile / RTL micro-audit (in-place).** Drive nav active-states, mobile menu
-   open/close, tap-target sizes, and mixed EN/AR bidi at 390/768px against current code with the
-   working local chromium; ship only genuine smallest-diff fixes (if any) + an e2e guard. Do not
-   re-do shipped #555/#557 work.
-5. **DP-5 — Freshness/label-honesty e2e guard.** Assert every derived/cached/fallback/delayed value
+1. **DP-4b — tracker.html query-lang fix (above)**, carefully, with hash-state regression e2e.
+2. **DP-5 — Freshness/label-honesty e2e guard.** Assert every derived/cached/fallback/delayed value
    on the price surfaces carries its visible freshness label and that spot vs retail stays visibly
    separated — the core trust-layer promise — as a browser regression test. $0, no gated surface.
-6. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
+3. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
    Docs-only: exact ordered merge/enable sequence + the precise `gold-price-fetch.yml` change
    required, so the biggest owner-gated cluster can be cleared in one decision. No workflow edits.
 
