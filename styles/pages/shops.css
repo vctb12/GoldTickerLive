@@ -1182,6 +1182,13 @@
 }
 
 .shops-info-link {
+  /* G6: WCAG 2.2 §2.5.8 — standalone CTA link (sole content of its <p>), so give it
+     a ≥24px tap target. Vertical-only growth keeps the info-card width unchanged.
+     (The inline methodology links inside the trust-disclaimer paragraphs are exempt
+     under the §2.5.8 inline exception and are intentionally left untouched.) */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: var(--color-accent);
   text-decoration: none;
   font-size: 0.8rem;

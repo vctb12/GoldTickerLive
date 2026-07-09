@@ -64,6 +64,7 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 | Revamp Phase 17 — Design-token consolidation             | `claude/revamp-phase-17-tokens`               | in-progress | —   | hex->tokens; dual-theme visual-regression                                                  |
 | Master Tracker (this doc)                                | `claude/revamp-master-tracker`                | in-progress | —   | Being created now                                                                          |
 | Learn-Hub Reliability — real read progress + favicon 404 | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —   | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix |
+| Program G / G6 — WCAG 2.2 tap-target size pass           | `claude/g6-tap-targets-k2tv7v`                | in-progress | —   | CSS-only ≥24px targets (home/compare/shops/learn); no overflow 360/390/414 EN+AR; RTL safe |
 
 ---
 
@@ -240,6 +241,18 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 Guardrails honored: no edits to `gold-price-fetch.yml`, `post_gold.yml`, `sw.js`, billing, or
 Supabase; EN/AR parity, RTL, freshness labels, AED peg 3.6725, troy 31.1034768 g, and spot-vs-retail
 wording untouched; no added scroll animation.
+
+### G. Program G — Mobile UX polish & WCAG 2.2 conformance
+
+| Item | Short Name                      | Status      | PR  | Scope/Blocker Note                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---- | ------------------------------- | ----------- | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| G6   | WCAG 2.2 §2.5.8 tap-target pass | in-progress | —   | CSS-only ≥24px targets for standalone/list/nav controls: `.breadcrumbs-link`, `.edu-list a`, `.learn-hub-toc-link`, `.hlc-karat-teaser-link`, `.shops-info-link`, `.karat-strip-k[role=button]`. Inline prose links (footer legal/source/credits, FAQ, trust-disclaimer, `.learn-hub-inline-link`) left as-is under the §2.5.8 inline exception. Verified via Playwright bounding-box scan: no non-exempt target <24px and 0px horizontal overflow at 360/390/414px in EN+AR. Branch `claude/g6-tap-targets-k2tv7v`. |
+
+Guardrails honored: no edits to `gold-price-fetch.yml`, `post_gold.yml`, `sw.js`, billing, or
+Supabase; EN/AR parity, RTL preserved (vertical-only growth + logical properties), freshness labels,
+AED peg 3.6725, and spot-vs-retail wording untouched; `prefers-reduced-motion` respected (no motion
+added). pa11y target-size runner is not installed in this repo (htmlcs/WCAG2AA does not implement
+§2.5.8), so the Playwright measurement above is the target-size proof.
 
 ---
 
