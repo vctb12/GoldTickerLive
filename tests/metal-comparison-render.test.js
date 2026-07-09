@@ -76,8 +76,13 @@ test('render: escapes all interpolated values (no XSS via model text)', async ()
   const { renderMetalComparisonTableHtml } = await import(MOD);
   const evil = { ...goldRow, name: '<script>alert(1)</script>', gradeLabel: '"><img>' };
   const html = renderMetalComparisonTableHtml(model({ rows: [evil], disclaimer: '<b>x</b>' }));
-  assert.doesNotMatch(html, /<script>/);
-  assert.doesNotMatch(html, /<img>/);
+  // No raw markup from the model reaches the output. Use case-insensitive substring checks (not
+  // tag-filter regexes) so the assertion also rejects upper-case injections like <SCRIPT>.
+  const lower = html.toLowerCase();
+  assert.ok(!lower.includes('<script'), 'raw <script> must not appear');
+  assert.ok(!lower.includes('<img'), 'raw <img> must not appear');
+  assert.ok(!html.includes('<b>x</b>'), 'raw <b> must not appear');
+  // The escaped forms are present instead.
   assert.match(html, /&lt;script&gt;/);
   assert.match(html, /&lt;b&gt;x&lt;\/b&gt;/);
 });
