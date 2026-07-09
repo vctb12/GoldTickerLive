@@ -59,12 +59,12 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
-| Phase                                                    | Branch                                        | Status      | PR  | Notes                                                                                                   |
-| -------------------------------------------------------- | --------------------------------------------- | ----------- | --- | ------------------------------------------------------------------------------------------------------- |
-| Revamp Phase 17 — Design-token consolidation             | `claude/revamp-phase-17-tokens`               | in-progress | —   | hex->tokens; dual-theme visual-regression                                                               |
-| Master Tracker (this doc)                                | `claude/revamp-master-tracker`                | in-progress | —   | Being created now                                                                                       |
-| Learn-Hub Reliability — real read progress + favicon 404 | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —   | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix              |
-| G16 — Glossary DefinedTermSet schema                     | `claude/g16-glossary-definedtermset-2ksva9`   | in-progress | —   | active-locale DefinedTermSet + DefinedTerm JSON-LD from rendered DOM; BreadcrumbList kept; EN/AR parity |
+| Phase                                                    | Branch                                        | Status      | PR                                                        | Notes                                                                                                   |
+| -------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Revamp Phase 17 — Design-token consolidation             | `claude/revamp-phase-17-tokens`               | in-progress | —                                                         | hex->tokens; dual-theme visual-regression                                                               |
+| Master Tracker (this doc)                                | `claude/revamp-master-tracker`                | in-progress | —                                                         | Being created now                                                                                       |
+| Learn-Hub Reliability — real read progress + favicon 404 | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —                                                         | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix              |
+| G16 — Glossary DefinedTermSet schema                     | `claude/g16-glossary-definedtermset-2ksva9`   | in-progress | [#613](https://github.com/vctb12/GoldTickerLive/pull/613) | active-locale DefinedTermSet + DefinedTerm JSON-LD from rendered DOM; BreadcrumbList kept; EN/AR parity |
 
 ---
 
@@ -246,9 +246,9 @@ wording untouched; no added scroll animation.
 
 ### G. Program G — Structured Data / SEO Isolates (safe, additive)
 
-| Item | Short Name                       | Status      | PR  | Scope/Blocker Note                                                                                                                                                                                                                                                                                                                                               |
-| ---- | -------------------------------- | ----------- | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| G16  | Glossary `DefinedTermSet` schema | in-progress | —   | Runtime `DefinedTermSet` + one `DefinedTerm` per term, emitted for the ACTIVE locale and built from the same rendered DOM terms so EN/AR stay in parity (the single glossary file serves both via `?lang=ar`). Static `BreadcrumbList` kept. `src/seo/glossary-schema.js` + `glossary.js` wiring; +12 tests. Deferred here from Phase-11 structured-data report. |
+| Item | Short Name                       | Status      | PR                                                        | Scope/Blocker Note                                                                                                                                                                                                                                                                                                                                               |
+| ---- | -------------------------------- | ----------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| G16  | Glossary `DefinedTermSet` schema | in-progress | [#613](https://github.com/vctb12/GoldTickerLive/pull/613) | Runtime `DefinedTermSet` + one `DefinedTerm` per term, emitted for the ACTIVE locale and built from the same rendered DOM terms so EN/AR stay in parity (the single glossary file serves both via `?lang=ar`). Static `BreadcrumbList` kept. `src/seo/glossary-schema.js` + `glossary.js` wiring; +12 tests. Deferred here from Phase-11 structured-data report. |
 
 Guardrails honored: no edits to `gold-price-fetch.yml`, `post_gold.yml`, `sw.js`, billing, or
 Supabase; EN/AR parity, RTL, freshness labels, AED peg 3.6725, and spot-vs-retail wording untouched;
@@ -273,17 +273,18 @@ no term content or visible copy changed; static `BreadcrumbList` JSON-LD preserv
 
 ## Recently Opened PRs
 
-| PR   | Phase          | Title                                             | Opened     |
-| ---- | -------------- | ------------------------------------------------- | ---------- |
-| #537 | 30-Revamp 1    | Baseline & rollback fences                        | 2026-07-07 |
-| #538 | 30-Revamp 2    | Runtime error audit & defect register             | 2026-07-07 |
-| #539 | 30-Revamp 3    | Dependency/security/secrets audit + CSP inventory | 2026-07-07 |
-| #540 | Master Tracker | Canonical cross-plan tracker                      | 2026-07-07 |
-| #541 | 30-Revamp 4    | Data-source resilience map + state diagram        | 2026-07-07 |
-| #542 | 30-Revamp 5    | Spot-vs-retail parity fix (compare+heatmap)       | 2026-07-07 |
-| #543 | 30-Revamp 6    | Shops spot-bar vs ticker freshness fix            | 2026-07-07 |
-| #544 | 30-Revamp 7    | Methodology parity + tool deep-links              | 2026-07-07 |
-| #545 | 30-Revamp 8    | Secondary-provider cross-validation (flagged)     | 2026-07-07 |
+| PR   | Phase           | Title                                             | Opened     |
+| ---- | --------------- | ------------------------------------------------- | ---------- |
+| #537 | 30-Revamp 1     | Baseline & rollback fences                        | 2026-07-07 |
+| #538 | 30-Revamp 2     | Runtime error audit & defect register             | 2026-07-07 |
+| #539 | 30-Revamp 3     | Dependency/security/secrets audit + CSP inventory | 2026-07-07 |
+| #540 | Master Tracker  | Canonical cross-plan tracker                      | 2026-07-07 |
+| #541 | 30-Revamp 4     | Data-source resilience map + state diagram        | 2026-07-07 |
+| #542 | 30-Revamp 5     | Spot-vs-retail parity fix (compare+heatmap)       | 2026-07-07 |
+| #543 | 30-Revamp 6     | Shops spot-bar vs ticker freshness fix            | 2026-07-07 |
+| #544 | 30-Revamp 7     | Methodology parity + tool deep-links              | 2026-07-07 |
+| #545 | 30-Revamp 8     | Secondary-provider cross-validation (flagged)     | 2026-07-07 |
+| #613 | Program G / G16 | DefinedTermSet schema for glossary                | 2026-07-09 |
 
 ## Skipped / Superseded Items
 
