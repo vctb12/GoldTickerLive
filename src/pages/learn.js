@@ -9,12 +9,14 @@ import * as cache from '../lib/cache.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { getArticle } from '../learn-hub/content-registry.js';
+import { resolveLearnHubText } from '../learn-hub/content-model.js';
 import { renderArticle } from '../learn-hub/article-renderer.js';
 import { createTocRenderer } from '../learn-hub/toc-renderer.js';
 import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
 import { initInsightsFeed } from './insights/insights-feed.js';
+import { buildLearnArticleSchema, injectLearnArticleSchema } from '../seo/learn-schema.js';
 import { TRANSLATIONS } from '../config/index.js';
 
 const STATE = {
@@ -107,6 +109,23 @@ function hubTx(lang, key) {
   return TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en?.[key] ?? key;
 }
 
+// Keep the Article JSON-LD language-correct. The build-time injector emits an
+// English-only Article; here we rebuild it from the shared learn model for the
+// active language and atomically replace it (BreadcrumbList + FAQ microdata are
+// left intact), so the Arabic view no longer advertises English structured data.
+function syncArticleSchema(article, lang) {
+  if (!article) return;
+  const canonical =
+    document.querySelector('link[rel="canonical"]')?.getAttribute('href') || undefined;
+  const schema = buildLearnArticleSchema({
+    article,
+    lang,
+    resolveText: resolveLearnHubText,
+    url: canonical,
+  });
+  injectLearnArticleSchema(document, schema);
+}
+
 function applyInsightsHeading(lang) {
   const title = document.getElementById('insights-feed-heading');
   const sub = document.getElementById('insights-feed-sub');
@@ -138,6 +157,7 @@ function init() {
 
   const article = getArticle('learn');
   let experience = mountArticleExperience(article);
+  syncArticleSchema(article, STATE.lang);
 
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -146,6 +166,7 @@ function init() {
       shell.updateLang(STATE.lang);
       experience.toc?.destroy();
       experience = mountArticleExperience(article);
+      syncArticleSchema(article, STATE.lang);
       mountLearnHubCatalog({ lang: STATE.lang, container: '#learn-catalog-root' });
       insightsFeed?.setLang(STATE.lang);
       applyInsightsHeading(STATE.lang);
