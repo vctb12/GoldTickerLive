@@ -9,6 +9,8 @@ const LEGACY_LEARN_COPY = Object.freeze({
   en: {
     'learn-h1': 'Learn About Gold',
     'learn-sub': 'Karats · Pricing · AED Peg · Zakat · Hallmarking',
+    'learn-answer-summary':
+      'A plain-language guide to how gold is priced and bought across the UAE and GCC — karats and purity, spot versus retail prices, the fixed AED–USD peg (3.6725), Zakat on gold, and hallmarking. All prices shown are spot-linked reference estimates, not final shop quotes.',
     'toc-label': 'Contents',
     'toc-karats': 'Gold Karats',
     'toc-pricing': 'Pricing',
@@ -76,6 +78,8 @@ const LEGACY_LEARN_COPY = Object.freeze({
   ar: {
     'learn-h1': 'تعلّم عن الذهب',
     'learn-sub': 'العيارات · التسعير · ربط الدرهم · الزكاة · الدمغة',
+    'learn-answer-summary':
+      'دليل مبسّط لكيفية تسعير الذهب وشرائه في الإمارات ودول الخليج — العيارات والنقاء، والفرق بين السعر الفوري وسعر التجزئة، وربط الدرهم الثابت بالدولار (3.6725)، وزكاة الذهب، والدمغة. جميع الأسعار المعروضة تقديرات مرجعية مرتبطة بالسعر الفوري وليست أسعار محلات نهائية.',
     'toc-label': 'المحتويات',
     'toc-karats': 'عيارات الذهب',
     'toc-pricing': 'التسعير',
@@ -347,10 +351,21 @@ export const LEARN_ARTICLE = Object.freeze({
   id: 'learn',
   titleKey: 'learn-h1',
   subtitleKey: 'learn-sub',
+  // One-to-two sentence factual answer summary, resolved per language from the
+  // shared copy dictionary. Renders as a visible lead block at the top of the
+  // guide (EN + AR parity) and feeds the Article JSON-LD `description` so the
+  // structured data matches the visible content. Strictly descriptive — no
+  // investment advice or forward-looking claims.
+  summaryKey: 'learn-answer-summary',
   icon: 'i-book',
   iconLabelKey: 'learnHub.articles.learn.iconLabel',
   metadata: {
     readTime: 8,
+    // Original publication date is not recoverable from the (shallow) git
+    // history, so it is anchored to the last verified content review. Keeping
+    // datePublished <= dateModified keeps the Article schema valid; the owner
+    // can set the true earlier launch date here if known.
+    datePublished: '2026-05-25',
     lastUpdated: '2026-05-25',
     category: 'learn',
     categoryKey: 'learnHub.categories.learn',

@@ -293,6 +293,21 @@ html[lang='ar'] [data-lang-block='en'] {
   line-height: var(--leading-relaxed);
 }
 
+/* Factual answer-summary lead block. Logical properties keep the gold accent on
+   the leading edge in both LTR and RTL (Arabic). Additive — only appears when the
+   article model supplies a summaryKey. */
+.learn-hub-answer-summary {
+  margin-block: 0 1.5rem;
+  padding-block: 0.9rem 1rem;
+  padding-inline: 1.1rem;
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  color: var(--text-secondary);
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+}
+
 .learn-hub-article-meta {
   display: flex;
   flex-wrap: wrap;

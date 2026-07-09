@@ -329,6 +329,14 @@ export function createArticleRenderer({
       },
       [
         renderHeader(),
+        // Factual answer-summary lead block (AEO): mirrors the static fallback and
+        // feeds the Article JSON-LD description. Only rendered when the model
+        // supplies a summaryKey, so other articles are unaffected.
+        currentArticle.summaryKey
+          ? el('p', { class: 'learn-hub-answer-summary', 'data-answer-summary': '' }, [
+              t(currentArticle.summaryKey),
+            ])
+          : null,
         ...(currentArticle.sections ?? []).map((section) => renderSection(section, t)),
       ]
     );

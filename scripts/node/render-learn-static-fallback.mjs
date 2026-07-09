@@ -121,7 +121,9 @@ function renderTable(section) {
 function renderFaq(section) {
   const items = (section.faqs ?? [])
     .map(
-      (faq) => `<details class="faq-item learn-hub-faq-item"${faq.open ? ' open' : ''} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+      (
+        faq
+      ) => `<details class="faq-item learn-hub-faq-item"${faq.open ? ' open' : ''} itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
   <summary class="faq-question" itemprop="name">${esc(t(faq.questionKey))}</summary>
   <div class="faq-answer" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
     <p itemprop="text">${esc(t(faq.answerKey))}</p>
@@ -198,7 +200,9 @@ function renderCatalog() {
   const sections = LEARN_GUIDE_CATEGORIES.map((cat) => {
     const cards = cat.guides
       .map(
-        (guide) => `<a href="${esc(guide.href)}" class="card card--bordered learn-guide-card card-interactive">
+        (
+          guide
+        ) => `<a href="${esc(guide.href)}" class="card card--bordered learn-guide-card card-interactive">
   <div class="learn-guide-card__meta">
     <span class="badge badge--${guide.level === 'beginner' ? 'info' : 'neutral'}">${esc(tx(`learn.level.${guide.level}`))}</span>
     <span class="learn-guide-card__time">${esc(tx('learn.readMin', { n: guide.readMin }))}</span>
@@ -244,6 +248,7 @@ function renderStaticBlock() {
         <div id="learn-article-root" class="learn-body learn-hub-body" data-static-fallback="true">
           <div class="learn-hub-article" data-article-id="${esc(article.id)}" data-locale="en">
             ${renderArticleHeader(article)}
+            ${article.summaryKey ? `<p class="learn-hub-answer-summary" data-answer-summary>${esc(t(article.summaryKey))}</p>` : ''}
             ${sections}
           </div>
         </div>
@@ -262,8 +267,7 @@ function patchLearnHtml() {
   if (re.test(html)) {
     next = html.replace(re, block.trim());
   } else {
-    const shellRe =
-      /(<main id="main-content">\s*)(<div id="related-guides-slot">)/;
+    const shellRe = /(<main id="main-content">\s*)(<div id="related-guides-slot">)/;
     if (!shellRe.test(html)) {
       throw new Error('Could not locate learn.html insertion point for static fallback');
     }
