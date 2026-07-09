@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 6 branches, 9 commits, 6 PRs.
+**Work produced this run:** 7 branches, 10 commits, 7 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                             |
 | ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
@@ -36,6 +36,7 @@ line-by-line. No fabricated PR links.
 | `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | ✅ DP-2 — 15 e2e pass; first-party console/network clean       |
 | `cowork/dp3-pricing-invariants`                | 1               | **#621** | ✅ DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
 | `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3 |
+| `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard    |
 
 ---
 
@@ -233,16 +234,21 @@ resolved. Firefox/webkit run the same spec in CI.
   fixed in #622 — the flagship's hash-state system (deep-links, 99KB) makes it higher-risk and it
   deserves its own scoped PR + e2e. Status: **not-started**, safe, $0.
 
-### Next 3 packets (still stabilize-first)
+5. **DP-5 — Freshness/label-honesty e2e guard → DONE, PR #623.**
+   `tests/e2e/freshness-labels.spec.js` asserts, on home + tracker (EN + AR), that the
+   `FreshnessBadge` renders a recognised state + non-empty source attribution + UTC timestamp, and
+   that reference/estimate framing is present (spot ≠ retail). VERIFIED chromium: 3 passed. Observed
+   live: `Cached • Source: Gold-API.com • Updated: 09 Jul 2026 … UTC` (AR localized equivalent).
 
-1. **DP-4b — tracker.html query-lang fix (above)**, carefully, with hash-state regression e2e.
-2. **DP-5 — Freshness/label-honesty e2e guard.** Assert every derived/cached/fallback/delayed value
-   on the price surfaces carries its visible freshness label and that spot vs retail stays visibly
-   separated — the core trust-layer promise — as a browser regression test. $0, no gated surface.
-3. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
+### Next packets (still stabilize-first)
+
+1. **DP-4b — tracker.html query-lang fix**, carefully, with hash-state regression e2e (flagship).
+2. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
    Docs-only: exact ordered merge/enable sequence + the precise `gold-price-fetch.yml` change
    required, so the biggest owner-gated cluster can be cleared in one decision. No workflow edits.
+3. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
+   surfaces with the working chromium; ship genuine smallest-diff fixes + a guard, else document.
 
-Rationale: DP-1→DP-5 verify and harden **core stability** before any expansion; DP-6 unblocks the
-largest owner-gated cluster without touching a gated surface. Shiny features
-(silver/crypto/API/premium) stay parked behind their owner gates.
+Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
+invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
+touching a gated surface. Shiny features (silver/crypto/API/premium) stay parked behind owner gates.
