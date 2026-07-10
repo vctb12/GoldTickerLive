@@ -1,0 +1,351 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   GoldTickerLive — Design System v2  ·  "Editorial Bullion Terminal"
+   The production visual foundation for the homepage redesign (redesign/home).
+   Layers on top of styles/partials/tokens.css — reuses its warm-parchment
+   palette + WCAG-tuned gold/ink; adds the redesign's type/space/motion scales
+   and the signature primitives (numeral treatment, freshness object, buttons,
+   cards, pills, comparison bars, karat base). Theme-aware; dark mode later.
+
+   Approved package: docs/design/reviews/PRE_BUILD_VALIDATION*.md
+   Guardrails: gold is accent/hairline/material only (never a large fill); one
+   accent; disclaimer once; every price uses the tabular numeral treatment.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Type scale (fluid, editorial) ─────────────────────────────────────── */
+  --ds-price-hero: clamp(3.25rem, 2.2rem + 4.6vw, 6.5rem); /* the protagonist numeral */
+  --ds-display-1: clamp(2rem, 1.4rem + 2.6vw, 3rem); /* page H1 (serif) */
+  --ds-display-2: clamp(1.5rem, 1.15rem + 1.5vw, 2rem); /* section heading (serif) */
+  --ds-title: 1.25rem;
+  --ds-body: 1rem;
+  --ds-meta: 0.8125rem; /* freshness, kickers, labels */
+  --ds-kicker: 0.72rem;
+
+  /* ── Spacing scale (4px base) ──────────────────────────────────────────── */
+  --ds-1: 4px;
+  --ds-2: 8px;
+  --ds-3: 12px;
+  --ds-4: 16px;
+  --ds-5: 24px;
+  --ds-6: 32px;
+  --ds-7: 48px;
+  --ds-8: 64px;
+  --ds-9: 96px;
+  --ds-10: 128px;
+
+  /* ── Radii / elevation ─────────────────────────────────────────────────── */
+  --ds-r-sm: 10px;
+  --ds-r-md: 14px;
+  --ds-r-lg: 18px;
+  --ds-r-pill: 999px;
+  --ds-shadow-1: 0 1px 2px rgb(35 27 12 / 6%), 0 1px 0 rgb(255 255 255 / 40%) inset;
+  --ds-shadow-2: 0 18px 44px -26px rgb(35 27 12 / 34%);
+
+  /* ── Motion (the tick + reveals) — every value informs, never decorates ── */
+  --ds-t-fast: 120ms;
+  --ds-t-base: 200ms;
+  --ds-t-slow: 320ms;
+  --ds-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* ── Layout ────────────────────────────────────────────────────────────── */
+  --ds-maxw: 1180px;
+  --ds-measure: 66ch;
+
+  /* ── Semantic aliases onto the existing token system (single accent) ───── */
+  --ds-paper: var(--color-bg);
+  --ds-surface: var(--color-surface);
+  --ds-ink: var(--color-text);
+  --ds-ink-muted: var(--color-text-muted);
+  --ds-ink-faint: var(--color-text-faint);
+  --ds-ink-data: var(--color-ink-data);
+  --ds-gold: var(--color-gold);
+  --ds-gold-deep: var(--color-gold-dark);
+  --ds-gold-soft: var(--color-gold-tint);
+  --ds-line: var(--color-border);
+  --ds-line-soft: var(--color-border-subtle);
+  --ds-up: var(--color-move-up);
+  --ds-down: var(--color-move-down);
+
+  /* Fonts (already self-hosted: Playfair Display serif, Source Sans 3 UI, Cairo AR) */
+  --ds-serif: 'Playfair Display', 'Iowan Old Style', Georgia, serif;
+  --ds-sans: var(--font-sans, 'Source Sans 3', system-ui, -apple-system, 'Segoe UI', sans-serif);
+
+  /* Tabular figures for the "ticker" numeral treatment (dedicated face can be added later) */
+  --ds-num: var(--ds-sans);
+}
+
+/* ── Base primitives ─────────────────────────────────────────────────────── */
+.ds-wrap {
+  max-width: var(--ds-maxw);
+  margin-inline: auto;
+  padding-inline: var(--ds-6);
+}
+
+@media (max-width: 760px) {
+  .ds-wrap {
+    padding-inline: var(--ds-4);
+  }
+}
+
+.ds-kicker {
+  font-family: var(--ds-sans);
+  font-size: var(--ds-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--ds-gold-deep);
+}
+.ds-serif {
+  font-family: var(--ds-serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.12;
+  color: var(--ds-ink);
+}
+
+/* THE signature: tabular-lining numerals for every price on the site. */
+.ds-num {
+  font-family: var(--ds-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings:
+    'tnum' 1,
+    'lnum' 1;
+  letter-spacing: -0.01em;
+}
+
+/* Split-digit hero price — big integer, smaller decimals, raised gold currency. */
+.ds-price {
+  font-family: var(--ds-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--ds-ink-data);
+  display: inline-flex;
+  align-items: flex-start;
+}
+.ds-price__int {
+  font-size: var(--ds-price-hero);
+}
+.ds-price__dec {
+  font-size: 0.52em;
+  color: var(--ds-ink-muted);
+  align-self: flex-start;
+  margin-top: 0.18em;
+}
+.ds-price__cur {
+  font-size: 0.36em;
+  color: var(--ds-gold);
+  font-weight: 700;
+  align-self: flex-start;
+  margin-top: 0.18em;
+  margin-inline-start: 0.12em;
+}
+
+/* Movement chip (up/down encoded by shape+sign, never colour alone). */
+.ds-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--ds-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 5px 11px;
+  border-radius: var(--ds-r-sm);
+}
+.ds-delta--up {
+  color: var(--ds-up);
+  background: var(--color-move-up-bg);
+}
+.ds-delta--down {
+  color: var(--ds-down);
+  background: var(--color-move-down-bg);
+}
+
+/* Freshness / trust object — status-dot pulse + source + timestamp, one per surface. */
+.ds-freshness {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-2);
+  font-size: var(--ds-meta);
+  color: var(--ds-ink-muted);
+}
+.ds-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--color-live);
+  position: relative;
+  flex: none;
+}
+.ds-dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-live);
+  opacity: 0.5;
+  animation: ds-pulse 2s var(--ds-ease) infinite;
+}
+.ds-dot--cached {
+  background: var(--color-daily);
+}
+.ds-dot--cached::after {
+  border-color: var(--color-daily);
+}
+.ds-dot--stale,
+.ds-dot--fallback {
+  background: var(--color-stale);
+}
+.ds-dot--stale::after,
+.ds-dot--fallback::after {
+  border-color: var(--color-stale);
+  animation: none;
+}
+
+@keyframes ds-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Buttons — one primary (gold) per view; ghost secondary; ink tertiary. */
+.ds-btn {
+  font-family: var(--ds-sans);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 0;
+  border-radius: var(--ds-r-pill);
+  padding: 12px 22px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition:
+    transform var(--ds-t-fast) var(--ds-ease),
+    box-shadow var(--ds-t-fast) var(--ds-ease),
+    background var(--ds-t-fast) var(--ds-ease);
+}
+.ds-btn:focus-visible {
+  outline: 2px solid var(--ds-gold);
+  outline-offset: 2px;
+}
+.ds-btn--gold {
+  background: linear-gradient(180deg, var(--color-gold-bright), var(--ds-gold));
+  color: #2e2205;
+  box-shadow: 0 1px 0 rgb(255 244 214 / 60%) inset;
+}
+.ds-btn--gold:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ds-shadow-2);
+}
+.ds-btn--ghost {
+  background: transparent;
+  color: var(--ds-ink);
+  border: 1px solid var(--ds-ink);
+}
+.ds-btn--ink {
+  background: var(--ds-ink);
+  color: var(--ds-paper);
+}
+
+/* Surfaces — 3 elevation levels max; hairline OR one soft shadow, never both heavy. */
+.ds-card {
+  background: var(--ds-surface);
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-lg);
+  box-shadow: var(--ds-shadow-1);
+}
+.ds-card--raised {
+  box-shadow: var(--ds-shadow-2);
+}
+
+/* Pills / segmented control (karat, unit, filters). */
+.ds-pill {
+  border: 1px solid var(--ds-line);
+  border-radius: var(--ds-r-sm);
+  padding: 9px 15px;
+  font-size: 0.875rem;
+  color: var(--ds-ink-muted);
+  background: var(--ds-surface);
+  cursor: pointer;
+}
+.ds-pill[aria-selected='true'],
+.ds-pill--on {
+  border-color: var(--ds-gold);
+  box-shadow: inset 0 0 0 1px var(--ds-gold);
+  color: var(--ds-ink);
+  background: var(--ds-gold-soft);
+}
+.ds-pill:focus-visible {
+  outline: 2px solid var(--ds-gold);
+  outline-offset: 2px;
+}
+
+/* Comparison bar — length is the primary encoding; colour is accent only. */
+.ds-bar {
+  height: 10px;
+  background: var(--color-surface-3);
+  border-radius: var(--ds-r-pill);
+  overflow: hidden;
+}
+.ds-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-gold-light), var(--ds-gold));
+  border-radius: inherit;
+}
+
+/* Karat medallion base (ladder rung / dial center share the numeral treatment). */
+.ds-karat-v {
+  font-family: var(--ds-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 600;
+}
+
+/* Section rhythm. */
+.ds-section {
+  padding-block: var(--ds-8);
+  border-top: 1px solid var(--ds-line);
+}
+.ds-measure {
+  max-width: var(--ds-measure);
+}
+
+/* Material moment — the soft radial gold field behind the live price (never a fill). */
+.ds-market-field {
+  position: relative;
+  isolation: isolate;
+}
+.ds-market-field::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-block-start: -140px;
+  inset-inline-end: -120px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-gold-glow), transparent 62%);
+  pointer-events: none;
+}
+
+/* Motion contract: reduced-motion strips the pulse/reveals; the page is never
+   less usable and content is never gated behind motion. */
+@media (prefers-reduced-motion: reduce) {
+  .ds-dot::after {
+    animation: none;
+  }
+  .ds-btn {
+    transition: none;
+  }
+}
