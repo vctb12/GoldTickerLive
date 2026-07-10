@@ -66,6 +66,59 @@ test('a stored canonical id counts toward read progress (0 -> 1)', async () => {
   assert.equal(cat.countReadGuides(cat.getLearnProgress()), 1);
 });
 
+// --- one-time legacy-id migration -----------------------------------------
+
+test('migrateLearnProgress maps a slash-stripped legacy id to the canonical href', async () => {
+  localStorage.clear();
+  const cat = await loadCatalog();
+  // Historical bug: ids were stored without the leading slash.
+  localStorage.setItem(cat.LEARN_PROGRESS_KEY, JSON.stringify(['learn.html#karats']));
+  cat.migrateLearnProgress();
+  assert.deepEqual(cat.getLearnProgress(), ['/learn.html#karats']);
+  assert.equal(cat.countReadGuides(cat.getLearnProgress()), 1, 'migrated id now counts');
+});
+
+test('migrateLearnProgress drops unrecoverable/non-string ids and dedupes', async () => {
+  localStorage.clear();
+  const cat = await loadCatalog();
+  localStorage.setItem(
+    cat.LEARN_PROGRESS_KEY,
+    JSON.stringify(['learn.html#karats', '/learn.html#karats', '/content/retired.html', 42, ''])
+  );
+  cat.migrateLearnProgress();
+  assert.deepEqual(cat.getLearnProgress(), ['/learn.html#karats']);
+});
+
+test('migrateLearnProgress recovers a retired page id by its hash fragment', async () => {
+  localStorage.clear();
+  const cat = await loadCatalog();
+  localStorage.setItem(cat.LEARN_PROGRESS_KEY, JSON.stringify(['/content/old-guide.html#pricing']));
+  cat.migrateLearnProgress();
+  assert.deepEqual(cat.getLearnProgress(), ['/learn.html#pricing']);
+});
+
+test('migrateLearnProgress runs once: stamps a version flag and no-ops afterward', async () => {
+  localStorage.clear();
+  const cat = await loadCatalog();
+  localStorage.setItem(cat.LEARN_PROGRESS_KEY, JSON.stringify(['learn.html#karats']));
+  cat.migrateLearnProgress();
+  assert.equal(localStorage.getItem(cat.LEARN_PROGRESS_MIGRATION_KEY), '2');
+
+  // A legacy id written AFTER the migration ran must NOT be rewritten again.
+  localStorage.setItem(cat.LEARN_PROGRESS_KEY, JSON.stringify(['learn.html#pricing']));
+  cat.migrateLearnProgress();
+  assert.deepEqual(cat.getLearnProgress(), ['learn.html#pricing'], 'migration is one-time');
+});
+
+test('migrateLearnProgress leaves an already-canonical list untouched', async () => {
+  localStorage.clear();
+  const cat = await loadCatalog();
+  localStorage.setItem(cat.LEARN_PROGRESS_KEY, JSON.stringify(['/learn.html#karats']));
+  cat.migrateLearnProgress();
+  assert.deepEqual(cat.getLearnProgress(), ['/learn.html#karats']);
+  assert.equal(localStorage.getItem(cat.LEARN_PROGRESS_MIGRATION_KEY), '2');
+});
+
 // --- countReadGuides semantics --------------------------------------------
 
 test('countReadGuides: empty -> 0, unknown ids ignored', async () => {
@@ -119,6 +172,26 @@ test('learn-hub-ui.js no longer slash-strips the stored id, and tracks via canon
   assert.match(ui, /data-guide-href/, 'cards must carry the canonical read-tracking id');
   assert.match(ui, /countReadGuides/, 'the counter must use the shared card-based tally');
   assert.match(ui, /addEventListener\('hashchange'/, 'deep links / back-forward must mark reads');
+});
+
+test('learn hub wires scroll/visibility completion + one-time legacy-id migration', () => {
+  const ui = read('src/pages/learn-hub-ui.js');
+  assert.match(ui, /migrateLearnProgress\(\)/, 'mount must run the one-time legacy-id migration');
+  assert.match(
+    ui,
+    /observeDwell\(/,
+    'mount must observe section dwell for scroll-based completion'
+  );
+  assert.match(ui, /ratio:\s*0\.6/, 'dwell completion must require ≥60% section visibility');
+  assert.match(ui, /dwellMs:\s*3000/, 'dwell completion must require ≥3 continuous seconds');
+  assert.match(ui, /markGuideRead\(href\)/, 'dwell completion must reuse markGuideRead()');
+
+  const reveal = read('src/lib/reveal.js');
+  assert.match(
+    reveal,
+    /export function observeDwell/,
+    'reveal must expose the shared dwell observer'
+  );
 });
 
 test('learn-hub "related tools" links use safeHref-safe root-relative hrefs (not dead links)', () => {
