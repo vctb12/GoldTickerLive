@@ -3,6 +3,7 @@ import { SHOPS as FALLBACK_SHOPS } from '../../data/shops.js';
 import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
@@ -109,6 +110,14 @@ const TXT = {
     trustLabel: 'Directory reference listings',
     trustDate: 'Last content review {date}',
     directoryReviewed: 'Directory last reviewed {date}',
+    refChipLabel: "Today's 24K reference",
+    refChipUnit: 'AED / gram',
+    refChipHint: 'Judge a shop quote against this — retail adds making + margin + VAT',
+    refUpdated: 'Updated',
+    refLive: 'Live',
+    refDelayed: 'Delayed',
+    refCached: 'Cached',
+    refStale: 'Stale',
     featuredNote:
       'Featured: editorially selected markets for this region. Not a paid placement and not an endorsement of any individual shop inside the market.',
     statListings: 'Shops & markets',
@@ -266,6 +275,14 @@ const TXT = {
     trustLabel: 'إدراجات مرجعية للدليل',
     trustDate: 'آخر مراجعة للمحتوى {date}',
     directoryReviewed: 'آخر مراجعة للدليل {date}',
+    refChipLabel: 'مرجع اليوم · عيار 24',
+    refChipUnit: 'درهم / غرام',
+    refChipHint: 'قِس عرض المحل على هذا — التجزئة تضيف الصياغة والهامش والضريبة',
+    refUpdated: 'آخر تحديث',
+    refLive: 'مباشر',
+    refDelayed: 'متأخر',
+    refCached: 'مخزّن',
+    refStale: 'قديم',
     featuredNote:
       'مختارة: أسواق مختارة تحريرياً لهذه المنطقة. ليست إعلاناً مدفوعاً ولا تزكية لأي محل بعينه داخل السوق.',
     statListings: 'محلات وأسواق',
@@ -2214,6 +2231,97 @@ function updateLanguage() {
   if (listLabel) listLabel.textContent = t('viewList');
   if (mapLabel) mapLabel.textContent = t('viewMap');
   render();
+  // Re-format the live reference chip in the newly active language.
+  renderReferenceChip();
+}
+
+// ── Live 24K reference chip (canonical F-1) ──────────────────────────────────
+// A compact "today's reference rate" chip in the hero so a buyer can judge a
+// shop's quote against the metal value. Reads the SAME getCanonicalSpot()
+// snapshot as every other price surface; freshness is honest. Numbers re-format
+// on language toggle via renderReferenceChip().
+let _refSnapshot = null;
+
+const REF_FRESH_KEY = {
+  live: 'refLive',
+  delayed: 'refDelayed',
+  cached: 'refCached',
+  fallback: 'refStale',
+  unavailable: 'refStale',
+};
+
+function renderReferenceChip() {
+  const chip = document.getElementById('shops-ref-chip');
+  if (!chip) return;
+  const snap = _refSnapshot;
+  if (!snap || !snap.ok || !snap.aedPerGram24k) return;
+
+  const valueEl = document.getElementById('shops-ref-value');
+  const labelEl = document.getElementById('shops-ref-label');
+  const unitEl = document.getElementById('shops-ref-unit');
+  const hintEl = document.getElementById('shops-ref-hint');
+  const dot = document.getElementById('shops-ref-dot');
+  const freshEl = document.getElementById('shops-ref-fresh');
+
+  if (labelEl) labelEl.textContent = t('refChipLabel');
+  if (unitEl) unitEl.textContent = t('refChipUnit');
+  if (hintEl) hintEl.textContent = t('refChipHint');
+  if (valueEl) {
+    valueEl.textContent = new Intl.NumberFormat(STATE.lang === 'ar' ? 'ar' : 'en', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(snap.aedPerGram24k);
+  }
+
+  const fresh = snap.freshness || {};
+  const key = REF_FRESH_KEY[fresh.state];
+  if (dot) dot.className = `shops-ref-dot shops-ref-dot--${fresh.state || 'unavailable'}`;
+  if (freshEl && key) {
+    let stamp = '';
+    if (fresh.updatedAt) {
+      try {
+        stamp = new Intl.DateTimeFormat(STATE.lang === 'ar' ? 'ar' : 'en', {
+          hour: '2-digit',
+          minute: '2-digit',
+          timeZone: 'Asia/Dubai',
+        }).format(new Date(fresh.updatedAt));
+      } catch {
+        stamp = '';
+      }
+    }
+    freshEl.textContent = stamp ? `${t(key)} · ${t('refUpdated')}: ${stamp}` : t(key);
+  }
+  chip.hidden = false;
+}
+
+async function refreshLiveReference() {
+  try {
+    const snap = await getCanonicalSpot({ force: true });
+    if (!snap || !snap.ok) return;
+    _refSnapshot = snap;
+    const aedGram = (code) => snap.karats?.find((k) => k.code === code)?.aedPerGram ?? null;
+    // Honest freshness: only a genuinely-live snapshot clears hasLiveFailure, so
+    // the shared spot bar / ticker never label cached data as "Live".
+    const live = snap.freshness?.state === 'live';
+    updateTicker({
+      xauUsd: snap.spotUsdPerOz,
+      uae24k: aedGram('24'),
+      uae22k: aedGram('22'),
+      uae21k: aedGram('21'),
+      uae18k: aedGram('18'),
+      updatedAt: snap.freshness?.updatedAt || null,
+      hasLiveFailure: !live,
+    });
+    updateSpotBar({
+      xauUsd: snap.spotUsdPerOz,
+      aed24kGram: aedGram('24'),
+      updatedAt: snap.freshness?.updatedAt || null,
+      hasLiveFailure: !live,
+    });
+    renderReferenceChip();
+  } catch {
+    // Leave the cached seed in place; the chip simply stays hidden.
+  }
 }
 
 function init() {
@@ -2361,6 +2469,12 @@ function init() {
       hasLiveFailure: true,
     });
   }
+
+  // F-1: upgrade the cached seed to the shared canonical snapshot — the same
+  // memoized read as homepage / calculator / compare / portfolio / learn / dubai
+  // — so the spot bar, ticker, and hero reference chip go live and never diverge.
+  refreshLiveReference();
+  setInterval(refreshLiveReference, CONSTANTS.GOLD_REFRESH_MS);
 
   navResult.getLangToggleButtons().forEach((button) => {
     button.addEventListener('click', () => {
