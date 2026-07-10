@@ -1,5 +1,6 @@
 import { CONSTANTS, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import * as cache from '../lib/cache.js';
 import { mountSkeleton } from '../components/skeleton.js';
 import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
@@ -52,6 +53,10 @@ const I18N = {
     stat21Note: 'popular GCC grade',
     fetching: 'Fetching live data…',
     updated: 'Updated',
+    freshLive: 'Live',
+    freshDelayed: 'Delayed',
+    freshCached: 'Cached',
+    freshStale: 'Stale',
     marketOpen: 'Market open',
     marketClosed: 'Market closed',
     openTracker: 'Open full tracker →',
@@ -142,6 +147,10 @@ const I18N = {
     stat21Note: 'عيار شائع في الخليج',
     fetching: 'جارٍ جلب البيانات الحية…',
     updated: 'آخر تحديث',
+    freshLive: 'مباشر',
+    freshDelayed: 'متأخر',
+    freshCached: 'مخزّن',
+    freshStale: 'قديم',
     marketOpen: 'السوق مفتوح',
     marketClosed: 'السوق مغلق',
     openTracker: 'افتح المتتبع الكامل ←',
@@ -609,6 +618,7 @@ const state = {
   lang: 'en',
   goldPriceUsdPerOz: null,
   goldUpdatedAt: null,
+  freshnessState: null,
   dayOpenUsdPerOz: null,
   rates: {},
   purpose: 'hedge',
@@ -1101,8 +1111,35 @@ function renderLiveCard() {
   if (updatedEl) {
     if (state.goldPriceUsdPerOz && state.goldUpdatedAt) {
       // Stamp the DATA timestamp, not the render time — the render moment says
-      // nothing about how old the pipeline snapshot actually is.
-      updatedEl.textContent = `${tx('updated')}: ${fmt.formatTimestampShort(state.goldUpdatedAt, state.lang)}`;
+      // nothing about how old the pipeline snapshot actually is. Prefix with the
+      // honest freshness state (live / delayed / cached / stale) from the
+      // canonical snapshot, never faked.
+      const freshKey = {
+        live: 'freshLive',
+        delayed: 'freshDelayed',
+        cached: 'freshCached',
+        fallback: 'freshStale',
+        unavailable: 'freshStale',
+      }[state.freshnessState];
+      const freshLabel = freshKey ? tx(freshKey) : null;
+      clear(updatedEl);
+      if (freshLabel) {
+        updatedEl.append(
+          el(
+            'span',
+            {
+              class: `invest-fresh-dot invest-fresh-dot--${state.freshnessState}`,
+              'aria-hidden': 'true',
+            },
+            ''
+          ),
+          el('span', { class: 'invest-fresh-label' }, freshLabel),
+          el('span', { class: 'invest-fresh-sep', 'aria-hidden': 'true' }, ' · ')
+        );
+      }
+      updatedEl.append(
+        `${tx('updated')}: ${fmt.formatTimestampShort(state.goldUpdatedAt, state.lang)}`
+      );
     } else {
       mountSkeleton(updatedEl, 'freshnessStrip');
     }
@@ -1141,16 +1178,29 @@ function applyLang() {
 async function fetchLiveData() {
   if (!navigator.onLine) return;
 
-  const { gold, fx, errors } = await api.fetchGoldAndFX();
+  // F-1: read the gold spot from the shared canonical resolver — the SAME
+  // memoized snapshot the homepage / calculator / compare / portfolio read — so
+  // the invest planner and live snapshot can never diverge from the rest of the
+  // site. FX (SAR/EGP for the market planner) still comes from the FX endpoint;
+  // AED is the hardcoded peg. Freshness is honest, straight from the snapshot.
+  const [snapRes, fxRes] = await Promise.allSettled([
+    getCanonicalSpot({ force: true }),
+    api.fetchFX(),
+  ]);
 
-  if (gold?.price) {
-    state.goldPriceUsdPerOz = gold.price;
-    state.goldUpdatedAt = gold.updatedAt ?? null;
-    cache.saveGoldPrice(gold.price, gold.updatedAt);
+  let snapOk = false;
+  if (snapRes.status === 'fulfilled' && snapRes.value?.ok) {
+    const snap = snapRes.value;
+    snapOk = true;
+    state.goldPriceUsdPerOz = snap.spotUsdPerOz;
+    state.goldUpdatedAt = snap.freshness?.updatedAt ?? null;
+    state.freshnessState = snap.freshness?.state ?? null;
+    cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness?.updatedAt);
     hideDataStatusBanner();
   }
 
-  if (fx?.rates) {
+  if (fxRes.status === 'fulfilled' && fxRes.value?.rates) {
+    const fx = fxRes.value;
     state.rates = fx.rates ?? {};
     cache.saveFXRates(state.rates, {
       lastUpdateUtc: fx.time_last_update_utc,
@@ -1158,7 +1208,9 @@ async function fetchLiveData() {
     });
   }
 
-  if (!state.goldPriceUsdPerOz && (errors.gold || errors.fx)) {
+  const snapFailed = !snapOk;
+  const fxFailed = fxRes.status !== 'fulfilled' || !fxRes.value?.rates;
+  if (!state.goldPriceUsdPerOz && (snapFailed || fxFailed)) {
     showDataStatusBanner({
       lang: state.lang,
       variant: 'error',

@@ -77,6 +77,11 @@
     <link rel="stylesheet" href="./styles/pages/learn.css" />
     <link rel="stylesheet" href="./styles/pages/insights.css" />
     <link rel="stylesheet" href="./styles/pages/invest.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing scale);
+         learn-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/learn-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/learn-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -131,21 +136,61 @@
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
+    <!-- Reading-progress bar (decorative; enhanced by src/lib/reading-progress.js).
+         Aria-hidden so it never chatters to assistive tech. -->
+    <div class="learn-reading-progress" aria-hidden="true">
+      <span class="learn-reading-progress__bar"></span>
+    </div>
     <!-- Nav + Breadcrumbs (injected by learn.js) -->
     <div class="page-breadcrumbs"></div>
 
     <main id="main-content">
-      <!-- Page-level H1 (leads the document outline; the guide hub and the
-           reference article below are sections beneath it). One H1 element with
-           bilingual spans toggled by CSS — zero-JS, still a single H1. -->
-      <h1 class="learn-page-heading">
-        <span data-lang-block="en"
-          >Learn About Gold — Buying &amp; Investing Guides for the UAE &amp; GCC</span
-        >
-        <span data-lang-block="ar" lang="ar" dir="rtl"
-          >تعلّم عن الذهب — أدلة شراء واستثمار الذهب لدول الخليج والإمارات</span
-        >
-      </h1>
+      <!-- Editorial hero: eyebrow + single page H1 + lede. The H1 leads the
+           document outline (the guide hub and reference article are sections
+           beneath it). One H1 element with bilingual spans toggled by CSS —
+           zero-JS, still a single H1. -->
+      <header class="learn-hero">
+        <p class="learn-hero__eyebrow">
+          <span class="learn-hero__eyebrow-dot" aria-hidden="true"></span>
+          <span data-lang-block="en">Gold Knowledge Hub</span>
+          <span data-lang-block="ar" lang="ar" dir="rtl">مركز معرفة الذهب</span>
+        </p>
+        <h1 class="learn-page-heading">
+          <span data-lang-block="en"
+            >Learn About Gold — Buying &amp; Investing Guides for the UAE &amp; GCC</span
+          >
+          <span data-lang-block="ar" lang="ar" dir="rtl"
+            >تعلّم عن الذهب — أدلة شراء واستثمار الذهب لدول الخليج والإمارات</span
+          >
+        </h1>
+        <p class="learn-hero__lede">
+          <span data-lang-block="en"
+            >Clear, unhurried explanations of how gold is priced, purity and hallmarks, the AED
+            peg, Zakat, and how to buy well across the Gulf — grounded in the same live reference
+            data that powers our tools.</span
+          >
+          <span data-lang-block="ar" lang="ar" dir="rtl"
+            >شرح واضح ومتأنٍّ لكيفية تسعير الذهب، والعيار والدمغات، وربط الدرهم بالدولار، والزكاة،
+            وكيفية الشراء بحكمة في الخليج — مستند إلى بيانات مرجعية حية تُشغّل أدواتنا.</span
+          >
+        </p>
+        <div class="learn-hero__meta">
+          <span class="learn-hero__meta-item">
+            <span data-lang-block="en">9 practical guides</span>
+            <span data-lang-block="ar" lang="ar" dir="rtl">٩ أدلة عملية</span>
+          </span>
+          <span class="learn-hero__meta-sep" aria-hidden="true">·</span>
+          <span class="learn-hero__meta-item">
+            <span data-lang-block="en">Market insights</span>
+            <span data-lang-block="ar" lang="ar" dir="rtl">رؤى السوق</span>
+          </span>
+          <span class="learn-hero__meta-sep" aria-hidden="true">·</span>
+          <span class="learn-hero__meta-item">
+            <span data-lang-block="en">Investing walkthrough</span>
+            <span data-lang-block="ar" lang="ar" dir="rtl">دليل الاستثمار</span>
+          </span>
+        </div>
+      </header>
       <!-- LEARN_STATIC_FALLBACK:START -->
       <div id="learn-catalog-root" class="learn-catalog-wrap" data-static-fallback="true">
         <section class="learn-hub-catalog card card--bordered" data-static-fallback="true">

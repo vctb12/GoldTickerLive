@@ -1,0 +1,358 @@
+/* ============================================================================
+   Learn hub — premium editorial layer (redesign/learn-v2)
+   ----------------------------------------------------------------------------
+   Loaded AFTER learn.css / insights.css / invest.css so these win by source
+   order. Pure presentation over the existing DOM — no structural churn. Brings
+   the Learn hub into the same publication family as the redesigned homepage /
+   portfolio: Playfair serif hero in antique gold, gold-glow bordered cards,
+   editorial article typography, a slim reading-progress bar, honest freshness.
+   Built on shared tokens (tokens.css + design-system.css). Light theme only;
+   dark deferred site-wide (owner-gated).
+   ========================================================================== */
+
+/* ── Reading-progress bar ─────────────────────────────────────────────────── */
+.learn-reading-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: 3px;
+  background: transparent;
+  pointer-events: none;
+}
+.learn-reading-progress__bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(
+    90deg,
+    var(--color-gold-dark),
+    var(--color-gold) 45%,
+    var(--color-gold-bright)
+  );
+  box-shadow: 0 0 8px var(--color-gold-glow);
+  will-change: transform;
+}
+html[dir='rtl'] .learn-reading-progress__bar {
+  transform-origin: right center;
+}
+
+/* ── Editorial hero ───────────────────────────────────────────────────────── */
+.learn-hero {
+  max-width: var(--content-max-width, 1100px);
+  margin: var(--gtl-6) auto var(--gtl-5);
+  padding: var(--gtl-6) var(--gtl-4) 0;
+}
+.learn-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  margin: 0 0 var(--gtl-3);
+  font-size: var(--gtl-meta);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+}
+.learn-hero__eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* Elevate the existing page H1 to the serif antique-gold family. */
+.learn-hero .learn-page-heading {
+  max-width: 20ch;
+  margin: 0 0 var(--gtl-4);
+  padding: 0;
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 1.4rem + 3vw, 3.25rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+}
+.learn-hero__lede {
+  max-width: 62ch;
+  margin: 0 0 var(--gtl-4);
+  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.2rem);
+  line-height: 1.62;
+  color: var(--color-text-muted);
+}
+.learn-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55em;
+  padding-top: var(--gtl-4);
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--gtl-meta);
+  color: var(--color-text-faint);
+}
+.learn-hero__meta-item {
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.learn-hero__meta-sep {
+  color: var(--color-gold);
+}
+
+/* ── Featured-guide catalog card ──────────────────────────────────────────── */
+.learn-catalog-wrap {
+  max-width: var(--content-max-width, 1100px);
+}
+.learn-hub-catalog.card--bordered {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(140% 120% at 100% -10%, var(--color-gold-tint) 0%, transparent 42%),
+    var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  padding: var(--gtl-6);
+}
+.learn-hub-eyebrow {
+  color: var(--color-gold-dark);
+  letter-spacing: 0.12em;
+}
+.learn-hub-intro {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.learn-hub-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.3em 0.85em;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-subtle);
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.learn-hub-category__title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+
+/* Guide cards — gold-glow bordered, lift on hover, gold rail on read. */
+.learn-guide-card.card--bordered {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+.learn-guide-card.card--bordered:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-gold);
+}
+.learn-guide-card__title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.learn-guide-card__time {
+  font-variant-numeric: tabular-nums;
+}
+.learn-guide-card__cta {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+.learn-guide-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.learn-hub-filter:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.learn-hub-related-row {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--gtl-4);
+}
+.related-tool-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Table of contents ────────────────────────────────────────────────────── */
+.learn-hub-toc {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+.learn-hub-toc-label {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  color: var(--color-text);
+}
+.learn-hub-toc-link {
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.learn-hub-toc-link:hover,
+.learn-hub-toc-link.is-active {
+  color: var(--color-gold-dark);
+}
+.learn-hub-toc-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Reference article — editorial typography ─────────────────────────────── */
+.learn-hub-article-header {
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.learn-hub-article-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+}
+.learn-hub-section-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-text);
+}
+.learn-hub-section-intro {
+  font-size: 1.075rem;
+  line-height: 1.62;
+  color: var(--color-text-muted);
+}
+.learn-hub-paragraph,
+.learn-hub-list-item {
+  line-height: 1.68;
+}
+.learn-hub-subheading {
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--color-text);
+}
+
+/* Drop-cap flourish on the lead paragraph of the first prose section. */
+.learn-hub-section--prose .learn-hub-section-intro::first-letter {
+  initial-letter: 2;
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  color: var(--color-gold-antique);
+  margin-inline-end: 0.06em;
+}
+.learn-hub-callout {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gold-glow);
+  background: var(--color-gold-tint);
+}
+.learn-hub-callout--formula {
+  border-inline-start: 3px solid var(--color-gold);
+}
+.learn-hub-callout-title {
+  color: var(--color-gold-dark);
+}
+.learn-hub-inline-code {
+  font-variant-numeric: tabular-nums;
+}
+.learn-hub-table {
+  font-variant-numeric: tabular-nums;
+}
+.learn-purity-bar-fill {
+  background: linear-gradient(90deg, var(--color-gold-dark), var(--color-gold));
+}
+.learn-hub-faq-item {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+.learn-hub-faq-item .faq-question:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Cohesion: insights + invest section headings adopt the serif family ──── */
+.insights-section-title,
+.invest-hero-title,
+.invest-section-title,
+.invest-panel-title {
+  font-family: var(--gtl-serif);
+  letter-spacing: -0.01em;
+}
+.invest-hero-title {
+  color: var(--color-gold-antique);
+}
+
+/* Invest live snapshot — honest freshness pill on the updated line. */
+#invest-updated {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-variant-numeric: tabular-nums;
+}
+.invest-fresh-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  flex: none;
+}
+.invest-fresh-dot--live {
+  background: #1f9d55;
+  box-shadow: 0 0 0 3px rgb(31 157 85 / 18%);
+}
+.invest-fresh-dot--delayed {
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.invest-fresh-dot--cached,
+.invest-fresh-dot--fallback,
+.invest-fresh-dot--unavailable {
+  background: #b06a1f;
+  box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
+}
+.invest-fresh-label {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.invest-fresh-sep {
+  color: var(--color-text-faint);
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .learn-hero {
+    padding-top: var(--gtl-5);
+    margin-bottom: var(--gtl-4);
+  }
+  .learn-hero .learn-page-heading {
+    max-width: none;
+  }
+  .learn-hub-catalog.card--bordered {
+    padding: var(--gtl-5) var(--gtl-4);
+  }
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .learn-guide-card.card--bordered,
+  .learn-hub-toc-link {
+    transition: none;
+  }
+  .learn-guide-card.card--bordered:hover {
+    transform: none;
+  }
+  .learn-reading-progress__bar {
+    will-change: auto;
+  }
+}
