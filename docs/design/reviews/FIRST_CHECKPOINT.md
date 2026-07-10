@@ -12,8 +12,12 @@ final sequence instruction, I stop here and wait for approval.
   [`docs/design/GOLDTICKERLIVE_VISUAL_DIRECTION_V2.md`](../GOLDTICKERLIVE_VISUAL_DIRECTION_V2.md)
 - **Before** screenshots (107 PNGs, desktop+mobile, EN+AR) →
   [`docs/design/reviews/before/`](./before/)
-- **Concept** mockup (interactive HTML + renders) → [`docs/design/reviews/concepts/`](./concepts/)
-  (`homepage-hero-concept.html`, `concept_home_desktop_en.png`, `concept_home_mobile_en.png`)
+- **Concept** mockups (interactive HTML + renders) → [`docs/design/reviews/concepts/`](./concepts/):
+  three explored directions — **A Living Terminal** (`homepage-hero-concept.html`,
+  `concept_A_living_terminal_desktop.png`, `concept_home_mobile_en.png`), **B Market Story** & **C
+  Value-First** (`homepage-alternatives.html`, `concept_B_market_story_desktop.png`,
+  `concept_C_value_first_desktop.png`). Evaluated in **Part B4–B5** below; recommendation =
+  A-synthesis.
 - Protected checkpoint: branch `design/visual-transformation-checkpoint-2026-07-10`, tag
   `pre-visual-transformation-2026-07-10` @ `d9c5d7d25`.
 
