@@ -2,10 +2,21 @@
 
 **Auditor:** Claude (sole coordinator + visual-quality gate) · **Method:** production `dist`
 (`NODE_ENV=production` build + `stage-dist-statics` + `cp countries`), served on `localhost:8080`,
-exercised in headless Chromium at **desktop 1440×900** and **mobile 390×844**, **EN and AR**,
-`prefers-reduced-motion` both states. Screenshots live in
-[`docs/design/reviews/before/`](../design/reviews/before/) (107 PNGs: `<page>_<vp>_<lang>_fold.png`
-above-the-fold, `_full.png` whole page, `home_desktop_en_crop1..7.png` below-fold sweep).
+exercised in headless Chromium at **desktop 1440×900** and **mobile 390×844**, **EN and AR**. Shots
+in [`docs/design/reviews/before/`](../design/reviews/before/): `<page>_<vp>_<lang>_fold.png`
+(above-fold), `_full.png` (whole page), `home_desktop_en_crop1..7.png` (below-fold sweep).
+
+> **Capture-accuracy note (important — corrected after first pass).** This site's scroll container
+> is `<body>` (`height:100vh; overflow-y:auto`), so Playwright's `fullPage:true` cannot expand it —
+> the first pass produced `_full.png` images that looked _blank below the hero_, understating the
+> current state. That was a capture artifact, not the real page. **Corrected method**
+> (`scripts/node/capture-accurate-fullpage.mjs`): load with **normal motion** (the real default),
+> read `body.scrollHeight`, resize the viewport to the full height so every section lays out in one
+> paintable frame, then scroll `body` top→bottom→top to trigger all lazy/`IntersectionObserver`
+> reveals, wait to settle, and screenshot. Result: **21/21 homepage sections render** (h≈8,306px
+> desktop / ≈11,056px mobile). The `_full.png` files now reflect the true page; findings below use
+> the corrected captures. If anything, the accurate render makes the current state **more**
+> card-heavy and generic than the first pass implied — see §3.1.
 
 This is a **visual** audit. It does not re-litigate the pricing/data-integrity/testing state — that
 is in [`2026-07-10_POST_CONVERGENCE_MAIN_AUDIT.md`](./2026-07-10_POST_CONVERGENCE_MAIN_AUDIT.md) and
@@ -91,10 +102,24 @@ _Shots: `home_desktop_en_fold/full`, `home_desktop_en_crop1..7`, `home_mobile_en
 - **What's generic:** classic **header + hero-left + spot-card-right**. The single most valuable
   thing on the site — the live gold price — is rendered as a bordered card sitting beside a
   decorative serif headline, exactly the "header + card" the brief rejects.
-- **Structure:** 21 sections, `<main>` ~7,291px: hero → Gold Price Chart (TradingView) → Price
-  History → karat cards → trust pills → About-Our-Prices dark card → Live Gold Prices
-  (GCC/MENA/Global tabs) → tools → quick-convert. Real content exists; it's just laid out as a long
-  scroll of card blocks.
+- **Structure (accurate full-height capture):** 21 sections, `<main>` ~7,291px (page ~8,306px): hero
+  → Gold Price Chart (TradingView) → Price History (monthly cards) → "Start from what you need"
+  (quick convert + tool cards) → Live reference prices by karat (card row) → trust pills →
+  About-Our-Prices dark card → Live Gold Prices (country grid) → **"Everything You Need" (a grid of
+  ~11 near-identical tool cards)** → "Gold Ticker Live by the numbers" (stat row) → **"What should I
+  check next?" (another guide-card row)** → Browse by Country (flag chips) → **Major Gold Markets /
+  From the Markets (souk photography cards)** → follow-X strip → Spot/Karat/Local explainer →
+  Methodology. Real content exists; it's a very long scroll of **card blocks**.
+- **Card overload is worse than the fold suggests.** The accurate render shows the homepage repeats
+  the same tool set as cards **at least three times** ("Start from what you need", "Everything You
+  Need", "What should I check next?"). That's the single strongest generic signal on the site.
+- **Assets worth keeping:** the lower third has genuine **gold-souk photography** (Major Gold
+  Markets / From the Markets) — currently buried at the bottom, but a real editorial asset the
+  redesign should promote. There is also a **"by the numbers" stat row** (24+ / 7 / EN·AR / Free)
+  worth reworking.
+- **Broken/empty state in production serve:** the "Live Gold Prices" country grid renders as
+  **unpopulated skeleton tiles** (client fetch didn't resolve) — i.e. the current loading/empty
+  state is a bare grey placeholder, reinforcing the §XVIII "designed states" gap.
 - **Weak hierarchy:** three different sections use the same serif-H1 + eyebrow, so the chart, the
   karat table and the country list read as equally important. There's no visual argument for what to
   look at.

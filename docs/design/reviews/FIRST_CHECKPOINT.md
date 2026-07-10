@@ -206,9 +206,189 @@ evidence; bilingual EN+AR; flags/pilots OFF; never push/force-push `main`; never
 
 ---
 
+---
+
+# Part B — Final QC (adversarial review before presenting)
+
+The brief is frozen; this section is the uncompromising quality gate applied to my own proposal. I
+put on an **independent senior design team hat with permission to reject**, tried to break the
+direction, explored genuinely different alternatives, and scored everything honestly. Where a
+category was merely "good enough," it's called out with a concrete plan — nothing below is
+hand-waved.
+
+## B1 — Internal design review (I tried to break it)
+
+Hunting for weakness in the proposed direction and Concept A. **Findings against my own work:**
+
+1. **"Split hero" is itself a dashboard cliché.** A left-copy / right-data-panel hero is common
+   (Stripe, dozens of SaaS). _Risk:_ looks generic. _Fix:_ the identity has to come from the
+   **numeral treatment + the tick motion + material gold**, not the split. I'll also test a
+   **single-column** hero where the price is centered and huge (closer to Apple Weather) so the
+   split isn't load-bearing.
+2. **Karat ladder can read as "just another card row."** Four boxes in a row is exactly the pattern
+   I'm criticizing. _Fix:_ it must be visibly **interactive and connected** (a real slider/segmented
+   control that re-rolls the value, with a connecting rail), not four static tiles. If it can't feel
+   alive, it becomes a single karat selector + one big value, not a row.
+3. **Odometer tick risks being a gimmick.** Rolling digits can feel toy-ish and, worse, make a price
+   _harder_ to read for a second. _Fix:_ roll only the digits that changed, ≤220ms, never on first
+   paint; if it ever reduces readability in testing, downgrade to a tint-flash. Reduced-motion
+   already crossfades.
+4. **Two headlines competing.** The serif editorial H1 _and_ the giant numeral both want to be the
+   focal point. _Fix:_ pick one focal point per breakpoint — on desktop the **number** wins and the
+   headline is a kicker-scale line; the current concept slightly over-weights the serif H1.
+5. **Warm-paper + gold can drift "heritage/luxury cliché"** (generic jeweller sites). _Fix:_ keep
+   gold to hairlines/accents/one material moment; lean on **ink + generous whitespace + editorial
+   type** for modernity. The moment it gets gradient-heavy it dies.
+6. **Journey is asserted, not yet shown.** I claim a guided arc but the concept only shows the hero.
+   _Fix:_ the section directly under the hero must be the **audience-routing band** (buying /
+   comparing / holding) — the journey's first fork — and it must exist in v1, not "later."
+7. **Arabic is still under-proven.** I have EN concepts; AR is described, not designed. _Fix:_ the
+   homepage PR must ship an **AR-composed** hero (not mirrored), reviewed with the same scoring, or
+   it fails its own gate.
+8. **Density vs. calm tension.** "Density is a feature" (terminal) and "one idea per screen" (Apple)
+   can conflict. _Resolution:_ density lives on **tracker/compare**; the **homepage** stays calm —
+   it's the front door, not the terminal. Stated explicitly so implementation doesn't over-stuff it.
+
+**What I changed/tightened before presenting:** promoted the audience-routing band into v1 (was
+"later"); demoted the serif H1 relative to the numeral on desktop; constrained the tick to
+changed-digits-only with a readability kill-switch; required the karat ladder to be genuinely
+interactive or collapse to a selector; required an AR-composed hero in the homepage PR; and
+explicitly assigned "calm" to the homepage vs "dense" to tracker/compare.
+
+## B2 — Confidence assessment (per homepage section, 1–10)
+
+Scored for the **recommended A-synthesis** layout. Any category **< 9** carries a reason + a
+concrete plan. Scores are honest pre-build estimates — several are intentionally below 9 because
+they're unproven until built.
+
+| Section                                        | Visual | Usab. | Orig. | Perf. | A11y  | Trust | Mobile |  RTL  |
+| ---------------------------------------------- | :----: | :---: | :---: | :---: | :---: | :---: | :----: | :---: |
+| 1. Live-price hero                             |   9    |   9   | **8** |   9   |   9   |   9   |   9    | **7** |
+| 2. Karat ladder                                | **8**  |   9   | **8** |   9   | **8** |   9   | **8**  | **7** |
+| 3. "What's it worth" inline calc               |   9    |   9   |   9   |   9   |   9   |   9   |   9    | **8** |
+| 4. Audience-routing band                       |   9    |   9   |   9   |  10   |   9   |   9   |   9    | **8** |
+| 5. Market chart + history                      |   9    |   9   | **8** | **7** | **8** |   9   | **8**  | **8** |
+| 6. Editorial "Gold Markets" (souk photography) |   9    |   9   |   9   | **8** |   9   |   9   |   9    |   9   |
+| 7. Learn rail                                  |   9    |   9   | **8** |   9   |   9   |   9   |   9    |   9   |
+| 8. Nav + sticky mobile market summary          |   9    |   9   | **8** |   9   |   9   |   9   |   9    | **8** |
+
+**Why < 9, and the plan (every instance):**
+
+- **Originality 8 (hero, ladder, chart, learn rail, nav):** these evolve familiar patterns. _Plan:_
+  the originality budget is spent on the **numeral face + tick + material gold + Arabic
+  composition + the interactive ladder**; each of those five must land or the section is reworked,
+  not shipped.
+- **RTL 7 (hero, ladder):** unproven; Arabic headline length + numeral bidi are real hazards.
+  _Plan:_ design the AR hero natively, bidi-isolate all numerals, review AR at the same gate before
+  merge.
+- **A11y 8 (ladder, chart):** interactive ladder + chart crosshair need keyboard + SR support.
+  _Plan:_ ladder = radio-group/slider semantics + focus ring; chart = keyboard-scrub + text
+  summary + not-color-alone; add axe/pa11y coverage for both.
+- **Mobile 8 (ladder, chart, markets):** ladder cramps at 390px; chart is hard on small screens.
+  _Plan:_ ladder → horizontal swipe/segmented control; chart → simplified sparkline + tap-to-read.
+- **Perf 7 (chart):** the current TradingView embed is the heaviest thing on the page. _Plan:_
+  lazy-load below fold, reserve space (CLS≈0), evaluate a lightweight self-rendered chart to drop
+  third-party weight; measure LCP in the production build before the section is "done."
+- **Visual 8 (ladder):** four tiles risk genericness (see B1-2). _Plan:_ make it visibly interactive
+  or collapse to selector+value.
+
+**Rule I'm binding myself to:** no homepage section ships until **every** category reaches ≥9 in the
+actual build, verified with before/after screenshots at the Visual Acceptance Gate.
+
+## B3 — Top 5 risks (and mitigations)
+
+1. **"Reskin, not redesign."** _Why:_ easiest failure mode — change type/color, keep the same card
+   stack. _Harm:_ owner sees no real change; the program fails its premise. _Mitigate:_ the Gate
+   rejects CSS-only/more-cards; each PR shows a **structural** before/after (section count down,
+   card-repetition removed), not just restyling.
+2. **Market-narrative accuracy (esp. toward Concept B).** _Why:_ an editorial headline like "near a
+   3-month high" is a factual claim. _Harm:_ if wrong/stale it's misinformation and brushes the
+   no-fake-urgency guardrail. _Mitigate:_ any narrative copy is **derived from real data with a
+   verified rule** (e.g. vs true 90-day max) or it doesn't render; never hand-authored urgency.
+3. **Cross-surface price divergence (F-1) undermines the redesign.** _Why:_ the concepts assume ONE
+   canonical spot; today home/tracker/calculator disagree. _Harm:_ a beautiful hero showing a
+   different number than the calculator destroys trust faster than an ugly consistent one.
+   _Mitigate:_ the canonical-spot resolver (plan P1–P2) is a **prerequisite for / runs alongside**
+   the homepage, which reads the resolver so every number agrees. **Owner flag:** this couples
+   visual work to the F-1 fix.
+4. **Performance regression from richer visuals + fonts + motion.** _Why:_ self-hosted fonts, chart,
+   animated numbers. _Harm:_ slower LCP/CLS, especially mid-range mobile in the GCC. _Mitigate:_
+   subset woff2 + `font-display:swap`, transform/opacity-only motion, lazy charts, reserved space;
+   hard budget (LCP<2.5s, CLS≈0) verified in the production build per PR.
+5. **RTL/Arabic treated as a post-pass.** _Why:_ easy to design EN-first and mirror. _Harm:_ half
+   the GCC audience gets a second-class experience — a core-promise failure. _Mitigate:_ AR is a
+   first-class deliverable **in every page PR**, scored at the same gate; the homepage ships an
+   AR-composed (not mirrored) hero or it's rejected.
+
+## B4 — Alternative homepage concepts explored
+
+Three genuinely different balances were built and reviewed in-browser (renders in `concepts/`):
+
+- **Concept A — "Living Terminal"** (`concept_A_living_terminal_desktop.png`,
+  `concept_home_mobile_en.png`): price-as-protagonist split hero + karat ladder + inline "what's it
+  worth" + one primary CTA. Balance: **live market data forward**, with a consumer action and light
+  editorial framing.
+- **Concept B — "Market Story"** (`concept_B_market_story_desktop.png`): FT/Economist editorial
+  front — a serif headline telling today's story with the price inline, a wide chart + stat column,
+  and three "If you're buying / comparing / holding" cards. Balance: **editorial storytelling
+  forward.**
+- **Concept C — "Value-First"** (`concept_C_value_first_desktop.png`): Revolut-style consumer
+  utility — a big "What is your gold worth today?" calculator as the hero (weight + karat → instant
+  AED), live spot as a top strip, an "explore prices" rail. Balance: **consumer guidance/utility
+  forward.**
+
+| Criterion                        | A · Living Terminal | B · Market Story  | C · Value-First   |
+| -------------------------------- | ------------------- | ----------------- | ----------------- |
+| Serves buyers (jewellery)        | ●●●                 | ●●                | ●●●               |
+| Serves investors/returning       | ●●●                 | ●●●               | ●                 |
+| Serves journalists/citation      | ●●●                 | ●●●               | ●                 |
+| Serves first-timers              | ●●                  | ●●                | ●●●               |
+| Distinctive identity             | ●●●                 | ●●●               | ●●                |
+| Premium / editorial feel         | ●●●                 | ●●●               | ●●                |
+| "Best gold platform" credibility | ●●●                 | ●●                | ●                 |
+| Accuracy / fabrication risk      | low                 | **higher** (copy) | low               |
+| Overlap with existing pages      | low                 | low               | **high** (≈ calc) |
+
+**Strengths/weaknesses.** **A** balances all four audiences and keeps market credibility while
+giving buyers an action; weakest on first-timer hand-holding. **B** is the most premium and best
+storytelling, but demotes the live number and carries narrative-accuracy risk (#2). **C** is the
+most immediately useful for a first-time buyer but demotes the market identity and largely
+duplicates the calculator page, weakening the homepage's reason to exist.
+
+## B5 — Recommendation
+
+**Adopt Concept A ("Living Terminal") as the spine, grafting the strongest ideas from B and C** —
+the judge-panel outcome, not the first idea:
+
+- from **A**: price-as-protagonist hero, the numeral/tick signature, the interactive karat ladder;
+- from **C**: the inline **"what's it worth"** instant (promoted from a line to a mini-calc in the
+  hero) — the immediate utility A lacked for first-timers;
+- from **B**: the **"If you're buying / comparing / holding"** audience-routing band directly under
+  the hero — the journey's first fork, and B's single best idea.
+
+**Why this is the best long-term direction:** the product's durable moat is being the **trusted,
+live, bilingual gold _reference_** for the GCC — used by buyers, investors, and journalists. That
+demands the **live price be the protagonist** (A) with **market credibility**, while still guiding a
+first-time buyer to an answer (C) and telling enough of a story to bring people back tomorrow (B). B
+alone risks accuracy and demotes the number; C alone becomes "a calculator with a homepage" and
+cedes the reference-authority position. A-with-grafts is the only option that keeps the authority
+**and** the consumer warmth **and** an original identity — and it degrades gracefully (if
+narrative/chart is unavailable, the price hero still stands). It also sequences into one calm guided
+scroll — hero → routing band → chart/history → markets/editorial → learn — materially shorter than
+today's ~8,300px card stack.
+
+**Owner decisions this surfaces:** (a) approve **A-synthesis** as the homepage direction; (b)
+confirm the **identity/palette** ("editorial bullion terminal," warm ink/paper + one assay-gold
+accent, numeral signature); (c) accept that the homepage should **read the canonical-spot resolver**
+so its numbers can't diverge (couples to F-1, plan P1–P2) — or explicitly defer and accept temporary
+divergence; (d) confirm **build order** (homepage first).
+
+---
+
 ### ⏸ Stopping here for owner review
 
-Per your final instruction, I am **not** starting homepage code. On your **approve**, I begin the
-flagship homepage build on `redesign/home` with frequent before/after per-component checkpoints. If
-you want changes to the direction, palette, the identity concept, or the build order, tell me and
-I'll revise this package first.
+Per your final instruction, I am **not** starting homepage code and will not until you **explicitly
+approve the direction**. On approval I begin the flagship homepage on `redesign/home` (A-synthesis)
+with frequent before/after per-component checkpoints and the Visual Acceptance Gate applied to every
+section, EN **and** AR. If you want a different concept (B or C), a different palette/identity, or a
+different build order, tell me and I'll revise this package before any code.
