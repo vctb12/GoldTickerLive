@@ -75,6 +75,11 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/market.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing);
+         market-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/market-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/market-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
@@ -121,6 +126,7 @@
       <nav class="mkt-jump" aria-label="Market sections" data-lang-block="en">
         <span class="mkt-jump-label">Jump to a section</span>
         <a href="#chain">The price chain</a>
+        <a href="#worked">Live example</a>
         <a href="#marketplaces">Who sets the price</a>
         <a href="#gap">Why local differs</a>
         <a href="#reading">Reading a quote</a>
@@ -129,6 +135,7 @@
       <nav class="mkt-jump" aria-label="أقسام الصفحة" data-lang-block="ar" lang="ar" dir="rtl">
         <span class="mkt-jump-label">الانتقال إلى قسم</span>
         <a href="#chain">سلسلة التسعير</a>
+        <a href="#worked">مثال مباشر</a>
         <a href="#marketplaces">من يحدّد السعر</a>
         <a href="#gap">لماذا يختلف المحلي</a>
         <a href="#reading">قراءة التسعيرة</a>
@@ -299,6 +306,119 @@
               </li>
             </ol>
           </div>
+        </div>
+      </section>
+
+      <!-- ── 1b. Worked example — the chain in today's live numbers ─────────
+           Grounds the abstract chain in the canonical getCanonicalSpot() snapshot
+           (F-1). Numbers are filled by market.js; labels are bilingual
+           data-lang-blocks. Reference only — we never fabricate the retail step. -->
+      <section class="mkt-section mkt-worked-section" id="worked" aria-labelledby="worked-title">
+        <div class="mkt-inner">
+          <article class="mkt-worked" id="mkt-worked" aria-busy="true">
+            <div class="mkt-worked-head">
+              <div>
+                <p class="mkt-eyebrow">
+                  <span data-lang-block="en">Worked example · live</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">مثال محسوب · مباشر</span>
+                </p>
+                <h2 class="mkt-section-title" id="worked-title">
+                  <span data-lang-block="en">The chain, in today's real numbers</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">السلسلة بأرقام اليوم الحقيقية</span>
+                </h2>
+              </div>
+              <span class="mkt-worked-fresh" id="mkt-worked-fresh" hidden>
+                <span class="mkt-worked-dot" id="mkt-worked-dot" aria-hidden="true"></span>
+                <span class="mkt-worked-fresh-text" id="mkt-worked-fresh-text"></span>
+              </span>
+            </div>
+
+            <ol class="mkt-worked-flow">
+              <li class="mkt-worked-node">
+                <span class="mkt-worked-step">
+                  <span data-lang-block="en">Global spot</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">السعر الفوري</span>
+                </span>
+                <span class="mkt-worked-value" id="mkt-w-spot"
+                  ><span class="mkt-worked-skel"></span
+                ></span>
+                <span class="mkt-worked-unit">
+                  <span data-lang-block="en">USD / troy oz</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">دولار / أونصة</span>
+                </span>
+              </li>
+              <li class="mkt-worked-op" aria-hidden="true">÷ 31.1035</li>
+              <li class="mkt-worked-node">
+                <span class="mkt-worked-step">
+                  <span data-lang-block="en">Per gram (USD)</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">للغرام (دولار)</span>
+                </span>
+                <span class="mkt-worked-value" id="mkt-w-usdg"
+                  ><span class="mkt-worked-skel"></span
+                ></span>
+                <span class="mkt-worked-unit">
+                  <span data-lang-block="en">USD / gram · 24K</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">دولار / غرام · 24</span>
+                </span>
+              </li>
+              <li class="mkt-worked-op" aria-hidden="true">× 3.6725</li>
+              <li class="mkt-worked-node mkt-worked-node--accent">
+                <span class="mkt-worked-step">
+                  <span data-lang-block="en">Reference (AED)</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">المرجع (درهم)</span>
+                </span>
+                <span class="mkt-worked-value" id="mkt-w-aedg"
+                  ><span class="mkt-worked-skel"></span
+                ></span>
+                <span class="mkt-worked-unit">
+                  <span data-lang-block="en">AED / gram · 24K</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / غرام · 24</span>
+                </span>
+              </li>
+              <li class="mkt-worked-op mkt-worked-op--retail" aria-hidden="true">
+                <span data-lang-block="en">+ making · margin · VAT</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">+ صياغة · هامش · ضريبة</span>
+              </li>
+              <li class="mkt-worked-node mkt-worked-node--retail">
+                <span class="mkt-worked-step">
+                  <span data-lang-block="en">Counter price</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">سعر المحل</span>
+                </span>
+                <span class="mkt-worked-value mkt-worked-value--muted">
+                  <span data-lang-block="en">Shop-set</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">يحدّده المحل</span>
+                </span>
+                <span class="mkt-worked-unit">
+                  <span data-lang-block="en">above reference</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">فوق المرجع</span>
+                </span>
+              </li>
+            </ol>
+
+            <p class="mkt-worked-note">
+              <span data-lang-block="en"
+                >Steps 1–3 are arithmetic we can show live from the canonical spot price. The final
+                counter price is <strong>set by each shop</strong> — the making charge, dealer margin
+                and any VAT are why retail sits above this reference. We never fabricate it.</span
+              >
+              <span data-lang-block="ar" lang="ar" dir="rtl"
+                >الخطوات 1–3 حساب يمكننا عرضه مباشرة من السعر الفوري المرجعي. أما سعر المحل النهائي
+                <strong>فيحدّده كل محل</strong> — وأجور الصياغة وهامش التاجر وأي ضريبة هي سبب ارتفاع
+                التجزئة فوق هذا المرجع. ولا نختلقه أبدًا.</span
+              >
+            </p>
+
+            <div class="mkt-worked-actions">
+              <a href="calculator.html" class="mkt-worked-btn mkt-worked-btn--primary">
+                <span data-lang-block="en">Try it on a real weight →</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">جرّبها على وزن حقيقي →</span>
+              </a>
+              <a href="tracker.html" class="mkt-worked-btn">
+                <span data-lang-block="en">Watch spot live</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">تابع السعر مباشرة</span>
+              </a>
+            </div>
+          </article>
         </div>
       </section>
 

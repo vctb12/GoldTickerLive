@@ -1,0 +1,282 @@
+/* ============================================================================
+   Market ("How gold is priced") — premium editorial layer (redesign/market-v2)
+   ----------------------------------------------------------------------------
+   Loaded AFTER market.css so these win by source order. Two jobs: (1) the live
+   "worked example" panel that grounds the abstract price chain in the canonical
+   getCanonicalSpot() snapshot (F-1); (2) bring the page into the redesigned
+   homepage family — Playfair serif in antique gold, gold-glow cards, tabular
+   figures. Built on shared tokens (tokens.css + design-system.css). Light theme
+   only; dark deferred site-wide (owner-gated).
+   ========================================================================== */
+
+/* ── Hero + section headings: serif antique gold ──────────────────────────── */
+.mkt-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+  line-height: 1.07;
+}
+.mkt-hero-eyebrow {
+  letter-spacing: 0.13em;
+  color: var(--color-gold-dark);
+}
+.mkt-section-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.mkt-step-title,
+.mkt-card-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.mkt-step-num {
+  font-variant-numeric: tabular-nums;
+}
+.mkt-jump a:hover {
+  color: var(--color-gold-dark);
+}
+.mkt-jump a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Worked-example panel ─────────────────────────────────────────────────── */
+.mkt-worked-section {
+  padding-block: 0 var(--gtl-6);
+}
+.mkt-worked {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(130% 120% at 100% 0%, var(--color-gold-tint) 0%, transparent 46%),
+    var(--color-surface);
+  box-shadow: var(--shadow-md);
+  padding: clamp(20px, 3vw, 32px);
+}
+.mkt-worked-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--gtl-5);
+}
+.mkt-worked-head .mkt-eyebrow {
+  color: var(--color-gold-dark);
+  letter-spacing: 0.12em;
+}
+.mkt-worked-head .mkt-section-title {
+  margin: 0.15em 0 0;
+}
+.mkt-worked-fresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.35em 0.8em;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-2);
+  font-size: var(--gtl-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.mkt-worked-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  flex: none;
+}
+.mkt-worked-dot--live {
+  background: #1f9d55;
+  box-shadow: 0 0 0 3px rgb(31 157 85 / 18%);
+}
+.mkt-worked-dot--delayed {
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.mkt-worked-dot--cached,
+.mkt-worked-dot--fallback,
+.mkt-worked-dot--unavailable {
+  background: #b06a1f;
+  box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
+}
+
+/* Flow of nodes + operators. */
+.mkt-worked-flow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: var(--gtl-3);
+}
+.mkt-worked-node {
+  flex: 1 1 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--gtl-4);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+.mkt-worked-node--accent {
+  border-color: var(--color-gold-glow);
+  background: var(--color-gold-tint);
+}
+.mkt-worked-node--retail {
+  border-style: dashed;
+  background: transparent;
+}
+.mkt-worked-step {
+  font-size: var(--gtl-meta);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.mkt-worked-value {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: clamp(1.3rem, 1.05rem + 1vw, 1.75rem);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+.mkt-worked-node--accent .mkt-worked-value {
+  color: var(--color-gold-antique);
+}
+.mkt-worked-value--muted {
+  color: var(--color-text-faint);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.mkt-worked-unit {
+  font-size: var(--gtl-meta);
+  color: var(--color-text-muted);
+}
+.mkt-worked-op {
+  align-self: center;
+  flex: 0 0 auto;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gold-dark);
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.mkt-worked-op--retail {
+  color: var(--color-text-faint);
+  font-weight: 600;
+  font-variant-numeric: normal;
+}
+
+/* Skeletons. */
+.mkt-worked-skel {
+  display: inline-block;
+  width: 5ch;
+  height: 1em;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-3) 25%,
+    var(--color-surface-2) 50%,
+    var(--color-surface-3) 75%
+  );
+  background-size: 200% 100%;
+  animation: mkt-shimmer 1.4s ease-in-out infinite;
+  vertical-align: middle;
+}
+
+@keyframes mkt-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.mkt-worked-note {
+  margin: var(--gtl-5) 0 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.mkt-worked-note strong {
+  color: var(--color-text);
+}
+.mkt-worked-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gtl-3);
+  margin-top: var(--gtl-4);
+}
+.mkt-worked-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6em 1.2em;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease;
+}
+.mkt-worked-btn:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.mkt-worked-btn:active {
+  transform: translateY(1px);
+}
+.mkt-worked-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.mkt-worked-btn--primary {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--color-gold), var(--color-gold-dark));
+}
+.mkt-worked-btn--primary:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Responsive: stack the flow vertically on narrow screens ──────────────── */
+@media (max-width: 760px) {
+  .mkt-worked-flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .mkt-worked-op {
+    align-self: flex-start;
+    padding-inline-start: var(--gtl-3);
+  }
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .mkt-worked-skel {
+    animation: none;
+  }
+  .mkt-worked-btn {
+    transition: none;
+  }
+  .mkt-worked-btn--primary:hover {
+    transform: none;
+  }
+}
