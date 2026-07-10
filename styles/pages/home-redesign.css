@@ -550,6 +550,165 @@
   content: ' ←';
 }
 
+/* ═══ Karat ladder + interactive dial ═══════════════════════════════════════ */
+.karat-strip .karat-strip-inner {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  grid-template-areas:
+    'copy copy'
+    'dial prices'
+    'actions actions';
+  gap: var(--gtl-5) var(--gtl-7);
+  align-items: center;
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+}
+.karat-strip .karat-strip-copy {
+  grid-area: copy;
+}
+.karat-strip .karat-strip-scroll-hint {
+  display: none;
+}
+.karat-strip #karat-strip-prices {
+  grid-area: prices;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--gtl-3);
+  overflow: visible;
+}
+.karat-strip .karat-strip-actions {
+  grid-area: actions;
+}
+.karat-strip .karat-strip-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+.karat-strip .karat-strip-label {
+  color: var(--gtl-gold-deep);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: var(--gtl-kicker);
+}
+
+/* Rungs as a selectable ladder */
+.karat-strip .karat-strip-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-md);
+  padding: var(--gtl-4);
+  min-width: 0;
+  transition: border-color var(--gtl-t-fast) var(--gtl-ease);
+}
+.karat-strip .karat-strip-item[role='radio'] {
+  cursor: pointer;
+}
+.karat-strip .karat-strip-item.is-selected {
+  border-color: var(--gtl-gold);
+  box-shadow: inset 0 0 0 1px var(--gtl-gold);
+  background: var(--gtl-gold-soft);
+}
+.karat-strip .karat-strip-item:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+.karat-strip .karat-strip-k {
+  font-weight: 700;
+  color: var(--gtl-ink);
+  font-size: 0.95rem;
+}
+.karat-strip .karat-strip-v {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  color: var(--gtl-ink-data);
+  font-size: 1.15rem;
+}
+
+/* The dial */
+.karat-dial {
+  grid-area: dial;
+  position: relative;
+  width: 216px;
+  height: 216px;
+  justify-self: center;
+}
+.karat-dial__svg {
+  width: 100%;
+  height: 100%;
+}
+.karat-dial__track {
+  fill: none;
+  stroke: var(--color-surface-3);
+  stroke-width: 14;
+}
+.karat-dial__arc {
+  fill: none;
+  stroke: var(--gtl-gold);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--gtl-t-slow) var(--gtl-ease);
+}
+.karat-dial__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+.karat-dial__k {
+  font-family: var(--gtl-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gtl-ink);
+  line-height: 1;
+}
+.karat-dial__purity {
+  font-size: 0.8rem;
+  color: var(--gtl-ink-faint);
+}
+.karat-dial__val {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gtl-ink-data);
+  margin-top: 6px;
+}
+.karat-dial__unit {
+  font-size: 0.68rem;
+  color: var(--gtl-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 760px) {
+  .karat-strip .karat-strip-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'copy'
+      'dial'
+      'prices'
+      'actions';
+    justify-items: center;
+  }
+  .karat-strip #karat-strip-prices {
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karat-dial__arc {
+    transition: none;
+  }
+}
+
 @media (max-width: 900px) {
   .home-chart-wrap--gtl {
     grid-template-columns: 1fr;

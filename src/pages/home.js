@@ -85,6 +85,9 @@ let goldPrice = null;
 // F-1: the single canonical snapshot (committed-file source, identical to the
 // calculator) that authoritatively drives every displayed price on this page.
 let _canonicalSnapshot = null;
+// Karat dial: the currently-selected karat (drives the dial arc + centre value).
+let _selectedKarat = '24';
+let _karatDialInit = false;
 let dayOpenPrice = null;
 let rates = {};
 let goldUpdatedAt = null;
@@ -1329,6 +1332,109 @@ function updateRoutingCanonicalValue(snapshot) {
   if (wrap) wrap.hidden = false;
 }
 
+// ── Karat dial (signature interaction; teaches purity = karat ÷ 24) ──────────
+const KARAT_DIAL_CIRC = 2 * Math.PI * 84; // r=84 in the SVG
+
+/** Human purity label: fine gold shows .999; others show karat/24 to 3 places. */
+function purityDisplay(code, purity) {
+  if (String(code) === '24') return '.999';
+  return purity.toFixed(3).replace(/^0/, '');
+}
+
+/** Update the karat dial's arc + centre (karat, purity, canonical value) for the selection. */
+function updateKaratDial() {
+  const arc = document.getElementById('karat-dial-arc');
+  const kEl = document.getElementById('karat-dial-k');
+  const pEl = document.getElementById('karat-dial-purity');
+  const vEl = document.getElementById('karat-dial-val');
+  const uEl = document.getElementById('karat-dial-unit');
+  const karat =
+    KARATS.find((k) => k.code === _selectedKarat) || KARATS.find((k) => k.code === '24');
+  if (!karat) return;
+
+  // Arc fills to the purity proportion — the visual teaching of karat ÷ 24.
+  if (arc) {
+    arc.style.strokeDasharray = String(KARAT_DIAL_CIRC);
+    arc.style.strokeDashoffset = String(KARAT_DIAL_CIRC * (1 - karat.purity));
+  }
+  if (kEl) kEl.textContent = karat.code + 'K';
+  if (pEl) pEl.textContent = purityDisplay(karat.code, karat.purity);
+
+  // Centre value = canonical 24K/g × purity × unit multiplier (same source as the ladder).
+  const base = _canonicalSnapshot?.ok
+    ? _canonicalSnapshot.aedPerGram24k
+    : Number.isFinite(goldPrice)
+      ? calc.usdPerGram(goldPrice, 1) * CONSTANTS.AED_PEG
+      : null;
+  const mult = KARAT_STRIP_UNIT_MULT[karatStripUnit] || 1;
+  if (vEl && Number.isFinite(base)) {
+    vEl.textContent = fmt.formatPrice(base * karat.purity * mult, 'AED', 2);
+  }
+  const unitKey =
+    karatStripUnit === 'tola'
+      ? 'karatStripLabelTola'
+      : karatStripUnit === 'oz'
+        ? 'karatStripLabelOz'
+        : 'karatStripLabelGram';
+  if (uEl) uEl.textContent = tx(unitKey);
+
+  // Reflect selection state on the ladder rungs.
+  KARATS.forEach((k) => {
+    const item = document.getElementById('kstrip-' + k.code);
+    if (item && item.hasAttribute('role')) {
+      item.setAttribute('aria-checked', k.code === _selectedKarat ? 'true' : 'false');
+      item.tabIndex = k.code === _selectedKarat ? 0 : -1;
+      item.classList.toggle('is-selected', k.code === _selectedKarat);
+    }
+  });
+}
+
+/** Make the ladder rungs a keyboard-accessible radio-group that drives the dial. */
+function initKaratDial() {
+  if (_karatDialInit) return;
+  const group = document.getElementById('karat-strip-prices');
+  if (!group) return;
+  group.setAttribute('role', 'radiogroup');
+  group.setAttribute('aria-label', tx('karatStripTitle') || 'Prices by karat');
+  const codes = KARATS.map((k) => k.code).filter((c) => document.getElementById('kstrip-' + c));
+  codes.forEach((code) => {
+    const item = document.getElementById('kstrip-' + code);
+    if (!item) return;
+    item.setAttribute('role', 'radio');
+    item.setAttribute('aria-checked', code === _selectedKarat ? 'true' : 'false');
+    item.tabIndex = code === _selectedKarat ? 0 : -1;
+    item.setAttribute('aria-label', code + 'K');
+    const select = () => {
+      _selectedKarat = code;
+      updateKaratDial();
+      item.focus();
+    };
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.kstrip-copy-btn')) return; // let the copy button work
+      select();
+    });
+    item.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        select();
+      } else if (
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowDown' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowUp'
+      ) {
+        e.preventDefault();
+        const i = codes.indexOf(_selectedKarat);
+        const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+        _selectedKarat = codes[(i + dir + codes.length) % codes.length];
+        updateKaratDial();
+        document.getElementById('kstrip-' + _selectedKarat)?.focus();
+      }
+    });
+  });
+  _karatDialInit = true;
+}
+
 /**
  * Market-read insight ("Is today a high or a low?"). All values are REAL: derived
  * from the canonical spot (today) + the committed LBMA baseline history — never
@@ -1415,6 +1521,8 @@ async function seedCanonicalPrice() {
     renderMarketInsight();
     renderHeroCard();
     renderKaratStrip();
+    initKaratDial();
+    updateKaratDial();
     renderGCCGrid();
   } catch {
     // Keep the previous canonical/cached value on any resolver failure.
@@ -1750,6 +1858,7 @@ async function init() {
         b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
       });
       renderKaratStrip();
+      updateKaratDial();
       syncCrossPageLinks();
     });
   });
