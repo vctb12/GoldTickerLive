@@ -65,3 +65,26 @@ export function evaluateCrossValidation({
   const underReview = divergencePct > threshold;
   return { status: underReview ? 'under-review' : 'agree', divergencePct, underReview };
 }
+
+/**
+ * Map a cross-validation evaluation onto the existing freshness vocabulary from
+ * `src/lib/live-status.js` (`live | delayed | cached | stale | fallback |
+ * unavailable`, plus the `closed` presentation overlay).
+ *
+ * The single trust rule this encodes: a price a second source disagrees with
+ * beyond the threshold must never keep the "live" label (AGENTS.md rule 2 —
+ * "if data is not truly live, do not call it live"). So when the evaluation is
+ * `under-review` we downgrade `live` → `delayed` (still trustworthy, no longer
+ * real-time). This is downgrade-only and non-authoritative: it never touches the
+ * displayed price, the peg, or troy math, and it never *upgrades* a label. Every
+ * already-non-live key (`delayed`, `cached`, `stale`, `fallback`, `unavailable`,
+ * `closed`) passes through unchanged — they make no live claim to walk back.
+ *
+ * @param {'live'|'delayed'|'cached'|'stale'|'fallback'|'unavailable'|'closed'} freshnessKey
+ * @param {{ underReview?: boolean }} [evaluation]  Result from `evaluateCrossValidation`.
+ * @returns {'live'|'delayed'|'cached'|'stale'|'fallback'|'unavailable'|'closed'}
+ */
+export function downgradeFreshnessForDivergence(freshnessKey, evaluation = {}) {
+  if (evaluation?.underReview === true && freshnessKey === 'live') return 'delayed';
+  return freshnessKey;
+}

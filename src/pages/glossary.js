@@ -9,6 +9,7 @@
 
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
+import { syncGlossarySchema } from '../seo/glossary-schema.js';
 import * as cache from '../lib/cache.js';
 import { initPageEnter } from '../lib/page-enter.js';
 
@@ -43,6 +44,15 @@ function applyLang() {
     if (node) node.textContent = t(id);
   });
   document.title = t('docTitle');
+
+  // Emit DefinedTermSet JSON-LD for the ACTIVE locale, built from the same DOM
+  // terms the reader sees, so EN and AR stay in parity. Idempotent by id, so a
+  // language toggle swaps the schema rather than stacking duplicates. The
+  // existing static BreadcrumbList JSON-LD is untouched.
+  syncGlossarySchema(document, STATE.lang, {
+    name: t('glossary-h1'),
+    description: t('glossary-sub'),
+  });
 }
 
 function init() {

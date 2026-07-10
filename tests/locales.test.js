@@ -11,7 +11,7 @@ const assert = require('node:assert/strict');
 
 const LOC = new URL('../src/config/locales.js', `file://${__filename}`).href;
 
-test('locales: en/ar/fr/ur are all active (ur live in Phase 40)', async () => {
+test('locales: en/ar/fr/ur/hi are all active (hi live in the cowork Hindi pilot)', async () => {
   const { LOCALES, ACTIVE_LOCALE_CODES, SUPPORTED_LOCALE_CODES, isActiveLocale } = await import(
     LOC
   );
@@ -19,20 +19,24 @@ test('locales: en/ar/fr/ur are all active (ur live in Phase 40)', async () => {
   assert.equal(LOCALES.ar.enabled, true);
   assert.equal(LOCALES.fr.enabled, true); // Phase 39 — French pilot activated.
   assert.equal(LOCALES.ur.enabled, true); // Phase 40 — Urdu pilot activated.
-  assert.deepEqual(ACTIVE_LOCALE_CODES, ['en', 'ar', 'fr', 'ur']);
-  assert.deepEqual(SUPPORTED_LOCALE_CODES.sort(), ['ar', 'en', 'fr', 'ur']);
+  assert.equal(LOCALES.hi.enabled, true); // Cowork Phase 37 — Hindi pilot activated.
+  assert.deepEqual(ACTIVE_LOCALE_CODES, ['en', 'ar', 'fr', 'ur', 'hi']);
+  assert.deepEqual(SUPPORTED_LOCALE_CODES.sort(), ['ar', 'en', 'fr', 'hi', 'ur']);
   assert.equal(isActiveLocale('fr'), true);
   assert.equal(isActiveLocale('ur'), true);
+  assert.equal(isActiveLocale('hi'), true);
   assert.equal(isActiveLocale('ar'), true);
 });
 
-test('locales: direction metadata matches the app (ar/ur rtl, en/fr ltr)', async () => {
+test('locales: direction metadata matches the app (ar/ur rtl, en/fr/hi ltr)', async () => {
   const { getLocaleDir, isRtlLocale } = await import(LOC);
   assert.equal(getLocaleDir('en'), 'ltr');
   assert.equal(getLocaleDir('ar'), 'rtl');
   assert.equal(getLocaleDir('fr'), 'ltr');
   assert.equal(getLocaleDir('ur'), 'rtl');
+  assert.equal(getLocaleDir('hi'), 'ltr'); // Hindi is left-to-right.
   assert.equal(isRtlLocale('ar'), true);
+  assert.equal(isRtlLocale('hi'), false);
   assert.equal(isRtlLocale('en'), false);
   // Unknown code falls back to the default locale's direction.
   assert.equal(getLocaleDir('zz'), 'ltr');
@@ -53,6 +57,7 @@ test('locales: EN/AR resolution is unchanged; fr/ur now resolve to themselves', 
   // Pilots are live, so the resolver now returns them (exact-match only).
   assert.equal(resolveLocale('fr'), 'fr');
   assert.equal(resolveLocale('ur'), 'ur');
+  assert.equal(resolveLocale('hi'), 'hi');
 });
 
 test('locales: unknown codes still resolve to the default', async () => {
