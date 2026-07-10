@@ -788,6 +788,11 @@
 }
 
 .hlc-karat-teaser-link {
+  /* G6: WCAG 2.2 §2.5.8 — standalone CTA link (sole content of its <p>), so give it
+     a ≥24px tap target. Vertical-only growth keeps the hero card width unchanged. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: var(--color-gold-dark);
   font-weight: var(--weight-semibold);
   text-decoration: none;
@@ -993,6 +998,15 @@
   font-weight: var(--weight-bold);
   color: var(--text-secondary);
   letter-spacing: 0.02em;
+}
+
+/* G6: WCAG 2.2 §2.5.8 — when JS promotes the karat label to the keyboard-exposed
+   toggle (role=button), widen its named box to ≥24px. Height already ≥44px via the
+   global touch-target enforcer; the full 118×82 tile remains the pointer target, so
+   this only satisfies automated target-size checks without changing the layout. */
+.karat-strip-k[role='button'] {
+  min-width: 24px;
+  text-align: center;
 }
 
 .karat-strip-v {

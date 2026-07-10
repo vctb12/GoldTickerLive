@@ -59,11 +59,12 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
-| Phase                                                    | Branch                                        | Status      | PR  | Notes                                                                                      |
-| -------------------------------------------------------- | --------------------------------------------- | ----------- | --- | ------------------------------------------------------------------------------------------ |
-| Revamp Phase 17 — Design-token consolidation             | `claude/revamp-phase-17-tokens`               | in-progress | —   | hex->tokens; dual-theme visual-regression                                                  |
-| Master Tracker (this doc)                                | `claude/revamp-master-tracker`                | in-progress | —   | Being created now                                                                          |
-| Learn-Hub Reliability — real read progress + favicon 404 | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —   | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix |
+| Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
+| ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Revamp Phase 17 — Design-token consolidation               | `claude/revamp-phase-17-tokens`               | in-progress | —                                                         | hex->tokens; dual-theme visual-regression                                                                                                                         |
+| Master Tracker (this doc)                                  | `claude/revamp-master-tracker`                | in-progress | —                                                         | Being created now                                                                                                                                                 |
+| Learn-Hub Reliability — real read progress + favicon 404   | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —                                                         | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix                                                                        |
+| Program G / G3 — View Transition abort + console stability | `claude/g3-motion-guard-bsa6kk`               | done        | [#612](https://github.com/vctb12/GoldTickerLive/pull/612) | Fully guard VT promise aborts (ready/finished/updateCallbackDone), idempotent binding, reduced-motion re-check, try/catch fallback nav, dev-only rejection beacon |
 
 ---
 
@@ -243,7 +244,7 @@ wording untouched; no added scroll animation.
 
 ---
 
-### G. 70-Phase Autonomous Cowork Plan — cross-walk (2026-07-10)
+### H. 70-Phase Autonomous Cowork Plan — cross-walk (2026-07-10)
 
 Independent audit:
 [`docs/audits/2026-07-10_autonomous_cowork_audit.md`](./audits/2026-07-10_autonomous_cowork_audit.md).
@@ -300,6 +301,19 @@ switcher (same gate as FR/UR).
 
 ---
 
+### G. Motion / Console Stability — View Transition abort hardening
+
+| Item | Short Name                      | Status | PR                                                        | Scope/Blocker Note                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---- | ------------------------------- | ------ | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| G3   | View Transition abort + console | done   | [#612](https://github.com/vctb12/GoldTickerLive/pull/612) | `motion-boot.js`: catch-guard every VT promise (`ready`/`finished`/`updateCallbackDone`, incl. when `transition`/`transition.ready` is undefined); dedicated idempotent binding guard; `prefersReducedMotion()` re-check before any transition; try/catch fallback nav on synchronous `startViewTransition` throw; dev-only (`isDevHost`) unhandled-rejection beacon that never installs in production. No production behavior change; no layout shift. |
+
+Guardrails honored: no edits to `gold-price-fetch.yml`, `post_gold.yml`, `sw.js`, billing, or
+Supabase; EN/AR parity, RTL, freshness labels, AED peg 3.6725, troy 31.1034768 g, and spot-vs-retail
+wording untouched; no layout shift introduced. Verified: `npm run lint`, `npm test` (1411 pass / 0
+fail), `npm run build` all green.
+
+---
+
 ## Owner-Gated Decision Queue
 
 | Item                                | Source               | What's needed from owner                                                                    |
@@ -317,17 +331,18 @@ switcher (same gate as FR/UR).
 
 ## Recently Opened PRs
 
-| PR   | Phase          | Title                                             | Opened     |
-| ---- | -------------- | ------------------------------------------------- | ---------- |
-| #537 | 30-Revamp 1    | Baseline & rollback fences                        | 2026-07-07 |
-| #538 | 30-Revamp 2    | Runtime error audit & defect register             | 2026-07-07 |
-| #539 | 30-Revamp 3    | Dependency/security/secrets audit + CSP inventory | 2026-07-07 |
-| #540 | Master Tracker | Canonical cross-plan tracker                      | 2026-07-07 |
-| #541 | 30-Revamp 4    | Data-source resilience map + state diagram        | 2026-07-07 |
-| #542 | 30-Revamp 5    | Spot-vs-retail parity fix (compare+heatmap)       | 2026-07-07 |
-| #543 | 30-Revamp 6    | Shops spot-bar vs ticker freshness fix            | 2026-07-07 |
-| #544 | 30-Revamp 7    | Methodology parity + tool deep-links              | 2026-07-07 |
-| #545 | 30-Revamp 8    | Secondary-provider cross-validation (flagged)     | 2026-07-07 |
+| PR   | Phase          | Title                                                  | Opened     |
+| ---- | -------------- | ------------------------------------------------------ | ---------- |
+| #537 | 30-Revamp 1    | Baseline & rollback fences                             | 2026-07-07 |
+| #538 | 30-Revamp 2    | Runtime error audit & defect register                  | 2026-07-07 |
+| #539 | 30-Revamp 3    | Dependency/security/secrets audit + CSP inventory      | 2026-07-07 |
+| #540 | Master Tracker | Canonical cross-plan tracker                           | 2026-07-07 |
+| #541 | 30-Revamp 4    | Data-source resilience map + state diagram             | 2026-07-07 |
+| #542 | 30-Revamp 5    | Spot-vs-retail parity fix (compare+heatmap)            | 2026-07-07 |
+| #543 | 30-Revamp 6    | Shops spot-bar vs ticker freshness fix                 | 2026-07-07 |
+| #544 | 30-Revamp 7    | Methodology parity + tool deep-links                   | 2026-07-07 |
+| #545 | 30-Revamp 8    | Secondary-provider cross-validation (flagged)          | 2026-07-07 |
+| #612 | Program G / G3 | Fully guard View Transition aborts + console stability | 2026-07-09 |
 
 ## Skipped / Superseded Items
 
@@ -372,3 +387,4 @@ switcher (same gate as FR/UR).
 | 2026-07-10 | Claude Code | **Dispatch stabilize-first packets DP-1/2/3 shipped.** DP-1 (#617) `tests/e2e/learn-progress.spec.js` — **browser-verified** in local chromium that the learn "Read N of M" counter increments on click + persists across reload and that zero `InvalidStateError` fires (upgrades the two known bugs from verified-by-test to verified-by-browser). DP-2 (#620) `tests/e2e/console-clean.spec.js` — full-site sweep (18/22 loads clean; check-links 62/62; shops renders 61 cards despite cross-origin Supabase 404 = graceful fallback verified; `/ar/` phantom URL, GA/analytics artifacts) locked by a first-party console/network guard (15 e2e pass). DP-3 (#621) `tests/pricing-invariants.test.js` — pins `AED_PEG=3.6725`/`TROY_OZ_GRAMS=31.1035` on real exports + karat `code/24` + EN/AR disclaimer↔constant copy-sync (suite 1407→1412). All test-only, no product code, no gated surface. Control log: `docs/audits/2026-07-10_dispatch_control_log.md`.                                 |
 | 2026-07-10 | Claude Code | **Cowork Phase 37 Hindi pilot shipped → PR #616** (`cowork/phase-37-hindi-pilot`). `src/i18n/hi-pilot.js` (68-key Devanagari core-pages dict, same key set as fr/ur, `withHindiPilot()`) + live `hi` LTR registry entry + `tests/hi-pilot.test.js` (6) + `tests/locales.test.js` updated. Inert scaffolding (no runtime consumer, same as fr/ur); EN fallback for uncovered keys; bullion-estimate/"not financial advice"/AED-peg framing preserved in Hindi. Suite 1407→1413, lint clean, validate exit 0, prettier clean. Playwright i18n scans not run (no chromium binary in env — pre-existing, unrelated). Linguist review recommended before live-switcher wiring. Section G row 37 → done.                                                                                                                                                                                                                                                                                                     |
 | 2026-07-09 | Claude Code | Learn-Hub Reliability (Section F, branch `claude/learn-hub-progress-perception-kr5f7r`, additive minimal-diff): F1 scroll-dwell read completion (`observeDwell()` in `src/lib/reveal.js`; ≥60% visible ≥3s → `markGuideRead()`; click+hashchange retained); F2 one-time legacy-id migration (`migrateLearnProgress()` slash-stripped→canonical, v2 flag); F3 pre-hydration "Loading guides…" affordance (EN+AR parity, no animation, live aria-live counter takes over); F4 `/assets/favicon.svg` 404 root-caused to Vite hashing manifest into `/assets/` — fixed by root-absolute manifest icon paths. +12 tests (migration ×5, source wiring ×1, manifest guard ×1, plus existing). Guardrails: no `gold-price-fetch.yml`/`post_gold.yml`/`sw.js`/billing/Supabase edits; peg 3.6725 & troy 31.1034768 untouched.                                                                                                                                                                                   |
+| 2026-07-09 | Claude Code | Program G / G3 (branch `claude/g3-motion-guard-bsa6kk`, minimal-diff): fully guarded View Transition aborts in `src/lib/motion-boot.js` — catch-guard every VT promise (`ready`/`finished`/`updateCallbackDone`, incl. when `transition`/`transition.ready` is undefined); dedicated `viewTransitionsBound` idempotency guard so the click listener is never double-bound; `prefersReducedMotion()` re-checked at click time before any transition is created; try/catch fallback to plain navigation on a synchronous `startViewTransition` throw; dev-only (`isDevHost`) unhandled-rejection beacon that never installs in production. +5 regression tests in `tests/price-motion.test.js`. `npm run lint` clean, `npm test` 1411 pass / 0 fail, `npm run build` green. No production behavior change, no layout shift; `page-enter.js` left untouched (creates no transition). Opened as PR #612 (DO NOT MERGE).                                                                                    |
