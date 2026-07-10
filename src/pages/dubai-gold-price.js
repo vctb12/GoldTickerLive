@@ -1,18 +1,29 @@
 /**
  * Dubai / UAE gold-rate landing page entry point.
  *
- * Content is authored as static, bilingual HTML in dubai-gold-price.html
- * (twin `data-lang-block` en/ar blocks toggled purely by CSS on `html[lang]`),
- * so it renders with zero JavaScript. This entry only mounts the shared shell,
- * breadcrumbs, and the language toggle, and localizes the hero + jump-nav.
+ * The rich guidance content is authored as static, bilingual HTML in
+ * dubai-gold-price.html (twin `data-lang-block` en/ar blocks toggled purely by
+ * CSS on `html[lang]`), so it renders with zero JavaScript. This entry mounts
+ * the shared shell, breadcrumbs, and language toggle, localizes the hero, and
+ * hydrates the live reference-price panel from the shared canonical resolver.
+ *
+ * F-1: the live panel reads getCanonicalSpot() — the SAME memoized snapshot as
+ * the homepage / calculator / compare / portfolio / learn — so the Dubai page's
+ * headline rate can never diverge from the rest of the site. Freshness is honest
+ * (live / delayed / cached / stale), straight from the snapshot.
  */
 
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
 import { initPageEnter } from '../lib/page-enter.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { CONSTANTS } from '../config/index.js';
+import { formatNumber, formatCurrency, formatTimestampShort } from '../lib/formatter.js';
 
-const STATE = { lang: 'en' };
+const TOLA_GRAMS = 11.6638;
+
+const STATE = { lang: 'en', snapshot: null, timer: null };
 
 const T = {
   en: {
@@ -23,6 +34,11 @@ const T = {
     'dubai-jump-label': 'Jump to a section',
     docTitle:
       'Gold Rate in Dubai & UAE — Price per Gram in AED (24K/22K/21K/18K) | Gold Ticker Live',
+    freshLive: 'Live',
+    freshDelayed: 'Delayed',
+    freshCached: 'Cached',
+    freshStale: 'Stale',
+    updated: 'Updated',
   },
   ar: {
     'dubai-eyebrow': 'الإمارات · سعر الذهب في دبي',
@@ -31,11 +47,90 @@ const T = {
       'مرجع مرتبط بالسعر الفوري لسعر الذهب في دبي وعبر الإمارات، بالدرهم والدولار — مع شرح كيف يشكّل ربط الدرهم والعيارات وأجور الصياغة وضريبة القيمة المضافة الرقم الذي تدفعه فعلاً.',
     'dubai-jump-label': 'الانتقال إلى قسم',
     docTitle: 'سعر الذهب في دبي والإمارات — سعر الجرام بالدرهم (24/22/21/18) | Gold Ticker Live',
+    freshLive: 'مباشر',
+    freshDelayed: 'متأخر',
+    freshCached: 'مخزّن',
+    freshStale: 'قديم',
+    updated: 'آخر تحديث',
   },
 };
 
 function t(key) {
   return T[STATE.lang]?.[key] ?? T.en[key] ?? key;
+}
+
+const FRESH_KEY = {
+  live: 'freshLive',
+  delayed: 'freshDelayed',
+  cached: 'freshCached',
+  fallback: 'freshStale',
+  unavailable: 'freshStale',
+};
+
+function aedCell(id, value) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  node.textContent =
+    value != null && Number.isFinite(value)
+      ? formatNumber(value, STATE.lang, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : '—';
+}
+
+function renderLive() {
+  const card = document.getElementById('dubai-live-card');
+  const snap = STATE.snapshot;
+  const errorEl = document.getElementById('dubai-live-error');
+
+  if (!snap || !snap.ok) {
+    // Nothing to show yet. Surface the quiet, honest error only when the resolver
+    // actually returned an unusable snapshot (not while the first fetch is still
+    // in flight and STATE.snapshot is null).
+    if (errorEl && snap && !snap.ok) errorEl.hidden = false;
+    return;
+  }
+  if (errorEl) errorEl.hidden = true;
+
+  const byCode = new Map((snap.karats || []).map((k) => [k.code, k.aedPerGram]));
+  aedCell('dl-24', byCode.get('24') ?? snap.aedPerGram24k);
+  aedCell('dl-22', byCode.get('22'));
+  aedCell('dl-21', byCode.get('21'));
+  aedCell('dl-18', byCode.get('18'));
+  aedCell('dl-tola', (snap.aedPerGram24k ?? 0) * TOLA_GRAMS);
+
+  const spotNode = document.getElementById('dl-spot');
+  if (spotNode) {
+    spotNode.textContent = snap.spotUsdPerOz
+      ? formatCurrency(snap.spotUsdPerOz, 'USD', STATE.lang, 2)
+      : '—';
+  }
+
+  // Honest freshness pill — state + data timestamp, never the render time.
+  const fresh = snap.freshness || {};
+  const pill = document.getElementById('dubai-fresh');
+  const dot = document.getElementById('dubai-fresh-dot');
+  const text = document.getElementById('dubai-fresh-text');
+  const key = FRESH_KEY[fresh.state];
+  if (pill && dot && text && key) {
+    dot.className = `dubai-fresh-dot dubai-fresh-dot--${fresh.state}`;
+    const stamp = fresh.updatedAt ? formatTimestampShort(fresh.updatedAt, STATE.lang) : '';
+    text.textContent = stamp ? `${t(key)} · ${t('updated')}: ${stamp}` : t(key);
+    pill.hidden = false;
+  }
+
+  if (card) card.removeAttribute('aria-busy');
+}
+
+async function fetchLive() {
+  if (!navigator.onLine && !STATE.snapshot) return;
+  try {
+    const snap = await getCanonicalSpot({ force: true });
+    if (snap && snap.ok) STATE.snapshot = snap;
+    else if (!STATE.snapshot) STATE.snapshot = snap; // record failure for error state
+  } catch {
+    // Leave STATE.snapshot as-is; renderLive() shows the honest error only when
+    // the resolver returned an unusable snapshot.
+  }
+  renderLive();
 }
 
 function applyLang() {
@@ -46,6 +141,8 @@ function applyLang() {
     if (node) node.textContent = t(id);
   });
   document.title = t('docTitle');
+  // Re-format the live numbers + freshness in the newly active language.
+  renderLive();
 }
 
 function init() {
@@ -70,6 +167,10 @@ function init() {
   });
 
   applyLang();
+
+  fetchLive();
+  if (STATE.timer) clearInterval(STATE.timer);
+  STATE.timer = setInterval(fetchLive, CONSTANTS.GOLD_REFRESH_MS);
 }
 
 init();

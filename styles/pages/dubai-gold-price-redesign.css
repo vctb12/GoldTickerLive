@@ -1,0 +1,380 @@
+/* ============================================================================
+   Dubai / UAE gold-rate landing — premium editorial layer (redesign/dubai-v2)
+   ----------------------------------------------------------------------------
+   Loaded AFTER dubai-gold-price.css so these win by source order. Two jobs:
+   (1) the live reference-price panel (canonical getCanonicalSpot() snapshot,
+   F-1) that fulfils the hero's "spot-linked reference in AED and USD" promise;
+   (2) bring the page into the same publication family as the redesigned
+   homepage — Playfair serif in antique gold, gold-glow cards, premium jump
+   pills, tabular figures. Built on shared tokens (tokens.css + design-system).
+   Light theme only; dark deferred site-wide (owner-gated).
+   ========================================================================== */
+
+/* ── Hero: serif antique-gold headline ────────────────────────────────────── */
+.dubai-hero {
+  background:
+    radial-gradient(120% 100% at 50% -20%, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-bg);
+  border-bottom: 1px solid var(--color-gold-glow);
+}
+.dubai-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+  font-size: clamp(2rem, 1.4rem + 2.8vw, 3rem);
+  line-height: 1.07;
+}
+.dubai-hero-eyebrow {
+  letter-spacing: 0.13em;
+  color: var(--color-gold-dark);
+}
+
+/* ── Live reference-price panel ───────────────────────────────────────────── */
+.dubai-live {
+  padding-inline: var(--space-4, 16px);
+  margin-block: clamp(-40px, -3vw, -24px) var(--gtl-5);
+}
+.dubai-live .dubai-inner {
+  max-width: 940px;
+  margin-inline: auto;
+}
+.dubai-live-card {
+  position: relative;
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-xl);
+  background:
+    radial-gradient(130% 120% at 100% 0%, var(--color-gold-tint) 0%, transparent 45%),
+    var(--color-surface);
+  box-shadow: var(--shadow-md);
+  padding: clamp(20px, 3vw, 32px);
+}
+.dubai-live-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+}
+.dubai-live-eyebrow {
+  margin: 0 0 4px;
+  font-size: var(--gtl-meta);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+}
+.dubai-live-title {
+  margin: 0;
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-size: clamp(1.25rem, 1.05rem + 0.9vw, 1.6rem);
+  color: var(--color-text);
+}
+
+/* Freshness pill — honest state, colour-coded. */
+.dubai-fresh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  padding: 0.35em 0.8em;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-2);
+  font-size: var(--gtl-meta);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.dubai-fresh-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-faint);
+  flex: none;
+}
+.dubai-fresh-dot--live {
+  background: #1f9d55;
+  box-shadow: 0 0 0 3px rgb(31 157 85 / 18%);
+}
+.dubai-fresh-dot--delayed {
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.dubai-fresh-dot--cached,
+.dubai-fresh-dot--fallback,
+.dubai-fresh-dot--unavailable {
+  background: #b06a1f;
+  box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
+}
+
+/* Primary row: headline 24K value + spot. */
+.dubai-live-primary {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--gtl-4);
+  align-items: end;
+  margin-top: var(--gtl-5);
+  padding-bottom: var(--gtl-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.dubai-live-primary-main,
+.dubai-live-spot {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.dubai-live-spot {
+  align-items: flex-end;
+  text-align: end;
+}
+.dubai-live-karat-tag {
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-pill);
+  padding: 0.15em 0.6em;
+}
+.dubai-live-value {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+  font-size: clamp(1.4rem, 1.1rem + 1.4vw, 2rem);
+}
+.dubai-live-value--lg {
+  font-size: clamp(2.2rem, 1.6rem + 3vw, 3.4rem);
+  color: var(--color-gold-antique);
+}
+.dubai-live-unit,
+.dubai-live-mini-label,
+.dubai-live-mini-note {
+  font-size: var(--gtl-meta);
+  color: var(--color-text-muted);
+}
+.dubai-live-mini-label {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.dubai-live-mini-note {
+  color: var(--color-text-faint);
+}
+
+/* Secondary karat grid. */
+.dubai-live-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--gtl-3);
+  margin-top: var(--gtl-4);
+}
+.dubai-live-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: var(--gtl-3);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+.dubai-live-cell .dubai-live-value {
+  font-size: clamp(1.15rem, 0.95rem + 0.8vw, 1.45rem);
+  color: var(--color-text);
+}
+
+/* Reference-estimate note + actions. */
+.dubai-live-note {
+  margin: var(--gtl-4) 0 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+.dubai-live-note strong {
+  color: var(--color-text);
+}
+.dubai-live-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gtl-3);
+  margin-top: var(--gtl-4);
+}
+.dubai-live-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.6em 1.2em;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid var(--color-border);
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease,
+    background 0.16s ease;
+}
+.dubai-live-btn:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.dubai-live-btn:active {
+  transform: translateY(1px);
+}
+.dubai-live-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.dubai-live-btn--primary {
+  color: #fff;
+  border-color: transparent;
+  background: linear-gradient(180deg, var(--color-gold), var(--color-gold-dark));
+}
+.dubai-live-btn--primary:hover {
+  box-shadow: var(--shadow-md);
+}
+.dubai-live-error {
+  margin: var(--gtl-4) 0 0;
+  padding: var(--gtl-3) var(--gtl-4);
+  border: 1px solid var(--color-border);
+  border-inline-start: 3px solid #b06a1f;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+.dubai-live-error a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+/* Pre-hydration skeletons. */
+.dubai-skeleton {
+  display: inline-block;
+  width: 4.5ch;
+  height: 0.9em;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-3) 25%,
+    var(--color-surface-2) 50%,
+    var(--color-surface-3) 75%
+  );
+  background-size: 200% 100%;
+  animation: dubai-shimmer 1.4s ease-in-out infinite;
+  vertical-align: middle;
+}
+.dubai-live-value--lg .dubai-skeleton {
+  width: 6ch;
+  height: 1em;
+}
+
+@keyframes dubai-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ── Jump nav: premium pills ──────────────────────────────────────────────── */
+.dubai-jump a {
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+.dubai-jump a:hover {
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold);
+}
+.dubai-jump a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Section + router typography ──────────────────────────────────────────── */
+.dubai-section-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.dubai-subhead {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.dubai-callout {
+  border-inline-start: 3px solid var(--color-gold);
+  background: var(--color-gold-tint);
+  border-radius: var(--radius-sm);
+}
+.dubai-router-card {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+.dubai-router-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-gold);
+}
+.dubai-router-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.dubai-router-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+}
+.dubai-faq-item {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+.dubai-faq-item summary:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  .dubai-live-primary {
+    grid-template-columns: 1fr;
+    gap: var(--gtl-3);
+  }
+  .dubai-live-spot {
+    align-items: flex-start;
+    text-align: start;
+  }
+  .dubai-live-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .dubai-skeleton {
+    animation: none;
+  }
+  .dubai-router-card,
+  .dubai-live-btn {
+    transition: none;
+  }
+  .dubai-router-card:hover,
+  .dubai-live-btn--primary:hover {
+    transform: none;
+  }
+}
