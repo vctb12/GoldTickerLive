@@ -62,6 +62,16 @@ html[lang='ar'] [data-lang-block='en'] {
   margin: 0 0 var(--space-4);
 }
 
+/* Pre-hydration affordance: the static fallback shows "Loading guides…" (dimmed,
+   italic) instead of a frozen "Read 0 of N", which reads as a stuck counter. The
+   live aria-live counter replaces this element once the hub hydrates. Intentionally
+   static — no animation — so it is inherently prefers-reduced-motion safe. */
+.learn-hub-progress--loading {
+  color: var(--color-text-tertiary, var(--color-text-secondary));
+  font-style: italic;
+  opacity: 0.85;
+}
+
 .learn-hub-filter {
   width: 100%;
   min-height: 46px;
