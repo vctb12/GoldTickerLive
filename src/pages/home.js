@@ -1065,6 +1065,10 @@ function applyLangToPage() {
   setTextById('route-track-title', tx('routingTrackTitle'));
   setTextById('route-track-body', tx('routingTrackBody'));
   setTextById('route-track-cta', tx('routingTrackCta'));
+  // Market-read insight labels
+  setTextById('mi-position-label', tx('miPositionLabel'));
+  setTextById('mi-year-label', tx('miYearLabel'));
+  setTextById('mi-range-label', tx('miRangeLabel'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
   setTextById('home-tools-kicker', tx('toolsKicker'));
@@ -1324,6 +1328,59 @@ function updateRoutingCanonicalValue(snapshot) {
 }
 
 /**
+ * Market-read insight ("Is today a high or a low?"). All values are REAL: derived
+ * from the canonical spot (today) + the committed LBMA baseline history — never
+ * fabricated. 12-month change, 3-year range, and where today sits in that range.
+ */
+function renderMarketInsight() {
+  const baseline = getBaselineHistory();
+  if (!Array.isArray(baseline) || baseline.length < 2) return;
+  const spot = _canonicalSnapshot?.ok ? _canonicalSnapshot.spotUsdPerOz : goldPrice;
+  if (!Number.isFinite(spot)) return;
+
+  // 12-month change: canonical spot vs the baseline point ~12 months back.
+  const yearAgo = baseline[Math.max(0, baseline.length - 13)];
+  const yearEl = document.getElementById('mi-year-value');
+  if (yearEl && Number.isFinite(yearAgo?.price) && yearAgo.price > 0) {
+    const pct = ((spot - yearAgo.price) / yearAgo.price) * 100;
+    yearEl.textContent = (pct >= 0 ? '+' : '−') + Math.abs(pct).toFixed(1) + '%';
+    yearEl.classList.toggle('market-insight__value--up', pct >= 0);
+    yearEl.classList.toggle('market-insight__value--down', pct < 0);
+  }
+
+  // 3-year range (last 36 monthly baseline points) + where today sits within it.
+  // Include the canonical spot so the stated range always contains today's price
+  // (keeps the stat internally consistent — today can never fall outside its own range).
+  const prices = baseline
+    .slice(-36)
+    .map((b) => b.price)
+    .filter(Number.isFinite);
+  if (prices.length < 2) return;
+  prices.push(spot);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const rangeEl = document.getElementById('mi-range-value');
+  if (rangeEl) {
+    rangeEl.textContent =
+      '$' +
+      Math.round(min).toLocaleString('en-US') +
+      ' – $' +
+      Math.round(max).toLocaleString('en-US');
+  }
+  const posEl = document.getElementById('mi-position-value');
+  const posNote = document.getElementById('mi-position-note');
+  if (posEl && max > min) {
+    const pctPos = Math.max(0, Math.min(100, ((spot - min) / (max - min)) * 100));
+    posEl.textContent = Math.round(pctPos) + '% ' + tx('miOfRange');
+    posEl.classList.toggle('market-insight__value--up', pctPos >= 60);
+    if (posNote) {
+      posNote.textContent =
+        pctPos >= 75 ? tx('miNearTop') : pctPos <= 25 ? tx('miNearLow') : tx('miMidRange');
+    }
+  }
+}
+
+/**
  * F-1 canonical price seed. Reads the single canonical snapshot (the same
  * committed `/data/gold_price.json` the calculator uses, via the spot-resolver)
  * and makes it the authoritative displayed value for the hero, sticky spot-bar,
@@ -1343,6 +1400,7 @@ async function seedCanonicalPrice() {
     cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
     updateNavPricePill(snap);
     updateRoutingCanonicalValue(snap);
+    renderMarketInsight();
     renderHeroCard();
     renderKaratStrip();
     renderGCCGrid();

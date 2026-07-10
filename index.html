@@ -410,8 +410,23 @@
               <button type="button" class="home-chart-range-btn ds-segmented__btn is-active" data-range="ALL" id="home-chart-btn-all">ALL</button>
             </div>
           </div>
-          <div class="home-chart-wrap" id="home-chart-wrap">
+          <div class="home-chart-wrap home-chart-wrap--gtl" id="home-chart-wrap">
             <div id="home-chart-container" class="home-chart-container" aria-busy="true"></div>
+            <aside class="market-insight" id="home-market-insight" aria-label="Market read">
+              <div class="market-insight__stat market-insight__stat--hero" id="mi-position">
+                <span class="market-insight__label" id="mi-position-label">Where today sits</span>
+                <span class="market-insight__value gtl-num" id="mi-position-value">—</span>
+                <span class="market-insight__note" id="mi-position-note"></span>
+              </div>
+              <div class="market-insight__stat" id="mi-year">
+                <span class="market-insight__label" id="mi-year-label">12-month change</span>
+                <span class="market-insight__value gtl-num" id="mi-year-value">—</span>
+              </div>
+              <div class="market-insight__stat" id="mi-range">
+                <span class="market-insight__label" id="mi-range-label">3-year range</span>
+                <span class="market-insight__value gtl-num" id="mi-range-value">—</span>
+              </div>
+            </aside>
           </div>
         </div>
       </section>
