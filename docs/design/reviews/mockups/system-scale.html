@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoldTickerLive — System scale across the product (DESIGN MOCKUPS)</title>
+    <style>
+      /* DESIGN MOCKUPS — the ONE design language applied across the product to prove it scales.
+         Illustrative sample values (spot $4,108.70), never live. System fallback fonts. */
+      :root{
+        --paper:#f7f3ec;--paper-2:#f2ecdf;--surface:#fff;--ink:#171512;--ink-muted:#5c554b;--ink-faint:#8b8375;
+        --gold:#b8891e;--gold-deep:#916a12;--gold-soft:#e9dcc0;--up:#157347;--down:#b23a2e;--line:#e7decf;--ink-panel:#17140f;
+        --serif:'Iowan Old Style','Palatino Linotype',Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+        --ticker:'SF Mono','DejaVu Sans Mono',ui-monospace,Menlo,monospace;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{background:#e8e0d1;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.5}
+      .frame-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#6b6252;padding:28px 40px 10px;font-weight:600}
+      .device{width:1180px;margin:0 auto 40px;background:var(--paper);border:1px solid #d8cfbd;border-radius:16px;overflow:hidden;box-shadow:0 22px 55px -30px rgba(0,0,0,.35)}
+      .num{font-family:var(--ticker);font-variant-numeric:tabular-nums}
+      .kicker{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:700}
+      .serif{font-family:var(--serif)}
+      .dot{width:8px;height:8px;border-radius:50%;background:var(--up);display:inline-block}
+      .cta{font-weight:600;font-size:14px;border-radius:999px;padding:11px 20px;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:7px;text-decoration:none}
+      .cta.gold{background:linear-gradient(180deg,#eccf82,var(--gold));color:#2e2205}
+      .cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+      .cta.ink{background:var(--ink);color:var(--paper)}
+      .ribbon{background:repeating-linear-gradient(135deg,#efe7d8,#efe7d8 12px,#f2ecdf 12px,#f2ecdf 24px);color:var(--ink-muted);font-size:11.5px;text-align:center;padding:6px;border-bottom:1px solid var(--line)}
+      /* shared nav */
+      nav{display:flex;align-items:center;justify-content:space-between;padding:15px 32px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--paper) 86%,#fff)}
+      .brand{display:flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:19px}
+      .brand .g{width:27px;height:27px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#f6e2a2,var(--gold) 68%);display:grid;place-items:center;color:#3a2a06;font-weight:800;font-size:13px}
+      .navlinks{display:flex;gap:22px;font-size:14px;color:var(--ink-muted)}
+      .navlinks a{text-decoration:none}.navlinks a.active{color:var(--ink);font-weight:600}
+      .pricepill{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px}
+      .pricepill .g{color:var(--gold-deep)}
+      .pad{padding:40px 44px}
+      .kh{font-family:var(--serif);font-size:30px;letter-spacing:-.01em;line-height:1.12}
+      .sub{color:var(--ink-muted);font-size:14.5px;margin-top:6px}
+      .card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+      .price-lg{font-family:var(--ticker);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:-.02em}
+      .pills{display:flex;gap:7px;flex-wrap:wrap}
+      .pills span{border:1px solid var(--line);border-radius:9px;padding:8px 14px;font-size:13px;color:var(--ink-muted);background:var(--surface)}
+      .pills span.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);color:var(--ink);background:color-mix(in srgb,var(--gold-soft) 40%,#fff)}
+      .freshness{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+      .barwrap{height:10px;background:var(--paper-2);border-radius:999px;overflow:hidden}
+      .bar{height:100%;background:linear-gradient(90deg,var(--gold-soft),var(--gold))}
+    </style>
+  </head>
+  <body>
+    <!-- ============ 1. CALCULATOR (tool-first) ============ -->
+    <div class="frame-label">1 · Calculator — the tool leads; trust copy is quiet</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values ($4,108.70) — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a class="active">Calculator</a><a>Compare</a><a>Shops</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">XAU 4,108.70 · 24K 485.13</span></span></nav>
+      <div class="pad">
+        <span class="kicker">Gold calculator</span>
+        <h1 class="kh" style="margin-top:6px">What is your gold worth?</h1>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:26px;align-items:start">
+          <div class="card" style="padding:26px">
+            <div class="pills" style="margin-bottom:16px"><span class="on">Gold value</span><span>Scrap</span><span>Zakat</span><span>Buying power</span><span>Convert</span></div>
+            <label style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted)">Weight</label>
+            <div style="display:flex;gap:10px;margin-top:7px"><div class="card" style="flex:1;padding:14px 16px;font-family:var(--ticker);font-size:22px">10 g</div><div class="card" style="width:120px;padding:14px 16px;color:var(--ink-muted);display:flex;justify-content:space-between;align-items:center">grams ▾</div></div>
+            <label style="font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);display:block;margin-top:18px">Karat</label>
+            <div class="pills" style="margin-top:8px"><span class="on">24K</span><span>22K</span><span>21K</span><span>18K</span><span>14K</span><span>9K</span></div>
+          </div>
+          <div class="card" style="padding:30px;border-color:var(--gold);text-align:center">
+            <div style="font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted)">Reference metal value</div>
+            <div class="price-lg" style="font-size:58px;margin:8px 0">4,851.30 <span style="font-size:24px;color:var(--gold)">AED</span></div>
+            <div style="font-size:14px;color:var(--ink-muted)">≈ <span class="num">$1,320.70</span> · 10 g × 24K @ <span class="num">485.13</span>/g</div>
+            <div style="font-size:12.5px;color:var(--ink-muted);border-top:1px solid var(--line);margin-top:16px;padding-top:16px">Before making charges &amp; 5% VAT · <span style="color:var(--gold-deep)">what a shop would charge →</span></div>
+          </div>
+        </div>
+        <div style="margin-top:20px"><span class="freshness"><span class="dot"></span> Live · Gold-API.com · 3s ago · AED @ 3.6725 peg</span></div>
+      </div>
+    </div>
+
+    <!-- ============ 2. COUNTRY PAGE ============ -->
+    <div class="frame-label">2 · Country pricing (Dubai) — market-story, not a template</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a>Calculator</a><a class="active">Countries</a><a>Shops</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">24K 485.13 AED/g</span></span></nav>
+      <div class="pad">
+        <span class="kicker">🇦🇪 United Arab Emirates · Dubai</span>
+        <div style="display:grid;grid-template-columns:1.1fr .9fr;gap:32px;margin-top:10px;align-items:end">
+          <div>
+            <h1 class="kh" style="font-size:38px">Gold price in Dubai today</h1>
+            <p class="sub" style="max-width:44ch">Dubai's Gold Souk sets the reference tone for the GCC — spot-linked prices below, before making charges.</p>
+            <div style="display:flex;gap:10px;margin-top:18px" class="pills"><span class="on">24K</span><span>22K</span><span>21K</span><span>18K</span></div>
+          </div>
+          <div class="card" style="padding:24px">
+            <div style="font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.08em">24K · per gram</div>
+            <div class="price-lg" style="font-size:44px;margin:4px 0">485.13 <span style="font-size:19px;color:var(--gold)">AED</span></div>
+            <div style="display:flex;gap:16px;font-size:13px;color:var(--ink-muted);margin-top:6px"><span style="color:var(--up)">▲ +0.30% today</span><span>−0.4% vs GCC avg</span></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px">
+          <div class="card" style="padding:18px"><div class="kicker">Why Dubai</div><p style="font-size:13.5px;color:var(--ink-muted);margin-top:6px">No import duty on gold + fierce souk competition keep making charges among the lowest in the region.</p></div>
+          <div class="card" style="padding:18px"><div class="kicker">Where to buy</div><p style="font-size:13.5px;color:var(--ink-muted);margin-top:6px">Gold Souk (Deira) · Gold &amp; Diamond Park · Dubai Mall. Always confirm the day's making charge.</p></div>
+          <div class="card" style="padding:18px"><div class="kicker">Good to know</div><p style="font-size:13.5px;color:var(--ink-muted);margin-top:6px">5% VAT applies; tourists can reclaim it on eligible purchases at the airport.</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 3. COMPARE ============ -->
+    <div class="frame-label">3 · Compare — length-encoded bars + cheapest-market reveal</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a>Calculator</a><a class="active">Compare</a><a>Shops</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">XAU 4,108.70</span></span></nav>
+      <div class="pad">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span class="kicker">Compare markets</span><h1 class="kh" style="font-size:30px">All-in gram price, GCC &amp; Arab world</h1></div><div class="pills"><span class="on">22K</span><span>24K</span><span>21K</span><span>18K</span></div></div>
+        <div class="card" style="margin-top:18px;padding:10px 22px 22px">
+          <div style="display:grid;grid-template-columns:150px 1fr 110px 90px;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em"><span>Country</span><span>All-in retail estimate / g</span><span style="text-align:right">USD/g</span><span style="text-align:right">vs UAE</span></div>
+          <!-- rows -->
+          <div style="display:grid;grid-template-columns:150px 1fr 110px 90px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span style="font-weight:600">🇰🇼 Kuwait <span style="font-size:11px;color:var(--up);border:1px solid var(--up);border-radius:6px;padding:1px 6px;margin-inline-start:4px">cheapest</span></span><div class="barwrap"><div class="bar" style="width:88%"></div></div><span class="num" style="text-align:right">142.83</span><span class="num" style="text-align:right;color:var(--up)">−2.1%</span></div>
+          <div style="display:grid;grid-template-columns:150px 1fr 110px 90px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span style="font-weight:600">🇦🇪 UAE</span><div class="barwrap"><div class="bar" style="width:92%"></div></div><span class="num" style="text-align:right">145.90</span><span class="num" style="text-align:right">—</span></div>
+          <div style="display:grid;grid-template-columns:150px 1fr 110px 90px;gap:14px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)"><span style="font-weight:600">🇸🇦 Saudi Arabia</span><div class="barwrap"><div class="bar" style="width:95%"></div></div><span class="num" style="text-align:right">148.20</span><span class="num" style="text-align:right;color:var(--down)">+1.6%</span></div>
+          <div style="display:grid;grid-template-columns:150px 1fr 110px 90px;gap:14px;align-items:center;padding:12px 0"><span style="font-weight:600">🇶🇦 Qatar</span><div class="barwrap"><div class="bar" style="width:100%"></div></div><span class="num" style="text-align:right">151.05</span><span class="num" style="text-align:right;color:var(--down)">+3.5%</span></div>
+        </div>
+        <div style="margin-top:14px;font-size:13px;color:var(--ink-muted)"><span class="dot"></span> Bars scale to all-in retail estimate per gram · reference, confirm making charges locally</div>
+      </div>
+    </div>
+
+    <!-- ============ 4. PORTFOLIO ============ -->
+    <div class="frame-label">4 · Portfolio — a lightweight wealth dashboard</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a>Calculator</a><a>Compare</a><a class="active">Portfolio</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">24K 485.13 AED/g</span></span></nav>
+      <div class="pad">
+        <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:32px;align-items:center">
+          <div>
+            <span class="kicker">Your holdings</span>
+            <div class="price-lg" style="font-size:52px;margin:6px 0">61,240 <span style="font-size:22px;color:var(--gold)">AED</span></div>
+            <div style="display:flex;gap:14px;font-size:14px;color:var(--ink-muted)"><span style="color:var(--up)">▲ +1,840 (+3.1%) today</span></div>
+            <div style="display:flex;gap:8px;margin-top:16px"><button class="cta gold">Add holding</button><button class="cta ghost">Export</button></div>
+          </div>
+          <div class="card" style="padding:8px 22px">
+            <div style="display:grid;grid-template-columns:1.4fr .8fr .8fr 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em"><span>Item</span><span>Karat</span><span>Weight</span><span style="text-align:right">Value</span></div>
+            <div style="display:grid;grid-template-columns:1.4fr .8fr .8fr 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px"><span style="font-weight:600">Wedding set</span><span>22K</span><span class="num">85 g</span><span class="num" style="text-align:right">37,800</span></div>
+            <div style="display:grid;grid-template-columns:1.4fr .8fr .8fr 1fr;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14px"><span style="font-weight:600">Coins (1oz)</span><span>24K</span><span class="num">31 g</span><span class="num" style="text-align:right">15,040</span></div>
+            <div style="display:grid;grid-template-columns:1.4fr .8fr .8fr 1fr;gap:12px;padding:13px 0;font-size:14px"><span style="font-weight:600">Bracelet</span><span>18K</span><span class="num">23 g</span><span class="num" style="text-align:right">8,400</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 5. LEARN ARTICLE ============ -->
+    <div class="frame-label">5 · Learn article — a premium publication, not a blog</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a>Calculator</a><a>Compare</a><a>Shops</a><a class="active">Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">24K 485.13</span></span></nav>
+      <div class="pad" style="max-width:760px;margin:0 auto">
+        <span class="kicker">Buying · 6 min read · Beginner</span>
+        <h1 class="kh serif" style="font-size:40px;margin-top:8px">Spot vs retail: why the shop price is higher</h1>
+        <p class="sub" style="font-size:17px;line-height:1.5">The number you see here is the metal's reference value. A jeweller's quote adds three things — here's exactly what, and how to check you're paying a fair premium.</p>
+        <div style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:22px 0;padding:14px 0;display:flex;gap:20px;font-size:13px;color:var(--ink-muted)"><span><span class="dot"></span> Reviewed by our editors</span><span>Updated Jul 2026</span><span>EN · العربية</span></div>
+        <p style="font-size:16px;line-height:1.7;color:#2c281f">Gold's <b>spot price</b> is what one troy ounce trades for on the global market. Every price on Gold Ticker Live derives from it. When you walk into a souk, the quote you get is <b>spot + making charge + VAT + margin</b>…</p>
+        <div class="card" style="padding:20px;margin:22px 0;border-inline-start:3px solid var(--gold)"><div class="kicker">Live context</div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:6px"><span style="font-size:14px;color:var(--ink-muted)">24K reference right now</span><span class="num" style="font-size:22px;font-weight:600">485.13 AED/g</span></div><div style="font-size:12.5px;color:var(--ink-muted);margin-top:4px">A 10 g 22K chain ≈ 4,446.90 AED in metal, before making charges.</div></div>
+        <p style="font-size:16px;line-height:1.7;color:#2c281f">Making charges vary by design complexity — machine-made chains are cheaper per gram than handcrafted pieces…</p>
+      </div>
+    </div>
+
+    <!-- ============ 6. SHOPS ============ -->
+    <div class="frame-label">6 · Shops — curated &amp; trustworthy, honest by design</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative values — not live</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a>Prices</a><a>Calculator</a><a>Compare</a><a class="active">Shops</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">24K 485.13 AED/g</span></span></nav>
+      <div class="pad">
+        <span class="kicker">Find gold shops</span>
+        <h1 class="kh" style="font-size:30px">Trusted gold markets &amp; jewellers</h1>
+        <div class="pills" style="margin-top:14px"><span class="on">Dubai</span><span>Abu Dhabi</span><span>Sharjah</span><span>Riyadh</span><span>Doha</span></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px">
+          <div class="card" style="overflow:hidden"><div style="height:120px;background:linear-gradient(135deg,#2b2118,#6a5030);display:grid;place-items:center;color:#f0e2c4;font-size:26px">🏛</div><div style="padding:16px"><h3 style="font-size:17px">Dubai Gold Souk</h3><div style="font-size:13px;color:var(--ink-muted);margin-top:4px">Deira · 380+ retailers</div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="font-size:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px">Hallmarked</span><span style="font-size:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px">Est. 1940s</span></div></div></div>
+          <div class="card" style="overflow:hidden"><div style="height:120px;background:linear-gradient(135deg,#2b2118,#6a5030);display:grid;place-items:center;color:#f0e2c4;font-size:26px">🏛</div><div style="padding:16px"><h3 style="font-size:17px">Gold &amp; Diamond Park</h3><div style="font-size:13px;color:var(--ink-muted);margin-top:4px">Sheikh Zayed Rd · 90+ retailers</div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="font-size:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px">Hallmarked</span><span style="font-size:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px">Indoor</span></div></div></div>
+          <div class="card" style="overflow:hidden"><div style="height:120px;background:linear-gradient(135deg,#2b2118,#6a5030);display:grid;place-items:center;color:#f0e2c4;font-size:26px">🏛</div><div style="padding:16px"><h3 style="font-size:17px">Meena Bazaar</h3><div style="font-size:13px;color:var(--ink-muted);margin-top:4px">Bur Dubai · traditional</div><div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap"><span style="font-size:11px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 8px">Hallmarked</span></div></div></div>
+        </div>
+        <div style="margin-top:16px;font-size:13px;color:var(--ink-muted)"><span class="dot"></span> Curated markets — we don't take payment for listings. Always confirm the day's price &amp; making charge in person.</div>
+      </div>
+    </div>
+
+    <!-- ============ 7. FUTURE-PROOFING ============ -->
+    <div class="frame-label">7 · Future-proof — metals, crypto, tiers, languages, AI (all within the same system)</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative — shows how the system extends (features shown gated/soon, none live)</div>
+      <nav>
+        <div class="brand"><span class="g">G</span>Gold Ticker Live</div>
+        <div class="navlinks"><a class="active">Prices</a><a>Calculator</a><a>Compare</a><a>Shops</a><a>Learn</a></div>
+        <div style="display:flex;gap:10px;align-items:center"><span style="font-size:12px;color:var(--ink-muted);border:1px solid var(--line);border-radius:999px;padding:6px 11px">EN ▾</span><span style="font-size:11.5px;color:#7a5b0f;background:var(--gold-soft);border-radius:999px;padding:6px 11px;font-weight:700">◆ Premium</span></div>
+      </nav>
+      <div class="pad">
+        <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+          <div class="pills"><span class="on">Gold</span><span>Silver <small style="color:var(--ink-faint)">soon</small></span><span>Platinum <small style="color:var(--ink-faint)">soon</small></span><span>Palladium <small style="color:var(--ink-faint)">soon</small></span></div>
+          <span style="font-size:12px;color:var(--ink-faint)">← one metal-switcher, same layout for every metal</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:12px">
+          <div class="card" style="padding:22px">
+            <div class="kicker">Descriptive market analysis · AI</div>
+            <p style="font-size:14px;color:var(--ink-muted);margin-top:8px;line-height:1.6">Gold has risen 3 sessions running and sits near a 3-month high; historically, moves of this size have been followed by consolidation. <b>Backward-looking &amp; rules-based — never a forecast or advice.</b></p>
+            <span style="font-size:11.5px;color:var(--ink-faint);display:inline-block;margin-top:8px">Same insight module used sitewide</span>
+          </div>
+          <div class="card" style="padding:22px">
+            <div class="kicker">Gold vs other assets</div>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
+              <div style="display:flex;justify-content:space-between;font-size:14px"><span>Gold · 3-yr</span><span class="num" style="color:var(--up)">+52%</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:14px"><span>Silver <small style="color:var(--ink-faint)">soon</small></span><span class="num" style="color:var(--ink-faint)">—</span></div>
+              <div style="display:flex;justify-content:space-between;font-size:14px"><span>BTC <small style="color:var(--ink-faint)">soon</small></span><span class="num" style="color:var(--ink-faint)">—</span></div>
+            </div>
+            <span style="font-size:11.5px;color:var(--ink-faint);display:inline-block;margin-top:12px">Comparison viz scales to metals + crypto (gated, descriptive)</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap;align-items:center">
+          <span style="font-size:12px;color:var(--ink-muted)">Extends without redesign:</span>
+          <span class="pills"><span>Public API</span></span><span class="pills"><span>Widgets / embed</span></span><span class="pills"><span>Mobile app (same tokens)</span></span><span class="pills"><span>FR · HI · UR</span></span><span class="pills"><span>Alerts</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ 8. PUSHED-FURTHER HERO ============ -->
+    <div class="frame-label">8 · Pushed further (ideal, unconstrained) — market-pulse ring + karat dial signature</div>
+    <div class="device">
+      <div class="ribbon">DESIGN MOCKUP · illustrative — pushes the hero past today's codebase toward the ideal</div>
+      <nav><div class="brand"><span class="g">G</span>Gold Ticker Live</div><div class="navlinks"><a class="active">Prices</a><a>Calculator</a><a>Compare</a><a>Shops</a><a>Learn</a></div><span class="pricepill"><span class="dot"></span><span class="num">XAU 4,108.70</span></span></nav>
+      <div class="pad" style="background:radial-gradient(120% 80% at 80% 0,color-mix(in srgb,var(--gold-soft) 40%,var(--paper)),var(--paper) 60%)">
+        <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center">
+          <div>
+            <div style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-muted);margin-bottom:14px"><span class="dot"></span> Live · updates every few seconds</div>
+            <div class="serif" style="font-size:22px;color:var(--ink-muted);margin-bottom:10px">Gold today, <b style="color:var(--ink)">one number the whole site trusts</b></div>
+            <div class="price-lg" style="font-size:96px;line-height:.9">4,108<span style="font-size:52px;color:var(--ink-muted)">.70</span><span style="font-size:34px;color:var(--gold);vertical-align:super">$</span></div>
+            <div style="display:flex;gap:14px;align-items:center;margin-top:14px"><span style="color:var(--up);font-family:var(--ticker);font-weight:600">▲ +12.40 (+0.30%)</span><span style="font-size:13px;color:var(--ink-muted)">near a 3-month high</span></div>
+            <div style="display:flex;gap:12px;margin-top:22px"><button class="cta gold">Calculate jewellery value →</button><button class="cta ghost">Open tracker</button></div>
+          </div>
+          <!-- karat dial signature -->
+          <div class="card" style="padding:26px;text-align:center;position:relative">
+            <div class="kicker">Karat dial · drag to your karat</div>
+            <svg viewBox="0 0 220 220" style="width:210px;height:210px;margin:8px auto 0;display:block">
+              <circle cx="110" cy="110" r="92" fill="none" stroke="#efe7d8" stroke-width="14"/>
+              <circle cx="110" cy="110" r="92" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="578" stroke-dashoffset="72" transform="rotate(-90 110 110)"/>
+              <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#e8c877"/><stop offset="1" stop-color="#b8891e"/></linearGradient></defs>
+              <text x="110" y="98" text-anchor="middle" font-family="var(--ticker)" font-size="15" fill="#8b8375">24K · .999</text>
+              <text x="110" y="132" text-anchor="middle" font-family="var(--ticker)" font-size="34" font-weight="600" fill="#171512">485.13</text>
+              <text x="110" y="152" text-anchor="middle" font-family="var(--sans)" font-size="12" fill="#8b8375">AED / gram</text>
+            </svg>
+            <div class="pills" style="justify-content:center;margin-top:8px"><span class="on">24K</span><span>22K</span><span>21K</span><span>18K</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
