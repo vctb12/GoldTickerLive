@@ -1,0 +1,78 @@
+{
+  "desktop_en": {
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 6,
+        "targets": [
+          "#trust-live-sub",
+          "#trust-countries-sub",
+          "#trust-karats-sub",
+          "#trust-aed-sub"
+        ]
+      }
+    ],
+    "passes": 36,
+    "incomplete": 2
+  },
+  "desktop_ar": {
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 4,
+        "targets": [
+          "#trust-karats-sub",
+          "#trust-aed-sub",
+          "#trust-bilingual-sub",
+          ".ticker-status-label"
+        ]
+      }
+    ],
+    "passes": 36,
+    "incomplete": 2
+  },
+  "mobile_en": {
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 2,
+        "targets": [".footer-col-heading", ".footer-copy"]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "help": "Scrollable region must have keyboard access",
+        "nodes": 1,
+        "targets": [".trust-inner"]
+      }
+    ],
+    "passes": 36,
+    "incomplete": 2
+  },
+  "mobile_ar": {
+    "violations": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "help": "Elements must meet minimum color contrast ratio thresholds",
+        "nodes": 1,
+        "targets": [".footer-copy"]
+      },
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "help": "Scrollable region must have keyboard access",
+        "nodes": 1,
+        "targets": [".trust-inner"]
+      }
+    ],
+    "passes": 36,
+    "incomplete": 2
+  }
+}

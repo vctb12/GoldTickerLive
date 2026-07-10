@@ -1,0 +1,1087 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Homepage redesign — section overrides (redesign/home)
+   Loads AFTER styles/pages/home.css; scoped to `.hero--gtl` so it only affects
+   the redesigned homepage hero. Built on styles/design-system.css (gtl-* tokens).
+   Approved package: docs/design/reviews/PRE_BUILD_VALIDATION*.md
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Hero shell ──────────────────────────────────────────────────────────── */
+.hero--gtl {
+  padding-block: var(--gtl-9) var(--gtl-8);
+}
+.hero--gtl .hero-inner--gtl {
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gtl-6);
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  align-items: center;
+  gap: var(--gtl-8);
+}
+
+/* Editorial left column */
+.hero--gtl .hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gtl-4);
+  max-width: none;
+}
+.hero--gtl .hero-badge {
+  margin: 0;
+}
+.hero--gtl #hero-headline {
+  margin: 0;
+  font-family: var(--gtl-serif);
+  line-height: 1.08;
+}
+.hero--gtl .hero-title-main {
+  display: block;
+  font-size: var(--gtl-display-1);
+  font-weight: 700;
+  color: var(--gtl-ink);
+  letter-spacing: -0.015em;
+}
+.hero--gtl .hero-title-sub {
+  display: block;
+  font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.5rem);
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  font-style: italic;
+  margin-top: 2px;
+}
+.hero--gtl .hero-lead {
+  font-size: 1.0625rem;
+  color: var(--gtl-ink-muted);
+  max-width: 46ch;
+  margin: 0;
+}
+.hero--gtl .hero-disclaimer--gtl {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-faint);
+  border-top: 1px solid var(--gtl-line);
+  padding-top: var(--gtl-4);
+  margin: var(--gtl-2) 0 0;
+  max-width: 46ch;
+}
+.hero--gtl .hero-disclaimer--gtl .hlc-retail-link {
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+  margin-inline-start: 6px;
+  white-space: nowrap;
+}
+
+/* CTAs — gtl buttons win over the legacy .btn base */
+.hero--gtl .hero-ctas--gtl {
+  display: flex;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hero-ctas--gtl .gtl-btn {
+  padding: 13px 24px;
+  font-size: 1rem;
+}
+.hero--gtl .hero-ctas-secondary {
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hero-secondary-link {
+  color: var(--gtl-ink-muted);
+}
+
+/* Darken the decorative separators to clear WCAG AA contrast (were ~1.65:1). */
+.hero--gtl .hero-secondary-sep {
+  color: var(--gtl-ink-muted);
+}
+
+/* ── Right column: the live-market price block (unboxed, protagonist) ────── */
+.hero--gtl .hero-live-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gtl-3);
+}
+.hero--gtl .hlc-title {
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+}
+.hero--gtl .hlc-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gtl-3);
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* The numeral — the brand's face */
+.hero--gtl .price-hero {
+  width: 100%;
+}
+.hero--gtl .hlc-price-wrap.gtl-price {
+  align-items: flex-start;
+  gap: 4px;
+}
+.hero--gtl .gtl-price__int {
+  font-size: var(--gtl-price-hero);
+  line-height: 0.88;
+  color: var(--gtl-ink-data);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+}
+.hero--gtl .gtl-price__cur {
+  font-size: 0.4em;
+  color: var(--gtl-gold);
+  font-weight: 700;
+  align-self: flex-start;
+  margin-top: 0.28em;
+  margin-inline-start: 0.06em;
+}
+.hero--gtl .hlc-change-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+}
+.hero--gtl .hlc-change {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--gtl-r-sm);
+}
+.hero--gtl .hlc-change.badge-up {
+  color: var(--gtl-up);
+  background: var(--color-move-up-bg);
+}
+.hero--gtl .hlc-change.badge-down {
+  color: var(--gtl-down);
+  background: var(--color-move-down-bg);
+}
+.hero--gtl .hlc-sub {
+  color: var(--gtl-ink-muted);
+  font-size: 0.95rem;
+}
+.hero--gtl .hlc-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-faint);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 3px 9px;
+}
+.hero--gtl .hlc-updated {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-muted);
+}
+.hero--gtl .hlc-sparkline {
+  width: 100%;
+  max-width: 460px;
+  height: 44px;
+  margin-top: 0;
+}
+.hero--gtl .hlc-sparkline:empty {
+  display: none;
+}
+
+/* Subtle day stats (open/high/low) under the price */
+.hero--gtl .hlc-stats-row {
+  display: flex;
+  gap: var(--gtl-5);
+  width: 100%;
+  border-top: 1px solid var(--gtl-line);
+  padding-top: var(--gtl-3);
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hlc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero--gtl .hlc-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-faint);
+}
+.hero--gtl .hlc-stat-value {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Disclaimer + freshness once: hide the card's duplicate trust lines, the
+   redundant karat teaser, the legacy divider rule, and the duplicate freshness
+   badge slot (the #hlc-updated chip is the single freshness object here). */
+.hero--gtl #hlc-retail,
+.hero--gtl #hlc-trust-line,
+.hero--gtl .hlc-karat-teaser,
+.hero--gtl .hlc-rule,
+.hero--gtl #home-freshness-badge-slot {
+  display: none;
+}
+.hero--gtl .hlc-sparkline {
+  height: 38px;
+}
+
+/* The freshness banner is position:sticky (z-index:100) and floats over the
+   sections that scroll beneath it. Its token backgrounds are 9%-alpha tints, so
+   content bled through and collided with the banner text — most visibly on
+   narrow/tablet widths where the banner wraps to multiple lines. Composite the
+   tint over the opaque page background so the banner occludes cleanly while
+   keeping the intended tint (theme-aware via the tokens). */
+.home-freshness-bar {
+  background: linear-gradient(var(--color-live-bg), var(--color-live-bg)), var(--color-bg);
+}
+.home-freshness-bar--stale {
+  background: linear-gradient(var(--color-daily-bg), var(--color-daily-bg)), var(--color-bg);
+}
+
+/* Keep the footer utilities (CSV / full tracker) quiet but present */
+.hero--gtl .hlc-footer {
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hlc-footer-actions {
+  display: flex;
+  gap: var(--gtl-4);
+  align-items: center;
+}
+.hero--gtl .hlc-tracker-link {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ── Mobile: price-first, single column ──────────────────────────────────── */
+@media (max-width: 760px) {
+  .hero--gtl {
+    padding-block: var(--gtl-7) var(--gtl-6);
+  }
+  .hero--gtl .hero-inner--gtl {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--gtl-4);
+    gap: var(--gtl-5);
+    align-items: stretch;
+  }
+
+  /* Pull the live price block above the editorial text on phones, and keep it
+     compact — no reserved voids from empty sub-elements. */
+  .hero--gtl .hero-live-card {
+    order: -1;
+    gap: var(--gtl-2);
+  }
+  .hero--gtl .hero-title-main {
+    font-size: clamp(1.75rem, 1.4rem + 3vw, 2.25rem);
+  }
+  .hero--gtl .hlc-sparkline {
+    max-width: none;
+  }
+  .hero--gtl .hlc-indicators {
+    margin-top: 0;
+  }
+  .hero--gtl .hlc-footer {
+    margin-top: var(--gtl-1);
+  }
+
+  /* The stacked editorial block leads with its CTA on phones for a fast path. */
+  .hero--gtl .hero-ctas--gtl {
+    width: 100%;
+  }
+  .hero--gtl .hero-ctas--gtl .gtl-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+/* ═══ Step 5 — Nav price-pill (homepage-only) + retire redundant top strips ═══ */
+.nav-price-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.8rem;
+  color: var(--gtl-ink);
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 7px 13px;
+  white-space: nowrap;
+  line-height: 1;
+}
+.nav-price-pill__dot {
+  width: 8px;
+  height: 8px;
+}
+.nav-price-pill__k {
+  color: var(--gtl-ink-faint);
+  font-weight: 600;
+  margin-inline-start: 6px;
+}
+.nav-price-pill__sep {
+  color: var(--gtl-line);
+  margin-inline: 6px;
+}
+.nav-price-pill__unit {
+  color: var(--gtl-gold-deep);
+  margin-inline-start: 4px;
+  font-weight: 600;
+}
+.nav-price-pill [data-nav-aed] {
+  color: var(--gtl-gold-deep);
+}
+
+/* The nav pill is a wide-desktop affordance; below this the shared nav (6 links +
+   search + theme + lang + CTA) has no room for it, so it hides to avoid crowding. */
+@media (max-width: 1280px) {
+  .nav-price-pill {
+    display: none;
+  }
+}
+
+/* Retire the redundant X-follow strip on the homepage (this file loads on home
+   only) — the approved nav has one persistent price pill and no top strips. */
+.x-follow-banner {
+  display: none;
+}
+
+/* ═══ Audience-routing band — "What brings you in today?" ═══════════════════ */
+.home-routing--gtl {
+  background: var(--color-surface-2);
+  border-top: 1px solid var(--gtl-line);
+  padding-block: var(--gtl-8);
+}
+.home-routing-inner {
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gtl-6);
+}
+.home-routing-lead {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+  margin: 0 0 var(--gtl-5);
+}
+.home-routing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gtl-4);
+}
+.route-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gtl-3);
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--gtl-t-base) var(--gtl-ease),
+    transform var(--gtl-t-base) var(--gtl-ease),
+    box-shadow var(--gtl-t-base) var(--gtl-ease);
+}
+.route-card:hover {
+  border-color: var(--gtl-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--gtl-shadow-2);
+}
+.route-card:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+.route-card__ic {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--gtl-gold-soft);
+  color: var(--gtl-gold-deep);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.route-card__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--gtl-ink);
+}
+.route-card__body {
+  font-size: 0.95rem;
+  color: var(--gtl-ink-muted);
+  margin: 0;
+  flex: 1;
+  line-height: 1.55;
+}
+.route-card__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-top: var(--gtl-2);
+}
+.route-card__value-label {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.route-card__value-num {
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  font-size: 1.05rem;
+}
+.route-card__value-unit {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+}
+.route-card__cta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+}
+.route-card__cta::after {
+  content: ' →';
+}
+[dir='rtl'] .route-card__cta::after {
+  content: ' ←';
+}
+
+@media (max-width: 760px) {
+  .home-routing--gtl {
+    padding-block: var(--gtl-6);
+  }
+  .home-routing-inner {
+    padding-inline: var(--gtl-4);
+  }
+  .home-routing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══ Market-read — "Is today a high or a low?" (chart + insight panel) ══════ */
+.home-chart-wrap--gtl {
+  display: grid;
+  grid-template-columns: 1fr 288px;
+  gap: var(--gtl-6);
+  align-items: stretch;
+}
+.market-insight {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gtl-3);
+}
+.market-insight__stat {
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-md);
+  padding: var(--gtl-4) var(--gtl-5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.market-insight__stat--hero {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gtl-gold-soft) 45%, var(--gtl-surface)),
+    var(--gtl-surface)
+  );
+  border-color: var(--gtl-gold-soft);
+}
+.market-insight__label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-muted);
+}
+.market-insight__value {
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--gtl-ink-data);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.market-insight__stat--hero .market-insight__value {
+  font-size: 1.6rem;
+}
+.market-insight__value--up {
+  color: var(--gtl-up);
+}
+.market-insight__value--down {
+  color: var(--gtl-down);
+}
+.market-insight__note {
+  font-size: 0.8rem;
+  color: var(--gtl-ink-muted);
+  line-height: 1.4;
+}
+
+/* Visibly distinguish explanatory interpretation from the factual numbers. */
+.market-insight__interp {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.market-insight__interp-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gtl-ink-faint);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.market-insight__source {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+  margin: 0;
+}
+.market-insight__link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  text-decoration: none;
+}
+.market-insight__link::after {
+  content: ' →';
+}
+[dir='rtl'] .market-insight__link::after {
+  content: ' ←';
+}
+
+/* ═══ Karat ladder + interactive dial ═══════════════════════════════════════ */
+.karat-strip .karat-strip-inner {
+  display: grid;
+  grid-template-columns: 232px 1fr;
+  grid-template-areas:
+    'copy copy'
+    'dial prices'
+    'actions actions';
+  gap: var(--gtl-5) var(--gtl-7);
+  align-items: center;
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+}
+.karat-strip .karat-strip-copy {
+  grid-area: copy;
+}
+.karat-strip .karat-strip-scroll-hint {
+  display: none;
+}
+.karat-strip #karat-strip-prices {
+  grid-area: prices;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: var(--gtl-3);
+  overflow: visible;
+}
+.karat-strip .karat-strip-actions {
+  grid-area: actions;
+}
+.karat-strip .karat-strip-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+.karat-strip .karat-strip-label {
+  color: var(--gtl-gold-deep);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: var(--gtl-kicker);
+}
+
+/* Rungs as a selectable ladder */
+.karat-strip .karat-strip-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-md);
+  padding: var(--gtl-4);
+  min-width: 0;
+  transition: border-color var(--gtl-t-fast) var(--gtl-ease);
+}
+.karat-strip .karat-strip-item[role='radio'] {
+  cursor: pointer;
+}
+.karat-strip .karat-strip-item.is-selected {
+  border-color: var(--gtl-gold);
+  box-shadow: inset 0 0 0 1px var(--gtl-gold);
+  background: var(--gtl-gold-soft);
+}
+.karat-strip .karat-strip-item:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+.karat-strip .karat-strip-k {
+  font-weight: 700;
+  color: var(--gtl-ink);
+  font-size: 0.95rem;
+}
+.karat-strip .karat-strip-v {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  color: var(--gtl-ink-data);
+  font-size: 1.15rem;
+}
+
+/* The dial */
+.karat-dial {
+  grid-area: dial;
+  position: relative;
+  width: 216px;
+  height: 216px;
+  justify-self: center;
+}
+.karat-dial__svg {
+  width: 100%;
+  height: 100%;
+}
+.karat-dial__track {
+  fill: none;
+  stroke: var(--color-surface-3);
+  stroke-width: 14;
+}
+.karat-dial__arc {
+  fill: none;
+  stroke: var(--gtl-gold);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset var(--gtl-t-slow) var(--gtl-ease);
+}
+.karat-dial__center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+}
+.karat-dial__k {
+  font-family: var(--gtl-serif);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gtl-ink);
+  line-height: 1;
+}
+.karat-dial__purity {
+  font-size: 0.8rem;
+  color: var(--gtl-ink-faint);
+}
+.karat-dial__val {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gtl-ink-data);
+  margin-top: 6px;
+}
+.karat-dial__unit {
+  font-size: 0.68rem;
+  color: var(--gtl-ink-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 760px) {
+  .karat-strip .karat-strip-inner {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'copy'
+      'dial'
+      'prices'
+      'actions';
+    justify-items: center;
+  }
+  .karat-strip #karat-strip-prices {
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.karat-teach-choice {
+  font-size: 0.85rem;
+  color: var(--gtl-ink-muted);
+  margin: var(--gtl-3) 0 0;
+  max-width: 42ch;
+  line-height: 1.5;
+}
+.karat-next-link {
+  display: inline-block;
+  margin-top: var(--gtl-3);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  text-decoration: none;
+}
+.karat-next-link::after {
+  content: ' →';
+}
+[dir='rtl'] .karat-next-link::after {
+  content: ' ←';
+}
+.karat-dial {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.karat-dial:active {
+  cursor: grabbing;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .karat-dial__arc {
+    transition: none;
+  }
+}
+
+/* ═══ Inline calculator (quick-convert): grams + karat → reference value ═════ */
+.quick-convert-widget {
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-6);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--gtl-5) var(--gtl-6);
+  align-items: start;
+}
+.quick-convert-widget__title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+  margin: 0;
+  grid-column: 1 / -1;
+}
+.quick-convert-widget__sub {
+  color: var(--gtl-ink-muted);
+  margin: 0;
+  grid-column: 1 / -1;
+  font-size: 0.95rem;
+}
+.quick-convert-widget__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gtl-4);
+}
+.quick-convert-widget__field label {
+  display: block;
+  font-size: var(--gtl-meta);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-muted);
+  margin-bottom: 6px;
+}
+.quick-convert-widget__row {
+  display: flex;
+  gap: var(--gtl-2);
+}
+.quick-convert-widget__input,
+.quick-convert-widget__select {
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-sm);
+  padding: 12px 14px;
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 1.05rem;
+  background: var(--gtl-paper);
+  color: var(--gtl-ink);
+  width: 100%;
+}
+.quick-convert-widget__input:focus-visible,
+.quick-convert-widget__select:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 1px;
+}
+.quick-convert-widget__input[aria-invalid='true'] {
+  border-color: var(--gtl-down);
+  box-shadow: inset 0 0 0 1px var(--gtl-down);
+}
+.quick-convert-widget__result {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--gtl-gold-soft) 42%, var(--gtl-surface)),
+    var(--gtl-surface)
+  );
+  border: 1px solid var(--gtl-gold-soft);
+  border-radius: var(--gtl-r-md);
+  padding: var(--gtl-5);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.quick-convert-widget__result-label {
+  font-size: var(--gtl-meta);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-muted);
+}
+.quick-convert-widget__result-value {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  font-size: 2.2rem;
+  color: var(--gtl-ink-data);
+  line-height: 1.05;
+}
+.quick-convert-widget__result-hint {
+  font-size: 0.85rem;
+  color: var(--gtl-down);
+  margin: 4px 0 0;
+}
+.quick-convert-widget__result-note {
+  font-size: 0.82rem;
+  color: var(--gtl-ink-muted);
+  margin: 6px 0 0;
+}
+.quick-convert-widget__retail-note {
+  font-size: 0.82rem;
+  color: var(--gtl-ink-faint);
+  margin: 4px 0 0;
+  border-top: 1px solid var(--gtl-line);
+  padding-top: 8px;
+}
+
+/* Formula + freshness reserve their space (min-height) so populating them after the
+   canonical seed lands causes NO layout shift; empty state is invisible (no box). */
+.quick-convert-widget__formula {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.82rem;
+  color: var(--gtl-ink-muted);
+  margin: 8px 0 0;
+  padding: 7px 10px;
+  background: var(--gtl-paper);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-sm);
+  min-height: 2.2rem;
+}
+.quick-convert-widget__formula:empty {
+  background: transparent;
+  border-color: transparent;
+}
+.quick-convert-widget__freshness {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--gtl-ink-faint);
+  margin: 6px 0 0;
+  min-height: 1.1rem;
+}
+.quick-convert-widget__cta {
+  align-self: flex-start;
+  margin-top: var(--gtl-3);
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+@media (max-width: 760px) {
+  .quick-convert-widget {
+    grid-template-columns: 1fr;
+    padding: var(--gtl-5);
+  }
+}
+
+/* ═══ Gulf-market editorial — real canonical prices + custom gold material ═══ */
+.home-gulf--gtl .gulf-kicker {
+  display: block;
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  margin-bottom: 6px;
+}
+.home-gulf--gtl .home-section-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+
+/* Region tabs — segmented; accessible active state (fixes the prior 3.83:1 contrast). */
+.home-gulf--gtl .gcc-region-tabs {
+  gap: 4px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 4px;
+  display: inline-flex;
+}
+.home-gulf--gtl .gcc-region-tab {
+  border: 0;
+  background: transparent;
+  color: var(--gtl-ink-muted);
+  border-radius: var(--gtl-r-pill);
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.home-gulf--gtl .gcc-region-tab.is-active,
+.home-gulf--gtl .gcc-region-tab[aria-selected='true'] {
+  background: var(--gtl-ink);
+  color: var(--gtl-paper);
+}
+.home-gulf--gtl .gcc-region-tab:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+
+/* Country cards — a custom gold-material treatment (no photography). */
+.home-gulf--gtl .gcc-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+}
+.home-gulf--gtl .gcc-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gtl-gold-soft), var(--gtl-gold), var(--gtl-gold-soft));
+}
+.home-gulf--gtl .gcc-card::after {
+  content: '';
+  position: absolute;
+  inset-block-start: -34px;
+  inset-inline-end: -34px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-gold-glow), transparent 70%);
+  pointer-events: none;
+}
+.home-gulf--gtl .gcc-price {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--gtl-ink-data);
+}
+.home-gulf--gtl .gulf-note {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-faint);
+  margin-top: var(--gtl-4);
+}
+
+@media (max-width: 760px) {
+  .home-gulf--gtl .gcc-region-tabs {
+    display: flex;
+    width: 100%;
+  }
+  .home-gulf--gtl .gcc-region-tab {
+    flex: 1;
+  }
+}
+
+/* ═══ Learn rail — premium publication treatment ════════════════════════════ */
+.home-learn--gtl .learn-kicker {
+  display: block;
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  margin-bottom: 6px;
+}
+.home-learn--gtl .home-section-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+
+/* Hide the component's own duplicate section-intro (we have the editorial header). */
+.home-learn--gtl #home-location-guides-mount .section-intro {
+  display: none;
+}
+.home-learn--gtl .location-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: var(--gtl-4);
+}
+.home-learn--gtl .location-guide-card {
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+}
+.home-learn--gtl .location-guide-card__title {
+  font-family: var(--gtl-serif);
+  font-size: 1.2rem;
+  color: var(--gtl-ink);
+}
+.home-learn--gtl .location-guide-card__links a {
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+}
+
+/* First card = the feature lede (dark, gold material) — AA text on ink. */
+.home-learn--gtl .location-guides-grid > :first-child {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-panel, #17140f);
+  border-color: transparent;
+  color: #f3eee4;
+}
+.home-learn--gtl .location-guides-grid > :first-child::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -40px;
+  inset-inline-end: -40px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(184 137 30 / 48%), transparent 66%);
+  pointer-events: none;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__title {
+  color: #fff;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__context,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__karats,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__checklist,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__checklist-title {
+  color: #cabfad;
+  position: relative;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__links a {
+  color: #e4b655;
+  position: relative;
+}
+
+@media (max-width: 900px) {
+  .home-chart-wrap--gtl {
+    grid-template-columns: 1fr;
+  }
+  .market-insight {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .market-insight__stat {
+    flex: 1;
+    min-width: 150px;
+  }
+}

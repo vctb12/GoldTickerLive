@@ -28,7 +28,7 @@ const UNIT_TO_GRAMS = {
  * instead of staying stuck on the placeholder. `spotUsdPerOz` is a static
  * fallback for callers that already have the value.
  */
-export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount }) {
+export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, getFreshness, t, mount }) {
   if (!mount) return null;
 
   let weight = 10;
@@ -77,7 +77,7 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
       id: 'home-quick-karat',
       'aria-label': t('quickConvertKarat'),
     },
-    ['24', '22', '21', '18'].map((code) => {
+    ['24', '22', '21', '18', '14'].map((code) => {
       const k = KARATS.find((item) => item.code === code);
       const pct = k ? `${(k.purity * 100).toFixed(1)}%` : '';
       return el('option', { value: code }, [`${code}K (${pct})`]);
@@ -89,11 +89,33 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
     {
       class: 'quick-convert-widget__result-value',
       id: 'home-quick-result',
+      role: 'status',
+      'aria-live': 'polite',
+      'aria-atomic': 'true',
     },
     ['—']
   );
+  const resultHint = el('p', {
+    class: 'quick-convert-widget__result-hint',
+    id: 'home-quick-hint',
+    hidden: true,
+  });
   const resultNote = el('p', { class: 'quick-convert-widget__result-note' }, [
     t('quickConvertNote'),
+  ]);
+  // Plain-language formula: weight × AED/g (karat) = value — shows the maths, no black box.
+  const formulaLine = el('p', {
+    class: 'quick-convert-widget__formula',
+    id: 'home-quick-formula',
+  });
+  // On-widget freshness: proves the value uses the same live snapshot as the rest of the site.
+  const freshnessLine = el('p', {
+    class: 'quick-convert-widget__freshness',
+    id: 'home-quick-freshness',
+  });
+  // Explicit reference (spot) vs retail (shop) distinction — trust guardrail.
+  const retailNote = el('p', { class: 'quick-convert-widget__retail-note' }, [
+    t('quickConvertRetail'),
   ]);
 
   const calcLink = el(
@@ -120,7 +142,11 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
   const resultBlock = el('div', { class: 'quick-convert-widget__result' }, [
     el('span', { class: 'quick-convert-widget__result-label' }, [t('quickConvertResult')]),
     resultValue,
+    resultHint,
+    formulaLine,
     resultNote,
+    retailNote,
+    freshnessLine,
     calcLink,
   ]);
 
@@ -140,16 +166,46 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
     karat = karatSelect.value;
     const k = KARATS.find((item) => item.code === karat);
     const spot = typeof getSpot === 'function' ? getSpot() : spotUsdPerOz;
-    if (!spot || !k || gramsFromInput() <= 0) {
+    const grams = gramsFromInput();
+    const raw = String(weightInput.value).trim();
+    // Freshness always reflects the current canonical snapshot (independent of input).
+    if (typeof getFreshness === 'function') {
+      const fr = getFreshness();
+      freshnessLine.textContent = fr ? `${fr.statusText} · ${fr.ageText}` : '';
+    }
+    formulaLine.textContent = '';
+    // Validation / error states (explicit, not just a dash).
+    if (!spot || !k) {
       resultValue.textContent = '—';
+      resultHint.textContent = t('quickConvertUnavailable');
+      resultHint.hidden = false;
+      weightInput.setAttribute('aria-invalid', 'false');
       return;
     }
+    if (raw === '' || grams <= 0) {
+      resultValue.textContent = '—';
+      resultHint.textContent = t('quickConvertHint');
+      resultHint.hidden = false;
+      // Only flag as invalid when the user typed something unusable (not when empty).
+      weightInput.setAttribute('aria-invalid', raw !== '' && grams <= 0 ? 'true' : 'false');
+      return;
+    }
+    resultHint.hidden = true;
+    weightInput.setAttribute('aria-invalid', 'false');
     const aedPerGram = usdPerGram(spot, k.purity) * CONSTANTS.AED_PEG;
-    const total = aedPerGram * gramsFromInput();
+    const total = aedPerGram * grams;
     countUp(resultValue, total, {
       decimals: 2,
       format: (n) => formatPrice(n, 'AED', 2),
     });
+    // Plain-language formula (LTR — maths reads left-to-right in both languages).
+    // Uses a plain "AED" suffix (not the د.إ glyph) so the forced-LTR line never
+    // garbles the currency symbol; the big result above uses the site's formatPrice.
+    const money = (n) =>
+      n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const gramsStr = grams.toLocaleString('en-US', { maximumFractionDigits: 2 });
+    formulaLine.setAttribute('dir', 'ltr');
+    formulaLine.textContent = `${gramsStr} g × ${money(aedPerGram)} AED/g (${karat}K) = ${money(total)} AED`;
     calcLink.href = `calculator.html${serializeCalculatorUrlState({
       weight: String(weight),
       karat,

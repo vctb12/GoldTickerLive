@@ -1,0 +1,632 @@
+{
+  "narrow360_en": {
+    "vw": 360,
+    "docW": 360,
+    "bodyW": 360,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 1358,
+        "left": 1178,
+        "w": 180
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 1357,
+        "left": 1179,
+        "w": 178
+      },
+      {
+        "tag": "SPAN",
+        "cls": "market-strip-label",
+        "right": 1357,
+        "left": 1179,
+        "w": 178
+      },
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 1166,
+        "left": 986,
+        "w": 180
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 1165,
+        "left": 987,
+        "w": 178
+      },
+      {
+        "tag": "SPAN",
+        "cls": "market-strip-label",
+        "right": 1165,
+        "left": 987,
+        "w": 178
+      },
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 974,
+        "left": 794,
+        "w": 180
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 973,
+        "left": 795,
+        "w": 178
+      }
+    ],
+    "smallTargetCount": 21,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 118,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 117,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 87,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 34,
+        "h": 18
+      }
+    ],
+    "navBottom": 0,
+    "dir": "ltr"
+  },
+  "narrow360_ar": {
+    "vw": 360,
+    "docW": 360,
+    "bodyW": 360,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "DIV",
+        "cls": "trust-item",
+        "right": 901,
+        "left": 760,
+        "w": 141
+      },
+      {
+        "tag": "DIV",
+        "cls": "trust-content",
+        "right": 891,
+        "left": 802,
+        "w": 90
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trust-label",
+        "right": 891,
+        "left": 802,
+        "w": 90
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trust-icon",
+        "right": 795,
+        "left": 770,
+        "w": 26
+      },
+      {
+        "tag": "svg",
+        "cls": "[object SVGAnimatedString]",
+        "right": 790,
+        "left": 774,
+        "w": 16
+      },
+      {
+        "tag": "use",
+        "cls": "[object SVGAnimatedString]",
+        "right": 788,
+        "left": 776,
+        "w": 12
+      },
+      {
+        "tag": "DIV",
+        "cls": "trust-item",
+        "right": 754,
+        "left": 563,
+        "w": 191
+      },
+      {
+        "tag": "DIV",
+        "cls": "trust-content",
+        "right": 744,
+        "left": 605,
+        "w": 139
+      }
+    ],
+    "smallTargetCount": 20,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 160,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 87,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 34,
+        "h": 18
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 105,
+        "h": 18
+      }
+    ],
+    "navBottom": 0,
+    "dir": "rtl"
+  },
+  "tablet768_en": {
+    "vw": 768,
+    "docW": 768,
+    "bodyW": 768,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "DIV",
+        "cls": "ticker-copy",
+        "right": 1955,
+        "left": 966,
+        "w": 989
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-sep",
+        "right": 1955,
+        "left": 1950,
+        "w": 5
+      },
+      {
+        "tag": "A",
+        "cls": "ticker-item",
+        "right": 1950,
+        "left": 1751,
+        "w": 199
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-value",
+        "right": 1930,
+        "left": 1888,
+        "w": 42
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-label",
+        "right": 1881,
+        "left": 1771,
+        "w": 110
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-sep",
+        "right": 1751,
+        "left": 1746,
+        "w": 5
+      },
+      {
+        "tag": "A",
+        "cls": "ticker-item",
+        "right": 1746,
+        "left": 1547,
+        "w": 199
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-value",
+        "right": 1726,
+        "left": 1684,
+        "w": 42
+      }
+    ],
+    "smallTargetCount": 28,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 118,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 117,
+        "h": 19
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      }
+    ],
+    "navBottom": 0,
+    "dir": "ltr"
+  },
+  "tablet768_ar": {
+    "vw": 768,
+    "docW": 768,
+    "bodyW": 768,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "DIV",
+        "cls": "ticker-copy",
+        "right": 540,
+        "left": -514,
+        "w": 1054
+      },
+      {
+        "tag": "A",
+        "cls": "ticker-item",
+        "right": 146,
+        "left": -69,
+        "w": 215
+      },
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 143,
+        "left": -41,
+        "w": 184
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 142,
+        "left": -40,
+        "w": 182
+      },
+      {
+        "tag": "SPAN",
+        "cls": "market-strip-label",
+        "right": 142,
+        "left": -40,
+        "w": 182
+      },
+      {
+        "tag": "DIV",
+        "cls": "nav-drawer-inner",
+        "right": 0,
+        "left": -419,
+        "w": 419
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-value",
+        "right": -6,
+        "left": -49,
+        "w": 43
+      },
+      {
+        "tag": "DIV",
+        "cls": "nav-drawer-search",
+        "right": -16,
+        "left": -403,
+        "w": 387
+      }
+    ],
+    "smallTargetCount": 30,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 160,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 114,
+        "h": 19
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      }
+    ],
+    "navBottom": 0,
+    "dir": "rtl"
+  },
+  "wide1920_en": {
+    "vw": 1920,
+    "docW": 1920,
+    "bodyW": 1920,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 2044,
+        "left": 1808,
+        "w": 236
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 2043,
+        "left": 1809,
+        "w": 234
+      },
+      {
+        "tag": "SPAN",
+        "cls": "market-strip-label",
+        "right": 2043,
+        "left": 1809,
+        "w": 234
+      },
+      {
+        "tag": "DIV",
+        "cls": "ticker-copy",
+        "right": 1965,
+        "left": 976,
+        "w": 989
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-sep",
+        "right": 1965,
+        "left": 1960,
+        "w": 5
+      },
+      {
+        "tag": "A",
+        "cls": "ticker-item",
+        "right": 1960,
+        "left": 1761,
+        "w": 199
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-value",
+        "right": 1940,
+        "left": 1898,
+        "w": 42
+      },
+      {
+        "tag": "DIV",
+        "cls": "ticker-copy",
+        "right": 976,
+        "left": -13,
+        "w": 989
+      }
+    ],
+    "smallTargetCount": 30,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 118,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 117,
+        "h": 19
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      }
+    ],
+    "navBottom": 0,
+    "dir": "ltr"
+  },
+  "wide1920_ar": {
+    "vw": 1920,
+    "docW": 1920,
+    "bodyW": 1920,
+    "hasHOverflow": false,
+    "overflowers": [
+      {
+        "tag": "DIV",
+        "cls": "ticker-copy",
+        "right": 652,
+        "left": -402,
+        "w": 1054
+      },
+      {
+        "tag": "A",
+        "cls": "market-strip-tile hover-lift",
+        "right": 112,
+        "left": -124,
+        "w": 236
+      },
+      {
+        "tag": "PICTURE",
+        "cls": "",
+        "right": 111,
+        "left": -123,
+        "w": 234
+      },
+      {
+        "tag": "SPAN",
+        "cls": "market-strip-label",
+        "right": 111,
+        "left": -123,
+        "w": 234
+      },
+      {
+        "tag": "A",
+        "cls": "ticker-item",
+        "right": 38,
+        "left": -177,
+        "w": 215
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-label",
+        "right": 18,
+        "left": -106,
+        "w": 125
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-value",
+        "right": -114,
+        "left": -157,
+        "w": 43
+      },
+      {
+        "tag": "SPAN",
+        "cls": "ticker-sep",
+        "right": -177,
+        "left": -182,
+        "w": 5
+      }
+    ],
+    "smallTargetCount": 29,
+    "smallTargets": [
+      {
+        "tag": "A",
+        "cls": "hlc-retail-link",
+        "w": 160,
+        "h": 20
+      },
+      {
+        "tag": "A",
+        "cls": "",
+        "w": 76,
+        "h": 19
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "gcc-copy-btn",
+        "w": 22,
+        "h": 44
+      }
+    ],
+    "navBottom": 0,
+    "dir": "rtl"
+  }
+}

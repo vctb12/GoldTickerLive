@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
+    <script>
+      (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoldTickerLive — Design System v2 styleguide (production tokens)</title>
+    <!-- Loads the REAL production stylesheets so this proves the actual system, not a mock. -->
+    <link rel="stylesheet" href="/styles/partials/fonts.css" />
+    <link rel="stylesheet" href="/styles/partials/tokens.css" />
+    <link rel="stylesheet" href="/styles/design-system.css" />
+    <style>
+      body {
+        background: var(--gtl-paper);
+        color: var(--gtl-ink);
+        font-family: var(--gtl-sans);
+        margin: 0;
+        -webkit-font-smoothing: antialiased;
+      }
+      .sg {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 32px 80px;
+      }
+      .sg h2.sec {
+        font-family: var(--gtl-serif);
+        font-size: 22px;
+        margin: 40px 0 16px;
+        padding-top: 20px;
+        border-top: 1px solid var(--gtl-line);
+      }
+      .row {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .swatch {
+        width: 92px;
+        height: 64px;
+        border-radius: 10px;
+        border: 1px solid var(--gtl-line);
+        display: flex;
+        align-items: flex-end;
+        padding: 6px;
+        font-size: 10px;
+        color: #fff;
+        text-shadow: 0 1px 2px rgb(0 0 0 / 40%);
+      }
+      .grid3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .label {
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gtl-ink-faint);
+        margin-bottom: 8px;
+      }
+    </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Docs",
+      "item": "https://goldtickerlive.com/docs"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Design",
+      "item": "https://goldtickerlive.com/docs/design"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Reviews",
+      "item": "https://goldtickerlive.com/docs/design/reviews"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "Styleguide",
+      "item": "https://goldtickerlive.com/docs/design/reviews/styleguide"
+    }
+  ]
+}
+  </script>
+  </head>
+  <body>
+    <div class="sg">
+      <div class="gtl-kicker">GoldTickerLive · design system v2</div>
+      <h1 class="gtl-serif" style="font-size: 40px; margin: 8px 0 4px">Editorial Bullion Terminal — base system</h1>
+      <p style="color: var(--gtl-ink-muted); max-width: 60ch">
+        Production tokens (<code>styles/design-system.css</code> on <code>tokens.css</code>) + the
+        signature primitives every homepage surface is built from. Playfair Display serif · Source
+        Sans 3 UI · tabular numerals.
+      </p>
+
+      <h2 class="sec">Palette (reused from production tokens)</h2>
+      <div class="row">
+        <div class="swatch" style="background: var(--gtl-paper); color: #444">paper</div>
+        <div class="swatch" style="background: var(--gtl-surface); color: #444">surface</div>
+        <div class="swatch" style="background: var(--gtl-ink)">ink</div>
+        <div class="swatch" style="background: var(--gtl-ink-muted)">ink-muted</div>
+        <div class="swatch" style="background: var(--gtl-gold)">gold</div>
+        <div class="swatch" style="background: var(--gtl-gold-deep)">gold-deep</div>
+        <div class="swatch" style="background: var(--gtl-up)">up</div>
+        <div class="swatch" style="background: var(--gtl-down)">down</div>
+      </div>
+
+      <h2 class="sec">Typography scale</h2>
+      <div class="gtl-serif" style="font-size: var(--gtl-display-1)">Display 1 — Gold prices today</div>
+      <div class="gtl-serif" style="font-size: var(--gtl-display-2)">Display 2 — Every karat, one price</div>
+      <div style="font-size: var(--gtl-title); font-weight: 600; margin-top: 8px">Title — section subheading</div>
+      <div style="font-size: var(--gtl-body); color: var(--gtl-ink-muted); max-width: var(--gtl-measure)">
+        Body — spot-linked reference prices for the UAE, GCC and Arab world, before shop making
+        charges. Measured for reading at ~66ch.
+      </div>
+      <div class="gtl-kicker" style="margin-top: 10px">Kicker · the market</div>
+
+      <h2 class="sec">Signature numeral treatment (the brand's face)</h2>
+      <div class="gtl-market-field" style="padding: 20px 0">
+        <span class="gtl-price">
+          <span class="gtl-price__int gtl-num">4,108</span>
+          <span class="gtl-price__dec gtl-num">.70</span>
+          <span class="gtl-price__cur">$</span>
+        </span>
+        <div style="margin-top: 12px" class="row">
+          <span class="gtl-delta gtl-delta--up">▲ +12.40 (+0.30%)</span>
+          <span class="gtl-delta gtl-delta--down">▼ −8.10 (−0.20%)</span>
+        </div>
+      </div>
+
+      <h2 class="sec">Freshness / trust object</h2>
+      <div class="row" style="gap: 28px">
+        <span class="gtl-freshness"><span class="gtl-dot"></span> Live · Gold-API.com · 3s ago</span>
+        <span class="gtl-freshness"><span class="gtl-dot gtl-dot--cached"></span> Cached · 12 min ago</span>
+        <span class="gtl-freshness"><span class="gtl-dot gtl-dot--fallback"></span> Fallback · last good value</span>
+      </div>
+
+      <h2 class="sec">Buttons</h2>
+      <div class="row">
+        <a class="gtl-btn gtl-btn--gold">Calculate jewellery value →</a>
+        <a class="gtl-btn gtl-btn--ghost">Open live tracker</a>
+        <a class="gtl-btn gtl-btn--ink">Live Tracker</a>
+      </div>
+
+      <h2 class="sec">Pills / segmented (karat &amp; unit)</h2>
+      <div class="row">
+        <span class="gtl-pill gtl-pill--on">24K</span>
+        <span class="gtl-pill">22K</span>
+        <span class="gtl-pill">21K</span>
+        <span class="gtl-pill">18K</span>
+        <span class="gtl-pill">14K</span>
+        <span class="gtl-pill">9K</span>
+      </div>
+
+      <h2 class="sec">Surfaces &amp; comparison bars</h2>
+      <div class="grid3">
+        <div class="gtl-card" style="padding: 18px">
+          <div class="label">24K · per gram</div>
+          <div class="gtl-karat-v" style="font-size: 24px">485.13 <span style="font-size: 13px; color: var(--gtl-gold-deep)">AED</span></div>
+        </div>
+        <div class="gtl-card gtl-card--raised" style="padding: 18px">
+          <div class="label">Kuwait — cheapest</div>
+          <div class="gtl-bar"><div class="gtl-bar__fill" style="width: 88%"></div></div>
+          <div class="gtl-num" style="margin-top: 8px; font-weight: 600">142.83 USD/g</div>
+        </div>
+        <div class="gtl-card" style="padding: 18px">
+          <div class="label">Qatar</div>
+          <div class="gtl-bar"><div class="gtl-bar__fill" style="width: 100%"></div></div>
+          <div class="gtl-num" style="margin-top: 8px; font-weight: 600">151.05 USD/g</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

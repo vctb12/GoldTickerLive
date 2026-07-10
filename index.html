@@ -102,6 +102,9 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles/global.css" />
     <link rel="stylesheet" href="styles/pages/home.css" />
+    <!-- Redesign (redesign/home): design-system foundation + homepage overrides -->
+    <link rel="stylesheet" href="styles/design-system.css" />
+    <link rel="stylesheet" href="styles/pages/home-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -202,11 +205,11 @@
         <span id="hfb-text"></span>
         <button id="hfb-dismiss" class="hfb-dismiss" aria-label="Dismiss freshness banner" type="button">×</button>
       </div>
-      <section class="hero" aria-labelledby="hero-headline" data-reveal>
-        <div class="hero-inner">
+      <section class="hero hero--gtl gtl-market-field" aria-labelledby="hero-headline" data-reveal>
+        <div class="hero-inner hero-inner--gtl">
           <div class="hero-text">
-            <div class="hero-badge" id="hero-live-badge" role="status" aria-live="polite" aria-atomic="true">
-              <span class="hero-badge-dot" aria-hidden="true"></span>
+            <div class="hero-badge gtl-freshness" id="hero-live-badge" role="status" aria-live="polite" aria-atomic="true">
+              <span class="hero-badge-dot gtl-dot" aria-hidden="true"></span>
               <span id="hero-live-label">Auto-refresh · freshness labeled</span>
             </div>
             <h1 id="hero-headline">
@@ -217,15 +220,20 @@
               Track spot-linked gold reference prices for the UAE, GCC, and Arab markets across
               24+ countries, seven karat grades (14K–24K), and local currencies.
             </p>
-            <p class="hero-trust-line" id="hero-trust-line">
-              Spot-linked reference prices before retail premiums, making charges, and tax.
-            </p>
-            <div class="hero-ctas">
-              <a href="tracker.html" class="btn btn-primary" id="hero-cta-tracker"
-                >Open Live Tracker</a
+            <p class="hero-trust-line hero-disclaimer--gtl">
+              <span id="hero-trust-line"
+                >Spot-linked reference prices before retail premiums, making charges, and tax.</span
               >
-              <a href="calculator.html" class="btn btn-outline-light" id="hero-cta-calculator"
+              <a class="hlc-retail-link" href="methodology.html" data-i18n="heroRetailLink"
+                >How retail differs →</a
+              >
+            </p>
+            <div class="hero-ctas hero-ctas--gtl">
+              <a href="calculator.html" class="btn gtl-btn gtl-btn--gold" id="hero-cta-calculator"
                 >Use Gold Calculator</a
+              >
+              <a href="tracker.html" class="btn gtl-btn gtl-btn--ghost" id="hero-cta-tracker"
+                >Open Live Tracker</a
               >
             </div>
             <div class="hero-ctas-secondary">
@@ -263,14 +271,15 @@
               <span class="hlc-market" id="hlc-market-status"></span>
             </div>
             <div class="price-hero price-hero--reference">
-              <div class="hlc-price-wrap price-hero__row">
+              <div class="hlc-price-wrap price-hero__row gtl-price">
                 <div
-                  class="hlc-price price-hero__value price-hero__value--xl hlc-price--loading"
+                  class="hlc-price price-hero__value price-hero__value--xl hlc-price--loading gtl-price__int gtl-num"
                   id="hlc-price"
                   data-testid="gold-price"
                 >
                   <span class="skeleton-inline shell-skeleton-price-lg"></span>
                 </div>
+                <span class="gtl-price__cur" aria-hidden="true">$</span>
               </div>
               <div class="hlc-change-row price-hero__meta">
                 <span class="hlc-direction price-hero__direction" id="hlc-direction" hidden aria-hidden="true"></span>
@@ -345,6 +354,48 @@
         </div>
       </section>
 
+      <section class="home-routing home-routing--gtl" aria-labelledby="home-routing-lead" data-reveal>
+        <div class="home-routing-inner">
+          <h2 class="home-routing-lead" id="home-routing-lead">What brings you in today?</h2>
+          <div class="home-routing-grid">
+            <a href="calculator.html" class="route-card" id="route-buy">
+              <span class="route-card__ic" aria-hidden="true">◆</span>
+              <h3 class="route-card__title" id="route-buy-title">I'm buying jewellery</h3>
+              <p class="route-card__body" id="route-buy-body">
+                See what your karat is worth in metal — then what a shop really charges once
+                making charges and VAT are added.
+              </p>
+              <span class="route-card__value" id="route-buy-value" hidden>
+                <span class="route-card__value-label" id="route-buy-value-label"
+                  >24K reference today</span
+                >
+                <span class="gtl-num route-card__value-num" data-route-24k>—</span>
+                <span class="route-card__value-unit">AED/g</span>
+              </span>
+              <span class="route-card__cta" id="route-buy-cta">Calculate a piece</span>
+            </a>
+            <a href="compare.html" class="route-card" id="route-compare">
+              <span class="route-card__ic" aria-hidden="true">⇄</span>
+              <h3 class="route-card__title" id="route-compare-title">I'm comparing markets</h3>
+              <p class="route-card__body" id="route-compare-body">
+                Compare 24+ GCC &amp; Arab countries side by side to see where gold is the best
+                value today.
+              </p>
+              <span class="route-card__cta" id="route-compare-cta">Compare countries</span>
+            </a>
+            <a href="tracker.html" class="route-card" id="route-track">
+              <span class="route-card__ic" aria-hidden="true">↗</span>
+              <h3 class="route-card__title" id="route-track-title">I'm tracking or investing</h3>
+              <p class="route-card__body" id="route-track-body">
+                See the full price history, today's change, and set a price alert so you never
+                miss a move.
+              </p>
+              <span class="route-card__cta" id="route-track-cta">Open the tracker</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       <section class="home-chart-section" aria-labelledby="home-chart-title" data-reveal>
         <div class="home-chart-inner">
           <div class="home-chart-header">
@@ -359,8 +410,30 @@
               <button type="button" class="home-chart-range-btn ds-segmented__btn is-active" data-range="ALL" id="home-chart-btn-all">ALL</button>
             </div>
           </div>
-          <div class="home-chart-wrap" id="home-chart-wrap">
+          <div class="home-chart-wrap home-chart-wrap--gtl" id="home-chart-wrap">
             <div id="home-chart-container" class="home-chart-container" aria-busy="true"></div>
+            <aside class="market-insight" id="home-market-insight" aria-label="Market read">
+              <div class="market-insight__stat market-insight__stat--hero" id="mi-position">
+                <span class="market-insight__label" id="mi-position-label">Where today sits</span>
+                <span class="market-insight__value gtl-num" id="mi-position-value">—</span>
+                <span class="market-insight__interp">
+                  <span class="market-insight__interp-tag" id="mi-interp-tag">Interpretation</span>
+                  <span class="market-insight__note" id="mi-position-note"></span>
+                </span>
+              </div>
+              <div class="market-insight__stat" id="mi-year">
+                <span class="market-insight__label" id="mi-year-label">12-month change</span>
+                <span class="market-insight__value gtl-num" id="mi-year-value">—</span>
+              </div>
+              <div class="market-insight__stat" id="mi-range">
+                <span class="market-insight__label" id="mi-range-label">3-year range</span>
+                <span class="market-insight__value gtl-num" id="mi-range-value">—</span>
+              </div>
+              <p class="market-insight__source" id="mi-source"></p>
+              <a class="market-insight__link" href="calculator.html" id="mi-read-link"
+                >What this means for your karat</a
+              >
+            </aside>
           </div>
         </div>
       </section>
@@ -480,6 +553,32 @@
                 aria-pressed="false"
                 title="Price per troy ounce (31.10 g)"
               >oz</button>
+            </div>
+            <p class="karat-teach-choice" id="karat-teach-choice">
+              Lower karat isn’t worse — just less pure, and often more durable and affordable.
+            </p>
+            <a class="karat-next-link" href="calculator.html" id="karat-next-link"
+              >Pick your karat, then calculate a real piece</a
+            >
+          </div>
+          <div class="karat-dial" id="karat-dial">
+            <svg class="karat-dial__svg" viewBox="0 0 200 200" role="img" aria-labelledby="karat-dial-a11y">
+              <title id="karat-dial-a11y">Selected karat purity dial</title>
+              <circle class="karat-dial__track" cx="100" cy="100" r="84" />
+              <circle
+                class="karat-dial__arc"
+                id="karat-dial-arc"
+                cx="100"
+                cy="100"
+                r="84"
+                transform="rotate(-90 100 100)"
+              />
+            </svg>
+            <div class="karat-dial__center" aria-hidden="true">
+              <span class="karat-dial__k" id="karat-dial-k">24K</span>
+              <span class="karat-dial__purity gtl-num" id="karat-dial-purity">.999</span>
+              <span class="karat-dial__val gtl-num" id="karat-dial-val">—</span>
+              <span class="karat-dial__unit" id="karat-dial-unit">AED / gram</span>
             </div>
           </div>
           <p class="karat-strip-scroll-hint" id="karat-strip-scroll-hint" aria-hidden="true">
@@ -654,11 +753,12 @@
       </section>
 
       <!-- ═══════ GCC QUICK PRICES ═══════ -->
-      <section class="home-section" aria-labelledby="gcc-section-title">
+      <section class="home-section home-gulf--gtl" aria-labelledby="gcc-section-title" data-reveal>
         <div class="home-section-inner">
           <div class="section-intro">
             <div>
-              <h2 id="gcc-section-title" class="home-section-title">Live Gold Prices</h2>
+              <span class="gulf-kicker" id="gulf-kicker">Across the Gulf &amp; Arab world</span>
+              <h2 id="gcc-section-title" class="home-section-title">Gold across the markets</h2>
               <p class="home-section-sub" id="gcc-section-sub">
                 22K per gram in local currency · freshness shown live
               </p>
@@ -741,6 +841,9 @@
               <div class="skeleton-value"></div>
             </div>
           </div>
+          <p class="gulf-note" id="gulf-note">
+            Spot-linked reference prices in local currency — shops add making charges &amp; VAT.
+          </p>
         </div>
       </section>
 
@@ -1367,13 +1470,14 @@
 
       <section
         id="location-guides"
-        class="home-section home-section--location-guides"
+        class="home-section home-section--location-guides home-learn--gtl"
         aria-labelledby="home-location-guides-title"
         data-reveal
       >
         <div class="home-section-inner">
           <div class="section-intro">
             <div>
+              <span class="learn-kicker" id="learn-kicker">Learn · buying guides</span>
               <h2 class="home-section-title" id="home-location-guides-title">City buying guides</h2>
               <p class="home-section-sub" id="home-location-guides-sub">
                 Quick context for common karats, buyer habits, and quote-verification checkpoints.

@@ -15,6 +15,7 @@ import {
 } from '../config/index.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import * as api from '../lib/api.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
@@ -27,7 +28,6 @@ import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
 } from '../lib/quote-providers/create-providers.js';
-import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -82,6 +82,12 @@ const SOURCE_TX_KEY = {
 // ── State ──────────────────────────────────────────────────────────────────
 let lang = 'en';
 let goldPrice = null;
+// F-1: the single canonical snapshot (committed-file source, identical to the
+// calculator) that authoritatively drives every displayed price on this page.
+let _canonicalSnapshot = null;
+// Karat dial: the currently-selected karat (drives the dial arc + centre value).
+let _selectedKarat = '24';
+let _karatDialInit = false;
 let dayOpenPrice = null;
 let rates = {};
 let goldUpdatedAt = null;
@@ -258,16 +264,10 @@ function updateKaratStripSelection() {
     const isSelectable = ['24', '22', '21', '18', '14'].includes(karat);
     const selected = isSelectable && karat === homeTrackerKarat;
     item.classList.toggle('is-selected', selected);
-    // The toggle role lives on the karat label span, not the tile: the tile
-    // also contains the copy button, and a button inside a button is a
-    // nested-interactive a11y violation.
-    const toggle = item.querySelector('.karat-strip-k');
-    if (toggle) {
-      toggle.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      if (isSelectable) {
-        toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
-      }
-    }
+    // The radio role + aria-checked live on the `.karat-strip-k` rung and are
+    // owned by initKaratDial/updateKaratDial — not set here (aria-pressed would be
+    // invalid on a radio, and a second interactive role would nest with the copy
+    // button). We only reflect the visual selection on the tile above.
   });
 }
 
@@ -275,12 +275,10 @@ function bindKaratStripSelection() {
   document.querySelectorAll('.karat-strip-item').forEach((item) => {
     const karat = item.id?.replace('kstrip-', '');
     if (!['24', '22', '21', '18', '14'].includes(karat)) return;
+    // The rung's interactive role/tabindex are owned by initKaratDial (role=radio).
+    // Here we only wire the cross-page handoff selection; do NOT add a second
+    // interactive role, which would nest inside the copy button's tile.
     const toggle = item.querySelector('.karat-strip-k');
-    if (toggle) {
-      toggle.setAttribute('role', 'button');
-      toggle.setAttribute('tabindex', '0');
-      toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
-    }
     const selectKarat = (event) => {
       if (event.target.closest('.kstrip-copy-btn')) return;
       homeTrackerKarat = karat;
@@ -289,7 +287,7 @@ function bindKaratStripSelection() {
       syncCrossPageLinks();
     };
     // Whole-tile click stays for pointer users; keyboard activation lives on
-    // the labelled karat toggle span (see updateKaratStripSelection).
+    // the labelled karat rung (see initKaratDial + updateKaratStripSelection).
     item.addEventListener('click', selectKarat);
     toggle?.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -372,6 +370,9 @@ function startFreshnessTimer() {
       kstripEl.dataset.freshnessAge = ageClass;
       prevKstripText = kstripText;
     }
+    // Keep the nav pill dot honest as age crosses live→amber→stale thresholds.
+    const pillEl = _navPill || document.getElementById('nav-price-pill');
+    if (pillEl) updateNavPillDot(pillEl);
   }, 1_000);
 }
 
@@ -423,7 +424,10 @@ function renderHeroCard() {
 
     animatePrice(priceEl, usd24oz, {
       decimals: 2,
-      format: (n) => fmt.formatPrice(n, 'USD', 2),
+      // Redesign hero: the currency ($) is a static raised gold glyph in the
+      // markup, so the animated numeral omits it for the split-numeral treatment.
+      format: (n) =>
+        n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       pulse: true,
       pulseTarget: priceEl,
       terminalRoot: heroCard,
@@ -801,9 +805,24 @@ function mountHomeQuickConvert() {
     // price (cache-boot or live) lands, and the later recalc() calls must see
     // the current value instead of the null captured at mount time.
     getSpot: () => goldPrice,
+    // On-widget freshness reflects the same canonical snapshot as the hero/nav.
+    getFreshness: () => {
+      const { statusText, ageText } = getFreshnessMeta();
+      return { statusText, ageText };
+    },
     t: (key) => tx(key),
     mount,
   });
+  // Two-way karat link with the ladder/dial: selecting a karat in either updates both.
+  const qk = document.getElementById('home-quick-karat');
+  if (qk) {
+    qk.addEventListener('change', () => {
+      if (qk.value !== _selectedKarat && KARATS.some((k) => k.code === qk.value)) {
+        _selectedKarat = qk.value;
+        updateKaratDial();
+      }
+    });
+  }
 }
 
 function renderHomeAdditiveSections() {
@@ -1047,6 +1066,24 @@ function applyLangToPage() {
   setTextById('hero-cta-shops', tx('heroCta4'));
   setTextById('hero-cta-alert', tx('heroCta5'));
   setTextById('hero-cta-methodology', tx('heroCtaMethodology'));
+  // Audience-routing band
+  setTextById('home-routing-lead', tx('routingLead'));
+  setTextById('route-buy-title', tx('routingBuyTitle'));
+  setTextById('route-buy-body', tx('routingBuyBody'));
+  setTextById('route-buy-value-label', tx('routingBuyValueLabel'));
+  setTextById('route-buy-cta', tx('routingBuyCta'));
+  setTextById('route-compare-title', tx('routingCompareTitle'));
+  setTextById('route-compare-body', tx('routingCompareBody'));
+  setTextById('route-compare-cta', tx('routingCompareCta'));
+  setTextById('route-track-title', tx('routingTrackTitle'));
+  setTextById('route-track-body', tx('routingTrackBody'));
+  setTextById('route-track-cta', tx('routingTrackCta'));
+  // Market-read insight labels
+  setTextById('mi-position-label', tx('miPositionLabel'));
+  setTextById('mi-year-label', tx('miYearLabel'));
+  setTextById('mi-range-label', tx('miRangeLabel'));
+  setTextById('mi-interp-tag', tx('miInterpretationTag'));
+  setTextById('mi-read-link', tx('miReadLink'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
   setTextById('home-tools-kicker', tx('toolsKicker'));
@@ -1075,8 +1112,11 @@ function applyLangToPage() {
   setTextById('hlc-title', tx('spotTitle'));
   setTextById('hlc-sub', tx('perOz'));
   setTextById('hlc-updated', tx('fetching'));
+  setTextById('gulf-kicker', tx('gulfKicker'));
+  setTextById('learn-kicker', tx('learnRailKicker'));
   setTextById('gcc-section-title', tx('gccLiveTitle'));
   setTextById('gcc-section-sub', tx('gccLiveSub'));
+  setTextById('gulf-note', tx('gulfNote'));
   setTextById('gcc-see-all', tx('seeAll'));
   setTextById('trust-live', tx('trustLive'));
   setTextById('trust-live-sub', tx('trustLiveSub'));
@@ -1093,6 +1133,8 @@ function applyLangToPage() {
   setTextById('karat-strip-label', tx('karatStripLabel'));
   setTextById('karat-strip-title', tx('karatStripTitle'));
   setTextById('karat-strip-sub', tx('karatStripSub'));
+  setTextById('karat-teach-choice', tx('karatTeachChoice'));
+  setTextById('karat-next-link', tx('karatNextLine'));
   setTextById('karat-strip-cta', tx('karatStripCta'));
   setTextById('karat-strip-scroll-hint', tx('karatStripScrollHint'));
   updateKaratStripSelection();
@@ -1246,6 +1288,352 @@ function applyLangToPage() {
 }
 
 // ── Fetch live data in parallel ────────────────────────────────────────────
+// ── Homepage nav price-pill (home-only; injected into the shared nav) ────────
+let _navPill = null;
+
+/** Inject a persistent live price-pill into the shared nav — homepage only. */
+function mountHomeNavPricePill() {
+  const actions = document.querySelector('.nav-actions');
+  if (!actions || document.getElementById('nav-price-pill')) return;
+  const cta = document.getElementById('nav-cta-tracker');
+  const pill = document.createElement('div');
+  pill.id = 'nav-price-pill';
+  pill.className = 'nav-price-pill';
+  pill.setAttribute('role', 'status');
+  pill.setAttribute('aria-live', 'polite');
+  pill.setAttribute('aria-atomic', 'true');
+  pill.setAttribute('aria-label', 'Live gold spot price and 24K per gram');
+  // Compact: values only (dot + XAU/USD + 24K AED/g) to keep the shared nav
+  // uncrowded. Built with safe-dom el() (no innerHTML) to keep the homepage's
+  // zero unsafe-DOM-sink baseline — which `npm run validate` (CI + deploy) enforces.
+  pill.append(
+    el('span', { class: 'nav-price-pill__dot gtl-dot', 'aria-hidden': 'true' }),
+    el('span', { class: 'gtl-num', dataset: { navXau: '' } }, '—'),
+    el('span', { class: 'nav-price-pill__sep', 'aria-hidden': 'true' }, '·'),
+    el('span', { class: 'gtl-num', dataset: { navAed: '' } }, '—'),
+    el('span', { class: 'nav-price-pill__unit' }, 'AED')
+  );
+  if (cta && cta.parentNode === actions) actions.insertBefore(pill, cta);
+  else actions.appendChild(pill);
+  _navPill = pill;
+  if (_canonicalSnapshot) updateNavPricePill(_canonicalSnapshot);
+}
+
+/** Map a real-time freshness key to the nav pill dot's modifier class. Uses the
+ *  same 4-tier vocabulary as the freshness bar/HLC so the pill's dot cannot claim
+ *  "live" while the labels read "Stale" (e.g. if the hourly refresh stalls and the
+ *  committed file's `freshnessSeconds` freezes at a small value). */
+function pillDotClassForKey(key) {
+  if (key === 'live') return '';
+  if (key === 'delayed' || key === 'cached' || key === 'closed') return 'gtl-dot--cached';
+  if (key === 'stale') return 'gtl-dot--stale';
+  return 'gtl-dot--fallback'; // fallback | unavailable | unknown
+}
+
+/** Sync the nav pill dot with the homepage's real-time freshness (age-based),
+ *  not the upstream-claimed snapshot state — keeps every freshness indicator honest
+ *  and consistent. Falls back to the snapshot state only before a timestamp exists. */
+function updateNavPillDot(pill) {
+  const dot = pill?.querySelector('.nav-price-pill__dot');
+  if (!dot) return;
+  dot.classList.remove('gtl-dot--cached', 'gtl-dot--stale', 'gtl-dot--fallback');
+  const key = goldUpdatedAt
+    ? getFreshnessMeta().key
+    : _canonicalSnapshot?.freshness?.state || 'unavailable';
+  const cls = pillDotClassForKey(key);
+  if (cls) dot.classList.add(cls);
+}
+
+/** Update the nav pill from the canonical snapshot (value + freshness dot). */
+function updateNavPricePill(snapshot) {
+  const pill = _navPill || document.getElementById('nav-price-pill');
+  if (!pill || !snapshot?.ok) return;
+  const fmt2 = (n) =>
+    n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const xau = pill.querySelector('[data-nav-xau]');
+  const aed = pill.querySelector('[data-nav-aed]');
+  if (xau) xau.textContent = '$' + fmt2(snapshot.spotUsdPerOz);
+  if (aed) aed.textContent = fmt2(snapshot.aedPerGram24k);
+  updateNavPillDot(pill);
+}
+
+/** Update the audience-routing "buy" card's 24K value from the canonical snapshot. */
+function updateRoutingCanonicalValue(snapshot) {
+  const num = document.querySelector('[data-route-24k]');
+  if (!num || !snapshot?.ok) return;
+  num.textContent = snapshot.aedPerGram24k.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const wrap = document.getElementById('route-buy-value');
+  if (wrap) wrap.hidden = false;
+}
+
+// ── Karat dial (signature interaction; teaches purity = karat ÷ 24) ──────────
+const KARAT_DIAL_CIRC = 2 * Math.PI * 84; // r=84 in the SVG
+
+/** Human purity label: fine gold shows .999; others show karat/24 to 3 places. */
+function purityDisplay(code, purity) {
+  if (String(code) === '24') return '.999';
+  return purity.toFixed(3).replace(/^0/, '');
+}
+
+/** Update the karat dial's arc + centre (karat, purity, canonical value) for the selection. */
+function updateKaratDial() {
+  const arc = document.getElementById('karat-dial-arc');
+  const kEl = document.getElementById('karat-dial-k');
+  const pEl = document.getElementById('karat-dial-purity');
+  const vEl = document.getElementById('karat-dial-val');
+  const uEl = document.getElementById('karat-dial-unit');
+  const karat =
+    KARATS.find((k) => k.code === _selectedKarat) || KARATS.find((k) => k.code === '24');
+  if (!karat) return;
+
+  // Arc fills to the purity proportion — the visual teaching of karat ÷ 24.
+  if (arc) {
+    arc.style.strokeDasharray = String(KARAT_DIAL_CIRC);
+    arc.style.strokeDashoffset = String(KARAT_DIAL_CIRC * (1 - karat.purity));
+  }
+  if (kEl) kEl.textContent = karat.code + 'K';
+  if (pEl) pEl.textContent = purityDisplay(karat.code, karat.purity);
+
+  // Centre value = canonical 24K/g × purity × unit multiplier (same source as the ladder).
+  const base = _canonicalSnapshot?.ok
+    ? _canonicalSnapshot.aedPerGram24k
+    : Number.isFinite(goldPrice)
+      ? calc.usdPerGram(goldPrice, 1) * CONSTANTS.AED_PEG
+      : null;
+  const mult = KARAT_STRIP_UNIT_MULT[karatStripUnit] || 1;
+  if (vEl && Number.isFinite(base)) {
+    vEl.textContent = fmt.formatPrice(base * karat.purity * mult, 'AED', 2);
+  }
+  const unitKey =
+    karatStripUnit === 'tola'
+      ? 'karatStripLabelTola'
+      : karatStripUnit === 'oz'
+        ? 'karatStripLabelOz'
+        : 'karatStripLabelGram';
+  if (uEl) uEl.textContent = tx(unitKey);
+
+  // Reflect selection state: aria-checked + roving tabindex on the radio rung
+  // (the `.karat-strip-k` span), the visual is-selected class on the tile.
+  KARATS.forEach((k) => {
+    const item = document.getElementById('kstrip-' + k.code);
+    const rung = item?.querySelector('.karat-strip-k');
+    if (rung && rung.getAttribute('role') === 'radio') {
+      const on = k.code === _selectedKarat;
+      rung.setAttribute('aria-checked', on ? 'true' : 'false');
+      rung.tabIndex = on ? 0 : -1;
+      item.classList.toggle('is-selected', on);
+    }
+  });
+
+  // Flow the karat selection into the inline calculator (karat ladder → calculator).
+  const qk = document.getElementById('home-quick-karat');
+  if (
+    qk &&
+    qk.value !== _selectedKarat &&
+    [...qk.options].some((o) => o.value === _selectedKarat)
+  ) {
+    qk.value = _selectedKarat;
+    _quickConvert?.recalc?.();
+  }
+}
+
+/** Make the ladder rungs a keyboard-accessible radio-group that drives the dial. */
+function initKaratDial() {
+  if (_karatDialInit) return;
+  const group = document.getElementById('karat-strip-prices');
+  if (!group) return;
+  group.setAttribute('role', 'radiogroup');
+  group.setAttribute('aria-label', tx('karatStripTitle') || 'Prices by karat');
+  const codes = KARATS.map((k) => k.code).filter((c) => document.getElementById('kstrip-' + c));
+  // The radio lives on the inner `.karat-strip-k` rung, NOT the tile: the tile
+  // also holds the copy button, and an interactive control (button) nested inside
+  // a radio is a WCAG nested-interactive violation. Keeping the radio on the rung
+  // makes the copy button a sibling, not a descendant.
+  const rungOf = (code) =>
+    document.getElementById('kstrip-' + code)?.querySelector('.karat-strip-k');
+  codes.forEach((code) => {
+    const item = document.getElementById('kstrip-' + code);
+    const rung = rungOf(code);
+    if (!item || !rung) return;
+    rung.setAttribute('role', 'radio');
+    rung.setAttribute('aria-checked', code === _selectedKarat ? 'true' : 'false');
+    rung.tabIndex = code === _selectedKarat ? 0 : -1;
+    rung.setAttribute('aria-label', code + 'K');
+    const select = () => {
+      _selectedKarat = code;
+      updateKaratDial();
+      rung.focus();
+    };
+    // Whole-tile click stays for pointer users (large hit target); ignore the copy button.
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.kstrip-copy-btn')) return;
+      select();
+    });
+    rung.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        select();
+      } else if (
+        e.key === 'ArrowRight' ||
+        e.key === 'ArrowDown' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowUp'
+      ) {
+        e.preventDefault();
+        const i = codes.indexOf(_selectedKarat);
+        const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+        _selectedKarat = codes[(i + dir + codes.length) % codes.length];
+        updateKaratDial();
+        rungOf(_selectedKarat)?.focus();
+      }
+    });
+  });
+  // Dial: pointer drag/tap (mouse + touch) as an intuitive selector — the arc = purity,
+  // so dragging around the ring snaps to the nearest karat by purity. The rungs remain the
+  // keyboard/screen-reader path, so the dial is aria-hidden (a visual + pointer mirror).
+  const dial = document.getElementById('karat-dial');
+  if (dial) {
+    dial.setAttribute('aria-hidden', 'true');
+    dial.style.touchAction = 'none';
+    let dragging = false;
+    const pickFromPointer = (e) => {
+      const r = dial.getBoundingClientRect();
+      const x = e.clientX - (r.left + r.width / 2);
+      const y = e.clientY - (r.top + r.height / 2);
+      let ang = Math.atan2(x, -y); // 0 at 12 o'clock, clockwise positive
+      if (ang < 0) ang += Math.PI * 2;
+      const frac = ang / (Math.PI * 2);
+      let best = _selectedKarat;
+      let bd = Infinity;
+      codes.forEach((code) => {
+        const k = KARATS.find((kk) => kk.code === code);
+        if (!k) return;
+        const d = Math.abs(k.purity - frac);
+        if (d < bd) {
+          bd = d;
+          best = code;
+        }
+      });
+      if (best !== _selectedKarat) {
+        _selectedKarat = best;
+        updateKaratDial();
+      }
+    };
+    dial.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      dial.setPointerCapture?.(e.pointerId);
+      pickFromPointer(e);
+    });
+    dial.addEventListener('pointermove', (e) => {
+      if (dragging) pickFromPointer(e);
+    });
+    const stopDrag = () => {
+      dragging = false;
+    };
+    dial.addEventListener('pointerup', stopDrag);
+    dial.addEventListener('pointercancel', stopDrag);
+  }
+
+  _karatDialInit = true;
+}
+
+/**
+ * Market-read insight ("Is today a high or a low?"). All values are REAL: derived
+ * from the canonical spot (today) + the committed LBMA baseline history — never
+ * fabricated. 12-month change, 3-year range, and where today sits in that range.
+ */
+function renderMarketInsight() {
+  const baseline = getBaselineHistory();
+  if (!Array.isArray(baseline) || baseline.length < 2) return;
+  const spot = _canonicalSnapshot?.ok ? _canonicalSnapshot.spotUsdPerOz : goldPrice;
+  if (!Number.isFinite(spot)) return;
+
+  // 12-month change: canonical spot vs the baseline point ~12 months back.
+  const yearAgo = baseline[Math.max(0, baseline.length - 13)];
+  const yearEl = document.getElementById('mi-year-value');
+  if (yearEl && Number.isFinite(yearAgo?.price) && yearAgo.price > 0) {
+    const pct = ((spot - yearAgo.price) / yearAgo.price) * 100;
+    yearEl.textContent = (pct >= 0 ? '+' : '−') + Math.abs(pct).toFixed(1) + '%';
+    yearEl.classList.toggle('market-insight__value--up', pct >= 0);
+    yearEl.classList.toggle('market-insight__value--down', pct < 0);
+  }
+
+  // 3-year range (last 36 monthly baseline points) + where today sits within it.
+  // Include the canonical spot so the stated range always contains today's price
+  // (keeps the stat internally consistent — today can never fall outside its own range).
+  const prices = baseline
+    .slice(-36)
+    .map((b) => b.price)
+    .filter(Number.isFinite);
+  if (prices.length < 2) return;
+  prices.push(spot);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  const rangeEl = document.getElementById('mi-range-value');
+  if (rangeEl) {
+    rangeEl.textContent =
+      '$' +
+      Math.round(min).toLocaleString('en-US') +
+      ' – $' +
+      Math.round(max).toLocaleString('en-US');
+  }
+  const posEl = document.getElementById('mi-position-value');
+  const posNote = document.getElementById('mi-position-note');
+  if (posEl && max > min) {
+    const pctPos = Math.max(0, Math.min(100, ((spot - min) / (max - min)) * 100));
+    posEl.textContent = Math.round(pctPos) + '% ' + tx('miOfRange');
+    posEl.classList.toggle('market-insight__value--up', pctPos >= 60);
+    if (posNote) {
+      // Explanatory read (labeled "Interpretation" in the UI) — descriptive and
+      // backward-looking only; never advice or a forecast.
+      posNote.textContent =
+        pctPos >= 75 ? tx('miNearTop') : pctPos <= 25 ? tx('miNearLow') : tx('miMidRange');
+    }
+  }
+
+  // Source + freshness line — makes clear these are reference data figures and
+  // whether they are live / cached / stale (honest, matches the hero freshness).
+  const sourceEl = document.getElementById('mi-source');
+  if (sourceEl) {
+    const { statusText, ageText } = getFreshnessMeta();
+    sourceEl.textContent = `${tx('miDataLabel')} · ${statusText} · ${ageText}`;
+  }
+}
+
+/**
+ * F-1 canonical price seed. Reads the single canonical snapshot (the same
+ * committed `/data/gold_price.json` the calculator uses, via the spot-resolver)
+ * and makes it the authoritative displayed value for the hero, sticky spot-bar,
+ * karat strip and GCC grid — so every surface shows ONE price at any instant.
+ * Called at init and on the refresh interval; the realtime engine remains for
+ * liveness/SLA detection but no longer drives the displayed number.
+ */
+async function seedCanonicalPrice() {
+  try {
+    const snap = await getCanonicalSpot({ force: true });
+    if (!snap?.ok || !Number.isFinite(snap.spotUsdPerOz)) return;
+    _canonicalSnapshot = snap;
+    goldPrice = snap.spotUsdPerOz;
+    goldUpdatedAt = snap.freshness.updatedAt || goldUpdatedAt;
+    goldIsFallback = snap.freshness.isFallback === true;
+    goldIsFresh = snap.freshness.state === 'live';
+    cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
+    updateNavPricePill(snap);
+    updateRoutingCanonicalValue(snap);
+    renderMarketInsight();
+    renderHeroCard();
+    renderKaratStrip();
+    initKaratDial();
+    updateKaratDial();
+    renderGCCGrid();
+  } catch {
+    // Keep the previous canonical/cached value on any resolver failure.
+  }
+}
+
 async function fetchLiveData() {
   if (!navigator.onLine) return;
   try {
@@ -1288,14 +1676,15 @@ function applyRealtimeSnapshot(snapshot) {
 
   const quote = snapshot?.quote;
   if (quote?.price) {
-    goldPrice = quote.price;
-    goldUpdatedAt = quote.providerTimestamp || quote.fetchedAt || new Date().toISOString();
+    // F-1 (owner-approved): the realtime engine now drives liveness/SLA detection
+    // and provider identity ONLY. The DISPLAYED price stays the canonical
+    // committed-file value (seedCanonicalPrice), so the homepage never shows a
+    // number that disagrees with the calculator. We deliberately do NOT overwrite
+    // goldPrice / goldUpdatedAt / goldIsFresh / goldIsFallback with the divergent
+    // live quote here — correctness of the price pipeline wins.
     goldProviderId = quote.providerId || goldProviderId;
-    goldIsFallback = quote.isFallback ?? quote.forcedState === 'fallback';
-    goldIsFresh = resolveGoldIsFresh(quote);
-    cache.saveGoldPrice(quote.price, goldUpdatedAt);
     hideDataStatusBanner();
-    renderHeroCard();
+    if (!goldPrice) renderHeroCard();
   } else if (!goldPrice) {
     const priceEl = document.getElementById('hlc-price');
     if (priceEl) {
@@ -1478,9 +1867,12 @@ async function init() {
   enforceHreflangAlternates(document, window.location.pathname);
   injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
-  // Nav + footer + spot bar
-  const shell = mountSharedShell({ lang, depth: getDepth(), withSpotBar: true });
+  // Nav + footer. Redesign: the redundant top spot-bar is retired on the homepage
+  // (home-only) in favour of the nav price-pill (mountHomeNavPricePill); other pages
+  // keep their spot-bar. updateSpotBar() no-ops safely when the bar is absent.
+  const shell = mountSharedShell({ lang, depth: getDepth(), withSpotBar: false });
   initPageEnter('main');
+  mountHomeNavPricePill();
   const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -1571,11 +1963,16 @@ async function init() {
         b.setAttribute('aria-pressed', b.dataset.unit === unit ? 'true' : 'false');
       });
       renderKaratStrip();
+      updateKaratDial();
       syncCrossPageLinks();
     });
   });
 
   bindKaratStripSelection();
+  // Establish the ladder's radio roles + keyboard/dial wiring up front so keyboard
+  // access exists even if the canonical resolve later fails (guarded — the seed
+  // path's call is then a no-op).
+  initKaratDial();
 
   // FAQ: one-open-at-a-time behaviour
   document.querySelectorAll('.faq-item').forEach((item) => {
@@ -1631,13 +2028,18 @@ async function init() {
     renderGCCGrid();
   }
 
-  // Fetch live data (non-blocking)
+  // F-1: seed the canonical committed-file price first so the displayed number
+  // matches the calculator from first paint, then start the liveness engine + FX.
+  seedCanonicalPrice();
   initRealtimeEngine();
   fetchLiveData();
 
-  // FX auto-refresh (gold polling handled by realtime pricing engine)
+  // FX auto-refresh + canonical re-read (gold liveness handled by realtime engine)
   if (_refreshTimer) clearInterval(_refreshTimer);
-  _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
+  _refreshTimer = setInterval(() => {
+    seedCanonicalPrice();
+    fetchLiveData();
+  }, CONSTANTS.GOLD_REFRESH_MS);
 
   // Tick the "Updated X sec/min ago" label every second without a full price re-fetch.
   startFreshnessTimer();
