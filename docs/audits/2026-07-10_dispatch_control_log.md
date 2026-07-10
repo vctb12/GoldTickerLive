@@ -26,20 +26,22 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 10 branches, 13 commits, 10 PRs.
+**Work produced this run:** 12 branches, 15 commits, 12 PRs.
 
-| Branch                                         | Commits vs main | PR       | CI                                                             |
-| ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
-| `cowork/2026-07-10-autonomous-audit-crosswalk` | 5               | **#614** | Playwright pass (docs-only)                                    |
-| `cowork/phase-37-hindi-pilot`                  | 1               | **#616** | ✅ all pass (Playwright, lighthouse, CodeQL, Analyze×3, Build) |
-| `cowork/dp1-learn-progress-e2e`                | 1               | **#617** | ✅ DP-1 — learn counter + console browser-verified (chromium)  |
-| `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | ✅ DP-2 — 15 e2e pass; first-party console/network clean       |
-| `cowork/dp3-pricing-invariants`                | 1               | **#621** | ✅ DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
-| `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3 |
-| `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard    |
-| `cowork/dp4b-tracker-lang-param`               | 1               | **#624** | DP-4b — tracker.html RTL `?lang=` fix + 4 e2e (incl. #hash)    |
-| `cowork/dp6-multimetal-golive-checklist`       | 1               | **#625** | DP-6 — owner go-live checklist for metals cluster (docs)       |
-| `cowork/dp7-a11y-baseline-guard`               | 1               | **#626** | DP-7 — post-hydration a11y baseline guard (14 pages, 14 e2e)   |
+| Branch                                         | Commits vs main | PR       | CI                                                              |
+| ---------------------------------------------- | --------------- | -------- | --------------------------------------------------------------- |
+| `cowork/2026-07-10-autonomous-audit-crosswalk` | 5               | **#614** | Playwright pass (docs-only)                                     |
+| `cowork/phase-37-hindi-pilot`                  | 1               | **#616** | ✅ all pass (Playwright, lighthouse, CodeQL, Analyze×3, Build)  |
+| `cowork/dp1-learn-progress-e2e`                | 1               | **#617** | ✅ DP-1 — learn counter + console browser-verified (chromium)   |
+| `cowork/dp2-console-clean-e2e`                 | 1               | **#620** | ✅ DP-2 — 15 e2e pass; first-party console/network clean        |
+| `cowork/dp3-pricing-invariants`                | 1               | **#621** | ✅ DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412      |
+| `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3  |
+| `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard     |
+| `cowork/dp4b-tracker-lang-param`               | 1               | **#624** | DP-4b — tracker.html RTL `?lang=` fix + 4 e2e (incl. #hash)     |
+| `cowork/dp6-multimetal-golive-checklist`       | 1               | **#625** | DP-6 — owner go-live checklist for metals cluster (docs)        |
+| `cowork/dp7-a11y-baseline-guard`               | 1               | **#626** | DP-7 — post-hydration a11y baseline guard (14 pages, 14 e2e)    |
+| `cowork/dp8-seo-surface-guard`                 | 1               | **#627** | DP-8 — post-hydration SEO-head guard (canonical/title/hreflang) |
+| `cowork/dp9-theme-toggle-check`                | 1               | **#628** | DP-9 — theme-toggle correctness guard (50-Plan #29)             |
 
 ---
 
@@ -260,12 +262,22 @@ resolved. Firefox/webkit run the same spec in CI.
   an accessible name. Complements the static `check-basic-a11y.js` (source scan) by covering
   JS-injected DOM. Sweep found all 14 pages clean. VERIFIED chromium 14/14. Test-only.
 
+### DP-8 / DP-9 — DONE
+
+- **DP-8 → PR #627** `tests/e2e/seo-head.spec.js`: post-hydration SEO-head guard on 14 pages — one
+  canonical (absolute https), one non-empty `<title>`, substantive description, hreflang en+ar+
+  x-default with absolute hrefs. Sweep found all clean (`hreflang=[x-default,en,ar]`). Chromium
+  14/14.
+- **DP-9 → PR #628** `tests/e2e/theme-toggle.spec.js` (50-Plan #29): `data-theme` applied on load
+  (FOUC-safe), dark pref changes body bg (light `rgb(253,251,245)`→dark `rgb(11,11,13)`) + survives
+  reload, toggle persists a valid mode. Chromium 3/3.
+
 ### Next packets (still stabilize-first)
 
-1. **DP-8 — SEO surface guard** (canonical + single-title + reciprocal hreflang) as an e2e guard
-   across the core pages; $0, no gated surface.
-2. **DP-9 — theme-toggle correctness browser check** (light/dark persists, no FOUC, `data-theme`
-   applied) — 50-Plan #29, currently `not-started`; $0.
+1. **DP-10 — offline/PWA browser check**: `offline.html` + service-worker offline fallback behaves
+   (cached shell renders, no console errors) — $0, no `sw.js` edit (verify-only).
+2. **DP-11 — calculator numeric-correctness browser check**: enter grams/karat, assert the displayed
+   AED/USD matches the derived formula (peg 3.6725, troy 31.1035) to the rounding rule — $0.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
