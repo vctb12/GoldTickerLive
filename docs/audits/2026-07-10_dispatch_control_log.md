@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 9 branches, 12 commits, 9 PRs.
+**Work produced this run:** 10 branches, 13 commits, 10 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                             |
 | ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
@@ -39,6 +39,7 @@ line-by-line. No fabricated PR links.
 | `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard    |
 | `cowork/dp4b-tracker-lang-param`               | 1               | **#624** | DP-4b — tracker.html RTL `?lang=` fix + 4 e2e (incl. #hash)    |
 | `cowork/dp6-multimetal-golive-checklist`       | 1               | **#625** | DP-6 — owner go-live checklist for metals cluster (docs)       |
+| `cowork/dp7-a11y-baseline-guard`               | 1               | **#626** | DP-7 — post-hydration a11y baseline guard (14 pages, 14 e2e)   |
 
 ---
 
@@ -252,12 +253,19 @@ resolved. Firefox/webkit run the same spec in CI.
   verification checklist (reuses DP-3 peg lock + DP-5 freshness guard), and rollback. #607 crypto
   and #593 cross-validation flagged as separately gated. Docs-only; no workflow/secret/flag touched.
 
+### DP-7 — a11y baseline → DONE, PR #626
+
+- `tests/e2e/a11y-baseline.spec.js`: post-hydration browser guard across 14 core pages — exactly one
+  `<h1>`, a `<main>` landmark, `<html lang>`, no `<img>` without alt, no button/form-control without
+  an accessible name. Complements the static `check-basic-a11y.js` (source scan) by covering
+  JS-injected DOM. Sweep found all 14 pages clean. VERIFIED chromium 14/14. Test-only.
+
 ### Next packets (still stabilize-first)
 
-1. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
-   surfaces with the working chromium; ship genuine smallest-diff fixes + a guard, else document.
-2. **DP-8 — SEO surface guard** (canonical + single-title + hreflang reciprocity) as an e2e/unit
-   guard across the core pages; $0, no gated surface.
+1. **DP-8 — SEO surface guard** (canonical + single-title + reciprocal hreflang) as an e2e guard
+   across the core pages; $0, no gated surface.
+2. **DP-9 — theme-toggle correctness browser check** (light/dark persists, no FOUC, `data-theme`
+   applied) — 50-Plan #29, currently `not-started`; $0.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
