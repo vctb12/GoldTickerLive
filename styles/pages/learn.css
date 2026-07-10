@@ -407,6 +407,16 @@ html[lang='ar'] [data-lang-block='en'] {
   font-weight: var(--weight-bold);
 }
 
+/* G6: WCAG 2.2 §2.5.8 — the rendered table-of-contents links (.learn-hub-toc-link,
+   distinct from the .learn-toc-list variant above) are a nav link list stacked as
+   list items at ~22px. Give them a ≥24px tap target. Vertical-only growth keeps the
+   list width unchanged, so no horizontal overflow and RTL is unaffected. */
+.learn-hub-toc-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
 /* ── Body layout ────────────────────────────────────── */
 .learn-body {
   max-width: 800px;
