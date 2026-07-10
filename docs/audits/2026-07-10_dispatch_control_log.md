@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 7 branches, 10 commits, 7 PRs.
+**Work produced this run:** 8 branches, 11 commits, 8 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                             |
 | ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
@@ -37,6 +37,7 @@ line-by-line. No fabricated PR links.
 | `cowork/dp3-pricing-invariants`                | 1               | **#621** | ✅ DP-3 — peg/troy/karat + copy-sync lock; suite 1407→1412     |
 | `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3 |
 | `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard    |
+| `cowork/dp4b-tracker-lang-param`               | 1               | **#624** | DP-4b — tracker.html RTL `?lang=` fix + 4 e2e (incl. #hash)    |
 
 ---
 
@@ -225,14 +226,15 @@ resolved. Firefox/webkit run the same spec in CI.
    English body unchanged. Locked by `tests/e2e/lang-param.spec.js` (26 assertions, 13 pages ×
    EN/AR). VERIFIED: 7/7 CI incl. Playwright ×3 browsers; lint/test 1407/validate/build green.
 
-### Open follow-up finding (from DP-4)
+### DP-4b — tracker.html query-lang → DONE, PR #624
 
-- **DP-4b — `tracker.html` `?lang=` (query) ignored; locale lives in the URL hash.** Same
-  user-facing symptom as the DP-4 pages but a different mechanism: `src/tracker/state.js` reads
-  `lang` only from the URL **hash** params and returns early when there is no hash, so
-  `tracker.html?lang=ar` (query, as the switcher/hreflang emit) stays English. Deliberately **not**
-  fixed in #622 — the flagship's hash-state system (deep-links, 99KB) makes it higher-risk and it
-  deserves its own scoped PR + e2e. Status: **not-started**, safe, $0.
+- **`tracker.html` now honors `?lang=` on first load.** Root cause: `createInitialState()` in
+  `src/tracker/state.js` resolved locale from saved state / preference only, never the URL query
+  (hash state was read separately, after an early return when no hash). Fix: an explicit `?lang=`
+  query now takes priority in `createInitialState()`, mirroring the site-wide precedence and the
+  #622 fix; hash deep-links still override via `applyUrlState`. `tests/e2e/tracker-lang.spec.js` (4
+  cases incl. `?lang=ar#live`). VERIFIED chromium 4/4; lint/test 1407/validate/build green. This
+  closes the RTL `?lang=` bug class across every localized page.
 
 5. **DP-5 — Freshness/label-honesty e2e guard → DONE, PR #623.**
    `tests/e2e/freshness-labels.spec.js` asserts, on home + tracker (EN + AR), that the
@@ -242,11 +244,10 @@ resolved. Firefox/webkit run the same spec in CI.
 
 ### Next packets (still stabilize-first)
 
-1. **DP-4b — tracker.html query-lang fix**, carefully, with hash-state regression e2e (flagship).
-2. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
+1. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
    Docs-only: exact ordered merge/enable sequence + the precise `gold-price-fetch.yml` change
    required, so the biggest owner-gated cluster can be cleared in one decision. No workflow edits.
-3. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
+2. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
    surfaces with the working chromium; ship genuine smallest-diff fixes + a guard, else document.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
