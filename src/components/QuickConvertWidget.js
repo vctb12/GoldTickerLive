@@ -89,11 +89,23 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
     {
       class: 'quick-convert-widget__result-value',
       id: 'home-quick-result',
+      role: 'status',
+      'aria-live': 'polite',
+      'aria-atomic': 'true',
     },
     ['—']
   );
+  const resultHint = el('p', {
+    class: 'quick-convert-widget__result-hint',
+    id: 'home-quick-hint',
+    hidden: true,
+  });
   const resultNote = el('p', { class: 'quick-convert-widget__result-note' }, [
     t('quickConvertNote'),
+  ]);
+  // Explicit reference (spot) vs retail (shop) distinction — trust guardrail.
+  const retailNote = el('p', { class: 'quick-convert-widget__retail-note' }, [
+    t('quickConvertRetail'),
   ]);
 
   const calcLink = el(
@@ -120,7 +132,9 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
   const resultBlock = el('div', { class: 'quick-convert-widget__result' }, [
     el('span', { class: 'quick-convert-widget__result-label' }, [t('quickConvertResult')]),
     resultValue,
+    resultHint,
     resultNote,
+    retailNote,
     calcLink,
   ]);
 
@@ -140,12 +154,28 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, t, mount 
     karat = karatSelect.value;
     const k = KARATS.find((item) => item.code === karat);
     const spot = typeof getSpot === 'function' ? getSpot() : spotUsdPerOz;
-    if (!spot || !k || gramsFromInput() <= 0) {
+    const grams = gramsFromInput();
+    const raw = String(weightInput.value).trim();
+    // Validation / error states (explicit, not just a dash).
+    if (!spot || !k) {
       resultValue.textContent = '—';
+      resultHint.textContent = t('quickConvertUnavailable');
+      resultHint.hidden = false;
+      weightInput.setAttribute('aria-invalid', 'false');
       return;
     }
+    if (raw === '' || grams <= 0) {
+      resultValue.textContent = '—';
+      resultHint.textContent = t('quickConvertHint');
+      resultHint.hidden = false;
+      // Only flag as invalid when the user typed something unusable (not when empty).
+      weightInput.setAttribute('aria-invalid', raw !== '' && grams <= 0 ? 'true' : 'false');
+      return;
+    }
+    resultHint.hidden = true;
+    weightInput.setAttribute('aria-invalid', 'false');
     const aedPerGram = usdPerGram(spot, k.purity) * CONSTANTS.AED_PEG;
-    const total = aedPerGram * gramsFromInput();
+    const total = aedPerGram * grams;
     countUp(resultValue, total, {
       decimals: 2,
       format: (n) => formatPrice(n, 'AED', 2),

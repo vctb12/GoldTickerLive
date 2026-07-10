@@ -841,8 +841,13 @@ export const TRANSLATIONS = {
     'home.quickConvertWeight': 'Weight',
     'home.quickConvertUnit': 'Unit',
     'home.quickConvertKarat': 'Karat',
-    'home.quickConvertResult': 'Reference value',
-    'home.quickConvertNote': 'Illustrative reference only · shops add making charges & VAT',
+    'home.quickConvertResult': 'Reference metal value (spot)',
+    'home.quickConvertNote':
+      'Spot-linked metal value — the same live snapshot used across this site.',
+    'home.quickConvertRetail':
+      'A jeweller’s price is higher: it adds making charges + 5% VAT on top of this.',
+    'home.quickConvertHint': 'Enter a weight in grams to see its reference value.',
+    'home.quickConvertUnavailable': 'Live price unavailable right now — try again shortly.',
     'home.quickConvertCta': 'Open full calculator →',
     'home.copyPriceSuccess': 'Price copied',
     'home.copyPriceFailed': 'Could not copy — try again',
@@ -2291,8 +2296,13 @@ export const TRANSLATIONS = {
     'home.quickConvertWeight': 'الوزن',
     'home.quickConvertUnit': 'الوحدة',
     'home.quickConvertKarat': 'العيار',
-    'home.quickConvertResult': 'القيمة المرجعية',
-    'home.quickConvertNote': 'تقدير مرجعي · المحلات تضيف المصنعية وضريبة القيمة المضافة',
+    'home.quickConvertResult': 'القيمة المرجعية للمعدن (فوري)',
+    'home.quickConvertNote':
+      'قيمة المعدن مرتبطة بالسعر الفوري — نفس اللقطة الحية المستخدمة في كل الموقع.',
+    'home.quickConvertRetail':
+      'سعر الصائغ أعلى: يضيف أجور الصياغة و٥٪ ضريبة القيمة المضافة فوق ذلك.',
+    'home.quickConvertHint': 'أدخل الوزن بالغرام لرؤية قيمته المرجعية.',
+    'home.quickConvertUnavailable': 'السعر الحي غير متاح الآن — حاول بعد قليل.',
     'home.quickConvertCta': 'افتح الحاسبة الكاملة ←',
     'home.copyPriceSuccess': 'تم نسخ السعر',
     'home.copyPriceFailed': 'تعذر النسخ — حاول مرة أخرى',
