@@ -5,11 +5,26 @@
 import { observeReveal } from './reveal.js';
 
 let booted = false;
+let viewTransitionsBound = false;
+let devBeaconInstalled = false;
 
 const prefersReducedMotion = () =>
   typeof window !== 'undefined' &&
   window.matchMedia &&
   window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Local-development host detection (mirrors the analytics debug gate). Used only
+// to arm the dev-only rejection beacon below; it never returns true in production.
+const isDevHost = () => {
+  try {
+    const host = typeof location !== 'undefined' ? location.hostname || '' : '';
+    return (
+      host === 'localhost' || host === '127.0.0.1' || host === '::1' || host.endsWith('.local')
+    );
+  } catch {
+    return false;
+  }
+};
 
 function isSameOriginNavLink(anchor) {
   if (!anchor || anchor.tagName !== 'A') return false;
@@ -31,8 +46,13 @@ function isSameOriginNavLink(anchor) {
 }
 
 function initViewTransitions() {
+  // Idempotent: never bind the document click listener twice. A second binding
+  // would start two transitions per click, and the second `startViewTransition`
+  // call skips the first — guaranteeing an AbortError rejection every time.
+  if (viewTransitionsBound) return;
   if (prefersReducedMotion()) return;
   if (typeof document.startViewTransition !== 'function') return;
+  viewTransitionsBound = true;
 
   document.addEventListener('click', (e) => {
     if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)
@@ -42,20 +62,53 @@ function initViewTransitions() {
     if (!isSameOriginNavLink(anchor)) return;
     if (anchor.target && anchor.target !== '_self') return;
 
+    // Re-check at click time: the reduced-motion preference can flip after boot.
+    // Short-circuit BEFORE preventDefault so no transition is ever created and
+    // the browser performs a normal navigation.
+    if (prefersReducedMotion()) return;
+
     e.preventDefault();
     const destination = anchor.href;
-    const transition = document.startViewTransition(() => {
+
+    let transition;
+    try {
+      transition = document.startViewTransition(() => {
+        window.location.href = destination;
+      });
+    } catch {
+      // `startViewTransition` can throw synchronously (e.g. mid-unload). We have
+      // already called preventDefault(), so fall back to a plain navigation
+      // rather than leaving the click dead.
       window.location.href = destination;
-    });
+      return;
+    }
+
     // Navigating away unloads this document, which aborts the pending transition
     // and rejects its promises with `InvalidStateError: Transition was aborted
-    // because of invalid state`. That abort is expected — swallow it so it never
-    // surfaces as an uncaught promise rejection in the console.
+    // because of invalid state`. That abort is expected — swallow every promise
+    // path (each may be undefined on older engines, and `transition` itself may
+    // be undefined) so none surfaces as an uncaught promise rejection.
+    const swallow = () => {};
     if (transition) {
-      transition.ready?.catch(() => {});
-      transition.finished?.catch(() => {});
-      transition.updateCallbackDone?.catch(() => {});
+      transition.ready?.catch(swallow);
+      transition.finished?.catch(swallow);
+      transition.updateCallbackDone?.catch(swallow);
     }
+  });
+}
+
+// Dev-only diagnostic: surface any unhandled promise rejection that is NOT the
+// expected view-transition abort, so console-stability regressions are caught
+// during local development. Gated on a dev host — it never installs in
+// production (the site-wide error-reporter owns production rejection signals).
+function installDevRejectionBeacon() {
+  if (devBeaconInstalled || typeof window === 'undefined' || !isDevHost()) return;
+  devBeaconInstalled = true;
+  window.addEventListener('unhandledrejection', (event) => {
+    const reason = event && event.reason;
+    const name = (reason && reason.name) || '';
+    if (name === 'InvalidStateError' || name === 'AbortError') return;
+    console.warn('[motion-boot] unhandled promise rejection (dev only):', name || reason);
   });
 }
 
@@ -87,6 +140,7 @@ export function initMotionBoot() {
   initScrollDrivenClass();
   initStaggerScan();
   initViewTransitions();
+  installDevRejectionBeacon();
 
   // Sitewide reveal-on-scroll: animate any [data-reveal] element on every page
   // (idempotent — already-observed nodes are skipped). Reduced-motion is a no-op

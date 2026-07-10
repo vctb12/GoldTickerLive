@@ -96,3 +96,24 @@ test('manifest-audit: committed manifest.json is installable', async () => {
   assert.ok(!res.warnings.some((w) => /theme_color/.test(w)));
   assert.ok(!res.warnings.some((w) => /\bid\b/.test(w)));
 });
+
+test('manifest icons use root-absolute src so a Vite-hashed /assets/ manifest still resolves them', () => {
+  // Vite emits the manifest to /assets/manifest-<hash>.json and rewrites the
+  // <link rel="manifest"> to point there. Web-manifest icon URLs resolve
+  // relative to the MANIFEST url, so a relative "favicon.svg" would resolve to
+  // /assets/favicon.svg (404 on every page load) and "assets/favicon-192x192.png"
+  // to /assets/assets/… (also 404). Root-absolute paths resolve against the
+  // origin regardless of where the manifest is served.
+  const manifest = JSON.parse(fs.readFileSync(path.join(ROOT, 'manifest.json'), 'utf8'));
+  const srcs = [
+    ...manifest.icons.map((i) => i.src),
+    ...(manifest.shortcuts || []).flatMap((s) => (s.icons || []).map((i) => i.src)),
+  ];
+  assert.ok(srcs.length > 0, 'expected manifest icon sources');
+  for (const src of srcs) {
+    assert.ok(
+      src.startsWith('/'),
+      `manifest icon src "${src}" must be root-absolute to survive a hashed /assets/ manifest`
+    );
+  }
+});

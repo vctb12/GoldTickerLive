@@ -102,12 +102,78 @@ export const LEARN_GUIDE_CATEGORIES = Object.freeze([
 
 export const LEARN_PROGRESS_KEY = 'gtl_learn_guides_read';
 
+// Bumped whenever the stored-id shape changes so `migrateLearnProgress()` runs
+// exactly once per browser per shape. v2 = canonical `/learn.html#hash` hrefs.
+export const LEARN_PROGRESS_MIGRATION_KEY = 'gtl_learn_guides_read_migrated';
+const LEARN_PROGRESS_MIGRATION_VERSION = '2';
+
 export function getLearnProgress() {
   try {
     const raw = localStorage.getItem(LEARN_PROGRESS_KEY);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
+  }
+}
+
+/**
+ * One-time cleanup of legacy stored progress ids.
+ *
+ * Early builds persisted a slash-stripped id (e.g. `learn.html#karats`) that
+ * never matched the catalog's canonical href (`/learn.html#karats`), so a
+ * returning user's counter was silently pinned at "Read 0 of 9" even though the
+ * anchors had been visited. This maps recoverable ids to their canonical form,
+ * drops anything it cannot resolve, rewrites the array in place, and stamps a
+ * version flag so it never runs again (idempotent, best-effort — a blocked or
+ * unavailable localStorage simply skips the migration).
+ *
+ * Additive and safe to call on every mount: after the flag is set it returns
+ * immediately without touching storage.
+ */
+export function migrateLearnProgress() {
+  let already;
+  try {
+    already = localStorage.getItem(LEARN_PROGRESS_MIGRATION_KEY);
+  } catch {
+    return; // storage unavailable — nothing to migrate
+  }
+  if (already === LEARN_PROGRESS_MIGRATION_VERSION) return;
+
+  const canonical = new Set(LEARN_GUIDE_CATEGORIES.flatMap((cat) => cat.guides.map((g) => g.href)));
+
+  const stored = getLearnProgress();
+  const migrated = [];
+  const seen = new Set();
+  for (const raw of stored) {
+    if (typeof raw !== 'string' || !raw) continue;
+    let id = null;
+    if (canonical.has(raw)) {
+      id = raw; // already canonical
+    } else if (canonical.has(`/${raw}`)) {
+      id = `/${raw}`; // slash-stripped legacy id (the original bug)
+    } else {
+      // Last resort: recover by hash fragment (e.g. a retired standalone page id
+      // that still carries `#karats`). Unresolvable ids are dropped.
+      const hashAt = raw.indexOf('#');
+      id = hashAt >= 0 ? guideHrefForHash(raw.slice(hashAt)) : null;
+    }
+    if (id && !seen.has(id)) {
+      seen.add(id);
+      migrated.push(id);
+    }
+  }
+
+  try {
+    const changed = migrated.length !== stored.length || migrated.some((v, i) => v !== stored[i]);
+    if (changed) {
+      localStorage.setItem(LEARN_PROGRESS_KEY, JSON.stringify(migrated.slice(-50)));
+    }
+    // Always stamp the flag so the migration is genuinely one-time, even when
+    // the stored list was already clean.
+    localStorage.setItem(LEARN_PROGRESS_MIGRATION_KEY, LEARN_PROGRESS_MIGRATION_VERSION);
+  } catch {
+    // ignore quota/access errors — progress migration is best-effort
   }
 }
 
