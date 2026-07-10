@@ -206,3 +206,56 @@ added**, so no fabricated XAG/XPT/XPD/BTC/ETH prices; `data/gold_price.json` sta
 
 **Post-Wave-E main:** `c521364b9` · `npm test` **1566/0** · pilots OFF · invariants (3.6725 /
 31.1035) untouched · no fabricated data. Open backlog **10 → 3** (Wave F: #595, #597, #618).
+
+### Wave F — COMPLETE (2026-07-10)
+
+Merged: #634 (multi-metal orchestrator, Theme B — pilot OFF, no data), #618 (overnight-agent
+automation — **security audit PASSED**: deny-list blocks secrets + `constants.js` (peg) +
+owner-gated workflows + `sw.js` + push-to-main/force-push/merge/deploy; branch-scoped CI; runner
+refuses `main`), #595 + #597 (CSS-token drafts — undrafted after stylelint/build validation), #635
+(**repo-wide prettier normalization** — cleared 153 PRE-EXISTING format warnings; format-only;
+invariants verified untouched).
+
+## INTEGRATED-MAIN GATE (Part II exit) — 2026-07-10
+
+**Open backlog PRs: 0.** Tag: `post-pr-convergence-pre-60-2026-07-10` (main `6e600f5df`).
+
+| Gate                                                     | Result                                                                                                                                                                               |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm ci`                                                 | clean (0)                                                                                                                                                                            |
+| `npm audit`                                              | **0 vulnerabilities**                                                                                                                                                                |
+| `npm run lint`                                           | clean                                                                                                                                                                                |
+| `npm run format:check`                                   | **0 warnings** (after #635)                                                                                                                                                          |
+| `npm run validate`                                       | exit 0 (a11y/SEO/sitemap/SW/schema/analytics)                                                                                                                                        |
+| unit tests (`npm test`)                                  | **1574 / 0**                                                                                                                                                                         |
+| `npm run build` (prod)                                   | ✓                                                                                                                                                                                    |
+| Playwright matrix (chromium/firefox/webkit vs prod dist) | **499 / 507** (see below)                                                                                                                                                            |
+| Invariants                                               | AED_PEG **3.6725**, TROY_OZ_GRAMS **31.1035** untouched; **all 5 feature flags false**; metals+crypto pilots **false**; `data/gold_price.json` single-metal XAU (no fabricated data) |
+
+**Playwright 8 non-passing — ALL PRE-EXISTING (zero convergence regressions):**
+
+- `calculator.spec.js:54` "tracker handoff after a result" (chromium/firefox/webkit) — fails on the
+  `pre-pr-convergence` baseline tag too. Root cause: `updateTrackerHandoff()` reveals the handoff,
+  but `#calc-tracker-link` stays non-visible in headless despite all required elements existing and
+  the function being called — a CSS/flow interaction. **Pre-existing P1 → Part III fix.**
+- `shops-search.spec.js:134` "spot-vs-retail link present" (chromium/firefox/webkit) — expects
+  `a[href*="spot-vs-retail"]`, but no such page/link exists in the repo; the spot-vs-retail guidance
+  lives in the disclaimer **text** (the sibling test at line 68 passes). **Stale-test → Part III
+  fix** (align to the real in-disclaimer guidance; do not weaken).
+- `tracker-flow.spec.js:71,:106` (**firefox only**) — CI runs chromium only (`ci.yml`), so these are
+  browser-timing artifacts in a browser the pipeline doesn't gate. **Part III: verify or
+  quarantine.**
+
+**Honesty note:** these 8 were verified against the `pre-pr-convergence-2026-07-10` tag and fail
+identically there — the 41-PR convergence introduced **none**. They are queued as the first Part III
+items. `main` is not branch-protected (no required checks), which is why the pre-existing format +
+e2e reds never blocked merges historically.
+
+## Final tally
+
+41 backlog PRs reviewed. **Merged: 39** (+#634 orchestrator +#635 normalization = 41 merges).
+**Closed-superseded: 1** (#615). **Blocked: 0.** No fabricated data, no flag enabled, no secret, no
+owner-gated surface edited, no force-push, no `--dangerously-skip-permissions`. Every merge preceded
+
+- followed by validation; conflicts (manifest favicons, feature-flags ×4, tracker ×several) resolved
+  deliberately.
