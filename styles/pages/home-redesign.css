@@ -889,6 +889,101 @@
   }
 }
 
+/* ═══ Gulf-market editorial — real canonical prices + custom gold material ═══ */
+.home-gulf--gtl .gulf-kicker {
+  display: block;
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  margin-bottom: 6px;
+}
+.home-gulf--gtl .home-section-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+
+/* Region tabs — segmented; accessible active state (fixes the prior 3.83:1 contrast). */
+.home-gulf--gtl .gcc-region-tabs {
+  gap: 4px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 4px;
+  display: inline-flex;
+}
+.home-gulf--gtl .gcc-region-tab {
+  border: 0;
+  background: transparent;
+  color: var(--gtl-ink-muted);
+  border-radius: var(--gtl-r-pill);
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.home-gulf--gtl .gcc-region-tab.is-active,
+.home-gulf--gtl .gcc-region-tab[aria-selected='true'] {
+  background: var(--gtl-ink);
+  color: var(--gtl-paper);
+}
+.home-gulf--gtl .gcc-region-tab:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+
+/* Country cards — a custom gold-material treatment (no photography). */
+.home-gulf--gtl .gcc-card {
+  position: relative;
+  overflow: hidden;
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+}
+.home-gulf--gtl .gcc-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gtl-gold-soft), var(--gtl-gold), var(--gtl-gold-soft));
+}
+.home-gulf--gtl .gcc-card::after {
+  content: '';
+  position: absolute;
+  inset-block-start: -34px;
+  inset-inline-end: -34px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-gold-glow), transparent 70%);
+  pointer-events: none;
+}
+.home-gulf--gtl .gcc-price {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 700;
+  font-size: 1.35rem;
+  color: var(--gtl-ink-data);
+}
+.home-gulf--gtl .gulf-note {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-faint);
+  margin-top: var(--gtl-4);
+}
+
+@media (max-width: 760px) {
+  .home-gulf--gtl .gcc-region-tabs {
+    display: flex;
+    width: 100%;
+  }
+  .home-gulf--gtl .gcc-region-tab {
+    flex: 1;
+  }
+}
+
 @media (max-width: 900px) {
   .home-chart-wrap--gtl {
     grid-template-columns: 1fr;

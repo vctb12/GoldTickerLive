@@ -1117,8 +1117,10 @@ function applyLangToPage() {
   setTextById('hlc-title', tx('spotTitle'));
   setTextById('hlc-sub', tx('perOz'));
   setTextById('hlc-updated', tx('fetching'));
+  setTextById('gulf-kicker', tx('gulfKicker'));
   setTextById('gcc-section-title', tx('gccLiveTitle'));
   setTextById('gcc-section-sub', tx('gccLiveSub'));
+  setTextById('gulf-note', tx('gulfNote'));
   setTextById('gcc-see-all', tx('seeAll'));
   setTextById('trust-live', tx('trustLive'));
   setTextById('trust-live-sub', tx('trustLiveSub'));
