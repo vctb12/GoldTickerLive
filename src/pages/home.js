@@ -1303,13 +1303,16 @@ function mountHomeNavPricePill() {
   pill.setAttribute('aria-live', 'polite');
   pill.setAttribute('aria-atomic', 'true');
   pill.setAttribute('aria-label', 'Live gold spot price and 24K per gram');
-  // Compact: values only (dot + XAU/USD + 24K AED/g) to keep the shared nav uncrowded.
-  pill.innerHTML =
-    '<span class="nav-price-pill__dot gtl-dot" aria-hidden="true"></span>' +
-    '<span class="gtl-num" data-nav-xau>—</span>' +
-    '<span class="nav-price-pill__sep" aria-hidden="true">·</span>' +
-    '<span class="gtl-num" data-nav-aed>—</span>' +
-    '<span class="nav-price-pill__unit">AED</span>';
+  // Compact: values only (dot + XAU/USD + 24K AED/g) to keep the shared nav
+  // uncrowded. Built with safe-dom el() (no innerHTML) to keep the homepage's
+  // zero unsafe-DOM-sink baseline — which `npm run validate` (CI + deploy) enforces.
+  pill.append(
+    el('span', { class: 'nav-price-pill__dot gtl-dot', 'aria-hidden': 'true' }),
+    el('span', { class: 'gtl-num', dataset: { navXau: '' } }, '—'),
+    el('span', { class: 'nav-price-pill__sep', 'aria-hidden': 'true' }, '·'),
+    el('span', { class: 'gtl-num', dataset: { navAed: '' } }, '—'),
+    el('span', { class: 'nav-price-pill__unit' }, 'AED')
+  );
   if (cta && cta.parentNode === actions) actions.insertBefore(pill, cta);
   else actions.appendChild(pill);
   _navPill = pill;
