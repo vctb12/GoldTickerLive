@@ -79,6 +79,11 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/calculator.css" />
+    <!-- Design-system tokens + premium editorial override layer (redesign/calculator).
+         design-system.css is tokens + opt-in .gtl-* utilities only (no bare-element
+         overrides); calculator-redesign.css must load last to win by source order. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="stylesheet" href="./styles/pages/calculator-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
