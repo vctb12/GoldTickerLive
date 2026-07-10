@@ -1252,6 +1252,53 @@ function applyLangToPage() {
 }
 
 // ── Fetch live data in parallel ────────────────────────────────────────────
+// ── Homepage nav price-pill (home-only; injected into the shared nav) ────────
+let _navPill = null;
+
+/** Inject a persistent live price-pill into the shared nav — homepage only. */
+function mountHomeNavPricePill() {
+  const actions = document.querySelector('.nav-actions');
+  if (!actions || document.getElementById('nav-price-pill')) return;
+  const cta = document.getElementById('nav-cta-tracker');
+  const pill = document.createElement('div');
+  pill.id = 'nav-price-pill';
+  pill.className = 'nav-price-pill';
+  pill.setAttribute('role', 'status');
+  pill.setAttribute('aria-live', 'polite');
+  pill.setAttribute('aria-atomic', 'true');
+  pill.setAttribute('aria-label', 'Live gold spot price and 24K per gram');
+  // Compact: values only (dot + XAU/USD + 24K AED/g) to keep the shared nav uncrowded.
+  pill.innerHTML =
+    '<span class="nav-price-pill__dot gtl-dot" aria-hidden="true"></span>' +
+    '<span class="gtl-num" data-nav-xau>—</span>' +
+    '<span class="nav-price-pill__sep" aria-hidden="true">·</span>' +
+    '<span class="gtl-num" data-nav-aed>—</span>' +
+    '<span class="nav-price-pill__unit">AED</span>';
+  if (cta && cta.parentNode === actions) actions.insertBefore(pill, cta);
+  else actions.appendChild(pill);
+  _navPill = pill;
+  if (_canonicalSnapshot) updateNavPricePill(_canonicalSnapshot);
+}
+
+/** Update the nav pill from the canonical snapshot (value + freshness dot). */
+function updateNavPricePill(snapshot) {
+  const pill = _navPill || document.getElementById('nav-price-pill');
+  if (!pill || !snapshot?.ok) return;
+  const fmt2 = (n) =>
+    n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const xau = pill.querySelector('[data-nav-xau]');
+  const aed = pill.querySelector('[data-nav-aed]');
+  if (xau) xau.textContent = '$' + fmt2(snapshot.spotUsdPerOz);
+  if (aed) aed.textContent = fmt2(snapshot.aedPerGram24k);
+  const dot = pill.querySelector('.nav-price-pill__dot');
+  if (dot) {
+    dot.classList.remove('gtl-dot--cached', 'gtl-dot--fallback');
+    const st = snapshot.freshness?.state;
+    if (st === 'fallback' || st === 'unavailable') dot.classList.add('gtl-dot--fallback');
+    else if (st === 'cached' || st === 'delayed') dot.classList.add('gtl-dot--cached');
+  }
+}
+
 /**
  * F-1 canonical price seed. Reads the single canonical snapshot (the same
  * committed `/data/gold_price.json` the calculator uses, via the spot-resolver)
@@ -1270,6 +1317,7 @@ async function seedCanonicalPrice() {
     goldIsFallback = snap.freshness.isFallback === true;
     goldIsFresh = snap.freshness.state === 'live';
     cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
+    updateNavPricePill(snap);
     renderHeroCard();
     renderKaratStrip();
     renderGCCGrid();
@@ -1511,9 +1559,12 @@ async function init() {
   enforceHreflangAlternates(document, window.location.pathname);
   injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
-  // Nav + footer + spot bar
-  const shell = mountSharedShell({ lang, depth: getDepth(), withSpotBar: true });
+  // Nav + footer. Redesign: the redundant top spot-bar is retired on the homepage
+  // (home-only) in favour of the nav price-pill (mountHomeNavPricePill); other pages
+  // keep their spot-bar. updateSpotBar() no-ops safely when the bar is absent.
+  const shell = mountSharedShell({ lang, depth: getDepth(), withSpotBar: false });
   initPageEnter('main');
+  mountHomeNavPricePill();
   const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
     btn.addEventListener('click', () => {

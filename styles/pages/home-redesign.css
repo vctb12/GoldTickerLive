@@ -290,3 +290,55 @@
     justify-content: center;
   }
 }
+
+/* ═══ Step 5 — Nav price-pill (homepage-only) + retire redundant top strips ═══ */
+.nav-price-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.8rem;
+  color: var(--gtl-ink);
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 7px 13px;
+  white-space: nowrap;
+  line-height: 1;
+}
+.nav-price-pill__dot {
+  width: 8px;
+  height: 8px;
+}
+.nav-price-pill__k {
+  color: var(--gtl-ink-faint);
+  font-weight: 600;
+  margin-inline-start: 6px;
+}
+.nav-price-pill__sep {
+  color: var(--gtl-line);
+  margin-inline: 6px;
+}
+.nav-price-pill__unit {
+  color: var(--gtl-gold-deep);
+  margin-inline-start: 4px;
+  font-weight: 600;
+}
+.nav-price-pill [data-nav-aed] {
+  color: var(--gtl-gold-deep);
+}
+
+/* The nav pill is a wide-desktop affordance; below this the shared nav (6 links +
+   search + theme + lang + CTA) has no room for it, so it hides to avoid crowding. */
+@media (max-width: 1280px) {
+  .nav-price-pill {
+    display: none;
+  }
+}
+
+/* Retire the redundant X-follow strip on the homepage (this file loads on home
+   only) — the approved nav has one persistent price pill and no top strips. */
+.x-follow-banner {
+  display: none;
+}
