@@ -934,6 +934,7 @@ export const TRANSLATIONS = {
     'home.gccLiveTitle': 'Gold across the markets',
     'home.gccLiveSub': '22K per gram in local currency · freshness shown live',
     'home.gulfKicker': 'Across the Gulf & Arab world',
+    'home.learnRailKicker': 'Learn · buying guides',
     'home.gulfNote':
       'Spot-linked reference prices in local currency — shops add making charges & VAT.',
     'home.seeAll': 'See all countries →',
@@ -2390,6 +2391,7 @@ export const TRANSLATIONS = {
     'home.gccLiveTitle': 'الذهب عبر الأسواق',
     'home.gccLiveSub': 'عيار 22 لكل غرام بالعملة المحلية · حالة التحديث ظاهرة',
     'home.gulfKicker': 'عبر الخليج والعالم العربي',
+    'home.learnRailKicker': 'تعلّم · أدلة الشراء',
     'home.gulfNote':
       'أسعار مرجعية مرتبطة بالسعر الفوري بالعملة المحلية — تضيف المحلات المصنعية والضريبة.',
     'home.seeAll': 'عرض كل الدول ←',

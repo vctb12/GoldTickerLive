@@ -1118,6 +1118,7 @@ function applyLangToPage() {
   setTextById('hlc-sub', tx('perOz'));
   setTextById('hlc-updated', tx('fetching'));
   setTextById('gulf-kicker', tx('gulfKicker'));
+  setTextById('learn-kicker', tx('learnRailKicker'));
   setTextById('gcc-section-title', tx('gccLiveTitle'));
   setTextById('gcc-section-sub', tx('gccLiveSub'));
   setTextById('gulf-note', tx('gulfNote'));

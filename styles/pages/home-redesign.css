@@ -984,6 +984,81 @@
   }
 }
 
+/* ═══ Learn rail — premium publication treatment ════════════════════════════ */
+.home-learn--gtl .learn-kicker {
+  display: block;
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  margin-bottom: 6px;
+}
+.home-learn--gtl .home-section-title {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+}
+
+/* Hide the component's own duplicate section-intro (we have the editorial header). */
+.home-learn--gtl #home-location-guides-mount .section-intro {
+  display: none;
+}
+.home-learn--gtl .location-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(258px, 1fr));
+  gap: var(--gtl-4);
+}
+.home-learn--gtl .location-guide-card {
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+}
+.home-learn--gtl .location-guide-card__title {
+  font-family: var(--gtl-serif);
+  font-size: 1.2rem;
+  color: var(--gtl-ink);
+}
+.home-learn--gtl .location-guide-card__links a {
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+}
+
+/* First card = the feature lede (dark, gold material) — AA text on ink. */
+.home-learn--gtl .location-guides-grid > :first-child {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-panel, #17140f);
+  border-color: transparent;
+  color: #f3eee4;
+}
+.home-learn--gtl .location-guides-grid > :first-child::before {
+  content: '';
+  position: absolute;
+  inset-block-start: -40px;
+  inset-inline-end: -40px;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(184 137 30 / 48%), transparent 66%);
+  pointer-events: none;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__title {
+  color: #fff;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__context,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__karats,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__checklist,
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__checklist-title {
+  color: #cabfad;
+  position: relative;
+}
+.home-learn--gtl .location-guides-grid > :first-child .location-guide-card__links a {
+  color: #e4b655;
+  position: relative;
+}
+
 @media (max-width: 900px) {
   .home-chart-wrap--gtl {
     grid-template-columns: 1fr;
