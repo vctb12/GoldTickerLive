@@ -97,3 +97,36 @@ test('isCrossValidationEnabled reflects the (default OFF) flag', async () => {
   const { isCrossValidationEnabled } = await load();
   assert.equal(isCrossValidationEnabled(), false);
 });
+
+test('threshold boundary: just-under 0.75% agrees, just-over flags under-review', async () => {
+  const { evaluateCrossValidation, computeDivergencePct } = await load();
+  // 4000 vs 4030 → 0.7472% (just under the 0.75% default) → agree.
+  const under = evaluateCrossValidation({ primaryUsd: 4000, secondaryUsd: 4030, enabled: true });
+  assert.ok(computeDivergencePct(4000, 4030) < 0.75);
+  assert.equal(under.status, 'agree');
+  assert.equal(under.underReview, false);
+  // 4000 vs 4031 → 0.7720% (just over the 0.75% default) → under-review.
+  const over = evaluateCrossValidation({ primaryUsd: 4000, secondaryUsd: 4031, enabled: true });
+  assert.ok(computeDivergencePct(4000, 4031) > 0.75);
+  assert.equal(over.status, 'under-review');
+  assert.equal(over.underReview, true);
+});
+
+test('downgradeFreshnessForDivergence: under-review downgrades live → delayed only', async () => {
+  const { downgradeFreshnessForDivergence } = await load();
+  const underReview = { underReview: true };
+  // The one state that claims real-time accuracy is walked back.
+  assert.equal(downgradeFreshnessForDivergence('live', underReview), 'delayed');
+  // Every already-non-live key passes through unchanged (nothing to walk back).
+  for (const key of ['delayed', 'cached', 'stale', 'fallback', 'unavailable', 'closed']) {
+    assert.equal(downgradeFreshnessForDivergence(key, underReview), key);
+  }
+});
+
+test('downgradeFreshnessForDivergence: agree / insufficient / missing never downgrade', async () => {
+  const { downgradeFreshnessForDivergence } = await load();
+  assert.equal(downgradeFreshnessForDivergence('live', { underReview: false }), 'live');
+  assert.equal(downgradeFreshnessForDivergence('live', { status: 'agree' }), 'live');
+  assert.equal(downgradeFreshnessForDivergence('live', {}), 'live');
+  assert.equal(downgradeFreshnessForDivergence('live'), 'live');
+});

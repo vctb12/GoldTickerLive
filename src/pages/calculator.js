@@ -7,6 +7,8 @@ import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, DATA_ATTRIBUTION } from '..
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { usdPerGram } from '../lib/price-calculator.js';
+import { UNIT_TO_GRAMS, toGrams, parseLocalizedNumber } from '../lib/weight-units.js';
+import { isFeatureEnabled } from '../config/feature-flags.js';
 import { formatPrice } from '../lib/formatter.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -495,16 +497,18 @@ function updateTrackerHandoff({ karat = '22', currency = 'AED' } = {}) {
   }
 }
 
-// ── Weight unit conversions (to grams) ─────────────────────────────────────
-const UNIT_TO_GRAMS = {
-  gram: 1,
-  oz: CONSTANTS.TROY_OZ_GRAMS,
-  kg: 1000,
-  tola: 11.6638,
-  masha: 0.972,
-  baht: 15.244,
-  taels: 37.429,
-};
+// Weight-unit conversions (UNIT_TO_GRAMS / toGrams) live in lib/weight-units.js — a single tested
+// source of truth shared with the converter and the test suite.
+
+/**
+ * Read a numeric input field. With the localized-numeral flag on, accepts Arabic-Indic / Persian
+ * digits and thousands separators; otherwise identical to `parseFloat` (current behavior).
+ */
+function readNumber(value) {
+  return isFeatureEnabled('LOCALIZED_NUMERAL_INPUT_ENABLED')
+    ? parseLocalizedNumber(value)
+    : parseFloat(value);
+}
 
 const UNIT_LABELS = {
   en: {
@@ -558,10 +562,6 @@ function populateUnitSelects() {
     if (units.includes(previous)) select.value = previous;
     else if (units[0]) select.value = units[0];
   }
-}
-
-function toGrams(amount, unit) {
-  return amount * (UNIT_TO_GRAMS[unit] ?? 1);
 }
 
 // ── Get rate ────────────────────────────────────────────────────────────────
@@ -638,8 +638,8 @@ function _trackCalcUse(tool, params) {
 
 // ── Calculator 1: Value ─────────────────────────────────────────────────────
 function calcValue() {
-  const weightRaw = parseFloat(document.getElementById('val-weight')?.value);
-  const amountRaw = parseFloat(document.getElementById('val-aed-amount')?.value);
+  const weightRaw = readNumber(document.getElementById('val-weight')?.value);
+  const amountRaw = readNumber(document.getElementById('val-aed-amount')?.value);
   const unit = document.getElementById('val-unit')?.value ?? 'gram';
   const karat = document.getElementById('val-karat')?.value ?? '22';
   const currency = document.getElementById('val-currency')?.value ?? 'AED';
@@ -758,10 +758,10 @@ function calcValue() {
 
 // ── Calculator 2: Scrap ─────────────────────────────────────────────────────
 function calcScrap() {
-  const weightRaw = parseFloat(document.getElementById('scrap-weight')?.value);
+  const weightRaw = readNumber(document.getElementById('scrap-weight')?.value);
   const unit = document.getElementById('scrap-unit')?.value ?? 'gram';
   const karat = document.getElementById('scrap-karat')?.value ?? '22';
-  const payout = parseFloat(document.getElementById('scrap-payout')?.value) / 100;
+  const payout = readNumber(document.getElementById('scrap-payout')?.value) / 100;
   const currency = document.getElementById('scrap-currency')?.value ?? 'AED';
 
   const result = document.getElementById('scrap-result');
@@ -813,7 +813,7 @@ function calcScrap() {
 
 // ── Calculator 3: Zakat ─────────────────────────────────────────────────────
 function calcZakat() {
-  const weightRaw = parseFloat(document.getElementById('zakat-weight')?.value);
+  const weightRaw = readNumber(document.getElementById('zakat-weight')?.value);
   const unit = document.getElementById('zakat-unit')?.value ?? 'gram';
   const karat = document.getElementById('zakat-karat')?.value ?? '22';
   const currency = document.getElementById('zakat-currency')?.value ?? 'AED';
@@ -885,7 +885,7 @@ function calcZakat() {
 
 // ── Calculator 4: Buying power ──────────────────────────────────────────────
 function calcBuying() {
-  const amount = parseFloat(document.getElementById('buy-amount')?.value);
+  const amount = readNumber(document.getElementById('buy-amount')?.value);
   const currency = document.getElementById('buy-currency')?.value ?? 'AED';
   const karat = document.getElementById('buy-karat')?.value ?? '22';
 
@@ -940,7 +940,7 @@ function calcBuying() {
 
 // ── Calculator 5: Unit converter ────────────────────────────────────────────
 function calcConvert() {
-  const amount = parseFloat(document.getElementById('conv-amount')?.value);
+  const amount = readNumber(document.getElementById('conv-amount')?.value);
   const from = document.getElementById('conv-from')?.value ?? 'gram';
   const convResults = document.getElementById('conv-results');
   const grid = document.getElementById('conv-grid');
