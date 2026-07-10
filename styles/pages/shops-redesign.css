@@ -1,0 +1,187 @@
+/* ============================================================================
+   Shops directory — premium editorial layer (redesign/shops-v2)
+   ----------------------------------------------------------------------------
+   Loaded AFTER shops.css / shops-map.css so these win by source order. Pure
+   presentation over the existing DOM (the directory logic, filters, trust
+   states and honest verification are untouched) plus styling for the new live
+   24K reference chip. Brings the page into the redesigned homepage family:
+   Playfair serif in antique gold, gold-glow cards, premium chips + tabs,
+   tabular figures. Built on shared tokens (tokens.css + design-system.css).
+   Light theme only; dark deferred site-wide (owner-gated).
+   ========================================================================== */
+
+/* ── Hero: serif headline (dark hero background untouched) ─────────────────── */
+/* Serif treatment only — the dark hero's carefully-tuned near-white text
+   colours (#fff8ea title, light-cream kicker/lead) are preserved for contrast. */
+.shops-hero #shops-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.1;
+}
+.shops-hero-stats .shops-stat-value {
+  font-family: var(--gtl-serif);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Live 24K reference chip ──────────────────────────────────────────────── */
+
+/* Sits inside the always-dark editorial hero, so it uses the same translucent
+   light-on-dark glass treatment as the hero's stat cards / trust banner. */
+.shops-ref-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7em;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding: 0.65em 1.05em;
+  border: 1px solid rgb(255 240 195 / 24%);
+  border-radius: var(--radius-lg);
+  background: rgb(255 248 234 / 7%);
+}
+.shops-ref-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: rgb(255 248 234 / 55%);
+  flex: none;
+}
+.shops-ref-dot--live {
+  background: #4ade80;
+  box-shadow: 0 0 0 3px rgb(74 222 128 / 22%);
+}
+.shops-ref-dot--delayed {
+  background: var(--color-gold-bright);
+  box-shadow: 0 0 0 3px rgb(240 202 92 / 22%);
+}
+.shops-ref-dot--cached,
+.shops-ref-dot--fallback,
+.shops-ref-dot--unavailable {
+  background: #e0a253;
+  box-shadow: 0 0 0 3px rgb(224 162 83 / 20%);
+}
+.shops-ref-main {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+.shops-ref-label {
+  font-size: var(--gtl-meta);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-gold-muted);
+}
+.shops-ref-figure {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3em;
+}
+.shops-ref-value {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: rgb(255 248 234 / 96%);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.shops-ref-unit {
+  font-size: var(--gtl-meta);
+  color: rgb(255 248 234 / 70%);
+}
+.shops-ref-fresh {
+  font-size: var(--gtl-meta);
+  font-weight: 600;
+  color: rgb(255 248 234 / 78%);
+  font-variant-numeric: tabular-nums;
+  padding-inline-start: 0.6em;
+  border-inline-start: 1px solid rgb(255 240 195 / 20%);
+}
+.shops-ref-hint {
+  flex-basis: 100%;
+  font-size: 0.78rem;
+  color: rgb(255 248 234 / 58%);
+  line-height: 1.4;
+}
+
+/* ── Directory tabs + chips ───────────────────────────────────────────────── */
+.shops-tab.is-active {
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold);
+}
+.shops-tab:focus-visible,
+.shops-chip:focus-visible,
+.shops-guide-chip:focus-visible,
+.shops-quick-action-btn:focus-visible,
+.shops-filter-toggle:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.shops-guide-chip:hover,
+.shops-quick-action-btn:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* ── Shop cards: gold-glow, lift on hover ─────────────────────────────────── */
+.shop-card {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease,
+    border-color 0.18s ease;
+}
+.shop-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-gold);
+}
+.shop-card--featured {
+  border-color: var(--color-gold);
+  box-shadow:
+    0 0 0 1px var(--color-gold-glow),
+    var(--shadow-sm);
+}
+.shop-card-head h3 {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.shop-status-chip {
+  font-variant-numeric: tabular-nums;
+}
+.shop-status-chip--verified {
+  border-color: #1f9d55;
+  color: #14663a;
+}
+.shop-meta strong,
+.shop-confidence-item strong {
+  font-variant-numeric: tabular-nums;
+}
+.shop-action-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Search + filter focus rings ──────────────────────────────────────────── */
+#shops-search:focus,
+.shops-control select:focus,
+.shops-control input:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .shop-card {
+    transition: none;
+  }
+  .shop-card:hover {
+    transform: none;
+  }
+}

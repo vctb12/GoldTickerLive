@@ -79,6 +79,11 @@
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/shops.css" />
     <link rel="stylesheet" href="./styles/components/shops-map.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing);
+         shops-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/shops-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/shops-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -549,6 +554,22 @@
               ><span id="shops-trust-label">Reference listings</span> ·
               <span id="shops-last-updated" class="skeleton-inline shell-skeleton-freshness-strip" aria-busy="true"></span></span
             >
+          </div>
+
+          <!-- Live 24K reference chip — canonical getCanonicalSpot() snapshot (F-1).
+               Hidden until hydrated by shops.js; gives buyers a metal-value
+               baseline to judge a shop's quote against. Reference only. -->
+          <div class="shops-ref-chip" id="shops-ref-chip" aria-live="polite" hidden>
+            <span class="shops-ref-dot" id="shops-ref-dot" aria-hidden="true"></span>
+            <span class="shops-ref-main">
+              <span class="shops-ref-label" id="shops-ref-label">Today's 24K reference</span>
+              <span class="shops-ref-figure">
+                <span class="shops-ref-value" id="shops-ref-value">—</span>
+                <span class="shops-ref-unit" id="shops-ref-unit">AED / gram</span>
+              </span>
+            </span>
+            <span class="shops-ref-fresh" id="shops-ref-fresh"></span>
+            <span class="shops-ref-hint" id="shops-ref-hint"></span>
           </div>
           <p class="shops-results-disclaimer" id="shops-freshness-semantics">
             Directory listings were last reviewed editorially. Reference prices are spot-linked
