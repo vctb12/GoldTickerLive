@@ -15,6 +15,7 @@ import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
 import { initInsightsFeed } from './insights/insights-feed.js';
+import { initReadingProgress } from '../lib/reading-progress.js';
 import { TRANSLATIONS } from '../config/index.js';
 
 const STATE = {
@@ -155,6 +156,7 @@ function init() {
 
   scrollToHashTarget();
   mountRelatedGuides({ lang: STATE.lang });
+  initReadingProgress();
 }
 
 init();
