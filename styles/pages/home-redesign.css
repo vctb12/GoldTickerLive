@@ -703,6 +703,37 @@
   }
 }
 
+.karat-teach-choice {
+  font-size: 0.85rem;
+  color: var(--gtl-ink-muted);
+  margin: var(--gtl-3) 0 0;
+  max-width: 42ch;
+  line-height: 1.5;
+}
+.karat-next-link {
+  display: inline-block;
+  margin-top: var(--gtl-3);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  text-decoration: none;
+}
+.karat-next-link::after {
+  content: ' →';
+}
+[dir='rtl'] .karat-next-link::after {
+  content: ' ←';
+}
+.karat-dial {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.karat-dial:active {
+  cursor: grabbing;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .karat-dial__arc {
     transition: none;

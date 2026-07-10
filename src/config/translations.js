@@ -1057,9 +1057,12 @@ export const TRANSLATIONS = {
     'home.faqMore': 'More gold price questions answered →',
     'home.trackerLink': 'Full Tracker →',
     'home.karatStripLabel': 'AED / gram',
-    'home.karatStripTitle': 'Live reference prices by karat',
+    'home.karatStripTitle': 'Every karat, one live price',
     'home.karatStripSub':
-      'Spot-linked AED gram estimates. Retail jewelry can include making charges and tax.',
+      '24K–14K are purity levels — karat ÷ 24. The AED/g changes only because purity changes, all from the same live spot. Reference prices, not retail jewellery quotes.',
+    'home.karatTeachChoice':
+      'Lower karat isn’t worse — just less pure, and often more durable and affordable.',
+    'home.karatNextLine': 'Pick your karat, then calculate a real piece',
     'home.karatStripCta': 'Full Tracker →',
     'home.karatStripScrollHint': 'Swipe for more karats →',
     'home.pwaInstallLabel': 'Install app',
@@ -2500,9 +2503,12 @@ export const TRANSLATIONS = {
     'home.faqMore': 'المزيد من الأسئلة حول أسعار الذهب ←',
     'home.trackerLink': 'التتبع الكامل ←',
     'home.karatStripLabel': 'درهم / غرام',
-    'home.karatStripTitle': 'أسعار مرجعية مباشرة حسب العيار',
+    'home.karatStripTitle': 'كل العيارات بسعر حي واحد',
     'home.karatStripSub':
-      'تقديرات غرام بالدرهم مرتبطة بالسعر الفوري. قد تشمل المجوهرات المصنعية والضريبة.',
+      'العيارات من 14 إلى 24 هي مستويات نقاء — العيار ÷ 24. سعر الغرام بالدرهم يتغيّر فقط لأن النقاء يتغيّر، والجميع من نفس السعر الفوري. أسعار مرجعية، وليست أسعار تجزئة للمجوهرات.',
+    'home.karatTeachChoice':
+      'العيار الأقل ليس أسوأ — فقط أقل نقاءً، وغالباً أكثر متانة وأقل تكلفة.',
+    'home.karatNextLine': 'اختر عيارك ثم احسب قطعة حقيقية',
     'home.karatStripCta': 'المتتبع الكامل ←',
     'home.karatStripScrollHint': 'اسحب لعرض المزيد من العيارات ←',
     'home.pwaInstallLabel': 'تثبيت التطبيق',

@@ -1120,6 +1120,8 @@ function applyLangToPage() {
   setTextById('karat-strip-label', tx('karatStripLabel'));
   setTextById('karat-strip-title', tx('karatStripTitle'));
   setTextById('karat-strip-sub', tx('karatStripSub'));
+  setTextById('karat-teach-choice', tx('karatTeachChoice'));
+  setTextById('karat-next-link', tx('karatNextLine'));
   setTextById('karat-strip-cta', tx('karatStripCta'));
   setTextById('karat-strip-scroll-hint', tx('karatStripScrollHint'));
   updateKaratStripSelection();
@@ -1432,6 +1434,52 @@ function initKaratDial() {
       }
     });
   });
+  // Dial: pointer drag/tap (mouse + touch) as an intuitive selector — the arc = purity,
+  // so dragging around the ring snaps to the nearest karat by purity. The rungs remain the
+  // keyboard/screen-reader path, so the dial is aria-hidden (a visual + pointer mirror).
+  const dial = document.getElementById('karat-dial');
+  if (dial) {
+    dial.setAttribute('aria-hidden', 'true');
+    dial.style.touchAction = 'none';
+    let dragging = false;
+    const pickFromPointer = (e) => {
+      const r = dial.getBoundingClientRect();
+      const x = e.clientX - (r.left + r.width / 2);
+      const y = e.clientY - (r.top + r.height / 2);
+      let ang = Math.atan2(x, -y); // 0 at 12 o'clock, clockwise positive
+      if (ang < 0) ang += Math.PI * 2;
+      const frac = ang / (Math.PI * 2);
+      let best = _selectedKarat;
+      let bd = Infinity;
+      codes.forEach((code) => {
+        const k = KARATS.find((kk) => kk.code === code);
+        if (!k) return;
+        const d = Math.abs(k.purity - frac);
+        if (d < bd) {
+          bd = d;
+          best = code;
+        }
+      });
+      if (best !== _selectedKarat) {
+        _selectedKarat = best;
+        updateKaratDial();
+      }
+    };
+    dial.addEventListener('pointerdown', (e) => {
+      dragging = true;
+      dial.setPointerCapture?.(e.pointerId);
+      pickFromPointer(e);
+    });
+    dial.addEventListener('pointermove', (e) => {
+      if (dragging) pickFromPointer(e);
+    });
+    const stopDrag = () => {
+      dragging = false;
+    };
+    dial.addEventListener('pointerup', stopDrag);
+    dial.addEventListener('pointercancel', stopDrag);
+  }
+
   _karatDialInit = true;
 }
 
