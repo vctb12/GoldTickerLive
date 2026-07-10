@@ -233,6 +233,19 @@
   height: 38px;
 }
 
+/* The freshness banner is position:sticky (z-index:100) and floats over the
+   sections that scroll beneath it. Its token backgrounds are 9%-alpha tints, so
+   content bled through and collided with the banner text — most visibly on
+   narrow/tablet widths where the banner wraps to multiple lines. Composite the
+   tint over the opaque page background so the banner occludes cleanly while
+   keeping the intended tint (theme-aware via the tokens). */
+.home-freshness-bar {
+  background: linear-gradient(var(--color-live-bg), var(--color-live-bg)), var(--color-bg);
+}
+.home-freshness-bar--stale {
+  background: linear-gradient(var(--color-daily-bg), var(--color-daily-bg)), var(--color-bg);
+}
+
 /* Keep the footer utilities (CSV / full tracker) quiet but present */
 .hero--gtl .hlc-footer {
   margin-top: var(--gtl-2);
