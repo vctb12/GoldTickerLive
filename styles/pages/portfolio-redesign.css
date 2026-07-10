@@ -1,0 +1,114 @@
+/* ============================================================================
+   Portfolio V2 — premium editorial layer
+   ----------------------------------------------------------------------------
+   Loaded AFTER portfolio.css so these win by source order. Uses shared
+   design-system tokens (tokens + opt-in .gtl-* only). Pure presentation over the
+   existing DOM. Light theme only — dark deferred with the rest of the site.
+   ========================================================================== */
+
+.portfolio-hero {
+  background:
+    radial-gradient(120% 90% at 50% -10%, var(--color-gold-tint) 0%, transparent 60%),
+    var(--color-bg);
+  border-bottom: 1px solid var(--color-gold-glow);
+}
+.portfolio-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+  font-size: clamp(1.9rem, 4.5vw, 2.9rem);
+  line-height: 1.05;
+}
+.portfolio-spot-badge {
+  border: 1px solid var(--color-gold-glow);
+  background: var(--color-surface);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Summary stat cards: the portfolio's headline numbers ─────────────────── */
+.portfolio-summary {
+  gap: 1rem;
+}
+.portfolio-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.portfolio-card:hover {
+  box-shadow: var(--shadow-md);
+}
+.portfolio-card-label {
+  color: var(--color-gold-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+.portfolio-card-value {
+  font-family: var(--gtl-num);
+  font-weight: 800;
+  color: var(--color-ink-data);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  line-height: 1.1;
+}
+.portfolio-card-hint {
+  color: var(--text-secondary, #55493a);
+}
+
+/* ── Section headings ─────────────────────────────────────────────────────── */
+.portfolio-holdings-title,
+.portfolio-holdings-heading,
+.portfolio-chart-heading,
+.portfolio-how-heading {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  color: var(--color-ink, #1a140a);
+}
+
+/* ── Holdings + chart surfaces ────────────────────────────────────────────── */
+.portfolio-holdings-section,
+.portfolio-chart-section {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ── Toolbar buttons + inputs → design-system feel ────────────────────────── */
+.portfolio-toolbar button {
+  border-radius: 999px;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease;
+}
+.portfolio-toolbar button:focus-visible,
+.portfolio-holdings-section :is(button, a, input, select):focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.portfolio-holdings-section input,
+.portfolio-holdings-section select {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-muted, #d9cdb2);
+}
+.portfolio-holdings-section input:focus-visible,
+.portfolio-holdings-section select:focus-visible {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+  outline: none;
+}
+
+@media (max-width: 640px) {
+  .portfolio-summary {
+    gap: 0.7rem;
+  }
+}
