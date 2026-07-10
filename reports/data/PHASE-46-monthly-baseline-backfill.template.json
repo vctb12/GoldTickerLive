@@ -1,0 +1,17 @@
+[
+  {
+    "date": "2025-09",
+    "price": null,
+    "note": "fill with the real monthly-average XAU/USD"
+  },
+  { "date": "2025-10", "price": null },
+  { "date": "2025-11", "price": null },
+  { "date": "2025-12", "price": null },
+  { "date": "2026-01", "price": null },
+  { "date": "2026-02", "price": null },
+  { "date": "2026-03", "price": null },
+  { "date": "2026-04", "price": null },
+  { "date": "2026-05", "price": null },
+  { "date": "2026-06", "price": null },
+  { "date": "2026-07", "price": null }
+]
