@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 14 branches, 17 commits, 14 PRs.
+**Work produced this run:** 16 branches, 19 commits, 16 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                              |
 | ---------------------------------------------- | --------------- | -------- | --------------------------------------------------------------- |
@@ -44,6 +44,8 @@ line-by-line. No fabricated PR links.
 | `cowork/dp9-theme-toggle-check`                | 1               | **#628** | DP-9 — theme-toggle correctness guard (50-Plan #29)             |
 | `cowork/dp10-offline-verify`                   | 1               | **#629** | DP-10 — offline/PWA fallback guard (SW active + offline.html)   |
 | `cowork/dp11-calculator-accuracy`              | 1               | **#630** | DP-11 — calculator AED-vs-formula accuracy (24K/22K, trust)     |
+| `cowork/dp12-portfolio-persistence`            | 1               | **#631** | DP-12 — portfolio add/persist/delete localStorage round-trip    |
+| `cowork/dp13-glossary-compare`                 | 1               | **#632** | DP-13 — glossary(52 EN/AR) + compare no-empty-render guards     |
 
 ---
 
@@ -284,11 +286,21 @@ resolved. Firefox/webkit run the same spec in CI.
   `xau/31.1035 * purity * 3.6725 * grams` for 24K + 22K, plus 22K = 24K×22/24. Computed from the
   page's own spot; 10 g/24K/AED → `4,867.82 د.إ` exact. Chromium 3/3.
 
+### DP-12 / DP-13 — DONE
+
+- **DP-12 → PR #631** `tests/e2e/portfolio-persistence.spec.js`: add a holding → renders + summary
+  revealed + stored (`gtl_portfolio_v1`) + survives reload; delete → storage cleared. Chromium 2/2.
+- **DP-13 → PR #632** `tests/e2e/glossary-compare.spec.js`: glossary ≥40 terms all named+defined in
+  EN+AR (52/52 both), compare renders rows+prices+add-control. Chromium 3/3. (Glossary is a static
+  list — no search UI, so guard checks substance/parity.)
+
 ### Next packets (still stabilize-first)
 
-1. **DP-12 — portfolio persistence browser check**: add/edit/delete a holding, assert totals + P/L
-   render and survive reload (localStorage). $0.
-2. **DP-13 — glossary/compare surface checks** (search filters, no empty render). $0.
+1. **DP-14 — heatmap + shops surface checks**: heatmap renders countries/legend; shops renders its
+   directory (cards + filters) — no-empty-render, $0. (Last two major unguarded surfaces.)
+2. **Stabilize-first program will then be essentially complete** — every core surface
+   browser-guarded. Remaining work is owner-gated or lower-value polish; recommend a checkpoint with
+   the owner.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
