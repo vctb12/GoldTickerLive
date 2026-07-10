@@ -103,7 +103,13 @@ export function createInitialState() {
 
   // Tracker-specific saved state
   const saved = readLocal(STORAGE_KEYS.core, {});
-  base.lang = saved.lang || readLanguagePref() || base.lang;
+  // An explicit ?lang= query wins over saved state — the site's Arabic hreflang and the in-page
+  // switcher (page-handoff / cross-page-links) link to tracker.html?lang=ar, so a first load from
+  // an Arabic page must render RTL/Arabic rather than fall back to a stale saved preference. (Hash
+  // state, when present, still overrides via parseHashState — a deep-link is the most explicit.)
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  const queryLang = urlLang === 'ar' || urlLang === 'en' ? urlLang : null;
+  base.lang = queryLang || saved.lang || readLanguagePref() || base.lang;
   base.mode = (VALID_MODES.has(saved.mode) ? saved.mode : null) || base.mode;
   base.workspaceLevel = saved.workspaceLevel === 'advanced' ? 'advanced' : base.workspaceLevel;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
