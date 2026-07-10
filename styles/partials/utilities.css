@@ -2722,7 +2722,10 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 
 .footer-col-note {
   max-width: 22ch;
-  color: rgb(255 255 255 / 45%);
+
+  /* Phase 46: theme-aware ink — the footer was re-skinned to a light surface, so the
+     dark-era hardcoded white went invisible in light mode. */
+  color: var(--color-text-muted);
   font-size: 0.74rem;
   line-height: var(--leading-normal);
 }
@@ -2734,7 +2737,9 @@ details.nav-drawer-group > summary.nav-drawer-group-label {
 }
 
 .footer-section-heading {
-  color: rgb(255 255 255 / 72%);
+  /* Phase 46: theme-aware ink so the column headings ("Price tools" / "Markets" /
+     "Learn & trust") are visible on the light-mode footer, not invisible white-on-white. */
+  color: var(--color-text-muted);
   font-size: 0.68rem;
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-wide);
