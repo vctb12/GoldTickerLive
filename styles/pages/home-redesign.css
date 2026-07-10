@@ -342,3 +342,117 @@
 .x-follow-banner {
   display: none;
 }
+
+/* ═══ Audience-routing band — "What brings you in today?" ═══════════════════ */
+.home-routing--gtl {
+  background: var(--color-surface-2);
+  border-top: 1px solid var(--gtl-line);
+  padding-block: var(--gtl-8);
+}
+.home-routing-inner {
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gtl-6);
+}
+.home-routing-lead {
+  font-family: var(--gtl-serif);
+  font-size: var(--gtl-display-2);
+  color: var(--gtl-ink);
+  margin: 0 0 var(--gtl-5);
+}
+.home-routing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gtl-4);
+}
+.route-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gtl-3);
+  background: var(--gtl-surface);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-lg);
+  padding: var(--gtl-5);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    border-color var(--gtl-t-base) var(--gtl-ease),
+    transform var(--gtl-t-base) var(--gtl-ease),
+    box-shadow var(--gtl-t-base) var(--gtl-ease);
+}
+.route-card:hover {
+  border-color: var(--gtl-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--gtl-shadow-2);
+}
+.route-card:focus-visible {
+  outline: 2px solid var(--gtl-gold);
+  outline-offset: 2px;
+}
+.route-card__ic {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--gtl-gold-soft);
+  color: var(--gtl-gold-deep);
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+.route-card__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--gtl-ink);
+}
+.route-card__body {
+  font-size: 0.95rem;
+  color: var(--gtl-ink-muted);
+  margin: 0;
+  flex: 1;
+  line-height: 1.55;
+}
+.route-card__value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding-top: var(--gtl-2);
+}
+.route-card__value-label {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.route-card__value-num {
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+  font-size: 1.05rem;
+}
+.route-card__value-unit {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+}
+.route-card__cta {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+}
+.route-card__cta::after {
+  content: ' →';
+}
+[dir='rtl'] .route-card__cta::after {
+  content: ' ←';
+}
+
+@media (max-width: 760px) {
+  .home-routing--gtl {
+    padding-block: var(--gtl-6);
+  }
+  .home-routing-inner {
+    padding-inline: var(--gtl-4);
+  }
+  .home-routing-grid {
+    grid-template-columns: 1fr;
+  }
+}

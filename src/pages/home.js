@@ -1053,6 +1053,18 @@ function applyLangToPage() {
   setTextById('hero-cta-shops', tx('heroCta4'));
   setTextById('hero-cta-alert', tx('heroCta5'));
   setTextById('hero-cta-methodology', tx('heroCtaMethodology'));
+  // Audience-routing band
+  setTextById('home-routing-lead', tx('routingLead'));
+  setTextById('route-buy-title', tx('routingBuyTitle'));
+  setTextById('route-buy-body', tx('routingBuyBody'));
+  setTextById('route-buy-value-label', tx('routingBuyValueLabel'));
+  setTextById('route-buy-cta', tx('routingBuyCta'));
+  setTextById('route-compare-title', tx('routingCompareTitle'));
+  setTextById('route-compare-body', tx('routingCompareBody'));
+  setTextById('route-compare-cta', tx('routingCompareCta'));
+  setTextById('route-track-title', tx('routingTrackTitle'));
+  setTextById('route-track-body', tx('routingTrackBody'));
+  setTextById('route-track-cta', tx('routingTrackCta'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
   setTextById('home-tools-kicker', tx('toolsKicker'));
@@ -1299,6 +1311,18 @@ function updateNavPricePill(snapshot) {
   }
 }
 
+/** Update the audience-routing "buy" card's 24K value from the canonical snapshot. */
+function updateRoutingCanonicalValue(snapshot) {
+  const num = document.querySelector('[data-route-24k]');
+  if (!num || !snapshot?.ok) return;
+  num.textContent = snapshot.aedPerGram24k.toLocaleString('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const wrap = document.getElementById('route-buy-value');
+  if (wrap) wrap.hidden = false;
+}
+
 /**
  * F-1 canonical price seed. Reads the single canonical snapshot (the same
  * committed `/data/gold_price.json` the calculator uses, via the spot-resolver)
@@ -1318,6 +1342,7 @@ async function seedCanonicalPrice() {
     goldIsFresh = snap.freshness.state === 'live';
     cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
     updateNavPricePill(snap);
+    updateRoutingCanonicalValue(snap);
     renderHeroCard();
     renderKaratStrip();
     renderGCCGrid();

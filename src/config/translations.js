@@ -797,6 +797,20 @@ export const TRANSLATIONS = {
     'home.heroCta4': 'Find Gold Shops',
     'home.heroCta5': 'Set Alert',
     'home.heroCtaMethodology': 'How prices work',
+    'home.routingLead': 'What brings you in today?',
+    'home.routingBuyTitle': "I'm buying jewellery",
+    'home.routingBuyBody':
+      'See what your karat is worth in metal — then what a shop really charges once making charges and VAT are added.',
+    'home.routingBuyValueLabel': '24K reference today',
+    'home.routingBuyCta': 'Calculate a piece',
+    'home.routingCompareTitle': "I'm comparing markets",
+    'home.routingCompareBody':
+      'Compare 24+ GCC & Arab countries side by side to see where gold is the best value today.',
+    'home.routingCompareCta': 'Compare countries',
+    'home.routingTrackTitle': "I'm tracking or investing",
+    'home.routingTrackBody':
+      "See the full price history, today's change, and set a price alert so you never miss a move.",
+    'home.routingTrackCta': 'Open the tracker',
     'home.heroTrustLine':
       'Spot-linked reference prices before retail premiums, making charges, and tax.',
     'home.heroTrustShort':
@@ -2221,6 +2235,20 @@ export const TRANSLATIONS = {
     'home.heroCta4': 'ابحث عن محلات الذهب',
     'home.heroCta5': 'اضبط تنبيهاً',
     'home.heroCtaMethodology': 'كيف نحسب الأسعار',
+    'home.routingLead': 'ما الذي جاء بك اليوم؟',
+    'home.routingBuyTitle': 'أشتري مجوهرات',
+    'home.routingBuyBody':
+      'اعرف قيمة عيارك كمعدن — ثم ما سيتقاضاه المحل فعلياً بعد أجور الصياغة وضريبة القيمة المضافة.',
+    'home.routingBuyValueLabel': 'السعر المرجعي لعيار 24 اليوم',
+    'home.routingBuyCta': 'احسب قطعة',
+    'home.routingCompareTitle': 'أقارن الأسواق',
+    'home.routingCompareBody':
+      'قارن أكثر من 24 دولة خليجية وعربية جنباً إلى جنب لتعرف أين الذهب أفضل قيمة اليوم.',
+    'home.routingCompareCta': 'قارن الدول',
+    'home.routingTrackTitle': 'أتابع أو أستثمر',
+    'home.routingTrackBody':
+      'شاهد سجل الأسعار الكامل وتغيّر اليوم، واضبط تنبيهاً حتى لا تفوتك أي حركة.',
+    'home.routingTrackCta': 'افتح المتتبع',
     'home.heroTrustLine':
       'أسعار مرجعية مرتبطة بالسعر الفوري قبل الهامش التجاري والمصنعية والضريبة.',
     'home.heroTrustShort': 'مرجع مرتبط بالسعر الفوري · قد تضيف المحلات المصنعية والضريبة والهامش',
