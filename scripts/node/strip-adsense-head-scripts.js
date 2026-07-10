@@ -20,7 +20,9 @@ function walk(dir, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (['node_modules', 'dist', '.git', 'playwright-report', 'test-results'].includes(entry.name)) {
+      if (
+        ['node_modules', 'dist', '.git', 'playwright-report', 'test-results'].includes(entry.name)
+      ) {
         continue;
       }
       walk(full, acc);

@@ -7,23 +7,23 @@
 
 ## F.1 Blockers only owner can clear
 
-| Blocker | Secret / action | Unblocks |
-| ------- | --------------- | -------- |
-| Live Stripe checkout | `STRIPE_*` keys + price IDs in GitHub Secrets / server env | G-04, WB-603 |
-| Alert email delivery | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ALERT_JOB_TOKEN` | G-05, WB-303 |
-| Supabase production | `SUPABASE_SERVICE_ROLE_KEY`, RLS policies applied | DB-backed features |
-| Gold provider switch | `GOLD_PROVIDER_ORDER` change **separate PR** after bakeoff | provider migrations |
-| Vendor program go-live | Product decision + Stripe connect (future) | WB-701+ |
+| Blocker                | Secret / action                                            | Unblocks            |
+| ---------------------- | ---------------------------------------------------------- | ------------------- |
+| Live Stripe checkout   | `STRIPE_*` keys + price IDs in GitHub Secrets / server env | G-04, WB-603        |
+| Alert email delivery   | `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ALERT_JOB_TOKEN`   | G-05, WB-303        |
+| Supabase production    | `SUPABASE_SERVICE_ROLE_KEY`, RLS policies applied          | DB-backed features  |
+| Gold provider switch   | `GOLD_PROVIDER_ORDER` change **separate PR** after bakeoff | provider migrations |
+| Vendor program go-live | Product decision + Stripe connect (future)                 | WB-701+             |
 
 ## F.2 GitHub Actions secrets (names only)
 
-| Secret | Workflow |
-| ------ | -------- |
-| `GOLDPRICEZ_API_KEY` | gold fetch, post |
+| Secret                                                                   | Workflow                                    |
+| ------------------------------------------------------------------------ | ------------------------------------------- |
+| `GOLDPRICEZ_API_KEY`                                                     | gold fetch, post                            |
 | `CONSUMER_KEY`, `CONSUMER_SECRET`, `ACCESS_TOKEN`, `ACCESS_TOKEN_SECRET` | X post (mapped to TWITTER_* env internally) |
-| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | sync, python |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID` | alerts |
-| `DISCORD_WEBHOOK_URL` | notifications |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`                              | sync, python                                |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHANNEL_ID`                              | alerts                                      |
+| `DISCORD_WEBHOOK_URL`                                                    | notifications                               |
 
 ## F.3 Local dev minimum
 
@@ -38,12 +38,12 @@ Vite dev (`npm run dev`) — no env required.
 
 ## F.4 Client vs server keys
 
-| Surface | Keys live in |
-| ------- | ------------ |
+| Surface                  | Keys live in                 |
+| ------------------------ | ---------------------------- |
 | GitHub Pages static site | No secrets in browser bundle |
-| Hourly gold fetch | GitHub Secrets → workflow |
-| Express optional API | Server env / Supabase |
-| Admin OAuth | Supabase + `ALLOWED_EMAIL` |
+| Hourly gold fetch        | GitHub Secrets → workflow    |
+| Express optional API     | Server env / Supabase        |
+| Admin OAuth              | Supabase + `ALLOWED_EMAIL`   |
 
 ## F.5 When agent hits “needs secret”
 

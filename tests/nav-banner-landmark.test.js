@@ -26,11 +26,17 @@ test('nav.js wraps the nav in a single <header role="banner"> landmark', () => {
   const src = read('src/components/nav.js');
 
   const headerOpen = src.indexOf('<header class="site-header" role="banner">');
-  assert.ok(headerOpen !== -1, 'expected <header class="site-header" role="banner"> in the nav template');
+  assert.ok(
+    headerOpen !== -1,
+    'expected <header class="site-header" role="banner"> in the nav template'
+  );
 
   const navOpen = src.indexOf('<nav class="site-nav', headerOpen);
   const headerClose = src.indexOf('</header>', headerOpen);
-  assert.ok(navOpen !== -1 && headerClose !== -1, 'expected a <nav class="site-nav"> and a </header>');
+  assert.ok(
+    navOpen !== -1 && headerClose !== -1,
+    'expected a <nav class="site-nav"> and a </header>'
+  );
   assert.ok(
     headerOpen < navOpen && navOpen < headerClose,
     'the <nav class="site-nav"> must be nested inside the <header role="banner"> landmark'
@@ -40,7 +46,11 @@ test('nav.js wraps the nav in a single <header role="banner"> landmark', () => {
   // risk). Match the full element so an inline code comment mentioning the role
   // does not inflate the count.
   const bannerCount = (src.match(/<header class="site-header" role="banner">/g) || []).length;
-  assert.equal(bannerCount, 1, 'expected exactly one <header role="banner"> element in the nav template');
+  assert.equal(
+    bannerCount,
+    1,
+    'expected exactly one <header role="banner"> element in the nav template'
+  );
 });
 
 test('.site-header is display:contents in both components.css and critical.css', () => {
@@ -65,8 +75,15 @@ test('nav skip-link text is sourced from NAV_DATA (no hard-coded inline string)'
   const url = new URL('file://' + path.join(ROOT, 'src', 'components', 'nav-data.js'));
   const { NAV_DATA } = await import(url.href);
   for (const lang of ['en', 'ar']) {
-    assert.equal(typeof NAV_DATA[lang].skipLink, 'string', `NAV_DATA.${lang}.skipLink must be a string`);
-    assert.ok(NAV_DATA[lang].skipLink.trim().length > 0, `NAV_DATA.${lang}.skipLink must be non-empty`);
+    assert.equal(
+      typeof NAV_DATA[lang].skipLink,
+      'string',
+      `NAV_DATA.${lang}.skipLink must be a string`
+    );
+    assert.ok(
+      NAV_DATA[lang].skipLink.trim().length > 0,
+      `NAV_DATA.${lang}.skipLink must be non-empty`
+    );
   }
   assert.equal(NAV_DATA.en.skipLink, 'Skip to main content');
 });

@@ -73,7 +73,11 @@ describe('billing-repository API key hashing', () => {
     assert.equal(stored.keyHash, expectedPbkdf2);
     assert.equal(stored.keyHash.length, 64);
     assert.notEqual(stored.keyHash, created.key, 'raw key must never be stored as the hash');
-    assert.notEqual(stored.keyHash, legacyPbkdf2, 'legacy non-sha512 PBKDF2 hashes must not be written');
+    assert.notEqual(
+      stored.keyHash,
+      legacyPbkdf2,
+      'legacy non-sha512 PBKDF2 hashes must not be written'
+    );
 
     const resolved = await repo.resolveApiKey(created.key);
     assert.deepEqual(resolved, {

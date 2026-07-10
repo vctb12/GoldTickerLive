@@ -8,19 +8,19 @@ All automation runs via GitHub Actions and requires only GitHub Secrets — no p
 
 Go to **Settings → Secrets and variables → Actions → New repository secret** for each:
 
-| Secret                      | Used by                 | How to get it                                        |
-| --------------------------- | ----------------------- | ---------------------------------------------------- |
-| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`  | Sign up at https://gold-api.com (primary provider)   |
-| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional — https://goldpricez.com                |
-| `CONSUMER_KEY`              | X/Twitter posts         | X Developer Portal: API Key (Consumer Key)           |
-| `CONSUMER_SECRET`           | X/Twitter posts         | X Developer Portal: API Key Secret                   |
-| `ACCESS_TOKEN`              | X/Twitter posts         | X Developer Portal: Access Token (read-write)        |
-| `ACCESS_TOKEN_SECRET`       | X/Twitter posts         | X Developer Portal: Access Token Secret              |
-| `SUPABASE_URL`              | Python poster, DB sync  | Supabase project → Settings → API → URL              |
-| `SUPABASE_SERVICE_ROLE_KEY` | Python poster, DB sync  | Supabase project → Settings → API → service_role key |
-| `TELEGRAM_BOT_TOKEN`        | Telegram posts & alerts | @BotFather on Telegram                               |
-| `TELEGRAM_CHANNEL_ID`       | Telegram posts & alerts | Channel username e.g. `@mygoldchannel` or numeric ID |
-| `DISCORD_WEBHOOK_URL`       | Discord posts & alerts  | Discord channel → Integrations → Webhooks            |
+| Secret                      | Used by                   | How to get it                                        |
+| --------------------------- | ------------------------- | ---------------------------------------------------- |
+| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Sign up at https://gold-api.com (primary provider)   |
+| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional — https://goldpricez.com                    |
+| `CONSUMER_KEY`              | X/Twitter posts           | X Developer Portal: API Key (Consumer Key)           |
+| `CONSUMER_SECRET`           | X/Twitter posts           | X Developer Portal: API Key Secret                   |
+| `ACCESS_TOKEN`              | X/Twitter posts           | X Developer Portal: Access Token (read-write)        |
+| `ACCESS_TOKEN_SECRET`       | X/Twitter posts           | X Developer Portal: Access Token Secret              |
+| `SUPABASE_URL`              | Python poster, DB sync    | Supabase project → Settings → API → URL              |
+| `SUPABASE_SERVICE_ROLE_KEY` | Python poster, DB sync    | Supabase project → Settings → API → service_role key |
+| `TELEGRAM_BOT_TOKEN`        | Telegram posts & alerts   | @BotFather on Telegram                               |
+| `TELEGRAM_CHANNEL_ID`       | Telegram posts & alerts   | Channel username e.g. `@mygoldchannel` or numeric ID |
+| `DISCORD_WEBHOOK_URL`       | Discord posts & alerts    | Discord channel → Integrations → Webhooks            |
 
 > **Note on Twitter secrets:** Workflows map these GitHub secrets to environment variables named
 > `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and `TWITTER_ACCESS_TOKEN_SECRET`

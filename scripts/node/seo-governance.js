@@ -170,10 +170,7 @@ function summarize(records) {
     .filter((r) => r.thinRisk)
     .map((r) => ({ path: r.path, words: r.wordCount }));
   const requiredNoindexMissing = records
-    .filter(
-      (r) =>
-        REQUIRED_NOINDEX_PATTERNS.some((pattern) => pattern.test(r.path)) && !r.noindex
-    )
+    .filter((r) => REQUIRED_NOINDEX_PATTERNS.some((pattern) => pattern.test(r.path)) && !r.noindex)
     .map((r) => r.path);
   const duplicateRisk = buildDuplicateRisk(records);
 

@@ -16,7 +16,8 @@ Each guide: **pre-flight → steps → acceptance → verify → PR template**.
 
 ### Steps
 
-1. **Inventory links** — grep `href=` from `home.js`, `tracker-pro.js`, `calculator.js`, `shops.js`, `nav-data.js`
+1. **Inventory links** — grep `href=` from `home.js`, `tracker-pro.js`, `calculator.js`, `shops.js`,
+   `nav-data.js`
 2. **Home → Tracker** — ensure hash carries karat/unit/currency (document format in PR)
 3. **Tracker → Calculator** — inline calc link + full page link
 4. **Calculator → Shops** — CTA with honest copy key in `translations.js` EN+AR
@@ -49,8 +50,10 @@ Hash contract changes break bookmarks — document in Risks
 
 ### Steps
 
-1. Confirm API: `GET /api/v1/me/export`, `DELETE /api/v1/me` behavior + tests in `tests/public-accounts-api.test.js`
-2. If UI missing: add Export + Delete buttons with confirm modal (not `window.confirm` on public pages — use pattern from developer or custom modal)
+1. Confirm API: `GET /api/v1/me/export`, `DELETE /api/v1/me` behavior + tests in
+   `tests/public-accounts-api.test.js`
+2. If UI missing: add Export + Delete buttons with confirm modal (not `window.confirm` on public
+   pages — use pattern from developer or custom modal)
 3. EN+AR strings: `dashboard.export*`, `dashboard.delete*`
 4. Delete: clear localStorage keys documented in PR
 5. Update `docs/PUBLIC_ACCOUNTS_AND_SAVED_TOOLS.md`
@@ -77,7 +80,8 @@ Hash contract changes break bookmarks — document in Risks
 ### Steps
 
 1. Write `docs/plans/YYYY-MM-DD_noindex-karat-stubs.md` (if not exists) with counts
-2. Add `<meta name="robots" content="noindex,follow">` to template or generator for per-karat city pages
+2. Add `<meta name="robots" content="noindex,follow">` to template or generator for per-karat city
+   pages
 3. Update sitemap generator to exclude noindex URLs
 4. Run `inventory-seo --check` and sitemap tests
 
@@ -179,15 +183,19 @@ Hash contract changes break bookmarks — document in Risks
 
 ```markdown
 ## What
+
 WB-___ : <title>
 
 ## Why
+
 <G-__ gap or scanner hit>
 
 ## How
+
 <files touched>
 
 ## Proof
+
 - [ ] npm test
 - [ ] npm run lint
 - [ ] npm run validate
@@ -195,5 +203,6 @@ WB-___ : <title>
 - [ ] Manual: <RTL 360 / device>
 
 ## Risks
+
 <rollback / SEO / cache>
 ```

@@ -102,7 +102,7 @@ mounts). The registry is the single source of truth for the tab bar and the mode
 | ----- | ----- | --------- | ---------- | ---------- | --------- | ------------------------------------------------- |
 | 1     | mode  | `live`    | 📡 Live    | مباشر      | basic     | Default. Shown in the basic workspace.            |
 | 2     | mode  | `compare` | 🌍 Compare | مقارنة     | basic     | Spot-linked reference. Shown in basic workspace.  |
-| 3     | mode  | `archive` | 🗂 Archive | الأرشيف    | advanced  | Hidden unless workspace is advanced.              |
+| 3     | mode  | `archive` | 🗂 Archive  | الأرشيف    | advanced  | Hidden unless workspace is advanced.              |
 | 4     | panel | `alerts`  | 🔔 Alerts  | تنبيهات    | basic     | Modal overlay, not a mode; keyboard shortcut `a`. |
 | 5     | panel | `planner` | 📋 Planner | المخطط     | basic     | Modal overlay, not a mode; keyboard shortcut `p`. |
 | 6     | mode  | `exports` | ⬇ Exports  | تصدير      | advanced  | CSV / JSON / brief.                               |

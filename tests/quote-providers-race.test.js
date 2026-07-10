@@ -56,8 +56,18 @@ test('ParallelQuoteRaceProvider fails when every racer fails within budget', asy
 
   const race = new ParallelQuoteRaceProvider({
     providers: [
-      { providerId: 'a', fetchQuote: async () => { throw new Error('a down'); } },
-      { providerId: 'b', fetchQuote: async () => { throw new Error('b down'); } },
+      {
+        providerId: 'a',
+        fetchQuote: async () => {
+          throw new Error('a down');
+        },
+      },
+      {
+        providerId: 'b',
+        fetchQuote: async () => {
+          throw new Error('b down');
+        },
+      },
     ],
     raceTimeoutMs: 100,
     masterTimeoutMs: 200,

@@ -1,7 +1,7 @@
 # Gold Ticker Live — Cursor Automation Policy
 
-> Stable definition of “good” for all Cursor Automations on `vctb12/GoldTickerLive`.
-> Read this before creating or tuning any automation. Canonical charter: [`AGENTS.md`](../AGENTS.md).
+> Stable definition of “good” for all Cursor Automations on `vctb12/GoldTickerLive`. Read this
+> before creating or tuning any automation. Canonical charter: [`AGENTS.md`](../AGENTS.md).
 
 ---
 
@@ -22,16 +22,16 @@
 
 ## Repo anchors (read when relevant)
 
-| Area | Canonical file |
-| ---- | -------------- |
-| Charter | `AGENTS.md` |
-| Pricing formulas | `src/config/constants.js`, `src/config/karats.js` |
-| User-visible strings | `src/config/translations.js` |
-| Pricing rules | `.github/instructions/gold-pricing.instructions.md` |
-| SEO rules | `.github/instructions/seo.instructions.md` |
-| Automation governance | `.cursor/rules/automation-governance.mdc` |
-| Cursor Automations setup | `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` |
-| GitHub Actions (not Cursor) | `docs/AUTOMATIONS.md` |
+| Area                        | Canonical file                                      |
+| --------------------------- | --------------------------------------------------- |
+| Charter                     | `AGENTS.md`                                         |
+| Pricing formulas            | `src/config/constants.js`, `src/config/karats.js`   |
+| User-visible strings        | `src/config/translations.js`                        |
+| Pricing rules               | `.github/instructions/gold-pricing.instructions.md` |
+| SEO rules                   | `.github/instructions/seo.instructions.md`          |
+| Automation governance       | `.cursor/rules/automation-governance.mdc`           |
+| Cursor Automations setup    | `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`               |
+| GitHub Actions (not Cursor) | `docs/AUTOMATIONS.md`                               |
 
 ---
 
@@ -51,13 +51,13 @@ Automations may **flag** changes to these files; they must not silently approve 
 
 ## Automation roles
 
-| Type | Automations | Default mode |
-| ---- | ----------- | ------------ |
-| **Review** | Gold Integrity, Bilingual Consistency, SERP Structure | Advisory on PR open/update |
-| **Growth** | SEO Expansion, Gold Market Insight Writer | Proposal/draft only on schedule |
+| Type       | Automations                                           | Default mode                    |
+| ---------- | ----------------------------------------------------- | ------------------------------- |
+| **Review** | Gold Integrity, Bilingual Consistency, SERP Structure | Advisory on PR open/update      |
+| **Growth** | SEO Expansion, Gold Market Insight Writer             | Proposal/draft only on schedule |
 
-Review agents must know when to say **APPROVE**, **PASS**, or **HEALTHY** with no findings.
-Growth agents must know when to say **no worthwhile ideas** or **DO NOT PUBLISH**.
+Review agents must know when to say **APPROVE**, **PASS**, or **HEALTHY** with no findings. Growth
+agents must know when to say **no worthwhile ideas** or **DO NOT PUBLISH**.
 
 ---
 

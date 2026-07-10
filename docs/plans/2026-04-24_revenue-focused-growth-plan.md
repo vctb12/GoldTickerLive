@@ -312,7 +312,8 @@ Content: 1500-2500 words
 - Watchlist feature (logged-in users)
 - Email list: 500-1000 subscribers
 
-**Time Investment:** 20 hours **Cost:** $0 (using existing infrastructure) **Expected Traffic:** 70K
+**Time Investment:** 20 hours **Cost:**
+$0 (using existing infrastructure) **Expected Traffic:** 70K
 → 90K/mo (+28%) **Expected Revenue:** $80-180/mo
 
 ---
@@ -359,7 +360,8 @@ Content: 1500-2500 words
 - 100K+ monthly visitors
 - $100-200/mo revenue
 
-**Time Investment:** 20 hours **Cost:** $0-20/mo (may need Cloudflare Pro for advanced features)
+**Time Investment:** 20 hours **Cost:**
+$0-20/mo (may need Cloudflare Pro for advanced features)
 **Expected Traffic:** 90K → 110K+/mo **Expected Revenue:** $100-250/mo
 
 ---
@@ -639,8 +641,10 @@ Settings
 
 ---
 
-**Plan Status:** ✅ Ready for approval and implementation **Estimated ROI:** $100-250/mo revenue @
-$0-20/mo cost = 5-12x return **Next Action:** Approve plan → Start Month 1, Week 1 (JSON-LD schema)
+**Plan Status:** ✅ Ready for approval and implementation **Estimated ROI:**
+$100-250/mo revenue @
+$0-20/mo cost = 5-12x return **Next Action:** Approve plan → Start Month 1,
+Week 1 (JSON-LD schema)
 
 ---
 

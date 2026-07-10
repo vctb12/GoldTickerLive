@@ -74,14 +74,14 @@ In your repository on GitHub:
 1. Go to **Settings → Secrets and variables → Actions**.
 2. Add each of the following secrets:
 
-| Secret name           | Value                        |
-| --------------------- | ---------------------------- |
+| Secret name           | Value                              |
+| --------------------- | ---------------------------------- |
 | `GOLD_API_COM_KEY`    | gold-api.com API key (price fetch) |
-| `GOLDPRICEZ_API_KEY`  | Optional legacy adapter key  |
-| `CONSUMER_KEY`        | X App API Key (Consumer Key) |
-| `CONSUMER_SECRET`     | X App API Key Secret         |
-| `ACCESS_TOKEN`        | X Access Token (read-write)  |
-| `ACCESS_TOKEN_SECRET` | X Access Token Secret        |
+| `GOLDPRICEZ_API_KEY`  | Optional legacy adapter key        |
+| `CONSUMER_KEY`        | X App API Key (Consumer Key)       |
+| `CONSUMER_SECRET`     | X App API Key Secret               |
+| `ACCESS_TOKEN`        | X Access Token (read-write)        |
+| `ACCESS_TOKEN_SECRET` | X Access Token Secret              |
 
 > **Note:** The workflow YAML files map these GitHub secrets to environment variables named
 > `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, and

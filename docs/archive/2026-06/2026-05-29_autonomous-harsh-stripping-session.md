@@ -17,47 +17,47 @@ skills_used: [gold-ticker-live-audit, pricing-data-integrity, seo-governance]
 
 ## Internal execution prompt (agent)
 
-Strip duplicate country/city SEO surfaces (~345 HTML files), consolidate city commercial
-URLs on **`/countries/{country}/{city}/gold-rate/`** with live `page-hydrator.js` pricing,
-301 legacy paths (`gold-prices`, per-karat slugs), noindex off-strategy root pages, remove verified
-dead exports, and record every change in `REVAMP_PLAN.md` + this file. Pricing formula, AED peg,
-freshness labels, and canonical host stay untouched.
+Strip duplicate country/city SEO surfaces (~345 HTML files), consolidate city commercial URLs on
+**`/countries/{country}/{city}/gold-rate/`** with live `page-hydrator.js` pricing, 301 legacy paths
+(`gold-prices`, per-karat slugs), noindex off-strategy root pages, remove verified dead exports, and
+record every change in `REVAMP_PLAN.md` + this file. Pricing formula, AED peg, freshness labels, and
+canonical host stay untouched.
 
 ## Baseline (pre-change)
 
-| Gate            | Result        |
-| --------------- | ------------- |
-| `npm run lint`  | PASS          |
-| `npm test`      | 933/935 pass (2 flaky cache/provider tests) |
-| `npm run validate` | PASS (with stale report warnings) |
+| Gate               | Result                                      |
+| ------------------ | ------------------------------------------- |
+| `npm run lint`     | PASS                                        |
+| `npm test`         | 933/935 pass (2 flaky cache/provider tests) |
+| `npm run validate` | PASS (with stale report warnings)           |
 
 ## Scope — this session
 
 ### Phase A — Country page consolidation (game changer)
 
-| Action | Count | Rationale |
-| ------ | ----- | --------- |
-| Delete per-karat city pages | ~276 | Templated dupes; karat grid lives on city `gold-rate` hub |
-| Delete `gold-prices/` city pages | ~69 | Duplicate of `gold-rate`; 301 redirect |
-| Regenerate `gold-rate/index.html` | ~69 | Functional hydrated pages, **indexable** (remove erroneous `noindex`) |
-| Wildcard `_redirects` | 3 rules | `gold-prices` + `*-karat` → `gold-rate` |
+| Action                            | Count   | Rationale                                                             |
+| --------------------------------- | ------- | --------------------------------------------------------------------- |
+| Delete per-karat city pages       | ~276    | Templated dupes; karat grid lives on city `gold-rate` hub             |
+| Delete `gold-prices/` city pages  | ~69     | Duplicate of `gold-rate`; 301 redirect                                |
+| Regenerate `gold-rate/index.html` | ~69     | Functional hydrated pages, **indexable** (remove erroneous `noindex`) |
+| Wildcard `_redirects`             | 3 rules | `gold-prices` + `*-karat` → `gold-rate`                               |
 
 ### Phase B — Root / content slimming
 
-| Action | Notes |
-| ------ | ----- |
-| `invest.html` | `noindex,follow` + shell extraction to `src/pages/invest.js` |
-| Off-strategy tools/guides | `noindex` on `investment-return`, `invest-in-gold-gcc` |
-| Nav/search links | Point city URLs at `gold-rate` not `gold-prices` |
+| Action                    | Notes                                                        |
+| ------------------------- | ------------------------------------------------------------ |
+| `invest.html`             | `noindex,follow` + shell extraction to `src/pages/invest.js` |
+| Off-strategy tools/guides | `noindex` on `investment-return`, `invest-in-gold-gcc`       |
+| Nav/search links          | Point city URLs at `gold-rate` not `gold-prices`             |
 
 ### Phase C — Code hygiene
 
-| Action | Notes |
-| ------ | ----- |
-| `build/generatePages.js` | Stop generating karat subpages + `gold-prices`; emit `gold-rate` only |
-| `scripts/node/consolidate-country-pages.js` | Repeatable maintainer script |
-| Unused named exports | Trim per `2026-05-29_harsh-cleanup` follow-up list |
-| `enrich-placeholder-pages.js` | Stop advertising removed URL shapes |
+| Action                                      | Notes                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------- |
+| `build/generatePages.js`                    | Stop generating karat subpages + `gold-prices`; emit `gold-rate` only |
+| `scripts/node/consolidate-country-pages.js` | Repeatable maintainer script                                          |
+| Unused named exports                        | Trim per `2026-05-29_harsh-cleanup` follow-up list                    |
+| `enrich-placeholder-pages.js`               | Stop advertising removed URL shapes                                   |
 
 ### Carve-outs (never touch)
 

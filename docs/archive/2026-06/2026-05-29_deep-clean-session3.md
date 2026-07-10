@@ -11,23 +11,27 @@ branch: cursor/deep-clean-session3-d417
 
 ### learn.html vs insights.html — **keep both, differentiate**
 
-| Surface | Role | Primary content |
-| ------- | ---- | --------------- |
-| `learn.html` | Evergreen **education hub** | Learn-hub article registry (karats, pricing, Zakat, methodology topics) |
-| `insights.html` | **Market intelligence** | Live mini price bar, featured analysis, guide grid for GCC buyers |
+| Surface         | Role                        | Primary content                                                         |
+| --------------- | --------------------------- | ----------------------------------------------------------------------- |
+| `learn.html`    | Evergreen **education hub** | Learn-hub article registry (karats, pricing, Zakat, methodology topics) |
+| `insights.html` | **Market intelligence**     | Live mini price bar, featured analysis, guide grid for GCC buyers       |
 
-No merge: URLs are indexed, nav already routes Markets → Insights and Tools → Learn. Merging would lose a clean sitemap slot and blur product-trust boundaries (education vs market context).
+No merge: URLs are indexed, nav already routes Markets → Insights and Tools → Learn. Merging would
+lose a clean sitemap slot and blur product-trust boundaries (education vs market context).
 
-Actions taken: tightened meta descriptions, nav labels (`Learn hub` / `Market insights`), cross-link copy on learn related-tools row.
+Actions taken: tightened meta descriptions, nav labels (`Learn hub` / `Market insights`), cross-link
+copy on learn related-tools row.
 
 ### Service worker precache
 
-All `PRECACHE_URLS` in `sw.js` resolve at repo root (`/`, `tracker.html`, … `404.html`). No stale deleted paths in the v16 list.
+All `PRECACHE_URLS` in `sw.js` resolve at repo root (`/`, `tracker.html`, … `404.html`). No stale
+deleted paths in the v16 list.
 
 ## Shipped
 
 - [x] Fix 22 broken internal links (`/content/22k-gold-price-guide/` → `/learn.html#karats`)
-- [x] Migrate `src/pages/invest.js` — 11 `innerHTML` sinks → `safe-dom` `el()` / `clear()`; baseline 11 → 0
+- [x] Migrate `src/pages/invest.js` — 11 `innerHTML` sinks → `safe-dom` `el()` / `clear()`; baseline
+      11 → 0
 - [x] Add `cache.getPreference()` (pair to `savePreference`) — fixes `learn.js` runtime on load
 - [x] Differentiate learn vs insights SEO/nav copy (EN; AR nav learn label)
 - [x] Regenerate `reports/seo/inventory.json`, `reports/seo/governance.json`

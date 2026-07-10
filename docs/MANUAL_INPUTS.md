@@ -7,8 +7,7 @@ where to get it, which file to edit, and what breaks without it.
 
 ## 1. GOLD_API_COM_KEY — REQUIRED for live price fetch (~5 min)
 
-- **What:** API key for the primary gold spot provider (`gold_api_com`) in
-  `gold-price-fetch.yml`.
+- **What:** API key for the primary gold spot provider (`gold_api_com`) in `gold-price-fetch.yml`.
 - **Where to get it:** Sign up at https://gold-api.com and copy your API key from the dashboard.
 - **Where to set it:** GitHub repository secret: Settings → Secrets → Actions → `GOLD_API_COM_KEY`.
 - **What breaks without it:** The hourly price-fetch workflow cannot refresh `data/gold_price.json`;

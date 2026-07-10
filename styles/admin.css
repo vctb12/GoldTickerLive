@@ -29,7 +29,7 @@
   --danger: #ef4444;
   --danger-glow: rgb(239, 68, 68, 0.2);
   --info: #6366f1;
-    --purple: #a78bfa; /* badge-shipped / badge-search accent — was duplicated raw hex */
+  --purple: #a78bfa; /* badge-shipped / badge-search accent — was duplicated raw hex */
   --sidebar-w: 248px;
   --header-h: 60px;
   --radius: 10px;

@@ -18,7 +18,8 @@ function walk(dir, acc = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full, acc);
-    else if (entry.name === 'index.html' && full.includes(`${path.sep}gold-rate${path.sep}`)) acc.push(full);
+    else if (entry.name === 'index.html' && full.includes(`${path.sep}gold-rate${path.sep}`))
+      acc.push(full);
   }
   return acc;
 }
@@ -33,7 +34,8 @@ function ensureClass(openTag, className) {
 
 function anchorClass(attrs, href) {
   if (href.includes('gold-shops')) return 'cgr-chip cgr-chip--gold';
-  if (attrs.includes('#fde68a') && /font-weight:\s*500/.test(attrs)) return 'cgr-chip cgr-chip--accent';
+  if (attrs.includes('#fde68a') && /font-weight:\s*500/.test(attrs))
+    return 'cgr-chip cgr-chip--accent';
   return 'cgr-chip';
 }
 
@@ -100,11 +102,13 @@ function migrateHtml(html) {
   );
   next = next.replace(
     /<section class="cgr-resources">([\s\S]*?)<\/section>/i,
-    (_, body) => `<section class="cgr-resources">${body.replace(/cgr-link-row/g, 'cgr-resources__links')}</section>`
+    (_, body) =>
+      `<section class="cgr-resources">${body.replace(/cgr-link-row/g, 'cgr-resources__links')}</section>`
   );
   next = next.replace(
     /<section class="cgr-related">([\s\S]*?)<\/section>/i,
-    (_, body) => `<section class="cgr-related">${body.replace(/cgr-link-row/g, 'cgr-related__links')}</section>`
+    (_, body) =>
+      `<section class="cgr-related">${body.replace(/cgr-link-row/g, 'cgr-related__links')}</section>`
   );
 
   next = migrateAnchors(next);

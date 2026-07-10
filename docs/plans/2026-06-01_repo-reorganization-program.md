@@ -21,7 +21,8 @@ guardrails_reviewed: true
 
 ## Rules (all sessions)
 
-- No direct commits to `main`. Branch: `cursor/wb-<WB-ID>-<slug>-cb21` for workbook sessions; otherwise `cursor/repo-<slug>-cb21`.
+- No direct commits to `main`. Branch: `cursor/wb-<WB-ID>-<slug>-cb21` for workbook sessions;
+  otherwise `cursor/repo-<slug>-cb21`.
 - Every URL change needs `_redirects` + sitemap regen + `npm run validate`.
 - Do not move `post_gold.yml`, `gold-price-fetch.yml`, `data/gold_price.json`, `sw.js`,
   `src/config/constants.js` paths without owner approval.
@@ -32,18 +33,18 @@ guardrails_reviewed: true
 
 ## Session map
 
-| ID | Focus | Risk | Depends on |
-| -- | ----- | ---- | ------------ |
-| **C1a** | Docs archive + supersession index only | ✅ done | — |
-| **C1b** | CSS: ensure partials import graph documented; no moves | 🟢 | Session 5 CSS split on main |
-| **C1c** | Move `styles/pages/*` co-location **or** document why not | 🟡 | Owner |
-| **C1d** | `assets/` consolidation (favicons, og-image) | 🟡 | Link audit |
-| **C1e** | Root HTML → `pages/` **pilot** (404 + offline only) | 🟡 | Redirects |
-| **C1f** | Root HTML bulk move (remaining entry pages) | 🔴 | C1e green + owner |
-| **C2a** | Country canonical 301 audit (generator-only) | 🟡 | — |
-| **C2b** | City gold-rate static price snapshot | 🟡 | C2a |
-| **C3a** | Wire `check-sw-precache` + content audit in CI | 🟢 | — |
-| **C3b** | `docs/plans/` archive completed proposals to `docs/archive/YYYY-MM/` | 🟢 | C1a index |
+| ID      | Focus                                                                | Risk    | Depends on                  |
+| ------- | -------------------------------------------------------------------- | ------- | --------------------------- |
+| **C1a** | Docs archive + supersession index only                               | ✅ done | —                           |
+| **C1b** | CSS: ensure partials import graph documented; no moves               | 🟢      | Session 5 CSS split on main |
+| **C1c** | Move `styles/pages/*` co-location **or** document why not            | 🟡      | Owner                       |
+| **C1d** | `assets/` consolidation (favicons, og-image)                         | 🟡      | Link audit                  |
+| **C1e** | Root HTML → `pages/` **pilot** (404 + offline only)                  | 🟡      | Redirects                   |
+| **C1f** | Root HTML bulk move (remaining entry pages)                          | 🔴      | C1e green + owner           |
+| **C2a** | Country canonical 301 audit (generator-only)                         | 🟡      | —                           |
+| **C2b** | City gold-rate static price snapshot                                 | 🟡      | C2a                         |
+| **C3a** | Wire `check-sw-precache` + content audit in CI                       | 🟢      | —                           |
+| **C3b** | `docs/plans/` archive completed proposals to `docs/archive/YYYY-MM/` | 🟢      | C1a index                   |
 
 **Do not run C1f** in the same PR as UI polish.
 
@@ -55,7 +56,8 @@ guardrails_reviewed: true
 
 **Done:**
 
-1. Updated [`ARCHIVE_AND_SUPERSESSION_INDEX.md`](./ARCHIVE_AND_SUPERSESSION_INDEX.md) (landed 2026-05-30 rows, C3b policy, audit registries).
+1. Updated [`ARCHIVE_AND_SUPERSESSION_INDEX.md`](./ARCHIVE_AND_SUPERSESSION_INDEX.md) (landed
+   2026-05-30 rows, C3b policy, audit registries).
 2. **Status-only** for landed plans — no physical moves (links remain in `docs/plans/` until C3b).
 3. Governing-constraint sections in proposals already point to `AGENTS.md` (no long duplicates).
 4. [`docs/README.md`](../README.md) already lists master operations hub + supersession index.
@@ -91,11 +93,11 @@ Target structure documented in
 
 ## Reconciliation
 
-| Doc | Relationship |
-| --- | ------------ |
-| `REPO_CLEANUP_PROPOSAL.md` | Deletion/hygiene; C1 does not delete without CANDIDATES sign-off |
-| `2026-05-21_next-session-prompts.md` | Shell parity; after C1a |
-| `PLATFORM_UPGRADE_PROPOSAL.md` | Historical; do not execute wholesale |
+| Doc                                  | Relationship                                                     |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| `REPO_CLEANUP_PROPOSAL.md`           | Deletion/hygiene; C1 does not delete without CANDIDATES sign-off |
+| `2026-05-21_next-session-prompts.md` | Shell parity; after C1a                                          |
+| `PLATFORM_UPGRADE_PROPOSAL.md`       | Historical; do not execute wholesale                             |
 
 ---
 
@@ -104,9 +106,11 @@ Target structure documented in
 ```md
 Execute **repo reorganization session C1a only** (docs archive + supersession index).
 
-Read: AGENTS.md, docs/plans/2026-06-01_repo-reorganization-program.md, docs/plans/ARCHIVE_AND_SUPERSESSION_INDEX.md.
+Read: AGENTS.md, docs/plans/2026-06-01_repo-reorganization-program.md,
+docs/plans/ARCHIVE_AND_SUPERSESSION_INDEX.md.
 
-Do not move HTML or change URLs this session. Update indices and stale statuses; archive only files listed in the program as safe. One PR.
+Do not move HTML or change URLs this session. Update indices and stale statuses; archive only files
+listed in the program as safe. One PR.
 
 Verify: grep for broken markdown links; update PLAN.md.
 ```

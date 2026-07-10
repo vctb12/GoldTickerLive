@@ -53,15 +53,24 @@ The fix is twofold:
 `tweet_guard.decide()` evaluates these in order and returns the first match. `should_post=False`
 means the bot exits 0 with a `skip_reason`.
 
-| #   | Skip reason                    | Trigger                                                                                                                                                                                                                   |
-| --- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------------------------- | -------- | ------------------------------------------------------------------------ |
-| 1   | `stale_quote`                  | `is_fresh=false` and `ALLOW_STALE_TWEET≠true`. Fresh = `freshness_seconds ≤ MAX_GOLD_FRESHNESS_SECONDS`. Closed-market reference posts are explicitly labeled and pass `is_fresh=true` only in their narrow allowed case. |
-| 2   | `cooldown_active`              | Last successful tweet was less than `MIN_TWEET_INTERVAL_MINUTES` ago (default 55) and `FORCE_POST≠true`.                                                                                                                  |
-| 3   | `provider_sample_unchanged`    | Provider price **and** provider timestamp both match the last successful post. Always skipped.                                                                                                                            |
-| 4   | `provider_timestamp_unchanged` | Provider timestamp equals the last successful post's, and `FORCE_SUMMARY_AFTER_MINUTES` hasn't elapsed.                                                                                                                   |
-| 5   | `duplicate_text_hash`          | SHA-256 of generated tweet text equals the last posted hash. Always skipped — X would reject anyway.                                                                                                                      |
-| 6   | `fallback_no_change`           | `is_fallback=true` (or `source_type` is `cache_last_known` / `spot_delayed`) AND price equals last price.                                                                                                                 |
-| 7   | `price_move_below_threshold`   | `                                                                                                                                                                                                                         | move_usd | < MIN_TWEET_MOVE_USD`AND` | move_pct | < MIN_TWEET_MOVE_PCT`, and `FORCE_SUMMARY_AFTER_MINUTES` hasn't elapsed. |
+| # | Skip reason | Trigger | | --- | ------------------------------ |
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+| -------- | ------------------------- | -------- |
+------------------------------------------------------------------------ | | 1 | `stale_quote` |
+`is_fresh=false` and `ALLOW_STALE_TWEET≠true`. Fresh =
+`freshness_seconds ≤ MAX_GOLD_FRESHNESS_SECONDS`. Closed-market reference posts are explicitly
+labeled and pass `is_fresh=true` only in their narrow allowed case. | | 2 | `cooldown_active` | Last
+successful tweet was less than `MIN_TWEET_INTERVAL_MINUTES` ago (default 55) and `FORCE_POST≠true`.
+| | 3 | `provider_sample_unchanged` | Provider price **and** provider timestamp both match the last
+successful post. Always skipped. | | 4 | `provider_timestamp_unchanged` | Provider timestamp equals
+the last successful post's, and `FORCE_SUMMARY_AFTER_MINUTES` hasn't elapsed. | | 5 |
+`duplicate_text_hash` | SHA-256 of generated tweet text equals the last posted hash. Always skipped
+— X would reject anyway. | | 6 | `fallback_no_change` | `is_fallback=true` (or `source_type` is
+`cache_last_known` / `spot_delayed`) AND price equals last price. | | 7 |
+`price_move_below_threshold` |
+`                                                                                                                                                                                                                         | move_usd | < MIN_TWEET_MOVE_USD`AND` | move_pct | < MIN_TWEET_MOVE_PCT`,
+and `FORCE_SUMMARY_AFTER_MINUTES` hasn't elapsed. |
 
 Before those seven rules, `post_gold_price.py` also applies a narrow Shortcut anti-spam pre-check:
 when `source=shortcut`, it records the latest Shortcut-triggered attempt and exits early if the

@@ -25,9 +25,6 @@ test('home tools section exposes quick actions rail', () => {
 });
 
 test('home hero freshness uses skeleton strip until hydrated', () => {
-  assert.match(
-    HTML,
-    /id="hlc-updated"[\s\S]*shell-skeleton-freshness-strip/
-  );
+  assert.match(HTML, /id="hlc-updated"[\s\S]*shell-skeleton-freshness-strip/);
   assert.doesNotMatch(HTML, /id="hlc-updated"[^>]*>Loading/);
 });

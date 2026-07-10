@@ -1,26 +1,29 @@
 # Cursor Automations Playbook — Gold Ticker Live
 
-> Ready-to-use implementation guide for five Cursor Automations on `vctb12/GoldTickerLive`.
-> GitHub Actions automation (price fetch, X-post, deploy) lives in [`AUTOMATIONS.md`](./AUTOMATIONS.md) —
+> Ready-to-use implementation guide for five Cursor Automations on `vctb12/GoldTickerLive`. GitHub
+> Actions automation (price fetch, X-post, deploy) lives in [`AUTOMATIONS.md`](./AUTOMATIONS.md) —
 > this document is **Cursor Cloud Automations** only.
 
 **Policy (read first):** [`.cursor/automation-policy.md`](../.cursor/automation-policy.md)  
-**Your live config:** [`CURSOR_AUTOMATIONS_REGISTRY.md`](./CURSOR_AUTOMATIONS_REGISTRY.md) — update after creating automations in Cursor  
-**Master program:** [`MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md) — all phases + future prompts  
+**Your live config:** [`CURSOR_AUTOMATIONS_REGISTRY.md`](./CURSOR_AUTOMATIONS_REGISTRY.md) — update
+after creating automations in Cursor  
+**Master program:** [`MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md) — all
+phases + future prompts  
 **Charter:** [`AGENTS.md`](../AGENTS.md)  
-**Prompt files (copy-paste):** [`.github/prompts/cursor-automations/README.md`](../.github/prompts/cursor-automations/README.md)
+**Prompt files (copy-paste):**
+[`.github/prompts/cursor-automations/README.md`](../.github/prompts/cursor-automations/README.md)
 
 ---
 
 ## Overview
 
-| # | Automation | Type | First trigger | Tools |
-| - | ---------- | ---- | ------------- | ----- |
-| 1 | Gold Integrity Agent | Review | GitHub PR opened / updated | GitHub, Slack, Memories |
-| 2 | Bilingual Consistency Agent | Review | GitHub PR opened / updated | GitHub, Memories |
-| 3 | SERP Structure Agent | Review | GitHub PR opened / updated | GitHub, Memories |
-| 4 | SEO Expansion Agent | Growth | Weekly schedule | GitHub, Memories |
-| 5 | Gold Market Insight Writer | Growth | Daily schedule (UAE morning) | GitHub, Memories |
+| #   | Automation                  | Type   | First trigger                | Tools                   |
+| --- | --------------------------- | ------ | ---------------------------- | ----------------------- |
+| 1   | Gold Integrity Agent        | Review | GitHub PR opened / updated   | GitHub, Slack, Memories |
+| 2   | Bilingual Consistency Agent | Review | GitHub PR opened / updated   | GitHub, Memories        |
+| 3   | SERP Structure Agent        | Review | GitHub PR opened / updated   | GitHub, Memories        |
+| 4   | SEO Expansion Agent         | Growth | Weekly schedule              | GitHub, Memories        |
+| 5   | Gold Market Insight Writer  | Growth | Daily schedule (UAE morning) | GitHub, Memories        |
 
 **Build order:** 1 → 2 → 3 → 4 → 5. Launch review agents before growth agents.
 
@@ -37,24 +40,24 @@ repo. Pin it mentally (or in Cursor project context) before pasting prompts.
 
 ### 2. General setup (same for all five)
 
-| Step | Action |
-| ---- | ------ |
-| 1 | Open [Cursor Automations](https://cursor.com/automations) → **New Automation** |
-| 2 | Name = single job only (see each section below) |
-| 3 | **One trigger** on day one (add a second trigger only after first run is clean) |
-| 4 | Enable **Memories** on every automation |
-| 5 | Add **GitHub** for all five; **Slack** only where noted |
-| 6 | Paste the **Agent Instructions** from the prompt file linked in each section |
-| 7 | Test on narrow scope (one PR or one manual schedule run) |
-| 8 | Tune prompt if too noisy or too quiet |
+| Step | Action                                                                          |
+| ---- | ------------------------------------------------------------------------------- |
+| 1    | Open [Cursor Automations](https://cursor.com/automations) → **New Automation**  |
+| 2    | Name = single job only (see each section below)                                 |
+| 3    | **One trigger** on day one (add a second trigger only after first run is clean) |
+| 4    | Enable **Memories** on every automation                                         |
+| 5    | Add **GitHub** for all five; **Slack** only where noted                         |
+| 6    | Paste the **Agent Instructions** from the prompt file linked in each section    |
+| 7    | Test on narrow scope (one PR or one manual schedule run)                        |
+| 8    | Tune prompt if too noisy or too quiet                                           |
 
 ### 3. Review vs growth split
 
 | Review agents (strict, corrective) | Growth agents (exploratory, disciplined) |
 | ---------------------------------- | ---------------------------------------- |
-| Gold Integrity | SEO Expansion |
-| Bilingual Consistency | Gold Market Insight Writer |
-| SERP Structure | |
+| Gold Integrity                     | SEO Expansion                            |
+| Bilingual Consistency              | Gold Market Insight Writer               |
+| SERP Structure                     |                                          |
 
 Review agents: GitHub PR triggers. Growth agents: schedule triggers, proposal/draft only at launch.
 
@@ -62,12 +65,12 @@ Review agents: GitHub PR triggers. Growth agents: schedule triggers, proposal/dr
 
 ## Launch plan
 
-| Phase | Automations | Mode |
-| ----- | ----------- | ---- |
-| **1** | Gold Integrity + Bilingual Consistency | Advisory; Slack for high-risk only |
-| **2** | SERP Structure | PR review + optional weekly audit later |
-| **3** | SEO Expansion | Proposal-only; no page creation |
-| **4** | Gold Market Insight Writer | Draft-only; no auto-PR for first 5–10 runs |
+| Phase | Automations                            | Mode                                       |
+| ----- | -------------------------------------- | ------------------------------------------ |
+| **1** | Gold Integrity + Bilingual Consistency | Advisory; Slack for high-risk only         |
+| **2** | SERP Structure                         | PR review + optional weekly audit later    |
+| **3** | SEO Expansion                          | Proposal-only; no page creation            |
+| **4** | Gold Market Insight Writer             | Draft-only; no auto-PR for first 5–10 runs |
 
 Do **not** activate all five on day one.
 
@@ -77,14 +80,14 @@ Do **not** activate all five on day one.
 
 Enable **Memories** on every automation. Store short, reusable patterns:
 
-| Category | Example memory key |
-| -------- | ------------------ |
-| Pricing regressions | `pricing_logic_regression` |
-| Freshness wording | `live_vs_updated_label_mismatch` |
-| EN/AR terms | `arabic_term_for_reference_price_approved` |
-| Metadata mistakes | `country_page_title_pattern_approved` |
-| Rejected ideas | `rejected_page_idea` |
-| Content angles to avoid | `repeated_content_angle_to_avoid` |
+| Category                | Example memory key                         |
+| ----------------------- | ------------------------------------------ |
+| Pricing regressions     | `pricing_logic_regression`                 |
+| Freshness wording       | `live_vs_updated_label_mismatch`           |
+| EN/AR terms             | `arabic_term_for_reference_price_approved` |
+| Metadata mistakes       | `country_page_title_pattern_approved`      |
+| Rejected ideas          | `rejected_page_idea`                       |
+| Content angles to avoid | `repeated_content_angle_to_avoid`          |
 
 ### Weekly maintenance checklist
 
@@ -104,34 +107,36 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### Cursor field values
 
-| Field | Value |
-| ----- | ----- |
-| **Name** | `Gold Integrity Agent` |
-| **Description** | Protects pricing trust, calculator accuracy, freshness labels, and SEO integrity on PRs |
-| **Trigger** | GitHub → **Pull request opened**; add **Pull request updated** after first clean run |
-| **Repository** | `vctb12/GoldTickerLive` |
-| **Tools** | GitHub ✓ · Slack ✓ (high-risk only) · Memories ✓ |
+| Field                  | Value                                                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**               | `Gold Integrity Agent`                                                                                                                                |
+| **Description**        | Protects pricing trust, calculator accuracy, freshness labels, and SEO integrity on PRs                                                               |
+| **Trigger**            | GitHub → **Pull request opened**; add **Pull request updated** after first clean run                                                                  |
+| **Repository**         | `vctb12/GoldTickerLive`                                                                                                                               |
+| **Tools**              | GitHub ✓ · Slack ✓ (high-risk only) · Memories ✓                                                                                                      |
 | **Agent Instructions** | Copy from [`.github/prompts/cursor-automations/gold-integrity-agent.prompt.md`](../.github/prompts/cursor-automations/gold-integrity-agent.prompt.md) |
-| **Slack** | Notify on `BLOCK` or `High` risk only — not every PR comment |
+| **Slack**              | Notify on `BLOCK` or `High` risk only — not every PR comment                                                                                          |
 
 ### Test checklist
 
 - [ ] Connect GitHub to `vctb12/GoldTickerLive`
-- [ ] Open a **past or low-risk PR** that touches `translations.js`, a country page, or calculator logic
+- [ ] Open a **past or low-risk PR** that touches `translations.js`, a country page, or calculator
+      logic
 - [ ] Confirm output uses the template (`Decision`, `Risk level`, `Findings`, …)
 - [ ] Confirm it flags reference-vs-retail blur if you inject test wording (manual dry run)
-- [ ] Confirm it **blocks** (or escalates) changes to `src/config/constants.js` without approving silently
+- [ ] Confirm it **blocks** (or escalates) changes to `src/config/constants.js` without approving
+      silently
 - [ ] Confirm Slack fires only on high-risk, not on clean `APPROVE`
 - [ ] Save one memory entry from a real finding
 
 ### First-run success criteria
 
-| Good | Bad |
-| ---- | --- |
-| Catches risky freshness wording or karat math | Nitpicks harmless CSS class renames |
-| Returns `APPROVE` with no findings on docs-only PRs | Blocks every PR regardless of scope |
-| File-specific findings with exact fix text | Vague “check pricing” comments |
-| Escalates production-critical file touches | Approves changes to `post_gold.yml` without human flag |
+| Good                                                | Bad                                                    |
+| --------------------------------------------------- | ------------------------------------------------------ |
+| Catches risky freshness wording or karat math       | Nitpicks harmless CSS class renames                    |
+| Returns `APPROVE` with no findings on docs-only PRs | Blocks every PR regardless of scope                    |
+| File-specific findings with exact fix text          | Vague “check pricing” comments                         |
+| Escalates production-critical file touches          | Approves changes to `post_gold.yml` without human flag |
 
 ---
 
@@ -141,13 +146,13 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### Cursor field values
 
-| Field | Value |
-| ----- | ----- |
-| **Name** | `Bilingual Consistency Agent` |
-| **Description** | Audits semantic English/Arabic parity on user-visible copy changes |
-| **Trigger** | GitHub → **Pull request opened**; add **Pull request updated** after first clean run |
-| **Repository** | `vctb12/GoldTickerLive` |
-| **Tools** | GitHub ✓ · Memories ✓ · Slack ✗ (optional later) |
+| Field                  | Value                                                                                                                                                               |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**               | `Bilingual Consistency Agent`                                                                                                                                       |
+| **Description**        | Audits semantic English/Arabic parity on user-visible copy changes                                                                                                  |
+| **Trigger**            | GitHub → **Pull request opened**; add **Pull request updated** after first clean run                                                                                |
+| **Repository**         | `vctb12/GoldTickerLive`                                                                                                                                             |
+| **Tools**              | GitHub ✓ · Memories ✓ · Slack ✗ (optional later)                                                                                                                    |
 | **Agent Instructions** | Copy from [`.github/prompts/cursor-automations/bilingual-consistency-agent.prompt.md`](../.github/prompts/cursor-automations/bilingual-consistency-agent.prompt.md) |
 
 ### Test checklist
@@ -160,11 +165,11 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### First-run success criteria
 
-| Good | Bad |
-| ---- | --- |
-| Flags meaning drift, not spelling | Demands literal word-for-word match |
-| Natural Arabic suggestions | English-shaped Arabic |
-| `PASS` when PR is backend-only | Invented issues on non-copy PRs |
+| Good                                      | Bad                                 |
+| ----------------------------------------- | ----------------------------------- |
+| Flags meaning drift, not spelling         | Demands literal word-for-word match |
+| Natural Arabic suggestions                | English-shaped Arabic               |
+| `PASS` when PR is backend-only            | Invented issues on non-copy PRs     |
 | Terminology table in output when relevant | Ignores calculator or metadata copy |
 
 ---
@@ -175,15 +180,15 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### Cursor field values
 
-| Field | Value |
-| ----- | ----- |
-| **Name** | `SERP Structure Agent` |
-| **Description** | Protects SEO structure — titles, canonicals, hreflang, schema, intent |
-| **Trigger** | GitHub → **Pull request opened** / **updated** |
-| **Repository** | `vctb12/GoldTickerLive` |
-| **Tools** | GitHub ✓ · Memories ✓ |
+| Field                  | Value                                                                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**               | `SERP Structure Agent`                                                                                                                                |
+| **Description**        | Protects SEO structure — titles, canonicals, hreflang, schema, intent                                                                                 |
+| **Trigger**            | GitHub → **Pull request opened** / **updated**                                                                                                        |
+| **Repository**         | `vctb12/GoldTickerLive`                                                                                                                               |
+| **Tools**              | GitHub ✓ · Memories ✓                                                                                                                                 |
 | **Agent Instructions** | Copy from [`.github/prompts/cursor-automations/serp-structure-agent.prompt.md`](../.github/prompts/cursor-automations/serp-structure-agent.prompt.md) |
-| **Phase 2** | Add weekly schedule audit (top country pages, calculator, methodology) after PR mode is stable |
+| **Phase 2**            | Add weekly schedule audit (top country pages, calculator, methodology) after PR mode is stable                                                        |
 
 ### Test checklist
 
@@ -195,11 +200,11 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### First-run success criteria
 
-| Good | Bad |
-| ---- | --- |
-| Exact `<title>` / `link rel="canonical"` fixes | Generic “improve SEO” advice |
-| Intent conflict table when two pages overlap | Schema recommendations unsupported by body |
-| `HEALTHY` on non-SEO PRs | False positives on every HTML tweak |
+| Good                                           | Bad                                        |
+| ---------------------------------------------- | ------------------------------------------ |
+| Exact `<title>` / `link rel="canonical"` fixes | Generic “improve SEO” advice               |
+| Intent conflict table when two pages overlap   | Schema recommendations unsupported by body |
+| `HEALTHY` on non-SEO PRs                       | False positives on every HTML tweak        |
 
 ---
 
@@ -209,15 +214,15 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### Cursor field values
 
-| Field | Value |
-| ----- | ----- |
-| **Name** | `SEO Expansion Agent` |
-| **Description** | Weekly organic growth proposals — quality over volume |
-| **Trigger** | Schedule → **Weekly** (e.g. Monday 09:00 UTC / 13:00 Dubai) |
-| **Repository** | `vctb12/GoldTickerLive` |
-| **Tools** | GitHub ✓ · Memories ✓ · Slack ✗ (optional summary channel later) |
+| Field                  | Value                                                                                                                                               |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**               | `SEO Expansion Agent`                                                                                                                               |
+| **Description**        | Weekly organic growth proposals — quality over volume                                                                                               |
+| **Trigger**            | Schedule → **Weekly** (e.g. Monday 09:00 UTC / 13:00 Dubai)                                                                                         |
+| **Repository**         | `vctb12/GoldTickerLive`                                                                                                                             |
+| **Tools**              | GitHub ✓ · Memories ✓ · Slack ✗ (optional summary channel later)                                                                                    |
 | **Agent Instructions** | Copy from [`.github/prompts/cursor-automations/seo-expansion-agent.prompt.md`](../.github/prompts/cursor-automations/seo-expansion-agent.prompt.md) |
-| **Mode** | Proposal-only — no auto page creation or PRs until quality proven |
+| **Mode**               | Proposal-only — no auto page creation or PRs until quality proven                                                                                   |
 
 ### Test checklist
 
@@ -230,12 +235,12 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### First-run success criteria
 
-| Good | Bad |
-| ---- | --- |
-| 3–5 high-intent ideas with cluster context | 20 thin page ideas |
-| Quick wins / strategic / cluster buckets | Financial advice tone |
-| Honest “no ideas” run | Forced pages every week |
-| Internal link plan in/out | Reference price framed as shop quote |
+| Good                                       | Bad                                  |
+| ------------------------------------------ | ------------------------------------ |
+| 3–5 high-intent ideas with cluster context | 20 thin page ideas                   |
+| Quick wins / strategic / cluster buckets   | Financial advice tone                |
+| Honest “no ideas” run                      | Forced pages every week              |
+| Internal link plan in/out                  | Reference price framed as shop quote |
 
 ---
 
@@ -245,15 +250,15 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 
 ### Cursor field values
 
-| Field | Value |
-| ----- | ----- |
-| **Name** | `Gold Market Insight Writer` |
-| **Description** | Daily draft market commentary when price movement warrants publication |
-| **Trigger** | Schedule → **Daily** at **05:00 UTC** (09:00 UAE / Gulf morning) |
-| **Repository** | `vctb12/GoldTickerLive` |
-| **Tools** | GitHub ✓ · Memories ✓ · Slack ✗ (optional alert on `PUBLISH` later) |
+| Field                  | Value                                                                                                                                                             |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**               | `Gold Market Insight Writer`                                                                                                                                      |
+| **Description**        | Daily draft market commentary when price movement warrants publication                                                                                            |
+| **Trigger**            | Schedule → **Daily** at **05:00 UTC** (09:00 UAE / Gulf morning)                                                                                                  |
+| **Repository**         | `vctb12/GoldTickerLive`                                                                                                                                           |
+| **Tools**              | GitHub ✓ · Memories ✓ · Slack ✗ (optional alert on `PUBLISH` later)                                                                                               |
 | **Agent Instructions** | Copy from [`.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md`](../.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md) |
-| **Mode** | Draft-only — review first 5–10 outputs manually before any auto-PR |
+| **Mode**               | Draft-only — review first 5–10 outputs manually before any auto-PR                                                                                                |
 
 ### Test checklist
 
@@ -262,15 +267,16 @@ Enable **Memories** on every automation. Store short, reusable patterns:
 - [ ] Confirm draft includes EN + AR title, summary, body, disclaimers
 - [ ] Confirm no buy/sell advice or price predictions
 - [ ] Confirm memory avoids repeating last week’s angle
-- [ ] Cross-check with [`docs/AI_CONTENT_AUTOMATION.md`](./AI_CONTENT_AUTOMATION.md) — no auto-publish path
+- [ ] Cross-check with [`docs/AI_CONTENT_AUTOMATION.md`](./AI_CONTENT_AUTOMATION.md) — no
+      auto-publish path
 
 ### First-run success criteria
 
-| Good | Bad |
-| ---- | --- |
-| Correct `DO NOT PUBLISH` on quiet days | Forces daily article regardless of move |
-| Data snapshot with timestamp and state label | Hype or clickbait headline |
-| Reference vs retail distinction in body | Fabricated news or certainty |
+| Good                                             | Bad                                      |
+| ------------------------------------------------ | ---------------------------------------- |
+| Correct `DO NOT PUBLISH` on quiet days           | Forces daily article regardless of move  |
+| Data snapshot with timestamp and state label     | Hype or clickbait headline               |
+| Reference vs retail distinction in body          | Fabricated news or certainty             |
 | Internal links to tracker/calculator/methodology | Single-language draft for public content |
 
 ---
@@ -296,12 +302,12 @@ Every automation must support a **do nothing** outcome. That is a feature, not a
 
 ## Relationship to existing repo tooling
 
-| System | Purpose | This playbook |
-| ------ | ------- | ------------- |
-| GitHub Actions (`docs/AUTOMATIONS.md`) | Price fetch, X-post, deploy, CI | Complementary — do not duplicate |
-| `.github/prompts/pr-review.prompt.md` | Interactive PR review in chat | Overlaps Integrity + SERP — automations are always-on |
-| `.cursor/agents/gold-trust-auditor.md` | Subagent for pricing surfaces | Integrity Agent superset for PR automation |
-| `docs/AI_CONTENT_AUTOMATION.md` | Admin draft pipeline | Insight Writer feeds human review, not auto-publish |
+| System                                 | Purpose                         | This playbook                                         |
+| -------------------------------------- | ------------------------------- | ----------------------------------------------------- |
+| GitHub Actions (`docs/AUTOMATIONS.md`) | Price fetch, X-post, deploy, CI | Complementary — do not duplicate                      |
+| `.github/prompts/pr-review.prompt.md`  | Interactive PR review in chat   | Overlaps Integrity + SERP — automations are always-on |
+| `.cursor/agents/gold-trust-auditor.md` | Subagent for pricing surfaces   | Integrity Agent superset for PR automation            |
+| `docs/AI_CONTENT_AUTOMATION.md`        | Admin draft pipeline            | Insight Writer feeds human review, not auto-publish   |
 
 ---
 
@@ -319,6 +325,6 @@ Add growth agents after review signal quality is stable.
 
 ## Changelog
 
-| Date | Change |
-| ---- | ------ |
+| Date       | Change                                                   |
+| ---------- | -------------------------------------------------------- |
 | 2026-06-09 | Initial playbook + five prompt files + automation policy |

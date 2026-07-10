@@ -2498,7 +2498,7 @@ main {
 .btn-primary {
   background: var(--color-gold-dark);
   border-color: var(--color-gold-dark);
-    color: var(--color-btn-primary-text);
+  color: var(--color-btn-primary-text);
   box-shadow: var(--shadow-gold), var(--shadow-sm);
 }
 

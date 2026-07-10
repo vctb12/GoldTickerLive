@@ -300,13 +300,16 @@ In `get_gold_price()` and `_load_last_price()`:
 
 Evaluates five skip rules in order:
 
-| #   | Skip reason                    | Trigger                                                                                  |
-| --- | ------------------------------ | ---------------------------------------------------------------------------------------- | ----- | ------------------------- | --- | ------------------------------------------- |
-| 1   | `stale_quote`                  | `is_fresh=false` (freshness > `MAX_GOLD_FRESHNESS_SECONDS`) and `ALLOW_STALE_TWEET≠true` |
-| 2   | `provider_timestamp_unchanged` | Provider timestamp = last post's timestamp, `FORCE_SUMMARY_AFTER_MINUTES` not elapsed    |
-| 3   | `duplicate_text_hash`          | SHA-256 of tweet text = last posted hash (X would reject anyway)                         |
-| 4   | `fallback_no_change`           | `is_fallback=true` / `cache_last_known` / `spot_delayed` AND price unchanged             |
-| 5   | `price_move_below_threshold`   | `                                                                                        | Δ USD | < MIN_TWEET_MOVE_USD`AND` | Δ % | < MIN_TWEET_MOVE_PCT` and no forced summary |
+| # | Skip reason | Trigger | | --- | ------------------------------ |
+---------------------------------------------------------------------------------------- | ----- |
+------------------------- | --- | ------------------------------------------- | | 1 | `stale_quote`
+| `is_fresh=false` (freshness > `MAX_GOLD_FRESHNESS_SECONDS`) and `ALLOW_STALE_TWEET≠true` | | 2 |
+`provider_timestamp_unchanged` | Provider timestamp = last post's timestamp,
+`FORCE_SUMMARY_AFTER_MINUTES` not elapsed | | 3 | `duplicate_text_hash` | SHA-256 of tweet text =
+last posted hash (X would reject anyway) | | 4 | `fallback_no_change` | `is_fallback=true` /
+`cache_last_known` / `spot_delayed` AND price unchanged | | 5 | `price_move_below_threshold` |
+`                                                                                        | Δ USD | < MIN_TWEET_MOVE_USD`AND` | Δ % | < MIN_TWEET_MOVE_PCT`
+and no forced summary |
 
 All state is stored in `data/last_tweet_state.json`.
 

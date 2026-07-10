@@ -22,7 +22,15 @@
  */
 import { chromium } from 'playwright';
 import http from 'node:http';
-import { createReadStream, existsSync, readdirSync, statSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import {
+  createReadStream,
+  existsSync,
+  readdirSync,
+  statSync,
+  mkdirSync,
+  writeFileSync,
+  readFileSync,
+} from 'node:fs';
 import { extname, join, resolve, sep, relative } from 'node:path';
 
 function arg(name, fallback) {
@@ -47,12 +55,23 @@ const PAGES = [
 ];
 
 const MIME = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp',
-  '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.woff': 'font/woff', '.xml': 'application/xml', '.txt': 'text/plain',
-  '.map': 'application/json', '.webmanifest': 'application/manifest+json',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
+  '.xml': 'application/xml',
+  '.txt': 'text/plain',
+  '.map': 'application/json',
+  '.webmanifest': 'application/manifest+json',
 };
 
 function resolveChromium() {
@@ -64,7 +83,9 @@ function resolveChromium() {
       const p = join(root, dir, 'chrome-linux', 'chrome');
       if (existsSync(p)) return p;
     }
-  } catch { /* fall through */ }
+  } catch {
+    /* fall through */
+  }
   return undefined;
 }
 
@@ -87,7 +108,11 @@ function startServer(tree) {
     let urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
     if (urlPath.endsWith('/')) urlPath += 'index.html';
     const file = tree.get(urlPath);
-    if (!file) { res.writeHead(404); res.end('not found'); return; }
+    if (!file) {
+      res.writeHead(404);
+      res.end('not found');
+      return;
+    }
     res.writeHead(200, { 'Content-Type': MIME[extname(file)] || 'application/octet-stream' });
     createReadStream(file).pipe(res);
   });
@@ -130,11 +155,15 @@ async function measurePage(browser, url) {
           if (!e.hadRecentInput) window.__cwv.cls += e.value;
         }
       }).observe({ type: 'layout-shift', buffered: true });
-    } catch { /* metrics unavailable */ }
+    } catch {
+      /* metrics unavailable */
+    }
   });
   try {
     await page.goto(url, { waitUntil: 'load', timeout: 25000 });
-  } catch { /* record what we have */ }
+  } catch {
+    /* record what we have */
+  }
   await page.waitForTimeout(SETTLE_MS);
   const data = await page.evaluate(() => {
     const res = performance.getEntriesByType('resource');
@@ -163,7 +192,10 @@ async function main() {
   const budgets = loadBudgets();
   const tree = loadTree(SERVE_DIR);
   const server = await startServer(tree);
-  const browser = await chromium.launch({ executablePath: resolveChromium(), args: ['--no-sandbox'] });
+  const browser = await chromium.launch({
+    executablePath: resolveChromium(),
+    args: ['--no-sandbox'],
+  });
 
   const kb = (n) => Math.round((n / 1024) * 10) / 10;
   const results = [];
@@ -174,9 +206,19 @@ async function main() {
     for (const type of ['script', 'stylesheet', 'image', 'font', 'total']) {
       const usedKb = type === 'total' ? kb(d.total) : kb(d.buckets[type] || 0);
       const limit = bud[type];
-      checks[type] = { usedKb, limitKb: limit ?? null, over: limit != null ? usedKb > limit : null };
+      checks[type] = {
+        usedKb,
+        limitKb: limit ?? null,
+        over: limit != null ? usedKb > limit : null,
+      };
     }
-    results.push({ name, path, lcpMs: Math.round(d.cwv.lcp), cls: Math.round(d.cwv.cls * 1000) / 1000, checks });
+    results.push({
+      name,
+      path,
+      lcpMs: Math.round(d.cwv.lcp),
+      cls: Math.round(d.cwv.cls * 1000) / 1000,
+      checks,
+    });
     process.stdout.write('.');
   }
   process.stdout.write('\n');
@@ -186,18 +228,42 @@ async function main() {
   mkdirSync(OUT_DIR, { recursive: true });
   writeFileSync(join(OUT_DIR, `cwv-${STAMP}.json`), JSON.stringify(results, null, 2));
 
-  const lines = ['# Core Web Vitals + resource budgets', '', 'Local lab run against the built `dist/` (no external upload). LCP/CLS from PerformanceObserver; sizes vs `budget.json`. INP: n/a (needs interaction/field data).', ''];
-  lines.push('| Page | LCP (ms) | CLS | script KB | style KB | image KB | total KB | over budget |');
-  lines.push('| ---- | -------: | --: | --------: | -------: | -------: | -------: | ----------- |');
+  const lines = [
+    '# Core Web Vitals + resource budgets',
+    '',
+    'Local lab run against the built `dist/` (no external upload). LCP/CLS from PerformanceObserver; sizes vs `budget.json`. INP: n/a (needs interaction/field data).',
+    '',
+  ];
+  lines.push(
+    '| Page | LCP (ms) | CLS | script KB | style KB | image KB | total KB | over budget |'
+  );
+  lines.push(
+    '| ---- | -------: | --: | --------: | -------: | -------: | -------: | ----------- |'
+  );
   for (const r of results) {
-    const over = Object.entries(r.checks).filter(([, c]) => c.over).map(([t]) => t);
-    lines.push(`| ${r.name} | ${r.lcpMs} | ${r.cls} | ${r.checks.script.usedKb} | ${r.checks.stylesheet.usedKb} | ${r.checks.image.usedKb} | ${r.checks.total.usedKb} | ${over.length ? '⚠ ' + over.join(', ') : '✅ none'} |`);
+    const over = Object.entries(r.checks)
+      .filter(([, c]) => c.over)
+      .map(([t]) => t);
+    lines.push(
+      `| ${r.name} | ${r.lcpMs} | ${r.cls} | ${r.checks.script.usedKb} | ${r.checks.stylesheet.usedKb} | ${r.checks.image.usedKb} | ${r.checks.total.usedKb} | ${over.length ? '⚠ ' + over.join(', ') : '✅ none'} |`
+    );
   }
-  lines.push('', 'Budgets (KB): global script 600 / style 400 / image 500 / font 200 / total 1800; tracker script 800 / style 500 / total 2000.', '');
+  lines.push(
+    '',
+    'Budgets (KB): global script 600 / style 400 / image 500 / font 200 / total 1800; tracker script 800 / style 500 / total 2000.',
+    ''
+  );
   const anyOver = results.some((r) => Object.values(r.checks).some((c) => c.over));
-  lines.push(anyOver ? '**Result: one or more pages exceed a resource budget — see ⚠ above.**' : '**Result: all measured pages are within their resource budgets.**');
+  lines.push(
+    anyOver
+      ? '**Result: one or more pages exceed a resource budget — see ⚠ above.**'
+      : '**Result: all measured pages are within their resource budgets.**'
+  );
   writeFileSync(join(OUT_DIR, `cwv-${STAMP}.md`), lines.join('\n'));
   console.log(`Wrote ${join(OUT_DIR, `cwv-${STAMP}.json`)} and .md`);
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

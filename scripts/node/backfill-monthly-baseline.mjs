@@ -26,7 +26,10 @@ import {
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const BASELINE = path.join(ROOT, 'src/data/historical-baseline.json');
-const DEFAULT_INPUT = path.join(ROOT, 'reports/data/PHASE-46-monthly-baseline-backfill.template.json');
+const DEFAULT_INPUT = path.join(
+  ROOT,
+  'reports/data/PHASE-46-monthly-baseline-backfill.template.json'
+);
 
 function readJson(p) {
   return JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -62,7 +65,9 @@ function main() {
   fs.writeFileSync(BASELINE, JSON.stringify(merged, null, 2) + '\n');
   console.log(
     `Backfilled ${added.length} month(s): ${added.join(', ') || '(none)'}` +
-      (skipped.length ? `\nSkipped ${skipped.length} already-present month(s): ${skipped.join(', ')}` : '') +
+      (skipped.length
+        ? `\nSkipped ${skipped.length} already-present month(s): ${skipped.join(', ')}`
+        : '') +
       `\nBaseline now ends at ${merged[merged.length - 1].date} (${merged.length} rows).`
   );
 }

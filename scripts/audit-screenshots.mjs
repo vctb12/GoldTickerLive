@@ -25,7 +25,10 @@ const VIEWPORTS = [
 
 async function capture(page, pageId, viewport, lang) {
   const langSuffix = lang === 'ar' ? 'ar' : 'en';
-  const url = lang === 'ar' ? `${BASE}${pageId === 'homepage' ? '/?lang=ar' : PAGES.find((p) => p.id === pageId).path + '?lang=ar'}` : `${BASE}${PAGES.find((p) => p.id === pageId).path}`;
+  const url =
+    lang === 'ar'
+      ? `${BASE}${pageId === 'homepage' ? '/?lang=ar' : PAGES.find((p) => p.id === pageId).path + '?lang=ar'}`
+      : `${BASE}${PAGES.find((p) => p.id === pageId).path}`;
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   if (lang === 'ar') {
     await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });

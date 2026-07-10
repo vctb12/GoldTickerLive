@@ -23,12 +23,25 @@ const STRICT = process.argv.includes('--strict');
 // Authored top-level pages. Interactive shells whose body is JS-rendered are still linted for the
 // static shell content that ships in the HTML.
 const PAGES = [
-  'index.html', 'learn.html', 'glossary.html', 'methodology.html', 'calculator.html',
-  'tracker.html', 'compare.html', 'heatmap.html', 'portfolio.html', 'shops.html',
-  'dubai-gold-price.html', 'invest.html', 'privacy.html', 'terms.html', 'not-found.html',
+  'index.html',
+  'learn.html',
+  'glossary.html',
+  'methodology.html',
+  'calculator.html',
+  'tracker.html',
+  'compare.html',
+  'heatmap.html',
+  'portfolio.html',
+  'shops.html',
+  'dubai-gold-price.html',
+  'invest.html',
+  'privacy.html',
+  'terms.html',
+  'not-found.html',
 ];
 
-const PLACEHOLDER_RE = /\b(lorem ipsum|TODO|FIXME|XXX+|TBD|coming soon|PLACEHOLDER|REPLACE[_ ]WITH)\b/i;
+const PLACEHOLDER_RE =
+  /\b(lorem ipsum|TODO|FIXME|XXX+|TBD|coming soon|PLACEHOLDER|REPLACE[_ ]WITH)\b/i;
 const DOUBLED_RE = /\b(the|a|an|of|to|and|is|in|for|on|with|that|it)\s+\1\b/gi;
 
 function stripAttrsAndTags(html) {
@@ -50,7 +63,8 @@ function lintPage(path) {
 
   // Placeholders — in comments (WARN, may await owner content) and in visible text (ERROR).
   for (const m of html.matchAll(/<!--([\s\S]*?)-->/g)) {
-    if (PLACEHOLDER_RE.test(m[1])) add('WARN', `placeholder marker in comment: "${m[1].trim().slice(0, 70)}"`);
+    if (PLACEHOLDER_RE.test(m[1]))
+      add('WARN', `placeholder marker in comment: "${m[1].trim().slice(0, 70)}"`);
   }
   const text = stripAttrsAndTags(html).replace(/&[a-z]+;/gi, ' ');
   const vis = text.match(PLACEHOLDER_RE);
@@ -71,7 +85,8 @@ function lintPage(path) {
   const SPECIAL = new Set(['main-content', '']);
   for (const m of html.matchAll(/<a\b[^>]*\bhref=["']#([a-z0-9_-]+)["']/gi)) {
     const target = m[1];
-    if (!ids.has(target) && !SPECIAL.has(target)) add('ERROR', `broken same-page anchor: #${target}`);
+    if (!ids.has(target) && !SPECIAL.has(target))
+      add('ERROR', `broken same-page anchor: #${target}`);
   }
 
   // Empty headings — an ERROR only when there is NO runtime-population binding. Headings that ship
@@ -101,6 +116,8 @@ for (const page of PAGES) {
 }
 
 console.log(lines.length ? lines.join('\n').trim() : 'content-lint: no findings.');
-console.log(`\ncontent-lint: ${errors} error(s), ${warns} warning(s) across ${PAGES.length} pages.`);
+console.log(
+  `\ncontent-lint: ${errors} error(s), ${warns} warning(s) across ${PAGES.length} pages.`
+);
 
 if (CHECK && (errors > 0 || (STRICT && warns > 0))) process.exit(1);

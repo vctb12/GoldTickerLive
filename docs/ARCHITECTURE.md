@@ -21,7 +21,7 @@ admin API and server-side data persistence).
 | CSS lines     | ~17,000 across 16 files                                                                                                      |
 | JS modules    | 75+                                                                                                                          |
 | Test suites   | 10 files, 205 tests                                                                                                          |
-| External APIs | gold-api.com (gold spot), open.er-api.com (FX), DataHub (historical)                                                       |
+| External APIs | gold-api.com (gold spot), open.er-api.com (FX), DataHub (historical)                                                         |
 
 ---
 
@@ -369,7 +369,8 @@ Page Scripts ──► Core Library (api, cache, calculator, formatter)
 ## Resilience & Offline Strategy
 
 - **Dual cache layers**: Primary + fallback localStorage prevents data loss on storage errors
-- **Multi-provider fallback**: Gold price tries gold-api.com → mintedmetal.com → committed JSON → cache
+- **Multi-provider fallback**: Gold price tries gold-api.com → mintedmetal.com → committed JSON →
+  cache
 - **Stale data badges**: When cached data is used, freshness indicators are shown
 - **Service worker** (`sw.js`): Cache-first for static assets, network-first for API calls
 - **AED fixed peg**: Always 3.6725 regardless of FX API (removes dependency for UAE prices)

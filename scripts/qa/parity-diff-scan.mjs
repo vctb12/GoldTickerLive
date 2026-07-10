@@ -30,11 +30,53 @@ function urlFor(p, lang) {
 // units, currency/karat codes, source proper-nouns, symbols). Lower-cased compare.
 const ALLOW_EXACT = new Set(
   [
-    'Gold Ticker Live', 'GoldTickerLive', 'goldtickerlive.com', 'XAU/USD', 'XAU', 'USD',
-    'AED', 'SAR', 'KWD', 'QAR', 'BHD', 'OMR', 'EGP', 'JOD', 'CSV', 'JSON', 'VAT', 'PWA',
-    'API', 'FX', 'UTC', 'GDELT', 'DataHub', 'ExchangeRate-API', 'Supabase', 'WhatsApp',
-    'Leaflet', 'OpenStreetMap', '·', '→', '←', '—', '•', '%', '24K', '22K', '21K', '20K',
-    '18K', '16K', '14K', 'g', 'oz', 'tola', 'kg', '3.6725', '31.1035',
+    'Gold Ticker Live',
+    'GoldTickerLive',
+    'goldtickerlive.com',
+    'XAU/USD',
+    'XAU',
+    'USD',
+    'AED',
+    'SAR',
+    'KWD',
+    'QAR',
+    'BHD',
+    'OMR',
+    'EGP',
+    'JOD',
+    'CSV',
+    'JSON',
+    'VAT',
+    'PWA',
+    'API',
+    'FX',
+    'UTC',
+    'GDELT',
+    'DataHub',
+    'ExchangeRate-API',
+    'Supabase',
+    'WhatsApp',
+    'Leaflet',
+    'OpenStreetMap',
+    '·',
+    '→',
+    '←',
+    '—',
+    '•',
+    '%',
+    '24K',
+    '22K',
+    '21K',
+    '20K',
+    '18K',
+    '16K',
+    '14K',
+    'g',
+    'oz',
+    'tola',
+    'kg',
+    '3.6725',
+    '31.1035',
   ].map((s) => s.toLowerCase())
 );
 // A candidate must contain a Latin letter and at least one "word" of length ≥ 3,
@@ -79,7 +121,9 @@ for (const p of PAGES) {
   for (const lang of ['en', 'ar']) {
     const ctx = await browser.newContext({ viewport: { width: 1366, height: 1400 } });
     const page = await ctx.newPage();
-    await page.goto(urlFor(p, lang), { waitUntil: 'domcontentloaded', timeout: 25000 }).catch(() => {});
+    await page
+      .goto(urlFor(p, lang), { waitUntil: 'domcontentloaded', timeout: 25000 })
+      .catch(() => {});
     await page.waitForSelector('h1, main', { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(2200);
     sets[lang] = await visibleStrings(page);

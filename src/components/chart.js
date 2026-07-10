@@ -73,7 +73,7 @@ function readChartTheme() {
 function applyChartTheme(chart, series) {
   if (!chart || !series) return;
   const theme = readChartTheme();
-    chart.applyOptions({
+  chart.applyOptions({
     layout: {
       background: { color: 'transparent' },
       textColor: theme.text,

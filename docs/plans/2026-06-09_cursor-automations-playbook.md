@@ -22,11 +22,11 @@ not generic “SEO bot” instructions.
 
 ## Deliverables
 
-| File | Purpose |
-| ---- | ------- |
-| `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md` | Main operating guide |
-| `.cursor/automation-policy.md` | Stable “good” definition for all automations |
-| `.github/prompts/cursor-automations/*.prompt.md` | Copy-paste Agent Instructions (×5) |
+| File                                             | Purpose                                      |
+| ------------------------------------------------ | -------------------------------------------- |
+| `docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`            | Main operating guide                         |
+| `.cursor/automation-policy.md`                   | Stable “good” definition for all automations |
+| `.github/prompts/cursor-automations/*.prompt.md` | Copy-paste Agent Instructions (×5)           |
 
 ## Done checklist
 
@@ -49,8 +49,8 @@ Delete or revert the files above. No runtime or CI impact — docs and prompts o
 
 ## Risks
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| Automation auto-merges bad PRs | Prompts say comment-only; governance rule blocks prod file auto-merge |
-| Overlap with `pr-review.prompt.md` | Documented relationship; tune Integrity prompt to reduce duplicate noise |
+| Risk                                 | Mitigation                                                                         |
+| ------------------------------------ | ---------------------------------------------------------------------------------- |
+| Automation auto-merges bad PRs       | Prompts say comment-only; governance rule blocks prod file auto-merge              |
+| Overlap with `pr-review.prompt.md`   | Documented relationship; tune Integrity prompt to reduce duplicate noise           |
 | Growth agents publish without review | Launch in proposal/draft-only mode; `AI_CONTENT_AUTOMATION.md` enforces human gate |

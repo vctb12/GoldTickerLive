@@ -2,11 +2,13 @@
 
 ## Goal
 
-Make Gold Ticker Live feel premium: global interaction system, homepage showstopper polish, scroll reveals, price pulses, and consistent motion across flagship surfaces.
+Make Gold Ticker Live feel premium: global interaction system, homepage showstopper polish, scroll
+reveals, price pulses, and consistent motion across flagship surfaces.
 
 ## Impacted files
 
-- `styles/global.css` — interaction tokens, cards, links, forms, page-enter, reveal stagger, quick-convert focus
+- `styles/global.css` — interaction tokens, cards, links, forms, page-enter, reveal stagger,
+  quick-convert focus
 - `styles/pages/home.css` — hero drift, direction arrow, GCC stagger, karat tooltips
 - `src/pages/home.js` — tracker deep links, pulses, GCC CTA overlay
 - `src/lib/reveal.js`, `src/lib/count-up.js`, `src/lib/page-hydrator.js`

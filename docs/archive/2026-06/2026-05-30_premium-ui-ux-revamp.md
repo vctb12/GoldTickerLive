@@ -2,18 +2,20 @@
 
 ## Goal
 
-Make Gold Ticker Live feel like a premium, trustworthy financial data product after three cleanup sessions. Focus on visible polish, micro-interactions, and completing half-built UX (shop vs reference, quick convert, copy feedback).
+Make Gold Ticker Live feel like a premium, trustworthy financial data product after three cleanup
+sessions. Focus on visible polish, micro-interactions, and completing half-built UX (shop vs
+reference, quick convert, copy feedback).
 
 ## Scope (this session)
 
-| Area | Deliverable |
-| ---- | ----------- |
-| Shared | `copy-toast.js`, premium UI CSS tokens/components in `global.css` |
-| Homepage | Quick-convert widget, count-up on command metrics + hero karat cells, copy toast |
-| Calculator | Shop vs reference comparison panel, karat purity ring, count-up on result |
-| Country | Hero price pulse + copy-toast on karat grid |
-| i18n | New keys in `translations.js` (EN/AR) + calculator local `T` |
-| Docs | This plan + `REVAMP_PLAN.md` checklist |
+| Area       | Deliverable                                                                      |
+| ---------- | -------------------------------------------------------------------------------- |
+| Shared     | `copy-toast.js`, premium UI CSS tokens/components in `global.css`                |
+| Homepage   | Quick-convert widget, count-up on command metrics + hero karat cells, copy toast |
+| Calculator | Shop vs reference comparison panel, karat purity ring, count-up on result        |
+| Country    | Hero price pulse + copy-toast on karat grid                                      |
+| i18n       | New keys in `translations.js` (EN/AR) + calculator local `T`                     |
+| Docs       | This plan + `REVAMP_PLAN.md` checklist                                           |
 
 ## Out of scope (follow-up)
 
@@ -33,5 +35,6 @@ Make Gold Ticker Live feel like a premium, trustworthy financial data product af
 - [x] Homepage quick convert + smoother price transitions
 - [x] Calculator shop vs reference + purity indicator
 - [x] Country page hero card hover polish
-- [x] `npm run validate`, `npm run build` green; `npm test` 936/938 pass (2 pre-existing failures on main)
+- [x] `npm run validate`, `npm run build` green; `npm test` 936/938 pass (2 pre-existing failures on
+      main)
 - [x] PR opened with proof

@@ -26,7 +26,8 @@ guardrails_reviewed: true
 
 ### City hub stubs (69 pages)
 
-- [x] `scripts/node/patch-city-stub-pages.js` — rebuild stubs with two links (rate + shops), shared CSS
+- [x] `scripts/node/patch-city-stub-pages.js` — rebuild stubs with two links (rate + shops), shared
+      CSS
 - [x] `countries/stub-city.css` — extract inline styles
 - [x] Deduped misleading duplicate gold-rate links and removed “per-karat page” copy
 
@@ -39,7 +40,8 @@ guardrails_reviewed: true
 ### Dead code
 
 - [x] Remove `src/lib/search.js` (orphan)
-- [x] Trim unused exports: `deriveMarketState`, `exportCurrentViewCSV`, `buildFilterDropdowns`, shops helper dead fns
+- [x] Trim unused exports: `deriveMarketState`, `exportCurrentViewCSV`, `buildFilterDropdowns`,
+      shops helper dead fns
 - [x] Tighten `shops/filters.js` DOM baseline 4 → 0
 
 ### Reports
@@ -51,7 +53,8 @@ guardrails_reviewed: true
 - [ ] `learn.html` / `insights.html` overlap merge (product decision)
 - [ ] Migrate `src/pages/invest.js` innerHTML blocks to `safe-dom` (baseline allows 11 today)
 - [ ] Content `/content/` thin stubs — robots/canonical audit pass
-- [ ] Optional: 301 city index → gold-rate (blocked on preserving gold-shops hub path without wildcard collisions on `cities/` index pages)
+- [ ] Optional: 301 city index → gold-rate (blocked on preserving gold-shops hub path without
+      wildcard collisions on `cities/` index pages)
 
 ## Verification
 

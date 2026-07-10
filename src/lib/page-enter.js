@@ -4,8 +4,7 @@
 export function initPageEnter(selector = 'main') {
   if (typeof document === 'undefined') return;
   const reduced =
-    window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) return;
 
   const run = () => {
