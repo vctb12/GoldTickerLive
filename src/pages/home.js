@@ -378,6 +378,9 @@ function startFreshnessTimer() {
       kstripEl.dataset.freshnessAge = ageClass;
       prevKstripText = kstripText;
     }
+    // Keep the nav pill dot honest as age crosses live→amber→stale thresholds.
+    const pillEl = _navPill || document.getElementById('nav-price-pill');
+    if (pillEl) updateNavPillDot(pillEl);
   }, 1_000);
 }
 
@@ -1321,6 +1324,31 @@ function mountHomeNavPricePill() {
   if (_canonicalSnapshot) updateNavPricePill(_canonicalSnapshot);
 }
 
+/** Map a real-time freshness key to the nav pill dot's modifier class. Uses the
+ *  same 4-tier vocabulary as the freshness bar/HLC so the pill's dot cannot claim
+ *  "live" while the labels read "Stale" (e.g. if the hourly refresh stalls and the
+ *  committed file's `freshnessSeconds` freezes at a small value). */
+function pillDotClassForKey(key) {
+  if (key === 'live') return '';
+  if (key === 'delayed' || key === 'cached' || key === 'closed') return 'gtl-dot--cached';
+  if (key === 'stale') return 'gtl-dot--stale';
+  return 'gtl-dot--fallback'; // fallback | unavailable | unknown
+}
+
+/** Sync the nav pill dot with the homepage's real-time freshness (age-based),
+ *  not the upstream-claimed snapshot state — keeps every freshness indicator honest
+ *  and consistent. Falls back to the snapshot state only before a timestamp exists. */
+function updateNavPillDot(pill) {
+  const dot = pill?.querySelector('.nav-price-pill__dot');
+  if (!dot) return;
+  dot.classList.remove('gtl-dot--cached', 'gtl-dot--stale', 'gtl-dot--fallback');
+  const key = goldUpdatedAt
+    ? getFreshnessMeta().key
+    : _canonicalSnapshot?.freshness?.state || 'unavailable';
+  const cls = pillDotClassForKey(key);
+  if (cls) dot.classList.add(cls);
+}
+
 /** Update the nav pill from the canonical snapshot (value + freshness dot). */
 function updateNavPricePill(snapshot) {
   const pill = _navPill || document.getElementById('nav-price-pill');
@@ -1331,13 +1359,7 @@ function updateNavPricePill(snapshot) {
   const aed = pill.querySelector('[data-nav-aed]');
   if (xau) xau.textContent = '$' + fmt2(snapshot.spotUsdPerOz);
   if (aed) aed.textContent = fmt2(snapshot.aedPerGram24k);
-  const dot = pill.querySelector('.nav-price-pill__dot');
-  if (dot) {
-    dot.classList.remove('gtl-dot--cached', 'gtl-dot--fallback');
-    const st = snapshot.freshness?.state;
-    if (st === 'fallback' || st === 'unavailable') dot.classList.add('gtl-dot--fallback');
-    else if (st === 'cached' || st === 'delayed') dot.classList.add('gtl-dot--cached');
-  }
+  updateNavPillDot(pill);
 }
 
 /** Update the audience-routing "buy" card's 24K value from the canonical snapshot. */
