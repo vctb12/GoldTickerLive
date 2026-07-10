@@ -264,16 +264,10 @@ function updateKaratStripSelection() {
     const isSelectable = ['24', '22', '21', '18', '14'].includes(karat);
     const selected = isSelectable && karat === homeTrackerKarat;
     item.classList.toggle('is-selected', selected);
-    // The toggle role lives on the karat label span, not the tile: the tile
-    // also contains the copy button, and a button inside a button is a
-    // nested-interactive a11y violation.
-    const toggle = item.querySelector('.karat-strip-k');
-    if (toggle) {
-      toggle.setAttribute('aria-pressed', selected ? 'true' : 'false');
-      if (isSelectable) {
-        toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
-      }
-    }
+    // The radio role + aria-checked live on the `.karat-strip-k` rung and are
+    // owned by initKaratDial/updateKaratDial — not set here (aria-pressed would be
+    // invalid on a radio, and a second interactive role would nest with the copy
+    // button). We only reflect the visual selection on the tile above.
   });
 }
 
@@ -281,12 +275,10 @@ function bindKaratStripSelection() {
   document.querySelectorAll('.karat-strip-item').forEach((item) => {
     const karat = item.id?.replace('kstrip-', '');
     if (!['24', '22', '21', '18', '14'].includes(karat)) return;
+    // The rung's interactive role/tabindex are owned by initKaratDial (role=radio).
+    // Here we only wire the cross-page handoff selection; do NOT add a second
+    // interactive role, which would nest inside the copy button's tile.
     const toggle = item.querySelector('.karat-strip-k');
-    if (toggle) {
-      toggle.setAttribute('role', 'button');
-      toggle.setAttribute('tabindex', '0');
-      toggle.setAttribute('aria-label', tx('karatStripSelectAria').replace('{karat}', karat));
-    }
     const selectKarat = (event) => {
       if (event.target.closest('.kstrip-copy-btn')) return;
       homeTrackerKarat = karat;
@@ -295,7 +287,7 @@ function bindKaratStripSelection() {
       syncCrossPageLinks();
     };
     // Whole-tile click stays for pointer users; keyboard activation lives on
-    // the labelled karat toggle span (see updateKaratStripSelection).
+    // the labelled karat rung (see initKaratDial + updateKaratStripSelection).
     item.addEventListener('click', selectKarat);
     toggle?.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -1420,13 +1412,16 @@ function updateKaratDial() {
         : 'karatStripLabelGram';
   if (uEl) uEl.textContent = tx(unitKey);
 
-  // Reflect selection state on the ladder rungs.
+  // Reflect selection state: aria-checked + roving tabindex on the radio rung
+  // (the `.karat-strip-k` span), the visual is-selected class on the tile.
   KARATS.forEach((k) => {
     const item = document.getElementById('kstrip-' + k.code);
-    if (item && item.hasAttribute('role')) {
-      item.setAttribute('aria-checked', k.code === _selectedKarat ? 'true' : 'false');
-      item.tabIndex = k.code === _selectedKarat ? 0 : -1;
-      item.classList.toggle('is-selected', k.code === _selectedKarat);
+    const rung = item?.querySelector('.karat-strip-k');
+    if (rung && rung.getAttribute('role') === 'radio') {
+      const on = k.code === _selectedKarat;
+      rung.setAttribute('aria-checked', on ? 'true' : 'false');
+      rung.tabIndex = on ? 0 : -1;
+      item.classList.toggle('is-selected', on);
     }
   });
 
@@ -1450,23 +1445,31 @@ function initKaratDial() {
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-label', tx('karatStripTitle') || 'Prices by karat');
   const codes = KARATS.map((k) => k.code).filter((c) => document.getElementById('kstrip-' + c));
+  // The radio lives on the inner `.karat-strip-k` rung, NOT the tile: the tile
+  // also holds the copy button, and an interactive control (button) nested inside
+  // a radio is a WCAG nested-interactive violation. Keeping the radio on the rung
+  // makes the copy button a sibling, not a descendant.
+  const rungOf = (code) =>
+    document.getElementById('kstrip-' + code)?.querySelector('.karat-strip-k');
   codes.forEach((code) => {
     const item = document.getElementById('kstrip-' + code);
-    if (!item) return;
-    item.setAttribute('role', 'radio');
-    item.setAttribute('aria-checked', code === _selectedKarat ? 'true' : 'false');
-    item.tabIndex = code === _selectedKarat ? 0 : -1;
-    item.setAttribute('aria-label', code + 'K');
+    const rung = rungOf(code);
+    if (!item || !rung) return;
+    rung.setAttribute('role', 'radio');
+    rung.setAttribute('aria-checked', code === _selectedKarat ? 'true' : 'false');
+    rung.tabIndex = code === _selectedKarat ? 0 : -1;
+    rung.setAttribute('aria-label', code + 'K');
     const select = () => {
       _selectedKarat = code;
       updateKaratDial();
-      item.focus();
+      rung.focus();
     };
+    // Whole-tile click stays for pointer users (large hit target); ignore the copy button.
     item.addEventListener('click', (e) => {
-      if (e.target.closest('.kstrip-copy-btn')) return; // let the copy button work
+      if (e.target.closest('.kstrip-copy-btn')) return;
       select();
     });
-    item.addEventListener('keydown', (e) => {
+    rung.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         select();
@@ -1481,7 +1484,7 @@ function initKaratDial() {
         const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
         _selectedKarat = codes[(i + dir + codes.length) % codes.length];
         updateKaratDial();
-        document.getElementById('kstrip-' + _selectedKarat)?.focus();
+        rungOf(_selectedKarat)?.focus();
       }
     });
   });
@@ -1963,6 +1966,10 @@ async function init() {
   });
 
   bindKaratStripSelection();
+  // Establish the ladder's radio roles + keyboard/dial wiring up front so keyboard
+  // access exists even if the canonical resolve later fails (guarded — the seed
+  // path's call is then a no-op).
+  initKaratDial();
 
   // FAQ: one-open-at-a-time behaviour
   document.querySelectorAll('.faq-item').forEach((item) => {
