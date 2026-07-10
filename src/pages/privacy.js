@@ -63,8 +63,13 @@ function applyLanguage() {
 }
 
 function init() {
+  // Honor an explicit ?lang= first (matches home/content-page-boot precedence, so a
+  // switcher/hreflang link like privacy.html?lang=ar renders Arabic on first load), then
+  // fall back to the saved preference, then English.
+  const urlLang = new URLSearchParams(location.search).get('lang');
   const saved = localStorage.getItem('gp_pref_lang');
-  if (saved === 'ar' || saved === 'en') STATE.lang = saved;
+  if (urlLang === 'ar' || urlLang === 'en') STATE.lang = urlLang;
+  else if (saved === 'ar' || saved === 'en') STATE.lang = saved;
 
   const shell = mountSharedShell({ lang: STATE.lang, depth: 0 });
   const navCtrl = shell.navCtrl;

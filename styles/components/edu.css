@@ -132,6 +132,16 @@ html[lang='ar'] [data-lang-block='en'] {
   line-height: 1.55;
 }
 
+/* G6: WCAG 2.2 §2.5.8 — related-guide links are a vertical link list (not inline
+   prose), so give each a ≥24px tap target. Vertical-only growth (inline-flex +
+   min-height) keeps the list width unchanged, so no horizontal overflow and RTL
+   spacing (logical padding-inline above) is unaffected. */
+.edu-list a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
 /* ── Chips + rating tags ───────────────────────────────────────────────── */
 .edu-chip {
   display: inline-block;
