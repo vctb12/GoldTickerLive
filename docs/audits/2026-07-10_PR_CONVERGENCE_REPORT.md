@@ -166,3 +166,17 @@ suite must run against `NODE_ENV=production` dist + `stage-dist-statics.js` (cop
 definitive full matrix (chromium/firefox/webkit) against the CI-exact production dist is run at the
 Part II integrated-main gate; any spec still red there is fixed in a dedicated PR (candidate: stale
 `spot-vs-retail` link expectation vs a real production-only link — verify against deployed dist).
+
+### Wave C — COMPLETE (2026-07-10)
+
+| PR   | Disposition           | Notes                                                                                                                                                                                                                                      |
+| ---- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| #613 | merged                | glossary DefinedTermSet schema; tracker conflict resolved toward main (schema code kept)                                                                                                                                                   |
+| #616 | merged                | Hindi pilot; lighthouse flake re-ran green                                                                                                                                                                                                 |
+| #619 | merged                | WCAG tap-targets; **visually verified: 0 horizontal overflow across 3 pages × {320,360,390,414} × EN/AR**; stylelint + prod build green                                                                                                    |
+| #625 | merged                | multi-metal go-live checklist (docs)                                                                                                                                                                                                       |
+| #614 | merged                | **authoritative tracker/audit** — tracker conflict unioned (kept Section G motion + Section H cowork cross-walk; deduped maintenance log); preserved #615's unique live-site audit as `docs/audits/2026-07-10_live-site-audit-cowork-b.md` |
+| #615 | **closed-superseded** | unique live-site audit preserved (above); board/inventory reconciled into canonical tracker                                                                                                                                                |
+
+**Post-Wave-C main:** `5645de4a1` · `npm test` **1458/0** · lint clean · invariants untouched ·
+single canonical tracker (no fork) · open backlog **23 → 17**.
