@@ -1,0 +1,292 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Homepage redesign — section overrides (redesign/home)
+   Loads AFTER styles/pages/home.css; scoped to `.hero--gtl` so it only affects
+   the redesigned homepage hero. Built on styles/design-system.css (gtl-* tokens).
+   Approved package: docs/design/reviews/PRE_BUILD_VALIDATION*.md
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Hero shell ──────────────────────────────────────────────────────────── */
+.hero--gtl {
+  padding-block: var(--gtl-9) var(--gtl-8);
+}
+.hero--gtl .hero-inner--gtl {
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gtl-6);
+  display: grid;
+  grid-template-columns: 1.02fr 0.98fr;
+  align-items: center;
+  gap: var(--gtl-8);
+}
+
+/* Editorial left column */
+.hero--gtl .hero-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gtl-4);
+  max-width: none;
+}
+.hero--gtl .hero-badge {
+  margin: 0;
+}
+.hero--gtl #hero-headline {
+  margin: 0;
+  font-family: var(--gtl-serif);
+  line-height: 1.08;
+}
+.hero--gtl .hero-title-main {
+  display: block;
+  font-size: var(--gtl-display-1);
+  font-weight: 700;
+  color: var(--gtl-ink);
+  letter-spacing: -0.015em;
+}
+.hero--gtl .hero-title-sub {
+  display: block;
+  font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.5rem);
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  font-style: italic;
+  margin-top: 2px;
+}
+.hero--gtl .hero-lead {
+  font-size: 1.0625rem;
+  color: var(--gtl-ink-muted);
+  max-width: 46ch;
+  margin: 0;
+}
+.hero--gtl .hero-disclaimer--gtl {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-faint);
+  border-top: 1px solid var(--gtl-line);
+  padding-top: var(--gtl-4);
+  margin: var(--gtl-2) 0 0;
+  max-width: 46ch;
+}
+.hero--gtl .hero-disclaimer--gtl .hlc-retail-link {
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+  margin-inline-start: 6px;
+  white-space: nowrap;
+}
+
+/* CTAs — gtl buttons win over the legacy .btn base */
+.hero--gtl .hero-ctas--gtl {
+  display: flex;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hero-ctas--gtl .gtl-btn {
+  padding: 13px 24px;
+  font-size: 1rem;
+}
+.hero--gtl .hero-ctas-secondary {
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hero-secondary-link {
+  color: var(--gtl-ink-muted);
+}
+
+/* Darken the decorative separators to clear WCAG AA contrast (were ~1.65:1). */
+.hero--gtl .hero-secondary-sep {
+  color: var(--gtl-ink-muted);
+}
+
+/* ── Right column: the live-market price block (unboxed, protagonist) ────── */
+.hero--gtl .hero-live-card {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gtl-3);
+}
+.hero--gtl .hlc-title {
+  font-size: var(--gtl-kicker);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--gtl-gold-deep);
+}
+.hero--gtl .hlc-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gtl-3);
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* The numeral — the brand's face */
+.hero--gtl .price-hero {
+  width: 100%;
+}
+.hero--gtl .hlc-price-wrap.gtl-price {
+  align-items: flex-start;
+  gap: 4px;
+}
+.hero--gtl .gtl-price__int {
+  font-size: var(--gtl-price-hero);
+  line-height: 0.88;
+  color: var(--gtl-ink-data);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: -0.03em;
+}
+.hero--gtl .gtl-price__cur {
+  font-size: 0.4em;
+  color: var(--gtl-gold);
+  font-weight: 700;
+  align-self: flex-start;
+  margin-top: 0.28em;
+  margin-inline-start: 0.06em;
+}
+.hero--gtl .hlc-change-row {
+  display: flex;
+  align-items: center;
+  gap: var(--gtl-3);
+  flex-wrap: wrap;
+}
+.hero--gtl .hlc-change {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: var(--gtl-r-sm);
+}
+.hero--gtl .hlc-change.badge-up {
+  color: var(--gtl-up);
+  background: var(--color-move-up-bg);
+}
+.hero--gtl .hlc-change.badge-down {
+  color: var(--gtl-down);
+  background: var(--color-move-down-bg);
+}
+.hero--gtl .hlc-sub {
+  color: var(--gtl-ink-muted);
+  font-size: 0.95rem;
+}
+.hero--gtl .hlc-badge {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-faint);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 3px 9px;
+}
+.hero--gtl .hlc-updated {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-ink-muted);
+}
+.hero--gtl .hlc-sparkline {
+  width: 100%;
+  max-width: 460px;
+  height: 44px;
+  margin-top: 0;
+}
+.hero--gtl .hlc-sparkline:empty {
+  display: none;
+}
+
+/* Subtle day stats (open/high/low) under the price */
+.hero--gtl .hlc-stats-row {
+  display: flex;
+  gap: var(--gtl-5);
+  width: 100%;
+  border-top: 1px solid var(--gtl-line);
+  padding-top: var(--gtl-3);
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hlc-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.hero--gtl .hlc-stat-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gtl-ink-faint);
+}
+.hero--gtl .hlc-stat-value {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Disclaimer + freshness once: hide the card's duplicate trust lines, the
+   redundant karat teaser, the legacy divider rule, and the duplicate freshness
+   badge slot (the #hlc-updated chip is the single freshness object here). */
+.hero--gtl #hlc-retail,
+.hero--gtl #hlc-trust-line,
+.hero--gtl .hlc-karat-teaser,
+.hero--gtl .hlc-rule,
+.hero--gtl #home-freshness-badge-slot {
+  display: none;
+}
+.hero--gtl .hlc-sparkline {
+  height: 38px;
+}
+
+/* Keep the footer utilities (CSV / full tracker) quiet but present */
+.hero--gtl .hlc-footer {
+  margin-top: var(--gtl-2);
+}
+.hero--gtl .hlc-footer-actions {
+  display: flex;
+  gap: var(--gtl-4);
+  align-items: center;
+}
+.hero--gtl .hlc-tracker-link {
+  font-size: var(--gtl-meta);
+  color: var(--gtl-gold-deep);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* ── Mobile: price-first, single column ──────────────────────────────────── */
+@media (max-width: 760px) {
+  .hero--gtl {
+    padding-block: var(--gtl-7) var(--gtl-6);
+  }
+  .hero--gtl .hero-inner--gtl {
+    display: flex;
+    flex-direction: column;
+    padding-inline: var(--gtl-4);
+    gap: var(--gtl-5);
+    align-items: stretch;
+  }
+
+  /* Pull the live price block above the editorial text on phones, and keep it
+     compact — no reserved voids from empty sub-elements. */
+  .hero--gtl .hero-live-card {
+    order: -1;
+    gap: var(--gtl-2);
+  }
+  .hero--gtl .hero-title-main {
+    font-size: clamp(1.75rem, 1.4rem + 3vw, 2.25rem);
+  }
+  .hero--gtl .hlc-sparkline {
+    max-width: none;
+  }
+  .hero--gtl .hlc-indicators {
+    margin-top: 0;
+  }
+  .hero--gtl .hlc-footer {
+    margin-top: var(--gtl-1);
+  }
+
+  /* The stacked editorial block leads with its CTA on phones for a fast path. */
+  .hero--gtl .hero-ctas--gtl {
+    width: 100%;
+  }
+  .hero--gtl .hero-ctas--gtl .gtl-btn {
+    flex: 1;
+    justify-content: center;
+  }
+}

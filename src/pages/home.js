@@ -15,6 +15,7 @@ import {
 } from '../config/index.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import * as api from '../lib/api.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
@@ -27,7 +28,6 @@ import {
   createPrimaryQuoteProvider,
   createSecondaryQuoteProvider,
 } from '../lib/quote-providers/create-providers.js';
-import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -82,6 +82,9 @@ const SOURCE_TX_KEY = {
 // ── State ──────────────────────────────────────────────────────────────────
 let lang = 'en';
 let goldPrice = null;
+// F-1: the single canonical snapshot (committed-file source, identical to the
+// calculator) that authoritatively drives every displayed price on this page.
+let _canonicalSnapshot = null;
 let dayOpenPrice = null;
 let rates = {};
 let goldUpdatedAt = null;
@@ -423,7 +426,10 @@ function renderHeroCard() {
 
     animatePrice(priceEl, usd24oz, {
       decimals: 2,
-      format: (n) => fmt.formatPrice(n, 'USD', 2),
+      // Redesign hero: the currency ($) is a static raised gold glyph in the
+      // markup, so the animated numeral omits it for the split-numeral treatment.
+      format: (n) =>
+        n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
       pulse: true,
       pulseTarget: priceEl,
       terminalRoot: heroCard,
@@ -1246,6 +1252,32 @@ function applyLangToPage() {
 }
 
 // ── Fetch live data in parallel ────────────────────────────────────────────
+/**
+ * F-1 canonical price seed. Reads the single canonical snapshot (the same
+ * committed `/data/gold_price.json` the calculator uses, via the spot-resolver)
+ * and makes it the authoritative displayed value for the hero, sticky spot-bar,
+ * karat strip and GCC grid — so every surface shows ONE price at any instant.
+ * Called at init and on the refresh interval; the realtime engine remains for
+ * liveness/SLA detection but no longer drives the displayed number.
+ */
+async function seedCanonicalPrice() {
+  try {
+    const snap = await getCanonicalSpot({ force: true });
+    if (!snap?.ok || !Number.isFinite(snap.spotUsdPerOz)) return;
+    _canonicalSnapshot = snap;
+    goldPrice = snap.spotUsdPerOz;
+    goldUpdatedAt = snap.freshness.updatedAt || goldUpdatedAt;
+    goldIsFallback = snap.freshness.isFallback === true;
+    goldIsFresh = snap.freshness.state === 'live';
+    cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
+    renderHeroCard();
+    renderKaratStrip();
+    renderGCCGrid();
+  } catch {
+    // Keep the previous canonical/cached value on any resolver failure.
+  }
+}
+
 async function fetchLiveData() {
   if (!navigator.onLine) return;
   try {
@@ -1288,14 +1320,15 @@ function applyRealtimeSnapshot(snapshot) {
 
   const quote = snapshot?.quote;
   if (quote?.price) {
-    goldPrice = quote.price;
-    goldUpdatedAt = quote.providerTimestamp || quote.fetchedAt || new Date().toISOString();
+    // F-1 (owner-approved): the realtime engine now drives liveness/SLA detection
+    // and provider identity ONLY. The DISPLAYED price stays the canonical
+    // committed-file value (seedCanonicalPrice), so the homepage never shows a
+    // number that disagrees with the calculator. We deliberately do NOT overwrite
+    // goldPrice / goldUpdatedAt / goldIsFresh / goldIsFallback with the divergent
+    // live quote here — correctness of the price pipeline wins.
     goldProviderId = quote.providerId || goldProviderId;
-    goldIsFallback = quote.isFallback ?? quote.forcedState === 'fallback';
-    goldIsFresh = resolveGoldIsFresh(quote);
-    cache.saveGoldPrice(quote.price, goldUpdatedAt);
     hideDataStatusBanner();
-    renderHeroCard();
+    if (!goldPrice) renderHeroCard();
   } else if (!goldPrice) {
     const priceEl = document.getElementById('hlc-price');
     if (priceEl) {
@@ -1631,13 +1664,18 @@ async function init() {
     renderGCCGrid();
   }
 
-  // Fetch live data (non-blocking)
+  // F-1: seed the canonical committed-file price first so the displayed number
+  // matches the calculator from first paint, then start the liveness engine + FX.
+  seedCanonicalPrice();
   initRealtimeEngine();
   fetchLiveData();
 
-  // FX auto-refresh (gold polling handled by realtime pricing engine)
+  // FX auto-refresh + canonical re-read (gold liveness handled by realtime engine)
   if (_refreshTimer) clearInterval(_refreshTimer);
-  _refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
+  _refreshTimer = setInterval(() => {
+    seedCanonicalPrice();
+    fetchLiveData();
+  }, CONSTANTS.GOLD_REFRESH_MS);
 
   // Tick the "Updated X sec/min ago" label every second without a full price re-fetch.
   startFreshnessTimer();
