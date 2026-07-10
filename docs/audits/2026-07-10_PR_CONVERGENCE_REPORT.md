@@ -127,3 +127,21 @@ activation.
 `npm ci`, `npm audit`, lint, format:check, `npm run validate`, full unit tests, full Playwright
 (chromium/firefox/webkit), build, link/SEO/a11y/manifest checks, pricing/data-invariant checks, live
 smoke matrix — all green; record exact counts; then tag `post-pr-convergence-pre-60-2026-07-10`.
+
+---
+
+## Progress log
+
+### Wave A — COMPLETE (2026-07-10)
+
+| PR   | Disposition | Conflict resolution                                                                                                                                                                                                                                                                           | Result                                                                                                                            |
+| ---- | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| #622 | merged      | none (clean)                                                                                                                                                                                                                                                                                  | RTL `?lang=` fix (terms/privacy/methodology) live on main                                                                         |
+| #624 | merged      | none (clean)                                                                                                                                                                                                                                                                                  | tracker RTL `?lang=` fix live on main                                                                                             |
+| #612 | merged      | none (clean); red lighthouse was a **flake** — re-ran green on fresh main                                                                                                                                                                                                                     | motion/View-Transition console guard live                                                                                         |
+| #589 | merged      | **`manifest.json` conflict resolved deliberately**: standardized favicon icon paths on `/assets/` (site-wide convention used by schema/RSS/discord) and relocated the PR's PNGs from `public/` → `public/assets/` so every reference resolves. Verified all favicon refs point to real files. | favicon-404 fix + monthly-baseline backfill **mechanism** (template ships `price:null`, merge ignores nulls — no fabricated data) |
+| #590 | merged      | none (clean)                                                                                                                                                                                                                                                                                  | provider-health hysteresis flap fix (descriptive; no pricing change)                                                              |
+
+**Post-Wave-A main:** `e11204c9c` · `npm test` **1426/0** · lint clean · build green · AED_PEG
+3.6725 & TROY_OZ_GRAMS 31.1035 untouched · open backlog **41 → 36**. No owner-gated item hit. No
+fabricated data, no flag turned on, no secret, no force-push.
