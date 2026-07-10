@@ -1,0 +1,207 @@
+/* ============================================================================
+   Calculator redesign — premium editorial layer (Track 2, increment 1)
+   ----------------------------------------------------------------------------
+   Loaded AFTER calculator.css so these rules win by source order. Pure CSS
+   overrides on the existing DOM (no markup changes) to lift the hero + primary
+   result to the homepage's warm "bullion-terminal" bar, using the shared design
+   system tokens (design-system.css). Light theme only — dark is deferred with
+   the rest of the site, matching #642.
+   ========================================================================== */
+
+/* ── Hero: editorial identity ─────────────────────────────────────────────── */
+.calc-hero {
+  background:
+    radial-gradient(120% 90% at 50% -10%, var(--color-gold-tint) 0%, transparent 60%),
+    var(--color-bg);
+  border-bottom: 1px solid var(--color-gold-glow);
+  padding-block: clamp(2rem, 5vw, 3.5rem);
+}
+
+.calc-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+  font-size: clamp(2rem, 5vw, 3rem);
+  line-height: 1.05;
+}
+
+.calc-hero-sub {
+  color: var(--text-secondary, var(--color-ink-2, #55493a));
+}
+
+/* Spot / AED badges → premium pills */
+.calc-hero-badges .calc-live-badge {
+  border: 1px solid var(--color-gold-glow);
+  background: var(--color-surface);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  font-family: var(--gtl-num);
+}
+.calc-hero-badges .calc-live-badge #calc-spot-price,
+.calc-hero-badges .calc-live-badge #calc-aed-price {
+  color: var(--color-ink-data);
+  font-weight: 700;
+}
+
+/* Honesty breakdown chips */
+.calc-hero-breakdown {
+  gap: 0.5rem 0.9rem;
+}
+.calc-hero-breakdown-item {
+  color: var(--color-gold-deep);
+}
+
+/* ── Tabs: quiet rail with a struck-gold active marker ─────────────────────── */
+.calc-nav-tabs {
+  border-bottom: 1px solid var(--color-gold-glow);
+  gap: 0.25rem;
+}
+.calc-tab {
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  font-weight: 600;
+  color: var(--text-secondary, #55493a);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  transition:
+    color 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease;
+}
+.calc-tab:hover {
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+}
+.calc-tab.active {
+  color: var(--color-gold-dark);
+  border-bottom-color: var(--color-gold);
+  background: var(--color-gold-bg);
+}
+.calc-tab:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Primary tool card: raised premium surface ────────────────────────────── */
+.calc-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+.calc-card-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  color: var(--color-ink, #1a140a);
+}
+
+/* Quick-amount chips + mode toggle (both .calc-preset-chip) → design-system pills */
+.calc-preset-chip {
+  border-radius: 999px;
+  border: 1px solid var(--color-gold-glow);
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease;
+}
+.calc-preset-chip:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+}
+.calc-preset-chip.is-active,
+.calc-preset-chip[aria-pressed='true'] {
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+}
+.calc-preset-chip:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* Inputs / selects: calm, tokenised */
+.calc-input,
+.calc-field select,
+.calc-card input[type='text'],
+.calc-card input[type='number'],
+.calc-card select {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-muted, #d9cdb2);
+  background: var(--color-surface);
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease;
+}
+.calc-input:focus-visible,
+.calc-field select:focus-visible,
+.calc-card input:focus-visible,
+.calc-card select:focus-visible {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* ── Result: the hero number of the tool ──────────────────────────────────── */
+.calc-result {
+  background:
+    radial-gradient(90% 120% at 100% 0%, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-surface-2);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.calc-result-label {
+  color: var(--color-gold-deep);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.calc-result-value,
+.calc-result-main {
+  font-family: var(--gtl-num);
+  font-weight: 800;
+  color: var(--color-ink-data);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+}
+.calc-result-value {
+  font-size: clamp(2rem, 6vw, 3rem);
+}
+
+/* Reuse the homepage's value-settle motion; respect reduced motion. */
+.calc-result-value.calc-result--animating {
+  animation: calc-result-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes calc-result-pop {
+  0% {
+    transform: translateY(4px) scale(0.985);
+    opacity: 0.55;
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-result-value.calc-result--animating {
+    animation: none;
+  }
+}
+.calc-result-breakdown {
+  font-family: var(--gtl-num);
+  color: var(--text-secondary, #55493a);
+}
+.calc-result-note {
+  color: var(--color-gold-deep);
+}
+
+/* ── RTL: keep the gold wash mirrored, numerals stay LTR-isolated ─────────── */
+[dir='rtl'] .calc-result {
+  background:
+    radial-gradient(90% 120% at 0% 0%, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-surface-2);
+}

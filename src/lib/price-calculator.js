@@ -8,7 +8,9 @@ import { CONSTANTS } from '../config/index.js';
  * @returns {number}  USD per gram, or `0` if inputs are falsy.
  */
 export function usdPerGram(spotUsdPerOz, purity) {
-  if (!spotUsdPerOz || !purity) return 0;
+  // Reject non-positive / non-finite spot or purity (matches the canonical
+  // resolver's guard) so a bad feed can never yield a negative price.
+  if (!(spotUsdPerOz > 0) || !(purity > 0)) return 0;
   return (spotUsdPerOz / CONSTANTS.TROY_OZ_GRAMS) * purity;
 }
 
@@ -20,7 +22,7 @@ export function usdPerGram(spotUsdPerOz, purity) {
  * @returns {number}  USD per troy ounce, or `0` if inputs are falsy.
  */
 export function usdPerOz(spotUsdPerOz, purity) {
-  if (!spotUsdPerOz || !purity) return 0;
+  if (!(spotUsdPerOz > 0) || !(purity > 0)) return 0;
   return spotUsdPerOz * purity;
 }
 

@@ -6,6 +6,7 @@
 import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, DATA_ATTRIBUTION } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import { usdPerGram } from '../lib/price-calculator.js';
 import { UNIT_TO_GRAMS, toGrams, parseLocalizedNumber } from '../lib/weight-units.js';
 import { isFeatureEnabled } from '../config/feature-flags.js';
@@ -1494,12 +1495,20 @@ function applyValueModeUi() {
 // ── Fetch live data ──────────────────────────────────────────────────────────
 async function fetchLiveData() {
   try {
-    const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
-    if (goldRes.status === 'fulfilled') {
-      STATE.spotUsdPerOz = goldRes.value.price;
-      STATE.freshness.goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
-      STATE.spotSource = 'live';
-      cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
+    // F-1: read the SAME canonical snapshot the homepage uses (single memoized
+    // resolver over the committed /data/gold_price.json) so the calculator can
+    // never diverge from the rest of the site. Freshness state comes from the
+    // snapshot, not an optimistic "live", so cached/stale is labelled honestly.
+    const [snapRes, fxRes] = await Promise.allSettled([
+      getCanonicalSpot({ force: true }),
+      api.fetchFX(),
+    ]);
+    if (snapRes.status === 'fulfilled' && snapRes.value?.ok) {
+      const snap = snapRes.value;
+      STATE.spotUsdPerOz = snap.spotUsdPerOz;
+      STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || new Date().toISOString();
+      STATE.spotSource = snap.freshness.state === 'live' ? 'live' : 'cached/fallback';
+      cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness.updatedAt);
     } else if (STATE.spotUsdPerOz) {
       STATE.spotSource = 'cached/fallback';
     }
