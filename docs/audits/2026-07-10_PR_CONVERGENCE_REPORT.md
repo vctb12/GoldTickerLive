@@ -194,3 +194,15 @@ math untouched.
 open backlog **17 → 10**. Lighthouse flakiness recurred on several PRs (re-ran green each time) —
 logged as a CI-reliability finding for the post-merge audit. GitHub GraphQL rate limit was hit
 mid-wave; switched PR merges to the REST endpoint (core limit) and continued without stopping.
+
+### Wave E — COMPLETE (2026-07-10)
+
+Merged (7): #601, #602, #603, #604, #605, #606, #607 (multi-metal
+view-models/feed-adapter/freshness/ selector/render/SEO + gold-vs-crypto snapshot). **Verified
+before merge:** every "pilot" reference is a flag _comparison_ (`=== true` guard), NOT an assignment
+— `METALS_PILOT_ENABLED` and `CRYPTO_PILOT_ENABLED` remain **false** on main; **no data files
+added**, so no fabricated XAG/XPT/XPD/BTC/ETH prices; `data/gold_price.json` stays single-metal XAU.
+#607 crypto carries no prediction/recommendation language (descriptive snapshot only, pilot OFF).
+
+**Post-Wave-E main:** `c521364b9` · `npm test` **1566/0** · pilots OFF · invariants (3.6725 /
+31.1035) untouched · no fabricated data. Open backlog **10 → 3** (Wave F: #595, #597, #618).
