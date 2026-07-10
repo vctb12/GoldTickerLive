@@ -810,9 +810,24 @@ function mountHomeQuickConvert() {
     // price (cache-boot or live) lands, and the later recalc() calls must see
     // the current value instead of the null captured at mount time.
     getSpot: () => goldPrice,
+    // On-widget freshness reflects the same canonical snapshot as the hero/nav.
+    getFreshness: () => {
+      const { statusText, ageText } = getFreshnessMeta();
+      return { statusText, ageText };
+    },
     t: (key) => tx(key),
     mount,
   });
+  // Two-way karat link with the ladder/dial: selecting a karat in either updates both.
+  const qk = document.getElementById('home-quick-karat');
+  if (qk) {
+    qk.addEventListener('change', () => {
+      if (qk.value !== _selectedKarat && KARATS.some((k) => k.code === qk.value)) {
+        _selectedKarat = qk.value;
+        updateKaratDial();
+      }
+    });
+  }
 }
 
 function renderHomeAdditiveSections() {
@@ -1389,6 +1404,17 @@ function updateKaratDial() {
       item.classList.toggle('is-selected', k.code === _selectedKarat);
     }
   });
+
+  // Flow the karat selection into the inline calculator (karat ladder → calculator).
+  const qk = document.getElementById('home-quick-karat');
+  if (
+    qk &&
+    qk.value !== _selectedKarat &&
+    [...qk.options].some((o) => o.value === _selectedKarat)
+  ) {
+    qk.value = _selectedKarat;
+    _quickConvert?.recalc?.();
+  }
 }
 
 /** Make the ladder rungs a keyboard-accessible radio-group that drives the dial. */

@@ -846,6 +846,34 @@
   border-top: 1px solid var(--gtl-line);
   padding-top: 8px;
 }
+
+/* Formula + freshness reserve their space (min-height) so populating them after the
+   canonical seed lands causes NO layout shift; empty state is invisible (no box). */
+.quick-convert-widget__formula {
+  font-family: var(--gtl-num);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.82rem;
+  color: var(--gtl-ink-muted);
+  margin: 8px 0 0;
+  padding: 7px 10px;
+  background: var(--gtl-paper);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-sm);
+  min-height: 2.2rem;
+}
+.quick-convert-widget__formula:empty {
+  background: transparent;
+  border-color: transparent;
+}
+.quick-convert-widget__freshness {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--gtl-ink-faint);
+  margin: 6px 0 0;
+  min-height: 1.1rem;
+}
 .quick-convert-widget__cta {
   align-self: flex-start;
   margin-top: var(--gtl-3);
