@@ -16,6 +16,17 @@ export const FEATURE_FLAGS = Object.freeze({
   CROSS_VALIDATION_ENABLED: false,
 
   /**
+   * FX-rate integrity (Phase 52). When `true`, the live USD→currency rates fetched from the FX feed
+   * are sanitized by `../lib/fx-integrity.js` before they are applied to any displayed price: rates
+   * that are non-finite, non-positive, or wildly out of a plausible band are dropped (no price is
+   * shown for that currency rather than a corrupted one), and AED is always forced to the fixed
+   * `AED_PEG` regardless of what the feed carries. Non-authoritative — it never invents a rate and
+   * never touches the peg/troy math; it only rejects untrustworthy feed values. OFF until the owner
+   * approves enabling it on the live price path.
+   */
+  FX_INTEGRITY_ENABLED: false,
+
+  /**
    * Stale-price protection (Phase 50). When `true`, the freshness state a quote may claim is clamped
    * by `../lib/stale-price-guard.js`: a quote whose age cannot be TRUSTED from the provider's own
    * data timestamp (missing timestamp, or an implausible future timestamp that would otherwise clamp
