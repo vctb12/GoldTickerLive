@@ -24,6 +24,35 @@ export const FEATURE_FLAGS = Object.freeze({
    * until the owner reviews the localized-input UX.
    */
   LOCALIZED_NUMERAL_INPUT_ENABLED: false,
+
+  /**
+   * FX-rate integrity (Phase 52). When `true`, the live USD→currency rates fetched from the FX feed
+   * are sanitized by `../lib/fx-integrity.js` before they are applied to any displayed price: rates
+   * that are non-finite, non-positive, or wildly out of a plausible band are dropped (no price is
+   * shown for that currency rather than a corrupted one), and AED is always forced to the fixed
+   * `AED_PEG` regardless of what the feed carries. Non-authoritative — it never invents a rate and
+   * never touches the peg/troy math; it only rejects untrustworthy feed values. OFF until the owner
+   * approves enabling it on the live price path.
+   */
+  FX_INTEGRITY_ENABLED: false,
+
+  /**
+   * Stale-price protection (Phase 50). When `true`, the freshness state a quote may claim is clamped
+   * by `../lib/stale-price-guard.js`: a quote whose age cannot be TRUSTED from the provider's own
+   * data timestamp (missing timestamp, or an implausible future timestamp that would otherwise clamp
+   * to age 0) can no longer be presented as `live`/`cached`. Downgrade-only — it never makes a quote
+   * look fresher, never overrides age-based truth, and never alters the price itself. OFF until the
+   * owner approves enabling it on the live price path.
+   */
+  STALE_PRICE_GUARD_ENABLED: false,
+
+  /**
+   * Data-source health dashboard (Phase 48). When `true`, a diagnostics panel can render the
+   * per-provider health snapshot (success rate, median/p95 latency, timeouts, rate-limits, trip
+   * state) plus the current freshness state — a read-only operator/observability view. OFF by
+   * default; it surfaces no user-facing price and changes nothing about the pricing math.
+   */
+  DATASOURCE_HEALTH_DASHBOARD_ENABLED: false,
 });
 
 /**

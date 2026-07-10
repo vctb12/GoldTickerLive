@@ -62,6 +62,16 @@ html[lang='ar'] [data-lang-block='en'] {
   margin: 0 0 var(--space-4);
 }
 
+/* Pre-hydration affordance: the static fallback shows "Loading guides…" (dimmed,
+   italic) instead of a frozen "Read 0 of N", which reads as a stuck counter. The
+   live aria-live counter replaces this element once the hub hydrates. Intentionally
+   static — no animation — so it is inherently prefers-reduced-motion safe. */
+.learn-hub-progress--loading {
+  color: var(--color-text-tertiary, var(--color-text-secondary));
+  font-style: italic;
+  opacity: 0.85;
+}
+
 .learn-hub-filter {
   width: 100%;
   min-height: 46px;
@@ -395,6 +405,16 @@ html[lang='ar'] [data-lang-block='en'] {
   border-bottom: 2px solid var(--color-gold);
   padding-bottom: 1px;
   font-weight: var(--weight-bold);
+}
+
+/* G6: WCAG 2.2 §2.5.8 — the rendered table-of-contents links (.learn-hub-toc-link,
+   distinct from the .learn-toc-list variant above) are a nav link list stacked as
+   list items at ~22px. Give them a ≥24px tap target. Vertical-only growth keeps the
+   list width unchanged, so no horizontal overflow and RTL is unaffected. */
+.learn-hub-toc-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
 }
 
 /* ── Body layout ────────────────────────────────────── */
