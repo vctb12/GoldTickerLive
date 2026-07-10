@@ -513,6 +513,43 @@
   line-height: 1.4;
 }
 
+/* Visibly distinguish explanatory interpretation from the factual numbers. */
+.market-insight__interp {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+.market-insight__interp-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gtl-ink-faint);
+  border: 1px solid var(--gtl-line);
+  border-radius: var(--gtl-r-pill);
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+.market-insight__source {
+  font-size: 0.72rem;
+  color: var(--gtl-ink-faint);
+  margin: 0;
+}
+.market-insight__link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gtl-gold-deep);
+  text-decoration: none;
+}
+.market-insight__link::after {
+  content: ' →';
+}
+[dir='rtl'] .market-insight__link::after {
+  content: ' ←';
+}
+
 @media (max-width: 900px) {
   .home-chart-wrap--gtl {
     grid-template-columns: 1fr;

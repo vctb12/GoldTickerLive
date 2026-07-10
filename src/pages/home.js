@@ -1069,6 +1069,8 @@ function applyLangToPage() {
   setTextById('mi-position-label', tx('miPositionLabel'));
   setTextById('mi-year-label', tx('miYearLabel'));
   setTextById('mi-range-label', tx('miRangeLabel'));
+  setTextById('mi-interp-tag', tx('miInterpretationTag'));
+  setTextById('mi-read-link', tx('miReadLink'));
   setTextById('hero-trust-line', tx('heroTrustLine'));
   setTextById('hlc-trust-line', tx('heroTrustShort'));
   setTextById('home-tools-kicker', tx('toolsKicker'));
@@ -1374,9 +1376,19 @@ function renderMarketInsight() {
     posEl.textContent = Math.round(pctPos) + '% ' + tx('miOfRange');
     posEl.classList.toggle('market-insight__value--up', pctPos >= 60);
     if (posNote) {
+      // Explanatory read (labeled "Interpretation" in the UI) — descriptive and
+      // backward-looking only; never advice or a forecast.
       posNote.textContent =
         pctPos >= 75 ? tx('miNearTop') : pctPos <= 25 ? tx('miNearLow') : tx('miMidRange');
     }
+  }
+
+  // Source + freshness line — makes clear these are reference data figures and
+  // whether they are live / cached / stale (honest, matches the hero freshness).
+  const sourceEl = document.getElementById('mi-source');
+  if (sourceEl) {
+    const { statusText, ageText } = getFreshnessMeta();
+    sourceEl.textContent = `${tx('miDataLabel')} · ${statusText} · ${ageText}`;
   }
 }
 
