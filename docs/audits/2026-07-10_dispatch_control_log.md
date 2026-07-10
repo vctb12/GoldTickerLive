@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 12 branches, 15 commits, 12 PRs.
+**Work produced this run:** 14 branches, 17 commits, 14 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                              |
 | ---------------------------------------------- | --------------- | -------- | --------------------------------------------------------------- |
@@ -42,6 +42,8 @@ line-by-line. No fabricated PR links.
 | `cowork/dp7-a11y-baseline-guard`               | 1               | **#626** | DP-7 — post-hydration a11y baseline guard (14 pages, 14 e2e)    |
 | `cowork/dp8-seo-surface-guard`                 | 1               | **#627** | DP-8 — post-hydration SEO-head guard (canonical/title/hreflang) |
 | `cowork/dp9-theme-toggle-check`                | 1               | **#628** | DP-9 — theme-toggle correctness guard (50-Plan #29)             |
+| `cowork/dp10-offline-verify`                   | 1               | **#629** | DP-10 — offline/PWA fallback guard (SW active + offline.html)   |
+| `cowork/dp11-calculator-accuracy`              | 1               | **#630** | DP-11 — calculator AED-vs-formula accuracy (24K/22K, trust)     |
 
 ---
 
@@ -272,12 +274,21 @@ resolved. Firefox/webkit run the same spec in CI.
   (FOUC-safe), dark pref changes body bg (light `rgb(253,251,245)`→dark `rgb(11,11,13)`) + survives
   reload, toggle persists a valid mode. Chromium 3/3.
 
+### DP-10 / DP-11 — DONE
+
+- **DP-10 → PR #629** `tests/e2e/offline-pwa.spec.js` (verify-only, no `sw.js` edit): SW registers +
+  activates; `offline.html` is a valid self-contained fallback (heading + >200 chars + home link, 0
+  first-party errors). Live offline-interception nav verified manually (SW active + offline →
+  `/index.html` rendered app content), not asserted to avoid SW-timing flake. Chromium 2/2.
+- **DP-11 → PR #630** `tests/e2e/calculator-accuracy.spec.js` (trust-critical): displayed AED equals
+  `xau/31.1035 * purity * 3.6725 * grams` for 24K + 22K, plus 22K = 24K×22/24. Computed from the
+  page's own spot; 10 g/24K/AED → `4,867.82 د.إ` exact. Chromium 3/3.
+
 ### Next packets (still stabilize-first)
 
-1. **DP-10 — offline/PWA browser check**: `offline.html` + service-worker offline fallback behaves
-   (cached shell renders, no console errors) — $0, no `sw.js` edit (verify-only).
-2. **DP-11 — calculator numeric-correctness browser check**: enter grams/karat, assert the displayed
-   AED/USD matches the derived formula (peg 3.6725, troy 31.1035) to the rounding rule — $0.
+1. **DP-12 — portfolio persistence browser check**: add/edit/delete a holding, assert totals + P/L
+   render and survive reload (localStorage). $0.
+2. **DP-13 — glossary/compare surface checks** (search filters, no empty render). $0.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
