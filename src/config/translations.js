@@ -1230,6 +1230,8 @@ export const TRANSLATIONS = {
     'freshness.badge.closed': 'Closed',
     'freshness.badge.stale': 'Stale',
     'freshness.badge.unavailable': 'Unavailable',
+    'crossValidation.divergence.tooltip':
+      'Delayed: a secondary reference source disagrees with the live price beyond the {pct}% cross-check threshold, so the live label is held back.',
     'freshness.strip.live': 'Live',
     'freshness.strip.delayed': 'Delayed',
     'freshness.strip.cached': 'Cached',
@@ -2644,6 +2646,8 @@ export const TRANSLATIONS = {
     'freshness.badge.closed': 'مغلق',
     'freshness.badge.stale': 'قديم',
     'freshness.badge.unavailable': 'غير متاح',
+    'crossValidation.divergence.tooltip':
+      'متأخر: مصدر مرجعي ثانوي يختلف مع السعر المباشر بما يتجاوز حدّ التحقق المتقاطع البالغ {pct}%، لذا يُحجب وصف «مباشر».',
     'freshness.strip.live': 'مباشر',
     'freshness.strip.delayed': 'متأخر قليلاً',
     'freshness.strip.cached': 'مخزن مؤقتاً',

@@ -44,3 +44,23 @@ Divergence is symmetric (`|a−b| / mean × 100`), so it doesn't matter which pr
    `gold-price-fetch.yml` (writes `data/gold_price.json` provider fields) — **not changed here**.
 
 Until then, the detection is tested and ready but inert.
+
+## T1.1 update — client-side wiring (still OFF by default)
+
+Follow-on `T1.1` wires the dormant detection into the client live lane, **entirely behind the same
+`CROSS_VALIDATION_ENABLED` flag (still OFF)** plus a `?debug=true` preview toggle. Nothing runs in
+production until the owner flips the flag. What T1.1 adds:
+
+| File                                                                   | Role                                                                                                                                                                                                                                       |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/lib/quote-providers/cross-validation.js`                          | `downgradeFreshnessForDivergence(key, evaluation)` — pure map from an `under-review` result to the existing `live-status.js` vocabulary (`live` → `delayed`, downgrade-only).                                                              |
+| `src/lib/quote-providers/secondary-spot-check.js`                      | Lazy, throttled, fire-and-forget secondary **reference** spot check (freegoldapi.com, keyless/CORS). Same-day-fresh only → never a false positive from a stale daily close. `?debug=true` force + `setSimulateGoldFail`-safe orchestrator. |
+| `src/components/spotBar.js`                                            | Reads the last cached evaluation synchronously and downgrades the live pill when the flag/debug is active. No new fetch on the poll path.                                                                                                  |
+| `src/config/translations.js`                                           | `crossValidation.divergence.tooltip` — EN + AR, semantic parity.                                                                                                                                                                           |
+| `tests/secondary-spot-check.test.js`, `tests/cross-validation.test.js` | Threshold boundary (just-under vs just-over 0.75%), divergence→label mapping, forced primary failure via `setSimulateGoldFail`, `?debug=true`, reference selection/staleness.                                                              |
+
+**Honesty note:** freegoldapi is a _daily reference_, not a live feed. Enabling this therefore errs
+conservative — during normal intraday drift the reference can differ by >0.75%, downgrading `live` →
+`delayed` rather than risking an unlabelled "Live" a second source disagrees with. Tuning the
+threshold (or swapping in a proven-live secondary) is an owner decision at enable-time. No peg
+(3.6725) or troy (31.1035) math is touched; both come from `CONSTANTS` only.
