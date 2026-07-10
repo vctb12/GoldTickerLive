@@ -16,6 +16,16 @@ export const FEATURE_FLAGS = Object.freeze({
   CROSS_VALIDATION_ENABLED: false,
 
   /**
+   * Localized numeric input on the calculator (Phase 55). When `true`, the calculator reads weight /
+   * amount fields with `parseLocalizedNumber` (from `../lib/weight-units.js`) instead of `parseFloat`,
+   * so an Arabic-UI visitor who types native Arabic-Indic (٠-٩) / Persian-Urdu (۰-۹) numerals — or a
+   * thousands separator — gets a result instead of a silently blank one. For plain ASCII input the
+   * parser is a strict superset of `parseFloat`, so OFF is byte-for-byte the current behavior. OFF
+   * until the owner reviews the localized-input UX.
+   */
+  LOCALIZED_NUMERAL_INPUT_ENABLED: false,
+
+  /**
    * FX-rate integrity (Phase 52). When `true`, the live USD→currency rates fetched from the FX feed
    * are sanitized by `../lib/fx-integrity.js` before they are applied to any displayed price: rates
    * that are non-finite, non-positive, or wildly out of a plausible band are dropped (no price is
