@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 16 branches, 19 commits, 16 PRs.
+**Work produced this run:** 17 branches, 20 commits, 17 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                              |
 | ---------------------------------------------- | --------------- | -------- | --------------------------------------------------------------- |
@@ -46,6 +46,7 @@ line-by-line. No fabricated PR links.
 | `cowork/dp11-calculator-accuracy`              | 1               | **#630** | DP-11 — calculator AED-vs-formula accuracy (24K/22K, trust)     |
 | `cowork/dp12-portfolio-persistence`            | 1               | **#631** | DP-12 — portfolio add/persist/delete localStorage round-trip    |
 | `cowork/dp13-glossary-compare`                 | 1               | **#632** | DP-13 — glossary(52 EN/AR) + compare no-empty-render guards     |
+| `cowork/dp14-heatmap-shops`                    | 1               | **#633** | DP-14 — heatmap(156 shapes) + shops(87 cards) render guards     |
 
 ---
 
@@ -294,13 +295,22 @@ resolved. Firefox/webkit run the same spec in CI.
   EN+AR (52/52 both), compare renders rows+prices+add-control. Chromium 3/3. (Glossary is a static
   list — no search UI, so guard checks substance/parity.)
 
-### Next packets (still stabilize-first)
+### DP-14 — DONE, PR #633
 
-1. **DP-14 — heatmap + shops surface checks**: heatmap renders countries/legend; shops renders its
-   directory (cards + filters) — no-empty-render, $0. (Last two major unguarded surfaces.)
-2. **Stabilize-first program will then be essentially complete** — every core surface
-   browser-guarded. Remaining work is owner-gated or lower-value polish; recommend a checkpoint with
-   the owner.
+- `tests/e2e/heatmap-shops.spec.js`: heatmap renders a map + >20 country shapes + legend + prices +
+  0 first-party console errors (sweep: 156 shapes / 63 prices); shops renders >10 cards + filters
+  (87 cards). Chromium 2/2.
+
+### Stabilize-first program — ESSENTIALLY COMPLETE
+
+Every core surface now has a browser-verified regression guard (home, learn, tracker, calculator,
+portfolio, shops, compare, heatmap, glossary, methodology, terms, privacy, market, dubai) plus
+cross-cutting guards: console/network cleanliness, `?lang=` RTL (all pages incl. tracker),
+freshness/label-honesty, a11y, SEO head, theme toggle, offline/PWA, and pricing invariants
+(peg/troy/karat + calculator accuracy). One real user-facing bug found & fixed (RTL `?lang=`, #622 +
+#624). **Recommend an owner checkpoint** — remaining work is owner-gated (metals feed → see #625,
+billing, social, web-push, analytics OAuth) or lower-value polish overlapping other-fleet PRs.
+Suggest triaging/merging this 17-PR set before more is added.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
