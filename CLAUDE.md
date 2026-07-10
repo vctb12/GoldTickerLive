@@ -67,3 +67,27 @@ ran vs. what you inferred.
 ## When the two files disagree
 
 If anything here contradicts `AGENTS.md`, `AGENTS.md` wins. File an edit to reconcile.
+
+## Overnight / autonomous automation
+
+For unattended runs, the safety mandate in [`AGENTS.md` → Overnight autonomous agent](./AGENTS.md)
+is authoritative. Claude-specific mechanics:
+
+- **Launch via the safe runner.** `scripts/agent-night-run.sh` starts Claude Code in SAFE mode (no
+  `--dangerously-skip-permissions`), on an isolated non-`main` branch, logging to
+  `logs/agent-night/<timestamp>.log`. Do not add a permission-bypass flag.
+- **Permissions are pre-set.** `.claude/settings.json` allows safe repo work (read/edit source, run
+  npm scripts, commit, push to `cowork/**` `claude/**` `agent/**`) and denies dangerous work
+  (push/force-push to `main`, merge, deploy, editing `.env`/secrets, `gold-price-fetch.yml`,
+  `post_gold.yml`, `sw.js`, and `src/config/constants.js` where the 3.6725 peg lives).
+- **Pick the next phase.** Read `docs/AGENT_MASTER_TRACKER.md`; take the next `not-started`,
+  non-owner-gated phase; mark it `in-progress` before coding and `done` (with the PR link) after. If
+  it's owner-gated, mark `gated-pending-owner-decision`, add it to the Owner-Gated Decision Queue,
+  and move on.
+- **One phase per run.** Small logical commits; run `npm run lint`, `npm test`, `npm run build`, and
+  `npm run validate` for the surface you touched; open one PR; **stop** (never merge/deploy).
+- **Orient fast.** `scripts/agent-status.sh` prints branch, status, changed files, PR hints, and a
+  tracker summary — read-only, safe to run anytime.
+- **Stop conditions.** Stop and hand off (note in `docs/agent-handoffs/`) when: the phase is done
+  and a PR is open; the next eligible item is owner-gated; validation fails in a way you can't
+  safely fix within scope; or a change would touch any denied surface above.

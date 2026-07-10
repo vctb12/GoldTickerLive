@@ -203,3 +203,24 @@ Automation prompts under `.github/prompts/` include a rules preamble — copy fr
 | Active queue       | `PLAN.md`                                                                          |
 | Deep reference     | `docs/AGENTS_REFERENCE.md`, `docs/ARCHITECTURE.md`, `docs/REVAMP_PLAN.md`          |
 | Cursor Cloud env   | `docs/AGENTS_REFERENCE.md` (Node 24, env vars, ports)                              |
+
+## Overnight autonomous agent — scope & guardrails
+
+Unattended/overnight agent runs (and any Codex/secondary reviewer) operate under a hard, minimal
+mandate. Tooling: `scripts/agent-night-run.sh` (SAFE runner — no permission bypass, never `main`,
+logs to `logs/agent-night/`), `scripts/agent-status.sh` (read-only snapshot),
+`.claude/settings.json` (allow safe work / deny dangerous work), `.github/codex/prompts/review.md`
+(reviewer prompt).
+
+**Must NOT** (blocking): merge; deploy; push to `main`; force-push; add/edit `.env`, secrets, API
+keys, tokens, or credential files; edit `.github/workflows/gold-price-fetch.yml`, `post_gold.yml`,
+or `sw.js`; change the AED/USD peg **3.6725**, troy **31.1034768 g**, karat factors, or the
+price/karat/FX formulas and source-priority logic; add paid APIs / recurring infra / new
+dependencies without an explicit owner ask + advisory check.
+
+**Must** (each run): work on an isolated `cowork/**`, `claude/**`, or `agent/**` branch; take the
+next `not-started`, non-owner-gated phase from `docs/AGENT_MASTER_TRACKER.md`; make the smallest
+correct change; run applicable checks (`lint` / `test` / `build` / `validate`); update the tracker
+before and after; open **one PR per phase and stop** (never merge). Leave an owner-facing note in
+`docs/agent-handoffs/`. Owner-gated items go to the tracker's Owner-Gated Decision Queue, not into
+the diff. Full reviewer checklist: `.github/codex/prompts/review.md`.

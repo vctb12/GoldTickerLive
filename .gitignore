@@ -50,6 +50,10 @@ node_modules/
 *.tmp
 *.swp
 
+# Overnight autonomous-agent run logs (scripts/agent-night-run.sh) and worktrees
+logs/agent-night/
+.worktrees/
+
 # Editors
 .vscode/*
 !.vscode/mcp.example.json

@@ -1,0 +1,66 @@
+# ------------------------------------------------------------------
+# agent-ci.yml — additive, fast-feedback checks for autonomous-agent branches.
+#
+# WHY THIS EXISTS (and why it does NOT replace ci.yml)
+#   ci.yml is the required merge gate for `main`. This workflow is a lighter,
+#   additive companion that gives overnight/agent branches (cowork/**, claude/**)
+#   quick lint + test + build feedback WITHOUT waiting on the full gate, and
+#   without duplicating the e2e / link-check / sitemap stages.
+#
+# SAFETY
+#   - No deploy, no secrets consumed, no scheduled price jobs.
+#   - Read-only `contents` permission.
+#   - Only the standard CI test-only placeholders (never production values).
+#   - Every project step uses `--if-present` so it degrades gracefully if a
+#     script is renamed/removed — it never invents a passing result.
+# ------------------------------------------------------------------
+name: Agent CI
+
+on:
+  # Push on agent working branches only — main is covered by ci.yml.
+  push:
+    branches:
+      - 'cowork/**'
+      - 'claude/**'
+      - 'agent/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: agent-ci-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  agent-checks:
+    name: Lint / Test / Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # Test-only placeholders required by tests/auth.test.js + auth startup guard.
+      # These are NOT real secrets and must never be used in production.
+      JWT_SECRET: ci-test-secret-do-not-use-in-production
+      ADMIN_PASSWORD: ci-test-password-do-not-use-in-production
+      ADMIN_ACCESS_PIN: '000000'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint (if present)
+        run: npm run lint --if-present
+
+      - name: Unit tests (if present)
+        run: npm test --if-present
+
+      - name: Build (if present)
+        run: npm run build --if-present
