@@ -145,3 +145,24 @@ smoke matrix — all green; record exact counts; then tag `post-pr-convergence-p
 **Post-Wave-A main:** `e11204c9c` · `npm test` **1426/0** · lint clean · build green · AED_PEG
 3.6725 & TROY_OZ_GRAMS 31.1035 untouched · open backlog **41 → 36**. No owner-gated item hit. No
 fabricated data, no flag turned on, no secret, no force-push.
+
+### Wave B — COMPLETE (2026-07-10)
+
+Merged (13, all CI-green against production dist): #617, #620, #621, #623, #626, #627, #628, #629,
+#630, #631, #632, #633, #599. Karat/pricing lock triple **#610(merged) / #621 / #599** confirmed
+**complementary, not duplicate** (purity-map vs peg/troy-constants+copy-sync vs real
+usdPerGram/usdPerOz functions) — all kept intact, no assertions stripped.
+
+**Post-Wave-B main:** `09c6df713` · `npm test` **1440/0** · lint clean · build green · invariants
+untouched · open backlog **36 → 23**.
+
+**Full Playwright (chromium) note:** 167/169 passed locally. The 2 non-passing specs
+(`calculator.spec.js` "handoff after a result", `shops-search.spec.js` "spot-vs-retail link") are
+**PRE-EXISTING** — they fail identically on the `pre-pr-convergence-2026-07-10` baseline tag, so the
+convergence introduced **zero** regressions. Root cause is **local build parity**, not product: the
+suite must run against `NODE_ENV=production` dist + `stage-dist-statics.js` (copies `data/`) +
+`cp -r countries dist/` (exactly as CI does). With data staged, the calculator specs pass; the shops
+`a[href*="spot-vs-retail"]` link is injected only by the production build. **Action:** the
+definitive full matrix (chromium/firefox/webkit) against the CI-exact production dist is run at the
+Part II integrated-main gate; any spec still red there is fixed in a dedicated PR (candidate: stale
+`spot-vs-retail` link expectation vs a real production-only link — verify against deployed dist).
