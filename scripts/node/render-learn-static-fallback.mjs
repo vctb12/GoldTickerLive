@@ -195,7 +195,6 @@ function renderArticleHeader(article) {
 }
 
 function renderCatalog() {
-  const total = LEARN_GUIDE_CATEGORIES.reduce((n, c) => n + c.guides.length, 0);
   const sections = LEARN_GUIDE_CATEGORIES.map((cat) => {
     const cards = cat.guides
       .map(
@@ -220,7 +219,7 @@ function renderCatalog() {
   return `<section class="learn-hub-catalog card card--bordered" data-static-fallback="true">
   <p class="learn-hub-eyebrow">${esc(tx('learn.hubEyebrow'))}</p>
   <p class="learn-hub-intro">${esc(tx('learn.hubIntro'))}</p>
-  <p class="learn-hub-progress">${esc(tx('learn.progress', { read: 0, total }))}</p>
+  <p class="learn-hub-progress learn-hub-progress--loading" data-progress-loading="true">${esc(tx('learn.progressLoading'))}</p>
   <input type="search" class="learn-hub-filter" placeholder="${esc(tx('learn.filterPlaceholder'))}" aria-label="${esc(tx('learn.filterPlaceholder'))}" disabled aria-disabled="true" />
   <div class="learn-hub-sections">${sections}</div>
   <div class="learn-hub-related-row">
