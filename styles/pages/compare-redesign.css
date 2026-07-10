@@ -1,0 +1,171 @@
+/* ============================================================================
+   Compare V2 — premium editorial layer + length-encoded comparison bars
+   ----------------------------------------------------------------------------
+   Loaded AFTER compare.css so these rules win by source order. Uses the shared
+   design-system tokens (design-system.css: tokens + opt-in .gtl-* only). Pure
+   presentation over the existing DOM plus a per-row `--bar` custom property set
+   by renderTable(). Light theme only — dark deferred (matches the site).
+   ========================================================================== */
+
+/* ── Hero: editorial identity ─────────────────────────────────────────────── */
+.compare-hero {
+  background:
+    radial-gradient(120% 90% at 50% -10%, var(--color-gold-tint) 0%, transparent 60%),
+    var(--color-bg);
+  border-bottom: 1px solid var(--color-gold-glow);
+}
+.compare-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+  font-size: clamp(1.9rem, 4.5vw, 2.8rem);
+  line-height: 1.06;
+}
+.compare-spot-badge {
+  border: 1px solid var(--color-gold-glow);
+  background: var(--color-surface);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+.compare-spot-badge #compare-spot-price {
+  color: var(--color-ink-data);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Karat + country chips → design-system pills */
+.compare-karat button,
+.compare-chip {
+  border-radius: 999px;
+  border: 1px solid var(--color-gold-glow);
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    color 0.16s ease;
+}
+.compare-karat button:hover,
+.compare-chip:hover {
+  border-color: var(--color-gold);
+  background: var(--color-gold-tint);
+}
+.compare-karat button[aria-pressed='true'],
+.compare-karat button.is-active {
+  background: var(--color-gold-bg);
+  border-color: var(--color-gold);
+  color: var(--color-gold-dark);
+}
+.compare-karat button:focus-visible,
+.compare-chip:focus-visible,
+.compare-sort-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── "Lowest reference" callout: descriptive, not advice ──────────────────── */
+.compare-cheapest {
+  background:
+    radial-gradient(90% 130% at 0% 0%, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-surface-2);
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.compare-cheapest-label {
+  color: var(--color-gold-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.compare-cheapest-price {
+  font-family: var(--gtl-num);
+  font-weight: 800;
+  color: var(--color-ink-data);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Table: premium surface + readable ranked rows ────────────────────────── */
+.compare-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.compare-th {
+  font-family: var(--gtl-sans);
+  color: var(--text-secondary, #55493a);
+  border-bottom: 2px solid var(--color-gold-glow);
+}
+.compare-td {
+  font-variant-numeric: tabular-nums;
+}
+.compare-td--primary {
+  font-weight: 700;
+  color: var(--color-ink-data);
+}
+
+/* Length-encoded comparison bar: fills the primary (all-in reference) cell in
+   proportion to `--bar` (0–1, set per row by renderTable). The exact figure sits
+   above the bar and stays fully legible. */
+.compare-row--v2bar .compare-td--primary {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    to right,
+    var(--color-gold-tint) calc(var(--bar, 0) * 100%),
+    transparent calc(var(--bar, 0) * 100%)
+  );
+  box-shadow: inset 0 0 0 1px var(--color-gold-glow);
+  border-radius: var(--radius-xs);
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.compare-row--v2bar .compare-td--primary > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* RTL: mirror the fill so the bar grows from the row's start edge. */
+[dir='rtl'] .compare-row--v2bar .compare-td--primary {
+  background: linear-gradient(
+    to left,
+    var(--color-gold-tint) calc(var(--bar, 0) * 100%),
+    transparent calc(var(--bar, 0) * 100%)
+  );
+}
+
+/* Difference tints (already computed from pctVsUae) → clearer, token-based. */
+.compare-row--lower .compare-td--primary {
+  color: var(--color-move-up, #1a7a32);
+}
+.compare-row--higher .compare-td--primary {
+  color: var(--color-move-down, #b23b3b);
+}
+.compare-row--ref {
+  background: var(--color-gold-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-row--v2bar .compare-td--primary {
+    transition: none;
+  }
+}
+
+/* ── Mobile: keep the table swipeable and readable, not cramped ───────────── */
+@media (max-width: 640px) {
+  .compare-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-gold-glow);
+  }
+  .compare-swipe-hint {
+    color: var(--color-gold-deep);
+    font-weight: 600;
+  }
+  .compare-td--country {
+    position: sticky;
+    inset-inline-start: 0;
+    background: var(--color-surface);
+    z-index: 2;
+  }
+}

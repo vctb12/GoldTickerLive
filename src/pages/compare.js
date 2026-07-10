@@ -85,8 +85,8 @@ const T = {
     colMaking: 'Making',
     colRetail: 'Retail est. (USD/g)',
     colVsUae: 'vs UAE',
-    cheapestLabel: 'Currently most affordable',
-    cheapestSuffix: 'all-in retail estimate per gram',
+    cheapestLabel: 'Lowest all-in reference estimate',
+    cheapestSuffix: 'all-in reference estimate per gram (not a shop quote or advice)',
     cheapestEmpty: 'Waiting for live prices…',
     detailTitle: 'Side-by-side detail',
     detailHint: 'Select exactly two countries to see a full karat-by-karat breakdown.',
@@ -132,8 +132,8 @@ const T = {
     colMaking: 'مصنعية',
     colRetail: 'تقدير التجزئة (دولار/غرام)',
     colVsUae: 'مقابل الإمارات',
-    cheapestLabel: 'الأكثر تيسّراً حالياً',
-    cheapestSuffix: 'تقدير التجزئة الشامل لكل غرام',
+    cheapestLabel: 'أدنى تقدير إجمالي مرجعي',
+    cheapestSuffix: 'تقدير إجمالي مرجعي لكل غرام (ليس عرض متجر ولا نصيحة)',
     cheapestEmpty: 'بانتظار الأسعار الحية…',
     detailTitle: 'تفاصيل جنباً إلى جنب',
     detailHint: 'اختر دولتين بالضبط لعرض تفصيل كامل حسب العيار.',
@@ -487,6 +487,13 @@ function renderTable(rows) {
   table.append(thead);
 
   const tbody = el('tbody');
+  // Length-encoded comparison bars (V2): each available row's primary cell fills a
+  // gold bar in proportion to its all-in reference estimate vs the largest in view,
+  // so the ranking is readable at a glance while the exact figure stays legible.
+  const maxRetail = Math.max(
+    0,
+    ...sorted.filter((r) => r.available && r.retailUsdPerGram > 0).map((r) => r.retailUsdPerGram)
+  );
   for (const row of sorted) {
     const isUae = row.code === 'AE';
     let tint = '';
@@ -515,6 +522,10 @@ function renderTable(rows) {
       tr.append(el('td', { class: 'compare-td' }, row.currency), td);
       tbody.append(tr);
       continue;
+    }
+    if (maxRetail > 0 && row.retailUsdPerGram > 0) {
+      tr.classList.add('compare-row--v2bar');
+      tr.style.setProperty('--bar', (row.retailUsdPerGram / maxRetail).toFixed(4));
     }
     tr.append(
       el('td', { class: 'compare-td' }, row.currency),
