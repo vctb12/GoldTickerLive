@@ -131,10 +131,20 @@ for (const theme of THEMES) {
             await page.screenshot({ path: fileFull, fullPage: true });
           } catch {
             const h = await page.evaluate(() => Math.min(document.body.scrollHeight, 6000));
-            await page.screenshot({ path: fileFull, clip: { x: 0, y: 0, width: width.w, height: h } });
+            await page.screenshot({
+              path: fileFull,
+              clip: { x: 0, y: 0, width: width.w, height: h },
+            });
           }
         }
-        results.push({ mode, lang, width: width.name, theme, file, consoleErrors: consoleErrors.splice(0) });
+        results.push({
+          mode,
+          lang,
+          width: width.name,
+          theme,
+          file,
+          consoleErrors: consoleErrors.splice(0),
+        });
         process.stdout.write(`✓ ${mode} ${lang} ${width.name} ${theme}\n`);
       }
       await context.close();
@@ -149,7 +159,8 @@ console.log(`\nCaptured ${results.length} shots → ${outDir}`);
 if (errCount) {
   console.log(`\n⚠ ${errCount} console error(s):`);
   for (const r of results) {
-    for (const e of r.consoleErrors) console.log(`  [${r.mode}/${r.lang}/${r.width}/${r.theme}] ${e}`);
+    for (const e of r.consoleErrors)
+      console.log(`  [${r.mode}/${r.lang}/${r.width}/${r.theme}] ${e}`);
   }
 } else {
   console.log('No console errors captured. ✅');

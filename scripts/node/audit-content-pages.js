@@ -22,7 +22,10 @@ const MIN_WORDS = 150;
 const EXEMPT_PREFIXES = ['content/embed/', 'content/subscription/'];
 const EXEMPT_FILES = new Set(['content/markets/index.html']);
 /** Interactive app shells — word count is in JS, not static HTML */
-const THIN_WORD_EXEMPT = new Set(['content/search/index.html', 'content/gold-price-history/index.html']);
+const THIN_WORD_EXEMPT = new Set([
+  'content/search/index.html',
+  'content/gold-price-history/index.html',
+]);
 
 const REQUIRED_CHECKS = [
   { id: 'canonical', re: /<link[^>]+rel=["']canonical["']/i },

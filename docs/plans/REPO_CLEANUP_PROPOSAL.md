@@ -18,7 +18,8 @@ skills_used: []
 > **Status:** 📥 _Proposal — Phase 0 reconciled. Phase 1 (audit-only) is in progress on branch
 > `copilot/clean-repo-files-dead-code`. Phases 2+ are gated by owner sign-off on
 > `reports/cleanup-audit/CANDIDATES.md`._ **Constraints:** [`AGENTS.md`](../../AGENTS.md) only — no
-> public URL removal, no SEO/sitemap regression, DOM-safety baseline intact, ≤ ~50 files per removal PR.
+> public URL removal, no SEO/sitemap regression, DOM-safety baseline intact, ≤ ~50 files per removal
+> PR.
 >
 > The **single source of truth** for execution is [`docs/REVAMP_PLAN.md`](../REVAMP_PLAN.md) §29
 > ("Repo hygiene pass"). This file is the verbatim capture of the originating prompt plus the agreed

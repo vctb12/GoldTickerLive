@@ -3,6 +3,7 @@
 > Run this once before Phase 01. No code changes — documentation only.
 
 ## PROMPT
+
 ```
 You are doing a phased revamp of GoldTickerLive (static: vanilla ES6 + Vite, Express, Supabase, bilingual EN/AR, ~390 pages, gold price reference site). Trust and clarity are the top priority; spot/reference prices must never be confused with retail; the AED/USD peg is fixed at 3.6725; non-live values must be clearly labeled.
 
@@ -10,4 +11,5 @@ With NO code changes, produce a short repo map: where pages are generated, where
 ```
 
 ## Acceptance
+
 - `docs/REPO-MAP.md` committed; PR `phase00-repo-map` opened; no behavior change.

@@ -12,10 +12,6 @@ describe('basic a11y gate', () => {
       cwd: ROOT,
       encoding: 'utf8',
     });
-    assert.equal(
-      result.status,
-      0,
-      `check-basic-a11y failed:\n${result.stdout}\n${result.stderr}`
-    );
+    assert.equal(result.status, 0, `check-basic-a11y failed:\n${result.stdout}\n${result.stderr}`);
   });
 });

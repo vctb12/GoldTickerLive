@@ -53,7 +53,9 @@ function main() {
 
   const globalOut = [...EXISTING_IMPORTS, '', ...NEW_IMPORTS, ''].join('\n');
   fs.writeFileSync(GLOBAL, globalOut, 'utf8');
-  console.log(`Rewrote ${path.relative(ROOT, GLOBAL)} (${NEW_IMPORTS.length + EXISTING_IMPORTS.length} imports)`);
+  console.log(
+    `Rewrote ${path.relative(ROOT, GLOBAL)} (${NEW_IMPORTS.length + EXISTING_IMPORTS.length} imports)`
+  );
 }
 
 main();

@@ -436,18 +436,29 @@ Evidence:
 
 ## 16. Current Testing and CI State
 
-| Test/Workflow       | Purpose                                                 | Trigger                      | Evidence/File                                                                      | Gap                                                   |
-| ------------------- | ------------------------------------------------------- | ---------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------- | --- | --------------- |
-| `npm test`          | Node test suites across core modules                    | local + CI                   | `package.json`, `tests/*.test.js`                                                  | Not every UX path is integration-covered              |
-| Playwright E2E      | Browser smoke/flow tests                                | local + CI e2e job           | `package.json`, `tests/e2e/*.spec.js`, `.github/workflows/ci.yml`                  | Long-tail pages cannot all be deeply tested each run  |
-| Lint/style/format   | Code quality checks                                     | local + CI                   | `package.json` (`lint`, `quality`), `.github/workflows/ci.yml`                     | Quality checks do not prove runtime behavior          |
-| `npm run validate`  | Build safety checks (DOM/SEO/SW/inventory/placeholders) | local + CI                   | `package.json`, `scripts/node/*`, `.github/workflows/ci.yml`                       | Depends on strict script maintenance                  |
-| Build step          | Production bundle generation                            | local + CI + deploy          | `package.json` `build`, `.github/workflows/ci.yml`, `.github/workflows/deploy.yml` | Generated artifact parity can drift if scripts change |
-| CI merge gate       | Required gate with validate/quality/tests/build + E2E   | PR/push/main schedule/manual | `.github/workflows/ci.yml`                                                         | External dependencies can still cause flakiness       |
-| CodeQL workflow     | Security static analysis                                | workflow trigger config      | `.github/workflows/codeql.yml`                                                     | Findings require triage/action                        |
-| Lighthouse workflow | Manual performance scan                                 | workflow_dispatch            | `.github/workflows/lighthouse.yml`                                                 | Non-blocking/manual by default                        |
-| Nightly link checks | Link integrity monitoring                               | scheduled                    | `.github/workflows/ci.yml` link-check job, `scripts/node/check-links.js`           | Some jobs use non-blocking `                          |     | true` semantics |
-| Python lint checks  | Python script quality checks                            | CI                           | `.github/workflows/ci.yml` (`ruff`)                                                | Does not guarantee external API/runtime success       |
+| Test/Workflow | Purpose | Trigger | Evidence/File | Gap | | ------------------- |
+------------------------------------------------------- | ---------------------------- |
+---------------------------------------------------------------------------------- |
+----------------------------------------------------- | --- | --------------- | | `npm test` | Node
+test suites across core modules | local + CI | `package.json`, `tests/*.test.js` | Not every UX path
+is integration-covered | | Playwright E2E | Browser smoke/flow tests | local + CI e2e job |
+`package.json`, `tests/e2e/*.spec.js`, `.github/workflows/ci.yml` | Long-tail pages cannot all be
+deeply tested each run | | Lint/style/format | Code quality checks | local + CI | `package.json`
+(`lint`, `quality`), `.github/workflows/ci.yml` | Quality checks do not prove runtime behavior | |
+`npm run validate` | Build safety checks (DOM/SEO/SW/inventory/placeholders) | local + CI |
+`package.json`, `scripts/node/*`, `.github/workflows/ci.yml` | Depends on strict script maintenance
+| | Build step | Production bundle generation | local + CI + deploy | `package.json` `build`,
+`.github/workflows/ci.yml`, `.github/workflows/deploy.yml` | Generated artifact parity can drift if
+scripts change | | CI merge gate | Required gate with validate/quality/tests/build + E2E |
+PR/push/main schedule/manual | `.github/workflows/ci.yml` | External dependencies can still cause
+flakiness | | CodeQL workflow | Security static analysis | workflow trigger config |
+`.github/workflows/codeql.yml` | Findings require triage/action | | Lighthouse workflow | Manual
+performance scan | workflow_dispatch | `.github/workflows/lighthouse.yml` | Non-blocking/manual by
+default | | Nightly link checks | Link integrity monitoring | scheduled | `.github/workflows/ci.yml`
+link-check job, `scripts/node/check-links.js` | Some jobs use non-blocking
+`                          |     | true` semantics | | Python lint checks | Python script quality
+checks | CI | `.github/workflows/ci.yml` (`ruff`) | Does not guarantee external API/runtime success
+|
 
 Likely coverage gaps:
 

@@ -195,7 +195,10 @@ async function main() {
       // reports only the viewport there).
       const renderedHeight = buf.readUInt32BE(20);
 
-      viewportSig[`${vp.name}-${theme}`] = { pageHeight: renderedHeight, screenshotBytes: buf.length };
+      viewportSig[`${vp.name}-${theme}`] = {
+        pageHeight: renderedHeight,
+        screenshotBytes: buf.length,
+      };
       // The structural digest is theme/viewport-invariant; capture once on desktop-light.
       if (vp.name === 'desktop' && theme === 'light') sharedDigest = await structuralDigest(page);
       await page.close();

@@ -1509,7 +1509,8 @@ DELIVERABLE
 
 **Expected final report:**
 
-- 6 freshness keys (live/delayed/cached/stale/fallback/unavailable, + closed) verified with screenshots.
+- 6 freshness keys (live/delayed/cached/stale/fallback/unavailable, + closed) verified with
+  screenshots.
 - Confirmation that pricing math, AED peg, troy ounce, karat values, FX source, and freshness
   thresholds were not touched.
 - SW `CACHE_NAME` bump value.

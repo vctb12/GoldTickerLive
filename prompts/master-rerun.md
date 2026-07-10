@@ -76,16 +76,16 @@ Full charter: [`AGENTS.md`](../AGENTS.md)
 
 Ship **one PR-sized improvement** — not a survey, not a mega-refactor.
 
-| If the task is…         | Use mode                                                   |
-| ----------------------- | ---------------------------------------------------------- |
-| Unclear what to do next | Meta — `@.github/prompts/session-pick-next-work.prompt.md` |
-| UI / visual / RTL       | `@.github/prompts/endless-ui-visual-sweep.prompt.md`       |
-| Frontend pages          | `@.github/prompts/endless-frontend-polish.prompt.md`       |
-| Cross-page links        | `@.github/prompts/endless-integration-wiring.prompt.md`    |
-| Pricing / trust         | `@.github/prompts/endless-gold-product-trust.prompt.md`    |
+| If the task is…          | Use mode                                                                                                        |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Unclear what to do next  | Meta — `@.github/prompts/session-pick-next-work.prompt.md`                                                      |
+| UI / visual / RTL        | `@.github/prompts/endless-ui-visual-sweep.prompt.md`                                                            |
+| Frontend pages           | `@.github/prompts/endless-frontend-polish.prompt.md`                                                            |
+| Cross-page links         | `@.github/prompts/endless-integration-wiring.prompt.md`                                                         |
+| Pricing / trust          | `@.github/prompts/endless-gold-product-trust.prompt.md`                                                         |
 | Platform upgrade backlog | [`prompts/platform-upgrade.md`](platform-upgrade.md) or `@.github/prompts/platform-upgrade-bootstrap.prompt.md` |
-| Repo hygiene            | `@.github/prompts/endless-repo-discovery.prompt.md`        |
-| Workbook-sized program  | `@.github/prompts/master-workbook-session.prompt.md`       |
+| Repo hygiene             | `@.github/prompts/endless-repo-discovery.prompt.md`                                                             |
+| Workbook-sized program   | `@.github/prompts/master-workbook-session.prompt.md`                                                            |
 
 External repo ideas: [`docs/REPOS_TO_STEAL_FROM.md`](../docs/REPOS_TO_STEAL_FROM.md) — **study or
 borrow one feature**, never full-site template swap.

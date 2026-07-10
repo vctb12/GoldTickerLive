@@ -22,8 +22,8 @@ slimming … make it fully functional based on the features in it already."_ (20
 full autonomy to scope and execute.
 
 This continues the never-executed removal phases of
-[`docs/plans/REPO_CLEANUP_PROPOSAL.md`](../../plans/REPO_CLEANUP_PROPOSAL.md) (Phase 1 audit shipped in
-`reports/cleanup-audit/`, Phases 2–4 were gated and never run).
+[`docs/plans/REPO_CLEANUP_PROPOSAL.md`](../../plans/REPO_CLEANUP_PROPOSAL.md) (Phase 1 audit shipped
+in `reports/cleanup-audit/`, Phases 2–4 were gated and never run).
 
 ## Baseline (verified before any change)
 

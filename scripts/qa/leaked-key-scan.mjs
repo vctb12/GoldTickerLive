@@ -20,7 +20,8 @@ const PAGES = [
 // AR is selected via ?lang=ar everywhere except the tracker, which reads the hash.
 function urlFor(p, lang) {
   if (lang === 'en') return BASE + p.path;
-  if (p.name === 'tracker') return `${BASE}${p.path}#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=ar`;
+  if (p.name === 'tracker')
+    return `${BASE}${p.path}#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=ar`;
   return `${BASE}${p.path}?lang=ar`;
 }
 
@@ -39,7 +40,9 @@ for (const p of PAGES) {
   for (const lang of ['en', 'ar']) {
     const ctx = await browser.newContext({ viewport: { width: 1366, height: 1200 } });
     const page = await ctx.newPage();
-    await page.goto(urlFor(p, lang), { waitUntil: 'domcontentloaded', timeout: 25000 }).catch(() => {});
+    await page
+      .goto(urlFor(p, lang), { waitUntil: 'domcontentloaded', timeout: 25000 })
+      .catch(() => {});
     await page.waitForSelector('h1, main', { timeout: 8000 }).catch(() => {});
     await page.waitForTimeout(1800);
     const text = await page.evaluate(() => document.body.innerText);
@@ -60,7 +63,9 @@ await browser.close();
 
 const totalLeaks = report.reduce((n, r) => n + r.leaks.length, 0);
 for (const r of report) {
-  console.log(`${r.page.padEnd(12)} ${r.lang}  ${r.leaks.length ? '⚠ ' + r.leaks.join(', ') : 'clean'}`);
+  console.log(
+    `${r.page.padEnd(12)} ${r.lang}  ${r.leaks.length ? '⚠ ' + r.leaks.join(', ') : 'clean'}`
+  );
 }
 console.log(`\nTOTAL leaked keys: ${totalLeaks}`);
 process.exitCode = totalLeaks > 0 ? 1 : 0;

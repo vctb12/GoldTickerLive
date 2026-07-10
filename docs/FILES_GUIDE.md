@@ -102,12 +102,12 @@
 
 ## JavaScript — Services (src/services/)
 
-| File                               | Purpose                                                                                 | Dependencies                                                                 | When to Edit                                |
-| ---------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- |
-| `src/services/apiAdapter.js`       | API abstraction layer with timeout, retry, and error handling                           | `src/config/index.js`                                                        | Change API fetching behavior                |
-| `src/services/fxService.js`        | Fetch FX rates from exchangerate API with AED peg override                              | `src/services/apiAdapter.js`, `src/config/constants.js`                      | Change FX data source or add currencies     |
-| `server/services/goldPriceService.js` | Server-side gold spot fetcher (reads committed `data/gold_price.json`)                | `scripts/python/fetch_gold_price.py`, provider adapters                      | Change server-side provider chain           |
-| `src/services/pricingEngine.js`    | Single source of truth for all price calculations across countries and karats           | `src/config/countries.js`, `src/config/karats.js`, `src/config/constants.js` | Change pricing calculations                 |
+| File                                  | Purpose                                                                       | Dependencies                                                                 | When to Edit                            |
+| ------------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | --------------------------------------- |
+| `src/services/apiAdapter.js`          | API abstraction layer with timeout, retry, and error handling                 | `src/config/index.js`                                                        | Change API fetching behavior            |
+| `src/services/fxService.js`           | Fetch FX rates from exchangerate API with AED peg override                    | `src/services/apiAdapter.js`, `src/config/constants.js`                      | Change FX data source or add currencies |
+| `server/services/goldPriceService.js` | Server-side gold spot fetcher (reads committed `data/gold_price.json`)        | `scripts/python/fetch_gold_price.py`, provider adapters                      | Change server-side provider chain       |
+| `src/services/pricingEngine.js`       | Single source of truth for all price calculations across countries and karats | `src/config/countries.js`, `src/config/karats.js`, `src/config/constants.js` | Change pricing calculations             |
 
 ---
 

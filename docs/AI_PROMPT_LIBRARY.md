@@ -62,20 +62,22 @@ If you author a new prompt, follow this standard. Canonical preamble snippet:
 Configure at [cursor.com/automations](https://cursor.com/automations). Full setup:
 [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md).
 
-| Order | Prompt | Trigger | Output |
-| ----- | ------ | ------- | ------ |
-| 1 | [`gold-integrity-agent`](../.github/prompts/cursor-automations/gold-integrity-agent.prompt.md) | PR opened/updated | APPROVE \| COMMENT \| BLOCK |
-| 2 | [`bilingual-consistency-agent`](../.github/prompts/cursor-automations/bilingual-consistency-agent.prompt.md) | PR opened/updated | PASS \| NEEDS REVISION \| HIGH-RISK MISMATCH |
-| 3 | [`serp-structure-agent`](../.github/prompts/cursor-automations/serp-structure-agent.prompt.md) | PR opened/updated | HEALTHY \| WATCH \| BROKEN |
-| 4 | [`seo-expansion-agent`](../.github/prompts/cursor-automations/seo-expansion-agent.prompt.md) | Weekly schedule | PROPOSE \| NO WORTHWHILE IDEAS |
-| 5 | [`gold-market-insight-writer`](../.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md) | Daily schedule | PUBLISH \| DO NOT PUBLISH |
+| Order | Prompt                                                                                                       | Trigger           | Output                                       |
+| ----- | ------------------------------------------------------------------------------------------------------------ | ----------------- | -------------------------------------------- |
+| 1     | [`gold-integrity-agent`](../.github/prompts/cursor-automations/gold-integrity-agent.prompt.md)               | PR opened/updated | APPROVE \| COMMENT \| BLOCK                  |
+| 2     | [`bilingual-consistency-agent`](../.github/prompts/cursor-automations/bilingual-consistency-agent.prompt.md) | PR opened/updated | PASS \| NEEDS REVISION \| HIGH-RISK MISMATCH |
+| 3     | [`serp-structure-agent`](../.github/prompts/cursor-automations/serp-structure-agent.prompt.md)               | PR opened/updated | HEALTHY \| WATCH \| BROKEN                   |
+| 4     | [`seo-expansion-agent`](../.github/prompts/cursor-automations/seo-expansion-agent.prompt.md)                 | Weekly schedule   | PROPOSE \| NO WORTHWHILE IDEAS               |
+| 5     | [`gold-market-insight-writer`](../.github/prompts/cursor-automations/gold-market-insight-writer.prompt.md)   | Daily schedule    | PUBLISH \| DO NOT PUBLISH                    |
 
-**Phase 2+ / sessions:** [`serp-structure-weekly-audit`](../.github/prompts/cursor-automations/serp-structure-weekly-audit.prompt.md),
+**Phase 2+ / sessions:**
+[`serp-structure-weekly-audit`](../.github/prompts/cursor-automations/serp-structure-weekly-audit.prompt.md),
 [`seo-expansion-draft-mode`](../.github/prompts/cursor-automations/seo-expansion-draft-mode.prompt.md),
 [`automation-tuning-session`](../.github/prompts/cursor-automations/automation-tuning-session.prompt.md),
 [`ui-ux-ease-of-use-session`](../.github/prompts/cursor-automations/ui-ux-ease-of-use-session.prompt.md)
 
-**Master program (all tracks):** [`docs/MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md)
+**Master program (all tracks):**
+[`docs/MASTER_IMPROVEMENT_PROGRAM.md`](./MASTER_IMPROVEMENT_PROGRAM.md)
 
 > **Session bootstrap:** [`prompts/master-rerun.md`](../prompts/master-rerun.md)  
 > **Master workbook:**
@@ -87,8 +89,8 @@ Configure at [cursor.com/automations](https://cursor.com/automations). Full setu
 > [`docs/plans/2026-06-01_master-operations-hub.md`](./plans/2026-06-01_master-operations-hub.md)  
 > **GitHub control center:**
 > [`docs/plans/2026-06-09_github-control-center-setup.md`](./plans/2026-06-09_github-control-center-setup.md)  
-> **Cursor Automations:**
-> [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md)
+> **Cursor
+> Automations:** [`docs/CURSOR_AUTOMATIONS_PLAYBOOK.md`](./CURSOR_AUTOMATIONS_PLAYBOOK.md)
 
 ## Agent routing matrix
 

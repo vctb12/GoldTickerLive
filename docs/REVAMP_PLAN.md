@@ -2166,12 +2166,12 @@ breaking any CI gate, or weakening SEO/trust surfaces. Preserve the static multi
 
 _Reconciled from
 [`docs/plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md`](./plans/2026-07-01_20-phase-design-functionality-page-cleanup-revamp.md).
-Cross-cutting program: design polish, functionality wiring, HTML page-count hygiene, dead JS/CSS removal.
-Does **not** supersede §22b tracker depth or the Motion Universe 20-phase plan._
+Cross-cutting program: design polish, functionality wiring, HTML page-count hygiene, dead JS/CSS
+removal. Does **not** supersede §22b tracker depth or the Motion Universe 20-phase plan._
 
 **Branch:** `cursor/20-phase-design-page-cleanup-revamp-6c1b`  
 **Baseline:** 390 HTML files (2026-07-01); 30 phantom internal stubs; see
 [`reports/baseline-2026-07/html-count-summary.md`](../reports/baseline-2026-07/html-count-summary.md).
 
-- [ ] **Phases 0–20** — tracked in the canonical plan file §7. One phase per PR; audit phases (0, 1, 7,
-      10) are delete-free.
+- [ ] **Phases 0–20** — tracked in the canonical plan file §7. One phase per PR; audit phases (0, 1,
+      7, 10) are delete-free.

@@ -2,11 +2,13 @@
 
 ## Goal
 
-Roll Session 7 interaction system to every remaining surface: tracker, calculator, shops, country pages, content hubs, integration links, mobile 375px, loading/error states.
+Roll Session 7 interaction system to every remaining surface: tracker, calculator, shops, country
+pages, content hubs, integration links, mobile 375px, loading/error states.
 
 ## Done checklist
 
-- [x] Tracker: card-interactive stats, table highlight, price pulse, chart crossfade, inline calc deep link
+- [x] Tracker: card-interactive stats, table highlight, price pulse, chart crossfade, inline calc
+      deep link
 - [x] Calculator: tab crossfade, purity ring transition, copy shimmer, shops CTA in result
 - [x] Shops: card hover, copy ✓ feedback, grid fade, city reveal, empty fade-in
 - [x] Country (page-hydrator): countUp pulse, karat copy, FAQ smooth, hero 24K timing

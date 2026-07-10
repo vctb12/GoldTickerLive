@@ -23,7 +23,14 @@
  */
 import { chromium } from 'playwright';
 import http from 'node:http';
-import { createReadStream, existsSync, statSync, readdirSync, mkdirSync, writeFileSync } from 'node:fs';
+import {
+  createReadStream,
+  existsSync,
+  statSync,
+  readdirSync,
+  mkdirSync,
+  writeFileSync,
+} from 'node:fs';
 import { extname, join, resolve, sep, relative } from 'node:path';
 
 function arg(name, fallback) {
@@ -42,12 +49,23 @@ const EXTERNAL_BASE = arg('base', '');
 const SETTLE_MS = Number(arg('settle', '1500'));
 
 const MIME = {
-  '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.svg': 'image/svg+xml', '.webp': 'image/webp',
-  '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.ico': 'image/x-icon',
-  '.woff2': 'font/woff2', '.woff': 'font/woff', '.xml': 'application/xml', '.txt': 'text/plain',
-  '.map': 'application/json', '.webmanifest': 'application/manifest+json',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.mjs': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.ico': 'image/x-icon',
+  '.woff2': 'font/woff2',
+  '.woff': 'font/woff',
+  '.xml': 'application/xml',
+  '.txt': 'text/plain',
+  '.map': 'application/json',
+  '.webmanifest': 'application/manifest+json',
 };
 
 function resolveChromium() {
@@ -59,7 +77,9 @@ function resolveChromium() {
       const p = join(root, dir, 'chrome-linux', 'chrome');
       if (existsSync(p)) return p;
     }
-  } catch { /* fall through */ }
+  } catch {
+    /* fall through */
+  }
   return undefined; // let Playwright resolve its default
 }
 
@@ -104,15 +124,26 @@ function listPages(tree) {
 
 async function capturePage(browser, url) {
   const page = await browser.newPage();
-  const rec = { url, consoleErrors: [], consoleWarnings: [], pageErrors: [], failedResponses: [], requestFailures: [] };
+  const rec = {
+    url,
+    consoleErrors: [],
+    consoleWarnings: [],
+    pageErrors: [],
+    failedResponses: [],
+    requestFailures: [],
+  };
   page.on('console', (m) => {
     const t = m.type();
     if (t === 'error') rec.consoleErrors.push(m.text());
     else if (t === 'warning') rec.consoleWarnings.push(m.text());
   });
   page.on('pageerror', (e) => rec.pageErrors.push(e.message.split('\n')[0]));
-  page.on('response', (r) => { if (r.status() >= 400) rec.failedResponses.push(`${r.status()} ${r.url()}`); });
-  page.on('requestfailed', (r) => rec.requestFailures.push(`${r.failure()?.errorText || 'failed'} ${r.url()}`));
+  page.on('response', (r) => {
+    if (r.status() >= 400) rec.failedResponses.push(`${r.status()} ${r.url()}`);
+  });
+  page.on('requestfailed', (r) =>
+    rec.requestFailures.push(`${r.failure()?.errorText || 'failed'} ${r.url()}`)
+  );
   try {
     // 'load' (not 'networkidle') so blocked external fetches (gold-API / FX / Supabase in a
     // no-egress sandbox) don't stall the crawl waiting for an idle that never comes.
@@ -145,10 +176,14 @@ async function main() {
 
   const results = [];
   for (const p of pages) {
-    for (const [locale, suffix] of [['en', ''], ['ar', '?lang=ar']]) {
+    for (const [locale, suffix] of [
+      ['en', ''],
+      ['ar', '?lang=ar'],
+    ]) {
       const url = `${base}/${p}${suffix}`;
       const rec = await capturePage(browser, url);
-      rec.page = p; rec.locale = locale;
+      rec.page = p;
+      rec.locale = locale;
       results.push(rec);
       const n = rec.consoleErrors.length + rec.pageErrors.length;
       process.stdout.write(`${n ? 'x' : '.'}`);
@@ -169,10 +204,18 @@ async function main() {
   for (const r of results) {
     const failed = r.failedResponses.length + r.requestFailures.length;
     totalErr += r.consoleErrors.length + r.pageErrors.length;
-    lines.push(`| ${r.page} | ${r.locale} | ${r.consoleErrors.length} | ${r.pageErrors.length} | ${failed} |`);
+    lines.push(
+      `| ${r.page} | ${r.locale} | ${r.consoleErrors.length} | ${r.pageErrors.length} | ${failed} |`
+    );
   }
   lines.push('', `**Total console.error + pageerror across all pages/locales: ${totalErr}**`, '');
-  const dirty = results.filter((r) => r.consoleErrors.length || r.pageErrors.length || r.failedResponses.length || r.requestFailures.length);
+  const dirty = results.filter(
+    (r) =>
+      r.consoleErrors.length ||
+      r.pageErrors.length ||
+      r.failedResponses.length ||
+      r.requestFailures.length
+  );
   if (dirty.length) {
     lines.push('## Details (non-clean pages)', '');
     for (const r of dirty) {
@@ -185,7 +228,12 @@ async function main() {
     }
   }
   writeFileSync(join(OUT_DIR, `console-${STAMP}.md`), lines.join('\n'));
-  console.log(`Wrote ${join(OUT_DIR, `console-${STAMP}.json`)} and .md · total errors: ${totalErr}`);
+  console.log(
+    `Wrote ${join(OUT_DIR, `console-${STAMP}.json`)} and .md · total errors: ${totalErr}`
+  );
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

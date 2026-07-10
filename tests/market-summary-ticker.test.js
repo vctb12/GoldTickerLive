@@ -94,12 +94,20 @@ function installDom() {
       },
       classList: {
         add: (...names) => {
-          const classes = new Set(String(node.className || '').split(/\s+/).filter(Boolean));
+          const classes = new Set(
+            String(node.className || '')
+              .split(/\s+/)
+              .filter(Boolean)
+          );
           names.forEach((name) => classes.add(name));
           node.className = Array.from(classes).join(' ');
         },
         remove: (...names) => {
-          const classes = new Set(String(node.className || '').split(/\s+/).filter(Boolean));
+          const classes = new Set(
+            String(node.className || '')
+              .split(/\s+/)
+              .filter(Boolean)
+          );
           names.forEach((name) => classes.delete(name));
           node.className = Array.from(classes).join(' ');
         },
@@ -163,7 +171,10 @@ test('renderMarketSummaryTicker creates an accessible duplicated ticker track', 
   assert.equal(ticker.getAttribute('aria-live'), 'off');
   assert.equal(ticker.querySelectorAll('.mst-item').length, 8);
   assert.equal(ticker.querySelectorAll('.mst-item__change').length, 2);
-  assert.equal(ticker.querySelectorAll('.mst-track')[0].children[4].getAttribute('aria-hidden'), 'true');
+  assert.equal(
+    ticker.querySelectorAll('.mst-track')[0].children[4].getAttribute('aria-hidden'),
+    'true'
+  );
 
   dom.restore();
 });
@@ -194,7 +205,9 @@ test('updateMarketSummaryTicker formats prices, change direction, market state, 
       ['▼1.25%', '▼1.25%']
     );
     assert.ok(
-      ticker.querySelectorAll('.mst-item--spot').every((node) => node.classList.contains('mst-item--down'))
+      ticker
+        .querySelectorAll('.mst-item--spot')
+        .every((node) => node.classList.contains('mst-item--down'))
     );
     assert.deepEqual(
       ticker.querySelectorAll('.mst-item--aed .mst-item__value').map((node) => node.textContent),
@@ -210,7 +223,9 @@ test('updateMarketSummaryTicker formats prices, change direction, market state, 
         .every((node) => node.classList.contains('mst-item--closed'))
     );
     assert.deepEqual(
-      ticker.querySelectorAll('.mst-item--updated .mst-item__value').map((node) => node.textContent),
+      ticker
+        .querySelectorAll('.mst-item--updated .mst-item__value')
+        .map((node) => node.textContent),
       ['7 min ago', '7 min ago']
     );
   } finally {
@@ -221,11 +236,8 @@ test('updateMarketSummaryTicker formats prices, change direction, market state, 
 
 test('updateMarketSummaryTickerLang switches labels and future status updates to Arabic', async () => {
   const dom = installDom();
-  const {
-    renderMarketSummaryTicker,
-    updateMarketSummaryTicker,
-    updateMarketSummaryTickerLang,
-  } = await loadMarketSummaryTicker();
+  const { renderMarketSummaryTicker, updateMarketSummaryTicker, updateMarketSummaryTickerLang } =
+    await loadMarketSummaryTicker();
   const originalDateNow = Date.now;
   Date.now = () => Date.UTC(2026, 4, 26, 10, 0, 0);
 
@@ -257,7 +269,9 @@ test('updateMarketSummaryTickerLang switches labels and future status updates to
       ['مغلق', 'مغلق']
     );
     assert.deepEqual(
-      ticker.querySelectorAll('.mst-item--updated .mst-item__value').map((node) => node.textContent),
+      ticker
+        .querySelectorAll('.mst-item--updated .mst-item__value')
+        .map((node) => node.textContent),
       ['3 دقيقة مضت', '3 دقيقة مضت']
     );
   } finally {

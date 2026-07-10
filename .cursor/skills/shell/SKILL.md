@@ -1,6 +1,8 @@
 ---
 name: shell
-description: Runs the rest of a /shell request as a literal shell command. Use only when the user explicitly invokes /shell and wants the following text executed directly in the terminal.
+description:
+  Runs the rest of a /shell request as a literal shell command. Use only when the user explicitly
+  invokes /shell and wants the following text executed directly in the terminal.
 disable-model-invocation: true
 ---
 
