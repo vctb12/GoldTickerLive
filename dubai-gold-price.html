@@ -77,6 +77,11 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/dubai-gold-price.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing);
+         dubai-gold-price-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/dubai-gold-price-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/dubai-gold-price-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
@@ -165,6 +170,137 @@
             plus how the dirham peg, karats, making charges and VAT shape the number you actually pay
             at the counter.
           </p>
+        </div>
+      </section>
+
+      <!-- Live reference-price panel — canonical getCanonicalSpot() snapshot (F-1);
+           the same memoized read as every other price surface on the site. Values
+           are filled by dubai-gold-price.js; labels are bilingual data-lang-blocks.
+           Reference estimate only — never a live dealer quote. -->
+      <section class="dubai-live" id="live" aria-labelledby="dubai-live-heading">
+        <div class="dubai-inner">
+          <article class="dubai-live-card" aria-busy="true" id="dubai-live-card">
+            <div class="dubai-live-head">
+              <div class="dubai-live-head-copy">
+                <p class="dubai-live-eyebrow">
+                  <span data-lang-block="en">Live reference · AED per gram</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">مرجع مباشر · بالدرهم للغرام</span>
+                </p>
+                <h2 class="dubai-live-title" id="dubai-live-heading">
+                  <span data-lang-block="en">Gold rate in Dubai right now</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">سعر الذهب في دبي الآن</span>
+                </h2>
+              </div>
+              <span class="dubai-fresh" id="dubai-fresh" hidden>
+                <span class="dubai-fresh-dot" id="dubai-fresh-dot" aria-hidden="true"></span>
+                <span class="dubai-fresh-text" id="dubai-fresh-text"></span>
+              </span>
+            </div>
+
+            <div class="dubai-live-primary">
+              <div class="dubai-live-primary-main">
+                <span class="dubai-live-karat-tag">24K</span>
+                <span class="dubai-live-value dubai-live-value--lg" id="dl-24"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-unit">
+                  <span data-lang-block="en">AED / gram · bullion reference</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / غرام · مرجع السبائك</span>
+                </span>
+              </div>
+              <div class="dubai-live-spot">
+                <span class="dubai-live-mini-label">
+                  <span data-lang-block="en">Spot · XAU/USD</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">فوري · XAU/USD</span>
+                </span>
+                <span class="dubai-live-value" id="dl-spot"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-mini-note">
+                  <span data-lang-block="en">per troy ounce</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">للأوقية التروية</span>
+                </span>
+              </div>
+            </div>
+
+            <div class="dubai-live-grid">
+              <div class="dubai-live-cell">
+                <span class="dubai-live-karat-tag">22K</span>
+                <span class="dubai-live-value" id="dl-22"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-unit">
+                  <span data-lang-block="en">AED / g · jewellery</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / غ · مجوهرات</span>
+                </span>
+              </div>
+              <div class="dubai-live-cell">
+                <span class="dubai-live-karat-tag">21K</span>
+                <span class="dubai-live-value" id="dl-21"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-unit">
+                  <span data-lang-block="en">AED / g · Gulf grade</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / غ · العيار الخليجي</span>
+                </span>
+              </div>
+              <div class="dubai-live-cell">
+                <span class="dubai-live-karat-tag">18K</span>
+                <span class="dubai-live-value" id="dl-18"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-unit">
+                  <span data-lang-block="en">AED / g · designer</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / غ · التصاميم</span>
+                </span>
+              </div>
+              <div class="dubai-live-cell">
+                <span class="dubai-live-karat-tag">24K</span>
+                <span class="dubai-live-value" id="dl-tola"
+                  ><span class="dubai-skeleton"></span
+                ></span>
+                <span class="dubai-live-unit">
+                  <span data-lang-block="en">AED / tola (11.66 g)</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl">درهم / تولة (11.66 غ)</span>
+                </span>
+              </div>
+            </div>
+
+            <p class="dubai-live-note" id="dubai-live-note">
+              <span data-lang-block="en"
+                >Spot-linked <strong>reference estimate</strong> for the metal only — a Dubai shop's
+                price adds making charges, dealer margin and 5% VAT where it applies. Not a live
+                dealer quote.</span
+              >
+              <span data-lang-block="ar" lang="ar" dir="rtl"
+                >هذا <strong>تقدير مرجعي</strong> مرتبط بالسعر الفوري لقيمة المعدن وحده — وسعر المحل في
+                دبي يضيف أجور الصياغة وهامش التاجر وضريبة القيمة المضافة 5% حيثما تنطبق. وليس عرض سعر
+                مباشرًا من التاجر.</span
+              >
+            </p>
+
+            <div class="dubai-live-actions">
+              <a href="calculator.html" class="dubai-live-btn dubai-live-btn--primary">
+                <span data-lang-block="en">Value your weight →</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">احسب وزنك →</span>
+              </a>
+              <a href="tracker.html" class="dubai-live-btn">
+                <span data-lang-block="en">Open live tracker</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">المتتبع المباشر</span>
+              </a>
+            </div>
+
+            <p class="dubai-live-error" id="dubai-live-error" hidden role="status">
+              <span data-lang-block="en"
+                >Live reference is momentarily unavailable. The guidance below still applies — check
+                the <a href="tracker.html">live tracker</a> for the latest figure.</span
+              >
+              <span data-lang-block="ar" lang="ar" dir="rtl"
+                >المرجع المباشر غير متاح مؤقتًا. لا يزال الشرح أدناه ساريًا — راجع
+                <a href="tracker.html">المتتبع المباشر</a> لأحدث رقم.</span
+              >
+            </p>
+          </article>
         </div>
       </section>
 
