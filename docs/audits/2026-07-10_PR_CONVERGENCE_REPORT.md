@@ -180,3 +180,17 @@ Part II integrated-main gate; any spec still red there is fixed in a dedicated P
 
 **Post-Wave-C main:** `5645de4a1` · `npm test` **1458/0** · lint clean · invariants untouched ·
 single canonical tracker (no fork) · open backlog **23 → 17**.
+
+### Wave D — COMPLETE (2026-07-10)
+
+Merged (7): #598, #593, #591, #592, #594, #596, #600. Data/pricing layer. **`feature-flags.js` union
+conflict resolved deliberately across #591/#594/#596/#600** — every distinct flag retained, **all
+five OFF**: `CROSS_VALIDATION_ENABLED`, `LOCALIZED_NUMERAL_INPUT_ENABLED`, `FX_INTEGRITY_ENABLED`,
+`STALE_PRICE_GUARD_ENABLED`, `DATASOURCE_HEALTH_DASHBOARD_ENABLED`. #593 cross-validation wiring
+keeps `CROSS_VALIDATION_ENABLED` OFF (preview via `?debug=true` only). No flag turned on; peg/troy
+math untouched.
+
+**Post-Wave-D main:** `a480cd4d8` · `npm test` **1519/0** · lint clean · `npm run validate` exit 0 ·
+open backlog **17 → 10**. Lighthouse flakiness recurred on several PRs (re-ran green each time) —
+logged as a CI-reliability finding for the post-merge audit. GitHub GraphQL rate limit was hit
+mid-wave; switched PR merges to the REST endpoint (core limit) and continued without stopping.
