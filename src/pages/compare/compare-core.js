@@ -14,6 +14,7 @@
  */
 
 import { CONSTANTS } from '../../config/index.js';
+import { usdPerGram as metalUsdPerGram } from '../../lib/price-calculator.js';
 
 export const DEFAULT_COMPARE_CODES = ['AE', 'SA', 'KW', 'QA'];
 export const MAX_COMPARE = 6;
@@ -58,7 +59,9 @@ export function fxRateFor(country, rates) {
  */
 export function buildComparisonRows({ spotUsdPerOz, rates, countries, karat, getIntel }) {
   const purity = karatPurity(karat);
-  const usdPerGram = spotUsdPerOz && purity ? (spotUsdPerOz / CONSTANTS.TROY_OZ_GRAMS) * purity : 0;
+  // Use the shared canonical formula (not an inline copy) so Compare's spot-linked
+  // gold value stays byte-identical to the homepage/calculator derivation (F-1).
+  const usdPerGram = metalUsdPerGram(spotUsdPerOz, purity);
 
   return (countries || []).map((country) => {
     const intel = (getIntel && getIntel(country.code)) || {};
