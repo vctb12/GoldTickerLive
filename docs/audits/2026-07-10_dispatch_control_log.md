@@ -26,7 +26,7 @@ line-by-line. No fabricated PR links.
 | Node / npm               | v24.18.0 / 11.16.0                                                                                                                                                                       |
 | Baseline (run on `main`) | `npm test` **1407/0**, `npm run lint` clean, `npm run validate` exit 0, `npm run build` ✓ — all VERIFIED                                                                                 |
 
-**Work produced this run:** 8 branches, 11 commits, 8 PRs.
+**Work produced this run:** 9 branches, 12 commits, 9 PRs.
 
 | Branch                                         | Commits vs main | PR       | CI                                                             |
 | ---------------------------------------------- | --------------- | -------- | -------------------------------------------------------------- |
@@ -38,6 +38,7 @@ line-by-line. No fabricated PR links.
 | `cowork/dp4-nav-mobile-rtl`                    | 1               | **#622** | ✅ DP-4 — RTL `?lang=` fix (3 pages) + 26 e2e; 7/7 incl. PW ×3 |
 | `cowork/dp5-freshness-label-guard`             | 1               | **#623** | DP-5 — freshness/source/timestamp + reference-framing guard    |
 | `cowork/dp4b-tracker-lang-param`               | 1               | **#624** | DP-4b — tracker.html RTL `?lang=` fix + 4 e2e (incl. #hash)    |
+| `cowork/dp6-multimetal-golive-checklist`       | 1               | **#625** | DP-6 — owner go-live checklist for metals cluster (docs)       |
 
 ---
 
@@ -242,13 +243,21 @@ resolved. Firefox/webkit run the same spec in CI.
    that reference/estimate framing is present (spot ≠ retail). VERIFIED chromium: 3 passed. Observed
    live: `Cached • Source: Gold-API.com • Updated: 09 Jul 2026 … UTC` (AR localized equivalent).
 
+### DP-6 — multi-metal go-live checklist → DONE, PR #625
+
+- `docs/audits/2026-07-10_multimetal_golive_checklist.md`: names the single owner-gated blocker
+  (fetch script + `gold-price-fetch.yml` must emit per-metal spot; provider entitlement for
+  XAG/XPT/XPD), gives the additive `metals` data-contract that keeps the gold path byte-identical,
+  an ordered merge-behind-OFF-flag → land-data → flip-flag sequence for #601–#606, a go-live
+  verification checklist (reuses DP-3 peg lock + DP-5 freshness guard), and rollback. #607 crypto
+  and #593 cross-validation flagged as separately gated. Docs-only; no workflow/secret/flag touched.
+
 ### Next packets (still stabilize-first)
 
-1. **DP-6 — Reviewer-ready go-live checklist for the multi-metal PR set (#601–#607) + #593.**
-   Docs-only: exact ordered merge/enable sequence + the precise `gold-price-fetch.yml` change
-   required, so the biggest owner-gated cluster can be cleared in one decision. No workflow edits.
-2. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
+1. **DP-7 — a11y baseline browser pass** (keyboard nav, focus, landmarks, contrast) on the core
    surfaces with the working chromium; ship genuine smallest-diff fixes + a guard, else document.
+2. **DP-8 — SEO surface guard** (canonical + single-title + hreflang reciprocity) as an e2e/unit
+   guard across the core pages; $0, no gated surface.
 
 Rationale: DP-1→DP-5 verified and hardened **core stability** (console, links, RTL, pricing
 invariants, freshness) with browser evidence; DP-6 unblocks the largest owner-gated cluster without
