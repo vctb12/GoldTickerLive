@@ -19,13 +19,17 @@ import {
   guideHrefForHash,
   getLearnProgress,
   markGuideRead,
+  migrateLearnProgress,
 } from '../config/learn-hub-catalog.js';
 import { el } from '../lib/safe-dom.js';
-import { observeReveal } from '../lib/reveal.js';
+import { observeReveal, observeDwell } from '../lib/reveal.js';
 
-// One live `hashchange` listener at a time — remounts (language toggle) replace it
-// rather than stacking duplicates.
+// One live `hashchange` listener and one dwell observer at a time — remounts
+// (language toggle) replace them rather than stacking duplicates.
 let activeHashHandler = null;
+let activeDwellDisconnect = null;
+// Guards a deferred dwell setup against a newer mount superseding it.
+let dwellGeneration = 0;
 
 function t(lang, key, vars = {}) {
   let s = TRANSLATIONS[lang]?.[key] ?? TRANSLATIONS.en[key] ?? key;
@@ -107,6 +111,10 @@ export function mountLearnHubCatalog(options) {
       ? document.querySelector(options.container)
       : options.container;
   if (!root) return;
+
+  // One-time cleanup of legacy/slash-stripped stored ids so returning users are
+  // not silently pinned at "Read 0 of N" (no-op after its version flag is set).
+  migrateLearnProgress();
 
   const total = countTotalGuides();
   const readCount = countReadGuides(getLearnProgress());
@@ -252,6 +260,43 @@ export function mountLearnHubCatalog(options) {
   };
   window.addEventListener('hashchange', activeHashHandler);
   activeHashHandler();
+
+  // Scroll/visibility-based completion: "read" should mean genuinely read, not
+  // merely clicked. Mark a guide read once its in-page section (e.g. #karats)
+  // has been ≥60% visible for ≥3 continuous seconds, routed through the same
+  // markGuideRead()/refreshReadState() path as click + hashchange so persistence
+  // and the aria-live counter update identically. Deferred one frame because the
+  // Arabic renderer replaces #learn-article-root *after* this mount runs, so we
+  // observe the final section nodes rather than soon-to-be-detached ones.
+  if (activeDwellDisconnect) {
+    activeDwellDisconnect();
+    activeDwellDisconnect = null;
+  }
+  const dwellGen = ++dwellGeneration;
+  requestAnimationFrame(() => {
+    if (dwellGen !== dwellGeneration) return; // a newer mount superseded us
+    const hrefByNode = new Map();
+    for (const cat of LEARN_GUIDE_CATEGORIES) {
+      for (const guide of cat.guides) {
+        const anchorId = guide.href.split('#')[1];
+        if (!anchorId) continue;
+        const node = document.getElementById(anchorId);
+        // One section can back several cards (e.g. two #pricing guides); the
+        // canonical href is identical, so a single dwell marks them all read.
+        if (node && !hrefByNode.has(node)) hrefByNode.set(node, guide.href);
+      }
+    }
+    activeDwellDisconnect = observeDwell(hrefByNode.keys(), {
+      ratio: 0.6,
+      dwellMs: 3000,
+      onDwell: (node) => {
+        const href = hrefByNode.get(node);
+        if (!href) return;
+        markGuideRead(href);
+        refreshReadState();
+      },
+    });
+  });
 
   // Belt-and-suspenders: guarantee the whole hub is visible after mount.
   ensureRevealed(root);
