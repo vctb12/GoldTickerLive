@@ -23,12 +23,12 @@
         "id": "color-contrast",
         "impact": "serious",
         "help": "Elements must meet minimum color contrast ratio thresholds",
-        "nodes": 5,
+        "nodes": 4,
         "targets": [
-          "#hfb-text",
           "#trust-karats-sub",
           "#trust-aed-sub",
-          "#trust-bilingual-sub"
+          "#trust-bilingual-sub",
+          ".ticker-status-label"
         ]
       }
     ],
@@ -41,8 +41,8 @@
         "id": "color-contrast",
         "impact": "serious",
         "help": "Elements must meet minimum color contrast ratio thresholds",
-        "nodes": 3,
-        "targets": ["#hfb-text", ".footer-col-heading", ".footer-copy"]
+        "nodes": 2,
+        "targets": [".footer-col-heading", ".footer-copy"]
       },
       {
         "id": "scrollable-region-focusable",
@@ -61,8 +61,8 @@
         "id": "color-contrast",
         "impact": "serious",
         "help": "Elements must meet minimum color contrast ratio thresholds",
-        "nodes": 2,
-        "targets": ["#hfb-text", ".footer-copy"]
+        "nodes": 1,
+        "targets": [".footer-copy"]
       },
       {
         "id": "scrollable-region-focusable",

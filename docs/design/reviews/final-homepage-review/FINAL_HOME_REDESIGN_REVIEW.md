@@ -2,7 +2,7 @@
 
 **Reviewer:** autonomous production-readiness shift (resumed from committed state `812c91d84`)
 **Date:** 2026-07-10 **Verdict:** ✅ **Ready for owner visual approval.** Do **NOT** merge until the
-owner signs off on the visuals and the deferred decisions below. Two QA fixes were made and
+owner signs off on the visuals and the deferred decisions below. Three QA fixes were made and
 validated during this shift (see §7).
 
 ---
@@ -31,7 +31,7 @@ I independently re‑verified the prior session's headline claims (did not merel
   decision (§6, §8).
 
 **Bottom line:** the redesign is coherent, the canonical pricing holds everywhere, EN/AR + mobile
-are solid, and the two issues worth fixing before human review were fixed and validated. Remaining
+are solid, and the three issues worth fixing before human review were fixed and validated. Remaining
 items are pre‑existing debt, documented as follow‑ups.
 
 ---
@@ -42,8 +42,8 @@ items are pre‑existing debt, documented as follow‑ups.
 | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Branch               | `redesign/home`                                                                                                                                                                                                                                        |
 | PR                   | **#642** — OPEN, base `main`, "redesign(home): A‑synthesis homepage — WIP (do not merge)"                                                                                                                                                              |
-| Latest commit        | `59c88c67d` (this shift) on top of `812c91d84` (prior session)                                                                                                                                                                                         |
-| `main`               | `d9c5d7d25` — **untouched**, `HEAD` is a clean descendant, **16 commits ahead**                                                                                                                                                                        |
+| Latest commit        | `30f25152d` (this shift) on top of `812c91d84` (prior session)                                                                                                                                                                                         |
+| `main`               | `d9c5d7d25` — **untouched**, `HEAD` is a clean descendant, **19 commits ahead**                                                                                                                                                                        |
 | Diff vs main         | 49 files, **+2649 / −75** (incl. committed gate screenshots)                                                                                                                                                                                           |
 | Source files changed | `index.html`, `public/sitemap.xml`, `src/components/QuickConvertWidget.js`, `src/config/translations.js`, `src/lib/spot-resolver.js`, `src/pages/home.js`, `styles/design-system.css`, `styles/pages/home-redesign.css`, `tests/spot-resolver.test.js` |
 | Working tree         | clean except the untracked review folders (this doc + screenshots) and a prior stray `docs/design/reviews/footer-gate/AFTER_desktop_en.png`                                                                                                            |
@@ -168,6 +168,15 @@ not a descendant; dropped the redundant role=button and the invalid `aria-presse
 axe nested‑interactive **cleared** on all 4 variants; 1581/1581 tests; keyboard nav + dial sync +
 copy independence confirmed in a live browser.
 
+**(c) `30f25152d` — opaque sticky freshness banner (responsive fix, found in the §13 width pass).**
+The freshness banner is `position: sticky` (z‑index 100) and floats over the sections scrolling
+beneath it, but its token backgrounds are 9%‑alpha tints — so content **bled through** and collided
+with the banner text, most visibly on narrow (360) / tablet (768) widths where the banner wraps to
+multiple lines over the karat ladder / calculator / Gulf cards (only in delayed/cached/stale
+states). Composited the tint over the opaque page background in the PR‑owned `home-redesign.css`.
+_Validated:_ 1581/1581 tests, build + stylelint clean; axe shows **no new** violations (and the
+opaque bg lets axe correctly clear the prior `#hfb-text` contrast flag); before/after re‑captured.
+
 ---
 
 ## 8. Known deviations, deferred decisions, risks, follow‑ups
@@ -202,18 +211,18 @@ No pricing‑path, workflow, or `constants.js` changes.
 
 ## 9. Validation matrix
 
-| Check                       | Result                                                                                                               |
-| --------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Unit tests (`npm test`)     | 1581/1581 pass, 0 fail/skip                                                                                          |
-| Lint (`eslint .`)           | clean                                                                                                                |
-| Build (`npm run build`)     | clean (≈3.5s); fixes confirmed present in the production bundle                                                      |
-| Console errors              | 0 real (only external GA beacons abort in sandbox)                                                                   |
-| F‑1 pricing consistency     | ✅ 8+ surfaces + calculator, EN ≡ AR                                                                                 |
-| Accessibility (axe WCAG2AA) | 0 nested‑interactive after fix; remainder pre‑existing (documented)                                                  |
-| RTL / Arabic                | ✅ mirrored layout, Arabic copy, bidi‑isolated numerals, honest Arabic freshness                                     |
-| Mobile (390)                | ✅ EN + AR full‑page + axe                                                                                           |
-| Reduced motion              | ✅ `prefers-reduced-motion` honored; 18 reveals, 0 stuck‑hidden (no info lost)                                       |
-| Device widths               | desktop 1440 + mobile 390 fully covered (screens + axe); tablet/narrow/wide not exhaustively screenshotted — see §10 |
+| Check                       | Result                                                                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Unit tests (`npm test`)     | 1581/1581 pass, 0 fail/skip                                                                                            |
+| Lint (`eslint .`)           | clean                                                                                                                  |
+| Build (`npm run build`)     | clean (≈3.5s); fixes confirmed present in the production bundle                                                        |
+| Console errors              | 0 real (only external GA beacons abort in sandbox)                                                                     |
+| F‑1 pricing consistency     | ✅ 8+ surfaces + calculator, EN ≡ AR                                                                                   |
+| Accessibility (axe WCAG2AA) | 0 nested‑interactive after fix; remainder pre‑existing (documented)                                                    |
+| RTL / Arabic                | ✅ mirrored layout, Arabic copy, bidi‑isolated numerals, honest Arabic freshness                                       |
+| Mobile (390)                | ✅ EN + AR full‑page + axe                                                                                             |
+| Reduced motion              | ✅ `prefers-reduced-motion` honored; 18 reveals, 0 stuck‑hidden (no info lost)                                         |
+| Device widths               | ✅ **360 · 390 · 768 · 1440 · 1920, EN + AR** (screens + overflow probe; axe on 360/390/768/1440/1920 EN+AR) — see §13 |
 
 ---
 
@@ -224,8 +233,7 @@ No pricing‑path, workflow, or `constants.js` changes.
   contains both fixes). `vite preview` was **not** used for evidence because its SPA fallback
   mis‑serves `/data/*.json` and `/src/*` — an artifact that does not exist under GitHub Pages static
   hosting or the project's own Playwright config.
-- Dedicated tablet / ultra‑narrow / ultra‑wide screenshots were not captured; desktop 1440 and
-  mobile 390 (EN+AR) were, plus axe on both. Recommend a quick tablet/wide pass at human review.
+- Responsive widths are now fully covered (§13): 360 / 390 / 768 / 1440 / 1920, EN + AR.
 - The `/ar/` route is served client‑side (path/`?lang=ar` detection); AR evidence uses the canonical
   `?lang=ar` switch (the same target the `hreflang="ar"` tag points to).
 
@@ -239,14 +247,51 @@ No pricing‑path, workflow, or `constants.js` changes.
 `sec_routing_*`, `sec_market_chart_*`, `sec_trend_*`, `sec_karat_*`, `sec_dial_*`,
 `sec_quickconvert_*`, `sec_gulf_*`, `sec_learn_*`, `sec_markets_photo_*` (deferred photo section),
 `sec_footer_*`. **Freshness states:** `freshness_{live,cached,stale}_navpill.png`,
-`freshness_{live,cached,stale}_label.png`. **Data:** `axe-results.json`, `console-errors.json`,
-`f1-surfaces.json`.
+`freshness_{live,cached,stale}_label.png`. **Responsive widths (§13):**
+`AFTER_home_{narrow360,tablet768,wide1920}_{en,ar}.png` and
+`sec_{karat,gulf,quickconvert}_{narrow360,tablet768}_{en,ar}.png`. **Data:** `axe-results.json`,
+`console-errors.json`, `f1-surfaces.json`.
 
 ---
 
 ## 12. Final PR‑readiness verdict
 
 ✅ **Ready for owner visual approval.** Redesign is coherent, F‑1 holds everywhere, EN/AR + mobile +
-reduced‑motion validated, tests/lint/build green, console clean, and the two pre‑merge‑worthy issues
-were fixed and validated. **Keep #642 do‑not‑merge until the owner approves the visuals and resolves
-the three deferred decisions.**
+reduced‑motion + responsive widths validated, tests/lint/build green, console clean, and the three
+pre‑merge‑worthy issues were fixed and validated. **Keep #642 do‑not‑merge until the owner approves
+the visuals and resolves the three deferred decisions.**
+
+---
+
+## 13. Responsive‑width QA (added pass)
+
+Dedicated width sweep across **360 (narrow mobile), 390, 768 (tablet), 1440, 1920 (wide)** in **EN
+and AR** — full‑page captures + a programmatic overflow/tap‑target/nav probe
+(`responsive-diag.json`) + layout‑sensitive section closeups (karat ladder, Gulf grid, calculator)
+at 360/768.
+
+**Checked per width × locale:** horizontal overflow, cramped spacing, tap targets, sticky‑nav
+overlap, karat dial/ladder layout, calculator inputs, Gulf tabs/cards, learn rail, footer, RTL
+composition.
+
+**Findings:**
+
+- **No page‑level horizontal overflow at any width or locale**
+  (`documentElement.scrollWidth == viewport` everywhere). The elements that extend past the viewport
+  are all inside intentional horizontal scrollers (the ticker marquee and market‑strip carousel),
+  which are correctly clipped — the body never scrolls sideways.
+- **Layouts adapt correctly:** narrow/mobile stacks to a single column (Gulf cards stack, karat
+  ladder wraps to a 3+2 grid); tablet is a comfortable 2‑column hero; desktop/wide are max‑width
+  capped so 1920 becomes centered content with side gutters (no over‑stretch).
+- **RTL is correct at every width** (mirrored hero, karat dial at the RTL‑start, correct tile order,
+  bidi‑isolated numerals, Arabic freshness).
+- **Calculator** inputs fit and stay legible at 360 (weight + unit side‑by‑side, formula visible,
+  spot≠retail note intact); **F‑1 holds at every width** (24K/g 484.95; 10 g → 4,849.52).
+- **One issue found & fixed (§7c, `30f25152d`):** the sticky freshness banner bled content through
+  its 9%‑alpha background on narrow/tablet in delayed/cached/stale states — made opaque.
+- **Tap targets:** the only sub‑24px interactive controls are inline text links (exempt from
+  min‑target‑size) and the pre‑existing `.gcc-copy-btn` (22 px wide × 44 tall — 2 px under the AA
+  target; pre‑existing, shared, noted in `POST_HOME_FOLLOWUPS.md`).
+
+**Verdict:** the redesign is responsive‑clean across the full width range; the one real defect found
+was fixed and re‑validated (tests/build/stylelint green, axe no new violations).
