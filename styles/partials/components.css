@@ -632,6 +632,12 @@
 }
 
 .breadcrumbs-link {
+  /* G6: WCAG 2.2 §2.5.8 — breadcrumb nav links are a link list (not inline prose),
+     so bump the tap target to ≥24px. Vertical-only growth (inline-flex + min-height)
+     keeps the row width unchanged, so no horizontal overflow and RTL is unaffected. */
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
   color: var(--color-gold-dark);
   text-decoration: none;
   transition: color var(--transition);

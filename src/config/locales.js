@@ -37,6 +37,10 @@ export const LOCALES = {
   // Urdu pilot — activated in Phase 40 (RTL, reuses the same rtl infra as Arabic).
   // Curated core-pages dictionary in src/i18n/ur-pilot.js; uncovered keys fall back to English.
   ur: { code: 'ur', endonym: 'اردو', englishName: 'Urdu', dir: 'rtl', enabled: true },
+  // Hindi pilot — activated in the cowork run (LTR; reuses the default LTR infra).
+  // Curated core-pages dictionary in src/i18n/hi-pilot.js (same key set as fr/ur);
+  // uncovered keys fall back to English via the shared translate() helper.
+  hi: { code: 'hi', endonym: 'हिन्दी', englishName: 'Hindi', dir: 'ltr', enabled: true },
 };
 
 /** Every declared locale code, active or parked. */
