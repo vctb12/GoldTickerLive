@@ -28,29 +28,39 @@ result may differ in true production it is flagged for re-test.
 Fixture: `data/gold_price.json` `xau_usd_per_oz = 4107.7002` → canonical 24K AED/g =
 `4107.70 / 31.1035 × 3.6725 = 485.01`; 24K USD/g = `132.07`; 22K AED/g = `444.59`.
 
-### F-1 — Cross-surface spot value divergence · **P0 (pending prod re-test → possibly P1)**
+### F-1 — Cross-surface spot value divergence (different price SOURCES per surface) · **P0 — CONFIRMED**
 
-- **status:** reproduced (local prod-dist); root cause NOT isolated this session.
-- **page/module:** home (`index.html`), tracker (`tracker.html`), calculator (`calculator.html`);
-  price layer `src/lib/api.js`, `src/components/spotBar.js`, `src/tracker/*`.
-- **steps:** build+stage prod dist (single `data/gold_price.json` = 4107.70), serve, load each
-  surface, read the XAU/USD spot + 24K AED/g within the same few seconds.
-- **expected:** every surface shows the SAME spot (4107.70) and 24K AED/g (485.01) — one canonical
-  number at one instant, each with its own freshness label.
-- **actual:** **calculator 4107.70 / 485.01** (matches file, exact); **home 4108.50 / 485.11**;
-  **tracker (clean storage) 4111.00 / 485.40** — three different spot values simultaneously.
-- **evidence:** cross-surface sweep output 2026-07-10 (calc `AED 485.01` / `$4,107.70`; tracker text
-  `XAU/USD $4,108.50 | 24K AED/g 485.11`; clean-storage tracker `4,111.00 / 485.40`).
-- **suspected cause:** all client code reads `/data/gold_price.json` (`api.js:111`,
-  `tracker-pro.js:1470`), so variance is NOT from the committed file. Candidates: (a) localStorage
-  cache preferred over fresh file on some surfaces (`api.js:234 cached.price`); (b) a background
-  hourly `chore(data): refresh gold price` commit rewriting the file mid-test; (c) an un-isolated
-  live/secondary path. Requires a controlled prod-load re-test (no cache, no concurrent data commit)
-  to confirm P0 vs local artifact.
-- **fix:** single canonical spot-resolution shared by ALL surfaces (one value + one freshness state
-  per render), with a test asserting home/tracker/calculator/portfolio/compare/heatmap agree on the
-  24K figure under one fixture. **60-phase destination:** Theme A (Canonical pricing & trust, 1–6).
-- **owner gate:** none to investigate; none to fix (client-only).
+- **status:** **reproduced + root cause CONFIRMED** (network capture) — reproduces in production,
+  not a local artifact.
+- **page/module:** tracker + home fetch **live external gold APIs client-side**; calculator uses the
+  static committed file. Price layer `src/lib/api.js`, `src/components/spotBar.js`, `src/tracker/*`,
+  `src/lib/quote-providers/*`, `assets/freegoldapi-*.js`.
+- **steps:** serve prod dist (single `data/gold_price.json` = 4107.70), load each surface, read the
+  XAU/USD spot + labeled 24K AED/g within the same few seconds; capture network.
+- **expected:** every surface shows ONE canonical spot at any instant (or, if a surface is
+  deliberately more-live, the difference is explicit and reconciled), each with its own freshness
+  label — never two different "current" 24K prices on the same site at the same moment.
+- **actual:** three different spot values simultaneously — **calculator 4107.70 / 485.01** (static
+  file, formula exact); **home 4108.50 / 485.11**; **tracker (clean storage) 4111.00 / 485.40**.
+- **evidence:** **network capture on `tracker.html` load shows live client fetches to
+  `https://api.gold-api.com/price/XAU` (200) and `https://freegoldapi.com/data/latest.json` (200)**
+  — in ADDITION to `/data/gold_price.json`. So the tracker/home render a live external quote while
+  the calculator renders the hourly-committed static file; between hourly commits the live value
+  drifts, so the surfaces legitimately disagree. Cross-surface sweep 2026-07-10 captured the three
+  values.
+- **cause:** **multiple price sources with no single canonical resolution** — a client live-API path
+  (gold-api.com / freegoldapi.com) on tracker/home vs the static `/data/gold_price.json` on the
+  calculator. Each may be labeled fresh, but a user comparing the calculator result to the tracker
+  sees two different "current" gold prices → trust erosion. (Note: client-side third-party fetches
+  also raise a privacy surface — see the security/privacy audit backlog.)
+- **fix:** ONE canonical spot-resolution shared by ALL surfaces (single source + single freshness
+  state per render); if a live path is kept, it must feed the SAME resolver every surface reads, and
+  a regression test must assert home/tracker/calculator/portfolio/compare/heatmap agree on the 24K
+  figure under one fixture. Decide the source of truth (committed file vs live API) deliberately.
+  **60-phase destination:** Theme A (Canonical pricing & trust, phases 1–6) — highest priority.
+- **owner gate:** none to investigate/fix (client-only) — BUT choosing "live API vs committed file"
+  as the canonical source is a product-trust decision worth owner input; enabling/relying on a live
+  client API in production is a data-source decision.
 
 ### F-2 — Calculator numeric formula is exact · **PASS (verified)**
 
@@ -148,9 +158,12 @@ dark-mode contrast across the new metal/crypto (flag-OFF) surfaces.
 
 ## Severity summary
 
-| P0                         | P1              | P2  | P3                                |
-| -------------------------- | --------------- | --- | --------------------------------- |
-| F-1 (pending prod re-test) | F-13 governance | —   | F-6 firefox, F-9 offline `<main>` |
+| P0                               | P1              | P2  | P3                                |
+| -------------------------------- | --------------- | --- | --------------------------------- |
+| **F-1 CONFIRMED** (multi-source) | F-13 governance | —   | F-6 firefox, F-9 offline `<main>` |
 
-**Top priority: F-1** (cross-surface spot divergence) → Theme A. **F-13** (branch protection) is an
-owner decision.
+**Top priority: F-1 (P0, CONFIRMED)** — tracker/home fetch live external gold APIs
+(`api.gold-api.com`, `freegoldapi.com`) client-side while the calculator uses the committed static
+file, so the site shows different "current" 24K prices on different surfaces at the same instant →
+Theme A (canonical pricing), highest priority; the "live API vs committed file" source-of-truth is a
+product-trust decision worth owner input. **F-13** (branch protection) is an owner decision.
