@@ -176,6 +176,14 @@ export const TRANSLATIONS = {
     'tracker.chart.downloadJson': 'Download snapshot JSON',
     'tracker.chart.legendMain': 'Selected series',
     'tracker.chart.chartAriaLabel': 'Gold price chart',
+    'chart.summary.text':
+      'Chart data summary: from {from} to {to}, {points} data points. The reference price moved {direction} by {change} ({pct}%). Latest {latest}, period high {high}, period low {low}.',
+    'chart.summary.textFlat':
+      'Chart data summary: from {from} to {to}, {points} data points. The reference price was effectively unchanged over this period. Latest {latest}, period high {high}, period low {low}.',
+    'chart.summary.unitUsdOz': 'Values in USD per troy ounce.',
+    'chart.summary.noData': 'No chart data is available for this range yet.',
+    'chart.summary.up': 'up',
+    'chart.summary.down': 'down',
     'tracker.chart.emptyTitle':
       'Waiting for price data — select a time range above or refresh to load history.',
     'tracker.chart.emptyNote':
@@ -1638,6 +1646,14 @@ export const TRANSLATIONS = {
     'tracker.chart.downloadJson': 'تنزيل اللقطة بصيغة JSON',
     'tracker.chart.legendMain': 'السلسلة المختارة',
     'tracker.chart.chartAriaLabel': 'الرسم البياني لسعر الذهب',
+    'chart.summary.text':
+      'ملخص بيانات الرسم البياني: من {from} إلى {to}، وعدد نقاط البيانات {points}. تحرك السعر المرجعي {direction} بمقدار {change} ({pct}٪). الأحدث {latest}، أعلى قيمة خلال الفترة {high}، أدنى قيمة خلال الفترة {low}.',
+    'chart.summary.textFlat':
+      'ملخص بيانات الرسم البياني: من {from} إلى {to}، وعدد نقاط البيانات {points}. ظل السعر المرجعي دون تغيير يُذكر خلال هذه الفترة. الأحدث {latest}، أعلى قيمة خلال الفترة {high}، أدنى قيمة خلال الفترة {low}.',
+    'chart.summary.unitUsdOz': 'القيم بالدولار الأمريكي لكل أوقية تروي.',
+    'chart.summary.noData': 'لا تتوفر بيانات للرسم البياني في هذا النطاق بعد.',
+    'chart.summary.up': 'صعوداً',
+    'chart.summary.down': 'هبوطاً',
     'tracker.chart.emptyTitle':
       'في انتظار بيانات السعر — اختر نطاقاً زمنياً أعلاه أو حدّث الصفحة لتحميل السجل.',
     'tracker.chart.emptyNote':

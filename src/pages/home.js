@@ -1881,6 +1881,9 @@ async function init() {
       shell.updateLang(lang);
       applyLangToPage();
       mountHomeQuickConvert();
+      // Re-localize the interactive chart (time axis + SR summary); safe
+      // no-op before the lazy chart has mounted.
+      _homeChart?.setLang(lang);
       injectFaqSchema(document, buildMethodologyFaqSchema(lang));
     });
   });
