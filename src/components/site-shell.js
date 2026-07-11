@@ -1,8 +1,43 @@
 import { injectNav, updateNavLang } from './nav.js';
 import { injectFooter } from './footer.js';
-import { injectTicker, updateTickerLang } from './ticker.js';
+import { injectTicker, updateTicker, updateTickerLang } from './ticker.js';
 import { injectSpotBar, updateSpotBarLang } from './spotBar.js';
+import { getCanonicalSpot, karatPerGram } from '../lib/spot-resolver.js';
 import { installErrorReporter } from '../lib/error-reporter.js';
+
+/**
+ * Feed the shared price ticker a canonical-snapshot baseline so EVERY page
+ * shows one consistent freshness state — not just the tool pages whose own
+ * controllers call updateTicker(). Content pages (learn, market, methodology,
+ * glossary, country) previously left the ticker stuck at "Unavailable" even
+ * though the exact same snapshot was available elsewhere, contradicting the
+ * honest-freshness promise.
+ *
+ * Guarded so it never regresses richer data: it only writes while the ticker
+ * is still in its initial `unavailable` state, so any page that fed real data
+ * first — above all the Tracker's multi-tier live engine — always wins, and a
+ * late-resolving baseline is skipped. Failures leave the honest "Unavailable"
+ * state untouched.
+ */
+async function feedTickerBaseline() {
+  const bar = document.getElementById('gold-ticker');
+  if (!bar || bar.getAttribute('data-freshness') !== 'unavailable') return;
+  const snap = await getCanonicalSpot();
+  if (!snap || !snap.ok) return;
+  const current = document.getElementById('gold-ticker');
+  // Re-check after the await — a page controller may have fed live data meanwhile.
+  if (!current || current.getAttribute('data-freshness') !== 'unavailable') return;
+  updateTicker({
+    xauUsd: snap.spotUsdPerOz,
+    uae24k: snap.aedPerGram24k,
+    uae22k: karatPerGram(snap, '22', 'aed'),
+    uae21k: karatPerGram(snap, '21', 'aed'),
+    uae18k: karatPerGram(snap, '18', 'aed'),
+    updatedAt: snap.freshness.updatedAt,
+    hasLiveFailure: snap.freshness.state !== 'live',
+    isFallback: snap.freshness.isFallback,
+  });
+}
 
 /**
  * Run a shell-mounting step in isolation. A failure in one surface (e.g. the
@@ -41,6 +76,11 @@ export function mountSharedShell(options = {}) {
   if (withSpotBar) safeMount('spot-bar', () => injectSpotBar(lang, depth));
   safeMount('footer', () => injectFooter(lang, depth));
   safeMount('ticker', () => injectTicker(lang, depth));
+  // Baseline freshness for every page (esp. content pages without their own
+  // price controller). Fire-and-forget; guarded to never clobber live data.
+  feedTickerBaseline().catch((error) => {
+    console.error('[site-shell] ticker baseline feed failed:', error);
+  });
 
   return {
     navCtrl,
