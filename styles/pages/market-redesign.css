@@ -108,6 +108,84 @@
   box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
 }
 
+/* Reference movement panel — an honest observation of change since the last
+   reference we recorded. Uses the site's purpose-built movement palette
+   (--color-move-up/down), which is theme-flipped and WCAG-AA in both light and
+   dark; direction is never colour-only (arrow glyph + "Now/Then" figures +
+   label carry it too). Logical properties keep it correct in RTL. */
+.mkt-worked-move {
+  margin-bottom: var(--gtl-5);
+  padding: var(--gtl-3) var(--gtl-4);
+  border: 1px solid var(--color-border-subtle);
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+.mkt-worked-move-label {
+  margin: 0;
+  font-size: var(--gtl-meta);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+.mkt-worked-move-figure {
+  margin: 0.35em 0 0;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.3em 0.7em;
+}
+.mkt-worked-move-pct {
+  font-size: clamp(1.35rem, 3.4vw, 1.7rem);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+.mkt-worked-move-pct--up {
+  color: var(--color-move-up);
+}
+.mkt-worked-move-pct--down {
+  color: var(--color-move-down);
+}
+.mkt-worked-move-pct--neutral {
+  color: var(--color-text-muted);
+}
+.mkt-worked-move-window {
+  font-size: var(--gtl-meta);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.mkt-worked-move-compare {
+  margin: 0.5em 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 1.25em;
+  font-size: var(--gtl-meta);
+  font-variant-numeric: tabular-nums;
+}
+.mkt-worked-move-pair {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+}
+.mkt-worked-move-k {
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.82em;
+}
+.mkt-worked-move-v {
+  color: var(--color-text);
+  font-weight: 600;
+}
+.mkt-worked-move-note {
+  margin: 0.55em 0 0;
+  font-size: var(--gtl-meta);
+  color: var(--color-text-faint);
+  font-style: italic;
+}
+
 /* Flow of nodes + operators. */
 .mkt-worked-flow {
   list-style: none;

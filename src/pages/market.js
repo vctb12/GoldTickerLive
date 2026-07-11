@@ -22,10 +22,18 @@ import { initPageEnter } from '../lib/page-enter.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import { applyMarketClosedOverlay } from '../lib/live-status.js';
 import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
+import { parseLastGoldPriceSnapshot } from '../lib/quote-providers/last-gold-price-parse.js';
+import { referenceMove } from '../lib/reference-move.js';
 import { CONSTANTS } from '../config/index.js';
-import { formatNumber, formatCurrency, formatTimestampShort } from '../lib/formatter.js';
+import {
+  formatNumber,
+  formatCurrency,
+  formatTimestampShort,
+  formatDate,
+  formatRelativeTime,
+} from '../lib/formatter.js';
 
-const STATE = { lang: 'en', snapshot: null, timer: null };
+const STATE = { lang: 'en', snapshot: null, prior: null, timer: null };
 
 const T = {
   en: {
@@ -106,14 +114,83 @@ function renderWorked() {
     pill.hidden = false;
   }
 
+  renderMove();
   card.removeAttribute('aria-busy');
+}
+
+function computeMove() {
+  const snap = STATE.snapshot;
+  const prior = STATE.prior;
+  const current = snap?.ok ? snap.spotUsdPerOz : null;
+  return referenceMove(current, prior?.price, prior?.ts);
+}
+
+function renderMove() {
+  const panel = document.getElementById('mkt-worked-move');
+  if (!panel) return;
+  const move = computeMove();
+  if (!move) {
+    panel.hidden = true;
+    panel.setAttribute('aria-hidden', 'true');
+    return;
+  }
+
+  const arrow = move.direction === 'up' ? '↑' : move.direction === 'down' ? '↓' : '±';
+  const pctStr = formatNumber(Math.abs(move.change) / move.prior, STATE.lang, {
+    style: 'percent',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  const pctNode = document.getElementById('mkt-move-pct');
+  if (pctNode) {
+    pctNode.textContent = `${arrow} ${pctStr}`;
+    pctNode.className = `mkt-worked-move-pct mkt-worked-move-pct--${move.direction}`;
+  }
+
+  const windowNode = document.getElementById('mkt-move-window');
+  if (windowNode) {
+    const date = formatDate(move.ts, STATE.lang);
+    const rel = formatRelativeTime(move.ts, STATE.lang);
+    windowNode.textContent = `${date} · ${rel}`;
+  }
+
+  const nowNode = document.getElementById('mkt-move-now');
+  if (nowNode) nowNode.textContent = formatCurrency(move.current, 'USD', STATE.lang, 2);
+  const thenNode = document.getElementById('mkt-move-then');
+  if (thenNode) thenNode.textContent = formatCurrency(move.prior, 'USD', STATE.lang, 2);
+
+  panel.hidden = false;
+  panel.removeAttribute('aria-hidden');
+}
+
+/**
+ * Read the last reference we published (`/data/last_gold_price.json`). Reuses the
+ * canonical parser (`parseLastGoldPriceSnapshot`) so the price sanity-check and
+ * timestamp precedence match the Tracker's fallback tier — no duplicate price
+ * logic. Never throws: a missing/old/invalid record just leaves the movement
+ * panel hidden, and the static worked example stands on its own.
+ * @returns {Promise<{price:number, ts:string|null}|null>}
+ */
+async function fetchPrior() {
+  try {
+    const res = await fetch(`/data/last_gold_price.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const parsed = parseLastGoldPriceSnapshot(await res.json());
+    if (!parsed) return null;
+    return { price: parsed.price, ts: parsed.providerTimestamp };
+  } catch {
+    return null;
+  }
 }
 
 async function fetchWorked() {
   try {
-    const snap = await getCanonicalSpot({ force: true });
+    // Prior reference is fetched alongside but independently — fetchPrior never
+    // throws, so a missing last_gold_price.json can't block the worked example.
+    const [snap, prior] = await Promise.all([getCanonicalSpot({ force: true }), fetchPrior()]);
     if (snap && snap.ok) {
       STATE.snapshot = snap;
+      STATE.prior = prior;
       renderWorked();
     }
   } catch {
