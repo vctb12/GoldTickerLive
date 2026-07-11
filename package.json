@@ -19,6 +19,7 @@
     "preview": "vite preview",
     "start": "node server.js",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "smoke": "node scripts/node/post-deploy-smoke.js",
     "test:watch": "node --test --test-concurrency=1 --watch tests/*.test.js",
     "test:coverage": "node --test --test-concurrency=1 --experimental-test-coverage tests/*.test.js",
     "test:playwright": "npx playwright test",

@@ -121,6 +121,21 @@ jobs:
             exit 1
           fi
 
+      - name: Write build-info marker
+        # A tiny deploy fingerprint the post-deploy smoke reads back from the live
+        # site to prove the NEW commit is actually serving (merged ≠ deployed until
+        # verified live). Safe: only writes one JSON file into dist/ before upload.
+        run: |
+          cat > dist/build-info.json <<EOF
+          {
+            "commit": "${{ github.sha }}",
+            "ref": "${{ github.ref_name }}",
+            "run_id": "${{ github.run_id }}",
+            "built_at_utc": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          }
+          EOF
+          echo "build-info.json:" && cat dist/build-info.json
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
