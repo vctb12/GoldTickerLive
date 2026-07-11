@@ -7,6 +7,16 @@ import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import { SHOPS } from '../../data/shops.js';
 import { navIconSymbol } from '../components/icon-sprite.js';
+import { LEARN_GUIDE_CATEGORIES } from '../config/learn-hub-catalog.js';
+import { TRANSLATIONS } from '../config/translations.js';
+
+/** Resolve a translation key to its EN + AR strings (falls back to the key). */
+function tr(key) {
+  return {
+    en: (TRANSLATIONS.en && TRANSLATIONS.en[key]) || key,
+    ar: (TRANSLATIONS.ar && TRANSLATIONS.ar[key]) || TRANSLATIONS.en?.[key] || key,
+  };
+}
 
 const _BASE_URL = 'https://goldtickerlive.com';
 
@@ -106,8 +116,78 @@ function buildIndex() {
       url: '/learn.html#insights',
       icon: 'i-info',
       keywords: ['insights', 'analysis', 'news', 'تحليل'],
+    },
+    // Core tool + reference pages that were missing from the index, so searching
+    // their name (e.g. "compare", "portfolio", "مقارنة") returned nothing.
+    {
+      type: 'page',
+      label: 'Compare Gold Prices',
+      labelAr: 'قارن أسعار الذهب',
+      url: '/compare.html',
+      icon: 'i-exchange',
+      keywords: ['compare', 'comparison', 'countries', 'قارن', 'مقارنة'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Portfolio Tracker',
+      labelAr: 'محفظة الذهب',
+      url: '/portfolio.html',
+      icon: 'i-coins',
+      keywords: ['portfolio', 'holdings', 'investment', 'محفظة', 'استثمار'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Price World Map',
+      labelAr: 'خريطة أسعار الذهب العالمية',
+      url: '/heatmap.html',
+      icon: 'i-globe',
+      keywords: ['world map', 'heatmap', 'global', 'map', 'خريطة', 'العالم'],
+    },
+    {
+      type: 'page',
+      label: 'How Gold Is Priced',
+      labelAr: 'كيف يُسعّر الذهب',
+      url: '/market.html',
+      icon: 'i-info',
+      keywords: ['market', 'how gold is priced', 'spot', 'السوق', 'تسعير'],
+    },
+    {
+      type: 'page',
+      label: 'Learn About Gold',
+      labelAr: 'تعلّم عن الذهب',
+      url: '/learn.html',
+      icon: 'i-book',
+      keywords: ['learn', 'guides', 'education', 'تعلم', 'أدلة'],
+    },
+    {
+      type: 'page',
+      label: 'Gold Glossary',
+      labelAr: 'مسرد مصطلحات الذهب',
+      url: '/glossary.html',
+      icon: 'i-book',
+      keywords: ['glossary', 'terms', 'definitions', 'مسرد', 'مصطلحات'],
     }
   );
+
+  // Learn guides — deep-link into the learn.html hub sections. Titles/descriptions
+  // resolve bilingually from the shared translation table (the catalog stores
+  // translation keys, not literals), so guides like "24K vs 22K vs 18K" /
+  // "الفرق بين عيار 24 و22 و18" become findable in both languages.
+  for (const cat of LEARN_GUIDE_CATEGORIES) {
+    for (const g of cat.guides || []) {
+      const title = tr(g.titleKey);
+      const desc = tr(g.descKey);
+      entries.push({
+        type: 'guide',
+        slug: g.titleKey,
+        label: title.en,
+        labelAr: title.ar,
+        url: g.href,
+        icon: 'i-book',
+        keywords: [title.en, title.ar, desc.en, desc.ar, 'learn', 'guide', 'دليل'],
+      });
+    }
+  }
 
   // Shops
   for (const s of Array.isArray(SHOPS) ? SHOPS : []) {

@@ -1523,20 +1523,25 @@ export function initNavSearch(basePath = '/') {
 
   function renderResults(results, q) {
     const base = basePath.replace(/\/$/, '');
+    const d = NAV_DATA[_currentLang] || NAV_DATA.en;
+    const isAr = _currentLang === 'ar';
+    const typeNames = d.searchTypes || {};
     dropdown.replaceChildren();
 
     // Group results by `type` if available.
     const groups = new Map();
     for (const r of results) {
-      const key = r.type || 'Pages';
+      const key = r.type || 'page';
       if (!groups.has(key)) groups.set(key, []);
       groups.get(key).push(r);
     }
 
-    for (const [typeLabel, entries] of groups) {
+    for (const [typeKey, entries] of groups) {
       const head = document.createElement('div');
       head.className = 'nav-search-message nav-search-section-head';
-      head.textContent = typeLabel;
+      // Localized, human-friendly section title ("Countries" / "الدول") instead
+      // of the raw lowercase type key.
+      head.textContent = typeNames[typeKey] || typeKey;
       dropdown.appendChild(head);
 
       for (const r of entries) {
@@ -1558,13 +1563,14 @@ export function initNavSearch(basePath = '/') {
 
         const label = document.createElement('span');
         label.className = 'nav-search-result-label';
-        label.textContent = r.label || '';
+        // Show the Arabic label in the Arabic UI (falls back to the base label).
+        label.textContent = (isAr && r.labelAr) || r.label || '';
         body.appendChild(label);
 
         if (r.type) {
           const type = document.createElement('span');
           type.className = 'nav-search-result-type';
-          type.textContent = r.type;
+          type.textContent = typeNames[r.type] || r.type;
           body.appendChild(type);
         }
 
@@ -1585,14 +1591,15 @@ export function initNavSearch(basePath = '/') {
     }
 
     debounceTimer = setTimeout(async () => {
+      const d = NAV_DATA[_currentLang] || NAV_DATA.en;
       const mod = await getSearch();
       if (!mod) {
-        showMessage('Search unavailable');
+        showMessage(d.searchUnavailable || 'Search unavailable');
         return;
       }
       const results = mod.search(q);
       if (!results.length) {
-        showMessage('No results found');
+        showMessage(d.searchNoResults || 'No results found');
         return;
       }
       renderResults(results, q);
