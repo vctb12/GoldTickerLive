@@ -170,7 +170,9 @@ html[lang='ar'] [data-lang-block='en'] {
 }
 
 .edu-tag--medium {
-  color: var(--color-warning, var(--color-gold-dark));
+  /* Use the text-on-warning token (AA on the pale tint), not the surface colour
+     --color-warning (#a0671c = 4.36:1 on this bg — fails AA). Both flip for dark. */
+  color: var(--color-warning-text, var(--color-gold-dark));
   background: var(--color-warning-bg, rgb(176 125 31 / 12%));
 }
 
