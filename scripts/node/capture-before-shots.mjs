@@ -70,15 +70,20 @@ for (const [vpName, w, h] of VIEWPORTS) {
 }
 
 // Mobile nav menu open state (home, EN + AR)
-const navCtx = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+const navCtx = await browser.newContext({
+  viewport: { width: 390, height: 844 },
+  reducedMotion: 'reduce',
+});
 for (const [langName, q] of LANGS) {
   const page = await navCtx.newPage();
   try {
     await page.goto(`${BASE}/index.html${q}`, { waitUntil: 'domcontentloaded', timeout: 25000 });
     await page.waitForTimeout(1200);
-    const btn = page.locator(
-      'button[aria-label*="menu" i], button[aria-controls], .nav-toggle, .hamburger, [data-nav-toggle], button.menu-toggle'
-    ).first();
+    const btn = page
+      .locator(
+        'button[aria-label*="menu" i], button[aria-controls], .nav-toggle, .hamburger, [data-nav-toggle], button.menu-toggle'
+      )
+      .first();
     if (await btn.count()) {
       await btn.click({ timeout: 4000 }).catch(() => {});
       await page.waitForTimeout(700);

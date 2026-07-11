@@ -26,7 +26,11 @@
 
 import { el, safeHref } from '../lib/safe-dom.js';
 import { DATA_ATTRIBUTION, getRefreshStatement } from '../config/data-attribution.js';
-import { getLiveFreshness, applyMarketClosedOverlay, formatRelativeAge } from '../lib/live-status.js';
+import {
+  getLiveFreshness,
+  applyMarketClosedOverlay,
+  formatRelativeAge,
+} from '../lib/live-status.js';
 import { formatTimestampShort } from '../lib/formatter.js';
 
 // The immutable invariants (troy-oz 31.1035, peg 3.6725, karat÷24) are stated as
@@ -148,16 +152,21 @@ export function renderPriceProvenance(opts = {}) {
     DATA_ATTRIBUTION.gold.label
   );
   const dl = el('dl', { class: 'gtl-provenance__list' }, [
-    row(c, c.sourceLabel, el('span', null, [sourceLink, el('span', { class: 'gtl-provenance__muted' }, ` · ${c.sourceRole}`)])),
+    row(
+      c,
+      c.sourceLabel,
+      el('span', null, [
+        sourceLink,
+        el('span', { class: 'gtl-provenance__muted' }, ` · ${c.sourceRole}`),
+      ])
+    ),
   ]);
 
   // Updated — timestamp + relative age
   if (opts.updatedAt) {
     const timeText = formatTimestampShort(opts.updatedAt, lang);
     const ageText = formatRelativeAge(fresh.ageMs, lang);
-    dl.appendChild(
-      row(c, c.updatedLabel, el('span', null, `${timeText} · ${ageText}`))
-    );
+    dl.appendChild(row(c, c.updatedLabel, el('span', null, `${timeText} · ${ageText}`)));
   }
 
   // Basis — the fixed conversions

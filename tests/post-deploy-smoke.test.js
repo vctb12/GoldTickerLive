@@ -4,16 +4,16 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-const {
-  classifyRoute,
-  evaluateSnapshot,
-  checkCommitMatch,
-  runSmoke,
-} = require(path.resolve(__dirname, '..', 'scripts', 'node', 'post-deploy-smoke.js'));
+const { classifyRoute, evaluateSnapshot, checkCommitMatch, runSmoke } = require(
+  path.resolve(__dirname, '..', 'scripts', 'node', 'post-deploy-smoke.js')
+);
 
 // ── classifyRoute ─────────────────────────────────────────────────────────────
 test('classifyRoute: 200 with marker passes', () => {
-  assert.equal(classifyRoute({ status: 200, body: '<html><title>x</title>', marker: '<title' }).ok, true);
+  assert.equal(
+    classifyRoute({ status: 200, body: '<html><title>x</title>', marker: '<title' }).ok,
+    true
+  );
 });
 test('classifyRoute: 200 without marker fails (blank/error shell)', () => {
   const v = classifyRoute({ status: 200, body: 'oops', marker: '<title' });
@@ -53,7 +53,11 @@ test('evaluateSnapshot: old age is a warning, not a failure (weekend cron gap)',
 // ── checkCommitMatch ──────────────────────────────────────────────────────────
 test('checkCommitMatch: exact + short/long sha match', () => {
   assert.equal(checkCommitMatch({ commit: 'abc123def456' }, 'abc123def456').ok, true);
-  assert.equal(checkCommitMatch({ commit: 'abc123def456' }, 'abc123de').ok, true, 'expected short sha');
+  assert.equal(
+    checkCommitMatch({ commit: 'abc123def456' }, 'abc123de').ok,
+    true,
+    'expected short sha'
+  );
   assert.equal(checkCommitMatch({ commit: 'abc123de' }, 'abc123def456').ok, true, 'live short sha');
 });
 test('checkCommitMatch: mismatch is a hard failure (stale deploy)', () => {
@@ -82,7 +86,15 @@ function fakeFetch(map) {
         };
       }
     }
-    return { status: 404, async text() { return 'not found'; }, async json() { return null; } };
+    return {
+      status: 404,
+      async text() {
+        return 'not found';
+      },
+      async json() {
+        return null;
+      },
+    };
   };
 }
 

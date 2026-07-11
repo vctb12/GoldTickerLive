@@ -30,7 +30,11 @@ export function initReadingProgress(selector = '.learn-reading-progress__bar') {
     // Whichever element actually overflows is the scroller. When html is pinned
     // to viewport height, <body> becomes the scroll container instead of the
     // document element.
-    if (body && body.scrollHeight - body.clientHeight > 2 && de.scrollHeight - de.clientHeight <= 2) {
+    if (
+      body &&
+      body.scrollHeight - body.clientHeight > 2 &&
+      de.scrollHeight - de.clientHeight <= 2
+    ) {
       return body;
     }
     return de;
