@@ -350,11 +350,9 @@
   }
 }
 
-/* Retire the redundant X-follow strip on the homepage (this file loads on home
-   only) — the approved nav has one persistent price pill and no top strips. */
-.x-follow-banner {
-  display: none;
-}
+/* X-follow banner: restored by owner request (2026-07-11) — supersedes the
+   earlier "no top strips" retirement. Markup/assets/strings never left
+   index.html, assets/social/, and translations.js; only this hide rule did. */
 
 /* ═══ Audience-routing band — "What brings you in today?" ═══════════════════ */
 .home-routing--gtl {
