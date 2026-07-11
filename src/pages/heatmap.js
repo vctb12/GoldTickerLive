@@ -523,8 +523,12 @@ function showTooltipFor(target, pointerEvent) {
   const maxX = wrapRect.width - tipRect.width - 4;
   const clampedX = Math.max(4, Math.min(x + 12, maxX));
   const clampedY = Math.max(4, Math.min(y - tipRect.height - 10, wrapRect.height - tipRect.height));
-  tip.style.insetInlineStart = `${clampedX}px`;
-  tip.style.insetBlockStart = `${clampedY}px`;
+  // x/y are physical offsets from the wrapper's top-left corner, so position with
+  // physical left/top (matches src/tracker/chart.js). Using inset-inline-start here
+  // would resolve to the RIGHT edge under dir="rtl" and mirror the tooltip away
+  // from the pointer.
+  tip.style.left = `${clampedX}px`;
+  tip.style.top = `${clampedY}px`;
 }
 
 function hideTooltip() {
