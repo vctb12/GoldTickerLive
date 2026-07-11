@@ -1,6 +1,7 @@
 import { CONSTANTS, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import * as cache from '../lib/cache.js';
 import { mountSkeleton } from '../components/skeleton.js';
 import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
@@ -1288,8 +1289,12 @@ async function init() {
   renderPlanner();
   await fetchLiveData();
 
-  if (state.timer) clearInterval(state.timer);
-  state.timer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);
+  // Visibility-aware refresh: pause polling while the tab is hidden, catch up
+  // on re-show. Replaces a bare setInterval that polled even in a background tab.
+  if (state.refreshCtrl) state.refreshCtrl.stop();
+  state.refreshCtrl = startVisibilityAwareRefresh(fetchLiveData, {
+    intervalMs: CONSTANTS.GOLD_REFRESH_MS,
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

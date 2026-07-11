@@ -1,0 +1,115 @@
+# Price-data flow map
+
+_Single reference for how the gold spot price reaches every public surface: source, fetch
+location, resolver, cache, fallback, timestamp, freshness state, and refresh/visibility
+behaviour. Written for the Stage-2 shared-price-state work; keep in sync when a surface's
+price path changes._
+
+Last mapped: 2026-07-11.
+
+## 1. One canonical source, one resolver (non-Tracker surfaces)
+
+Every non-Tracker surface reads the same value through one memoized read point:
+
+- **Source of truth:** `/data/gold_price.json` — committed by the hourly
+  `gold-price-fetch.yml` workflow (minute :02, market hours). Fields consumed:
+  `xau_usd_per_oz`, `timestamp_utc`, `fetched_at_utc`, `is_fresh`, `is_fallback`,
+  `freshness_seconds`, `max_freshness_seconds`.
+- **Fetch layer:** `src/lib/api.js` → `fetchGold()`.
+  - URL is cache-busted per call: `/data/gold_price.json?t=<Date.now()>`.
+  - Retry with exponential back-off (`retryWithBackoff`, 2 retries, 1s/2s).
+  - Timeout via `fetchWithTimeout` (`CONSTANTS.GOLD_FETCH_TIMEOUT`), abortable via `signal`.
+  - Optional versioned backend (`/api/v1/prices/latest`) is probed **only** when
+    `CONSTANTS.API_BACKEND_ENABLED` (false on static Pages, so no guaranteed 404).
+  - **Fallback:** on total fetch failure, `getFallbackGoldPrice()` returns the last
+    `localStorage` cache with `source: 'cache-fallback'`. If that too is empty, `fetchGold`
+    throws `NetworkError` (offline with no cache → surface shows its error/unavailable state,
+    never a fabricated number).
+- **Resolver:** `src/lib/spot-resolver.js` → `getCanonicalSpot()`.
+  - Single-flight memoization: concurrent callers share ONE in-flight fetch and ONE
+    `_snapshot`, so surfaces cannot diverge within a render.
+  - `_snapshot` has **no TTL** — it is cached until `getCanonicalSpot({ force: true })` is
+    called. Periodic refreshers therefore pass `force: true`; the initial paint uses the
+    memoized read.
+  - `deriveFromSpot(spot)` applies the immutable invariants (troy-oz 31.1035, AED peg 3.6725,
+    karat purity = code/24) — never re-derived anywhere else.
+  - `buildSnapshot()` returns `{ ok, spotUsdPerOz, usdPerGram24k, aedPerGram24k, karats[],
+    freshness }`.
+
+## 2. Freshness vocabulary (the authoritative state set)
+
+Per `docs/freshness-contract.md`, the full state set is:
+`live · cached · delayed · estimated · stale · fallback · closed · unavailable`.
+
+Three modules emit subsets of it — no surface should branch on raw age itself:
+
+| Module | Function | States it emits | Used by |
+| --- | --- | --- | --- |
+| `spot-resolver.js` | `classifyFreshness(gold)` | live, delayed, cached, fallback, unavailable | `snapshot.freshness` on every canonical surface |
+| `live-status.js` | `getLiveFreshness(opts)` | live, delayed, cached, stale, fallback, unavailable | ticker + label layer; adds the age-based `stale` |
+| `live-status.js` | `applyMarketClosedOverlay(key)` | overlays `closed` | ticker, hero, tracker |
+| `freshness-policy.js` | `evaluateFreshnessState(opts)` | closed, live, cached, delayed, estimated, fallback | policy/engine-side evaluation |
+
+Note the split: `classifyFreshness` (what the snapshot carries) does **not** itself emit
+`stale`, `estimated`, or `closed` — those are added by the label layer
+(`getLiveFreshness` + `applyMarketClosedOverlay`) at render time. Surfaces feed the snapshot's
+`freshness.updatedAt` / `isFallback` / (`state !== 'live'` → `hasLiveFailure`) into the label
+layer so the displayed state is honest and market-closed-aware.
+
+Mandatory disclosure per block: **state label + source label + UTC timestamp**.
+Trust invariants: reference estimates are never shown as retail quotes; a closed market reads
+`closed` even with recent data; cached/fallback stays visibly non-live; AED peg stays 3.6725.
+
+## 3. Per-surface map
+
+All "canonical" surfaces below call `getCanonicalSpot()` for the initial paint and
+`getCanonicalSpot({ force: true })` on refresh. Timestamp source = `snapshot.freshness.updatedAt`
+(the committed `timestamp_utc`/`fetched_at_utc`).
+
+| Surface | Controller | Price path | Refresh (every `GOLD_REFRESH_MS`=90s) | Visibility-aware? |
+| --- | --- | --- | --- | --- |
+| Global bottom ticker | `components/ticker.js` + `site-shell.js` `feedTickerBaseline()` | canonical baseline, **guarded** — only writes while `data-freshness==='unavailable'` so any page that fed real data first wins | fed once at mount; tool controllers re-feed via `updateTicker` | n/a (event-driven) |
+| Homepage | `pages/home.js` | **dual**: realtime engine (`createPrimaryQuoteProvider`) for the live-updating spot + `getCanonicalSpot` for static hero/ladder | realtime engine + `_refreshTimer`/`_freshnessTimer` | ✅ engine `setVisibility` |
+| Calculator | `pages/calculator.js` | canonical | interval | ✅ inline guard |
+| Compare | `pages/compare.js` | canonical | interval | ✅ inline guard |
+| Portfolio | `pages/portfolio.js` | canonical | interval | ✅ inline guard |
+| Heatmap / world map | `pages/heatmap.js` | canonical | interval | ✅ inline guard |
+| Dubai country landing | `pages/dubai-gold-price.js` | canonical | interval | ✅ shared helper _(added 2026-07-11)_ |
+| Shops directory | `pages/shops.js` | canonical (`refreshLiveReference`) feeds spot bar + ticker + hero chip | interval | ✅ shared helper _(added 2026-07-11)_ |
+| Market explainer | `pages/market.js` | canonical (worked example) | interval | ✅ shared helper _(added 2026-07-11)_ |
+| Learn / invest planner | `pages/invest.js` | canonical | interval | ✅ shared helper _(added 2026-07-11)_ |
+| Content pages (learn/methodology/glossary) | `site-shell.js` baseline only | canonical baseline via ticker | none (static) | n/a |
+
+`market.js` also uses `showDataStatusBanner`/`hideDataStatusBanner` (invest too) for a
+page-level offline/degraded banner.
+
+### Visibility-aware refresh
+
+`src/lib/visibility-refresh.js` → `startVisibilityAwareRefresh(refresh, { intervalMs })`
+is the one tested implementation: it polls only while the tab is visible, pauses on
+`document.hidden`, runs an immediate catch-up `refresh` when the tab returns to visible, and
+tears down on `pagehide`. It mirrors the inline pattern the homepage-family pages
+(compare/portfolio/heatmap/calculator) already use; `market/dubai/shops/invest` were migrated
+to it (2026-07-11) — before that they polled `/data/gold_price.json` every 90s even in a
+background tab (and `shops` never captured its interval handle, so it could never be cleared).
+
+## 4. The Tracker exception (do not migrate)
+
+`tracker.html` (`pages/tracker-pro.js`) runs a **separate, deliberately superior multi-tier
+live pricing engine** (`createRealtimePricingEngine` + `createPrimaryQuoteProvider`:
+gold-api.com → minted-metal → committed `gold_price.json` → `last_gold_price.json`). It does
+NOT read `getCanonicalSpot()` (which is committed-JSON-only); migrating it would be a
+regression (live polling → committed-only). Consistency holds anyway because every tier traces
+to the same gold-api.com / committed snapshot. The Tracker uses the realtime engine's own
+`setVisibility()` for background throttling and its own inline freshness overlay
+(`src/tracker/freshness.js`). Leave it untouched.
+
+## 5. Known follow-ups
+
+- Trust/provenance ("about this price") progressive-disclosure layer is not yet a shared
+  component — freshness dots + source attribution exist per-surface (footer via
+  `data-attribution.js`); a unified compact badge + expandable basis (USD/AED, karat/weight,
+  spot-vs-retail, Methodology link) is Stage-2C.
+- `classifyFreshness` never emits `estimated`; only `evaluateFreshnessState` does. If a surface
+  needs to distinguish "provider unavailable, value estimated" from "cached", it must go through
+  the policy evaluator, not the snapshot's `freshness.state`.

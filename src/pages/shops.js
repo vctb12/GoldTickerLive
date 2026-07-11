@@ -4,6 +4,7 @@ import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
@@ -2474,7 +2475,12 @@ function init() {
   // memoized read as homepage / calculator / compare / portfolio / learn / dubai
   // — so the spot bar, ticker, and hero reference chip go live and never diverge.
   refreshLiveReference();
-  setInterval(refreshLiveReference, CONSTANTS.GOLD_REFRESH_MS);
+  // Visibility-aware refresh: pause polling while the tab is hidden, catch up on
+  // re-show. Was a bare setInterval — polled every tab, and its handle was never
+  // captured so it could never be cleared.
+  STATE.refreshCtrl = startVisibilityAwareRefresh(refreshLiveReference, {
+    intervalMs: CONSTANTS.GOLD_REFRESH_MS,
+  });
 
   navResult.getLangToggleButtons().forEach((button) => {
     button.addEventListener('click', () => {
