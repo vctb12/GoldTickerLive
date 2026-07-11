@@ -4,6 +4,7 @@ import { fetchShops as fetchSupabaseShops } from '../lib/supabase-data.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { applyMarketClosedOverlay } from '../lib/live-status.js';
 import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
@@ -119,6 +120,7 @@ const TXT = {
     refDelayed: 'Delayed',
     refCached: 'Cached',
     refStale: 'Stale',
+    refClosed: 'Closed',
     featuredNote:
       'Featured: editorially selected markets for this region. Not a paid placement and not an endorsement of any individual shop inside the market.',
     statListings: 'Shops & markets',
@@ -284,6 +286,7 @@ const TXT = {
     refDelayed: 'متأخر',
     refCached: 'مخزّن',
     refStale: 'قديم',
+    refClosed: 'مغلق',
     featuredNote:
       'مختارة: أسواق مختارة تحريرياً لهذه المنطقة. ليست إعلاناً مدفوعاً ولا تزكية لأي محل بعينه داخل السوق.',
     statListings: 'محلات وأسواق',
@@ -2249,6 +2252,7 @@ const REF_FRESH_KEY = {
   cached: 'refCached',
   fallback: 'refStale',
   unavailable: 'refStale',
+  closed: 'refClosed',
 };
 
 function renderReferenceChip() {
@@ -2275,8 +2279,11 @@ function renderReferenceChip() {
   }
 
   const fresh = snap.freshness || {};
-  const key = REF_FRESH_KEY[fresh.state];
-  if (dot) dot.className = `shops-ref-dot shops-ref-dot--${fresh.state || 'unavailable'}`;
+  // Apply the market-closed overlay so a closed-market reference never reads
+  // "Live" (freshness contract) — mirrors the shared ticker/spot bar.
+  const displayState = applyMarketClosedOverlay(fresh.state || 'unavailable');
+  const key = REF_FRESH_KEY[displayState];
+  if (dot) dot.className = `shops-ref-dot shops-ref-dot--${displayState}`;
   if (freshEl && key) {
     let stamp = '';
     if (fresh.updatedAt) {

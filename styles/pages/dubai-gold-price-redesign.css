@@ -105,7 +105,8 @@
 }
 .dubai-fresh-dot--cached,
 .dubai-fresh-dot--fallback,
-.dubai-fresh-dot--unavailable {
+.dubai-fresh-dot--unavailable,
+.dubai-fresh-dot--closed {
   background: #b06a1f;
   box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
 }

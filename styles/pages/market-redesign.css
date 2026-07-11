@@ -102,7 +102,8 @@
 }
 .mkt-worked-dot--cached,
 .mkt-worked-dot--fallback,
-.mkt-worked-dot--unavailable {
+.mkt-worked-dot--unavailable,
+.mkt-worked-dot--closed {
   background: #b06a1f;
   box-shadow: 0 0 0 3px rgb(176 106 31 / 16%);
 }

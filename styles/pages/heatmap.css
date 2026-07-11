@@ -114,7 +114,8 @@
 
 .heatmap-fresh[data-state='stale'] .heatmap-fresh-dot,
 .heatmap-fresh[data-state='fallback'] .heatmap-fresh-dot,
-.heatmap-fresh[data-state='unavailable'] .heatmap-fresh-dot {
+.heatmap-fresh[data-state='unavailable'] .heatmap-fresh-dot,
+.heatmap-fresh[data-state='closed'] .heatmap-fresh-dot {
   background: var(--color-down);
 }
 

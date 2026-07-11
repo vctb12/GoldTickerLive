@@ -1300,8 +1300,14 @@ function updateSpotBadge() {
         hour: '2-digit',
         minute: '2-digit',
       });
-      const sourceLabel =
-        STATE.spotSource === 'live'
+      // Honor the market-closed overlay here too — the parallel FreshnessBadge
+      // already does, so without this the note could read "Live" while the badge
+      // beside it reads "Closed" (freshness contract).
+      const sourceLabel = !getMarketStatus().isOpen
+        ? STATE.lang === 'ar'
+          ? 'مغلق'
+          : 'Closed'
+        : STATE.spotSource === 'live'
           ? STATE.lang === 'ar'
             ? 'مباشر'
             : 'Live'

@@ -29,7 +29,7 @@ import { updateSpotBar } from '../components/spotBar.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
-import { getLiveFreshness } from '../lib/live-status.js';
+import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import {
   HEATMAP_KARATS,
@@ -876,11 +876,15 @@ function renderSpotBadge() {
       hasLiveFailure: STATE.spotSource !== 'live',
     });
     const dict = t();
+    // Apply the market-closed overlay so a closed-market quote never reads "Live"
+    // (freshness contract). getLiveFreshness stays a pure data-freshness signal;
+    // the `closed` entry in the freshness dict is now reachable (was dead).
+    const key = applyMarketClosedOverlay(f.key);
     clear(freshNode);
-    freshNode.dataset.state = f.key;
+    freshNode.dataset.state = key;
     freshNode.appendChild(el('span', { class: 'heatmap-fresh-dot', 'aria-hidden': 'true' }));
     freshNode.appendChild(
-      el('span', {}, [`${dict.freshness[f.key] || f.key}${f.ageText ? ` · ${f.ageText}` : ''}`])
+      el('span', {}, [`${dict.freshness[key] || key}${f.ageText ? ` · ${f.ageText}` : ''}`])
     );
   }
 }

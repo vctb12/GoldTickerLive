@@ -10,8 +10,8 @@
    Light theme only; dark deferred site-wide (owner-gated).
    ========================================================================== */
 
-/* ── Hero: serif headline (dark hero background untouched) ─────────────────── */
-/* Serif treatment only — the dark hero's carefully-tuned near-white text
+/* ── Hero: serif headline (dark hero background untouched) ───────────────────
+   Serif treatment only — the dark hero's carefully-tuned near-white text
    colours (#fff8ea title, light-cream kicker/lead) are preserved for contrast. */
 .shops-hero #shops-title {
   font-family: var(--gtl-serif);
@@ -56,7 +56,8 @@
 }
 .shops-ref-dot--cached,
 .shops-ref-dot--fallback,
-.shops-ref-dot--unavailable {
+.shops-ref-dot--unavailable,
+.shops-ref-dot--closed {
   background: #e0a253;
   box-shadow: 0 0 0 3px rgb(224 162 83 / 20%);
 }
