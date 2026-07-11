@@ -82,6 +82,7 @@
          design-system.css = tokens + opt-in .gtl-* only; compare-redesign.css
          loads last to win by source order. -->
     <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="stylesheet" href="./styles/components/price-provenance.css" />
     <link rel="stylesheet" href="./styles/pages/compare-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -168,6 +169,8 @@
             >
             <a id="compare-methodology" href="methodology.html">How prices work →</a>
           </p>
+          <!-- Unified "About this price" provenance control (Stage-2C, JS-mounted). -->
+          <div id="compare-provenance"></div>
         </div>
       </section>
 

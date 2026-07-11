@@ -25,6 +25,7 @@ import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
+import { renderPriceProvenance } from '../components/priceProvenance.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
@@ -309,6 +310,23 @@ function renderSpotBadge() {
     freshEl.append(
       el('span', { class: 'compare-fresh-dot', 'aria-hidden': 'true' }),
       el('span', null, `${label} · ${f.ageText}`)
+    );
+  }
+
+  // Unified "About this price" provenance control (Stage-2C pilot). Preserve the
+  // user's open/closed state across the 90s refresh so a re-render never snaps it
+  // shut mid-read.
+  const provSlot = document.getElementById('compare-provenance');
+  if (provSlot) {
+    const wasOpen = provSlot.querySelector('.gtl-provenance')?.hasAttribute('open');
+    provSlot.replaceChildren(
+      renderPriceProvenance({
+        lang: STATE.lang,
+        depth: 0,
+        updatedAt: STATE.freshness.goldUpdatedAt,
+        hasLiveFailure: STATE.spotSource !== 'live',
+        open: wasOpen,
+      })
     );
   }
 }

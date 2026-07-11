@@ -115,12 +115,31 @@ to the same gold-api.com / committed snapshot. The Tracker uses the realtime eng
 `setVisibility()` for background throttling and its own inline freshness overlay
 (`src/tracker/freshness.js`). Leave it untouched.
 
-## 5. Known follow-ups
+## 5. Trust/provenance layer ("About this price")
 
-- Trust/provenance ("about this price") progressive-disclosure layer is not yet a shared
-  component — freshness dots + source attribution exist per-surface (footer via
-  `data-attribution.js`); a unified compact badge + expandable basis (USD/AED, karat/weight,
-  spot-vs-retail, Methodology link) is Stage-2C.
+`src/components/priceProvenance.js` → `renderPriceProvenance({ lang, depth, updatedAt,
+hasLiveFailure, isFallback, isFresh, open })` is the shared Stage-2C control: a compact
+`<details>` whose summary is a freshness chip + "About this price", expanding to disclose
+**source** (Gold-API.com + cadence), **updated** (UTC timestamp + relative age), **basis**
+(troy-oz 31.1035, USD→AED peg 3.6725, karat purity = code/24), **spot ≠ retail**, and a
+**methodology** link. It resolves state through `getLiveFreshness` + `applyMarketClosedOverlay`
+(honest, never "Live" while closed) and is built entirely from `data-attribution.js` +
+constitutional constants — no new data path. Bilingual EN/AR (RTL), theme-aware, mobile,
+keyboard-accessible (native `<details>`, not hover-only); `gtl-`-namespaced CSS in
+`styles/components/price-provenance.css`. Styles/tests: `tests/price-provenance.test.js`.
+
+**Rollout pattern** (piloted on `compare.html`): link the component CSS after `design-system.css`;
+add an empty mount container in the page HTML; in the page controller, on each price render call
+`slot.replaceChildren(renderPriceProvenance({ lang, depth, updatedAt, hasLiveFailure }))`,
+preserving the user's open/closed state across refreshes (`open: slot.querySelector('.gtl-provenance')?.hasAttribute('open')`).
+Pilot surface = compare (lean hero, no verbose existing trust block). Next candidates: portfolio,
+heatmap, then consolidate the scattered inline trust copy on home/calculator/dubai/market into
+this one control rather than adding a second disclosure beside them.
+
+## 6. Known follow-ups
+
+- Roll `priceProvenance` out to the remaining tool surfaces (see pattern above); on
+  home/calculator/dubai it should **consolidate** existing scattered trust copy, not duplicate it.
 - `classifyFreshness` never emits `estimated`; only `evaluateFreshnessState` does. If a surface
   needs to distinguish "provider unavailable, value estimated" from "cached", it must go through
   the policy evaluator, not the snapshot's `freshness.state`.
