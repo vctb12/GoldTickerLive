@@ -333,6 +333,44 @@
               </span>
             </div>
 
+            <!-- Reference movement — an honest OBSERVATION of how the reference
+                 figure has changed since the last one we recorded. market.js
+                 fills it from /data/last_gold_price.json (the last reference we
+                 published) vs the canonical spot, always showing the REAL window
+                 from that record's timestamp — never a fabricated "24h", never a
+                 forecast, never a stated cause. Hidden until data is present. -->
+            <div class="mkt-worked-move" id="mkt-worked-move" hidden aria-hidden="true">
+              <p class="mkt-worked-move-label">
+                <span data-lang-block="en">Movement since the last reference we recorded</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">التغيّر منذ آخر مرجع سجّلناه</span>
+              </p>
+              <p class="mkt-worked-move-figure">
+                <span class="mkt-worked-move-pct" id="mkt-move-pct"></span>
+                <span class="mkt-worked-move-window" id="mkt-move-window"></span>
+              </p>
+              <p class="mkt-worked-move-compare">
+                <span class="mkt-worked-move-pair">
+                  <span class="mkt-worked-move-k" data-lang-block="en">Now</span>
+                  <span class="mkt-worked-move-k" data-lang-block="ar" lang="ar" dir="rtl">الآن</span>
+                  <span class="mkt-worked-move-v" id="mkt-move-now"></span>
+                </span>
+                <span class="mkt-worked-move-pair">
+                  <span class="mkt-worked-move-k" data-lang-block="en">Then</span>
+                  <span class="mkt-worked-move-k" data-lang-block="ar" lang="ar" dir="rtl">حينها</span>
+                  <span class="mkt-worked-move-v" id="mkt-move-then"></span>
+                </span>
+              </p>
+              <p class="mkt-worked-move-note">
+                <span data-lang-block="en"
+                  >An observation of the reference figure — not a forecast, and not a stated
+                  cause.</span
+                >
+                <span data-lang-block="ar" lang="ar" dir="rtl"
+                  >ملاحظة لرقم مرجعي — وليست توقّعاً ولا سبباً معلَناً.</span
+                >
+              </p>
+            </div>
+
             <ol class="mkt-worked-flow">
               <li class="mkt-worked-node">
                 <span class="mkt-worked-step">
