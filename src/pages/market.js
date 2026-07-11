@@ -20,6 +20,7 @@ import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { CONSTANTS } from '../config/index.js';
 import { formatNumber, formatCurrency, formatTimestampShort } from '../lib/formatter.js';
 
@@ -149,8 +150,12 @@ function init() {
   applyLang();
 
   fetchWorked();
-  if (STATE.timer) clearInterval(STATE.timer);
-  STATE.timer = setInterval(fetchWorked, CONSTANTS.GOLD_REFRESH_MS);
+  // Visibility-aware refresh: pause polling while the tab is hidden, catch up
+  // on re-show. Replaces a bare setInterval that polled even in a background tab.
+  if (STATE.refreshCtrl) STATE.refreshCtrl.stop();
+  STATE.refreshCtrl = startVisibilityAwareRefresh(fetchWorked, {
+    intervalMs: CONSTANTS.GOLD_REFRESH_MS,
+  });
 }
 
 init();
