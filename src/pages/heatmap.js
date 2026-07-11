@@ -19,6 +19,7 @@
 import { CONSTANTS, COUNTRIES } from '../config/index.js';
 import { getMarketIntel } from '../config/market-intel.js';
 import * as api from '../lib/api.js';
+import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import * as cache from '../lib/cache.js';
 import { formatPrice } from '../lib/formatter.js';
 import { mountSharedShell } from '../components/site-shell.js';
@@ -244,13 +245,22 @@ function flagBadge(code, className) {
 // ── Live data ─────────────────────────────────────────────────────────────────
 async function fetchLiveData() {
   try {
-    const [goldRes, fxRes] = await Promise.allSettled([api.fetchGold(), api.fetchFX()]);
-    if (goldRes.status === 'fulfilled') {
-      STATE.spotUsdPerOz = goldRes.value.price;
-      STATE.goldPriceUsdPerOz = goldRes.value.price;
-      STATE.freshness.goldUpdatedAt = goldRes.value.updatedAt || new Date().toISOString();
-      STATE.spotSource = goldRes.value.source === 'cache-fallback' ? 'cached/fallback' : 'live';
-      cache.saveGoldPrice(goldRes.value.price, goldRes.value.updatedAt);
+    // F-1: read spot from the shared canonical resolver — the SAME memoized
+    // snapshot as homepage / calculator / compare / portfolio / learn / dubai /
+    // shops / market — so the heatmap can never diverge from the rest of the
+    // site. Freshness is honest, straight from the snapshot. FX still comes from
+    // the FX endpoint (per-country currency conversion).
+    const [snapRes, fxRes] = await Promise.allSettled([
+      getCanonicalSpot({ force: true }),
+      api.fetchFX(),
+    ]);
+    if (snapRes.status === 'fulfilled' && snapRes.value?.ok) {
+      const snap = snapRes.value;
+      STATE.spotUsdPerOz = snap.spotUsdPerOz;
+      STATE.goldPriceUsdPerOz = snap.spotUsdPerOz;
+      STATE.freshness.goldUpdatedAt = snap.freshness?.updatedAt || new Date().toISOString();
+      STATE.spotSource = snap.freshness?.state === 'live' ? 'live' : 'cached/fallback';
+      cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness?.updatedAt);
     } else if (STATE.spotUsdPerOz) {
       STATE.spotSource = 'cached/fallback';
     }

@@ -1,0 +1,82 @@
+/* ============================================================================
+   Heatmap (Gold Price World Map) — premium editorial layer (redesign/heatmap-v2)
+   ----------------------------------------------------------------------------
+   Loaded AFTER heatmap.css so these win by source order. Pure presentation over
+   the existing DOM (the map, lenses, table and honest freshness are untouched);
+   the F-1 canonical migration lives in heatmap.js. Brings the page into the
+   redesigned homepage family: Playfair serif in antique gold, gold-glow spot
+   badge / cards, tabular figures. Built on shared tokens (tokens.css +
+   design-system.css). Light theme only; dark deferred site-wide (owner-gated).
+   ========================================================================== */
+
+/* ── Hero ─────────────────────────────────────────────────────────────────── */
+.heatmap-hero {
+  background:
+    radial-gradient(120% 90% at 50% -20%, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-bg);
+}
+.heatmap-hero-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+  line-height: 1.07;
+}
+.heatmap-hero-sub {
+  color: var(--color-text-muted);
+}
+
+/* Spot badge — gold-glow, tabular figures. */
+.heatmap-spot-badge {
+  border: 1px solid var(--color-gold-glow);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  font-variant-numeric: tabular-nums;
+}
+#heatmap-spot-price {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+.heatmap-trust-note a {
+  color: var(--color-gold-dark);
+  font-weight: 600;
+}
+
+/* ── Controls ─────────────────────────────────────────────────────────────── */
+.heatmap-lens button:focus-visible,
+.heatmap-karat button:focus-visible,
+.heatmap-jump-select:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.heatmap-jump-select:focus {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+
+/* ── Legend + detail + table headings: serif, tabular values ──────────────── */
+.heatmap-legend-title,
+.heatmap-detail-title,
+.heatmap-table-heading {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.heatmap-table-wrap table {
+  font-variant-numeric: tabular-nums;
+}
+.heatmap-detail {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Map surface polish ───────────────────────────────────────────────────── */
+.heatmap-map-wrap {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-gold-glow);
+}
+.heatmap-map-section .heatmap-legend {
+  font-variant-numeric: tabular-nums;
+}
