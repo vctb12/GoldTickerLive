@@ -177,45 +177,6 @@ function renderUnitTable(spotUsd, lang = 'en') {
   );
 }
 
-function injectFaqSchema() {
-  if (document.getElementById('method-faq-schema')) return;
-  const faq = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'Why does my shop quote differ from Gold Ticker Live?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Shop prices add making charges, VAT, design premiums, and dealer margins on top of spot-linked reference metal value.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'How fresh is the gold price data?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'Spot is refreshed server-side hourly during market hours and polled by the browser about every 90 seconds. Freshness labels show live, cached, delayed, stale, or fallback states.',
-        },
-      },
-      {
-        '@type': 'Question',
-        name: 'Why is AED different from other currencies?',
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: 'AED uses the official fixed peg of 3.6725 per USD, so AED gold prices move with XAU/USD without FX spread noise.',
-        },
-      },
-    ],
-  };
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.id = 'method-faq-schema';
-  script.textContent = JSON.stringify(faq);
-  document.head.appendChild(script);
-}
-
 function renderHistoricalContext(lang) {
   const el52 = document.getElementById('method-52w-context');
   if (!el52) return;
@@ -240,7 +201,9 @@ function renderHistoricalContext(lang) {
  * @param {'en'|'ar'} lang
  */
 export async function initMethodologyLive(lang = 'en') {
-  injectFaqSchema();
+  // FAQ structured data lives once in the static <head> FAQPage block, matched to
+  // the visible #method-faq Q&A — no runtime-injected duplicate (Google requires
+  // FAQ markup to mirror on-page content, and two FAQPage blocks is invalid).
   renderKaratTable(lang);
   let spot = 0;
   try {
