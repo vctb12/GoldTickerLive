@@ -50,9 +50,9 @@ unavailable) — treat its findings as UNVERIFIED leads; re-verify before acting
 ## Multi-agent rules (unchanged, compressed)
 
 One coordinator owns queue/branches/PRs. Implementation agents get: one worktree, an explicit
-file-ownership list, the defect evidence, the gates to run, commit-but-never-push, JSON-only
-результат. Read-only audits fan out in parallel; implementers only on file-disjoint scopes. Verify
-agent claims by reproduction before shipping their work.
+file-ownership list, the defect evidence, the gates to run, commit-but-never-push, and a JSON-only
+result contract. Read-only audits fan out in parallel; implementers only on file-disjoint scopes.
+Verify agent claims by reproduction before shipping their work.
 
 ## Standing environment facts (save the rediscovery)
 
