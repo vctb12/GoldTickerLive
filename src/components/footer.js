@@ -2,11 +2,11 @@ import { DATA_ATTRIBUTION, getKaratCountLabel, getRefreshStatement } from '../co
 import { NAV_DATA } from './nav-data.js';
 import { escapeHtml, resolveHref } from './nav/helpers.js';
 
-// Keep the shared footer useful without turning mobile layouts into a full mega-menu repeat.
-const MAX_FOOTER_LINKS_PER_SECTION = 3;
-
 /**
- * Shared footer component — 5-column dark premium.
+ * Shared product footer — brand + three grouped link columns (Price tools,
+ * Markets, Learn) over a reference/trust bottom bar (sources, freshness, peg,
+ * troy constant, no-advice disclaimer). Each link group is a <details>
+ * accordion: always open and non-collapsible on desktop, collapsible on mobile.
  * Call injectFooter(lang, depth) from any page entry point.
  */
 
@@ -19,26 +19,20 @@ export function injectFooter(lang = 'en', depth = 0) {
   }
 
   const year = new Date().getFullYear();
+  // Each IA section (Price tools / Markets / Learn) renders as its own top-level
+  // column so the footer reads as grouped product navigation rather than a single
+  // "Explore" list. No per-section link cap — every real surface (Shops,
+  // Methodology, How gold is priced) is listed rather than silently dropped.
   const footerColumnsHtml = navData.groups
-    .map((group) => {
-      const sectionLinks = group.sections
-        .map((section) => {
-          const links = section.items
-            .slice(0, MAX_FOOTER_LINKS_PER_SECTION)
-            .map((item) => `<a href="${r(item.href)}">${escapeHtml(item.label)}</a>`)
-            .join('');
-          return `<div class="footer-link-section">
-            <h3 class="footer-section-heading">${escapeHtml(section.label)}</h3>
-            ${links}
-          </div>`;
-        })
+    .flatMap((group) => group.sections)
+    .map((section) => {
+      const links = section.items
+        .map((item) => `<a href="${r(item.href)}">${escapeHtml(item.label)}</a>`)
         .join('');
-
-      return `<div class="footer-col footer-col--links">
-        <h2 class="footer-col-heading">${escapeHtml(group.label)}</h2>
-        <p class="footer-col-note">${escapeHtml(group.description)}</p>
-        ${sectionLinks}
-      </div>`;
+      return `<details class="footer-col footer-col--links footer-accordion" open>
+        <summary class="footer-col-summary"><h2 class="footer-col-heading">${escapeHtml(section.label)}</h2></summary>
+        <div class="footer-link-list">${links}</div>
+      </details>`;
     })
     .join('');
 

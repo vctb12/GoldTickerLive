@@ -41,15 +41,20 @@ test('footer component emits no skip-inducing h4/h5 headings', () => {
 
 test('footer column/section headings use the correct levels (h2 / h3)', () => {
   const footer = read('src/components/footer.js');
+  // The footer renders each IA group (Price tools / Markets / Learn) as a
+  // top-level <h2 class="footer-col-heading"> column — flattened from the old
+  // "Explore" super-heading + <h3> sub-sections, so there is no longer an h3
+  // level. The h2 lives inside the accordion <summary>. Page content ends at
+  // <h2>, so h2 columns keep the outline skip-free (guarded by the h4/h5 test).
   assert.match(
     footer,
     /<h2 class="footer-col-heading"/,
     'footer column heading must be an <h2 class="footer-col-heading">'
   );
-  assert.match(
+  assert.doesNotMatch(
     footer,
-    /<h3 class="footer-section-heading"/,
-    'footer section heading must be an <h3 class="footer-section-heading">'
+    /<h3\b/,
+    'footer no longer uses <h3> sub-section headings after the flatten to top-level columns'
   );
 });
 
