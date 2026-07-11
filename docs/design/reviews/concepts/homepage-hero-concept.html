@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoldTickerLive — Homepage Hero CONCEPT</title>
+    <style>
+      /* CONCEPT ONLY — demonstrates Visual Direction V2. Fonts here are system fallbacks;
+         production self-hosts an editorial serif + a tabular "ticker" numeral face (woff2, no CDN). */
+      :root {
+        --paper: #f7f3ec;
+        --surface: #ffffff;
+        --ink: #171512;
+        --ink-muted: #5c554b;
+        --gold: #b8891e;
+        --gold-soft: #e9dcc0;
+        --up: #157347;
+        --line: #e7decf;
+        --serif: 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Times New Roman', serif;
+        --sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+        --ticker: 'SF Mono', 'DejaVu Sans Mono', ui-monospace, Menlo, monospace;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { background: var(--paper); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+      .frame-label { font-family: var(--sans); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-muted); padding: 24px 40px 8px; }
+      .device { margin: 0 auto 48px; background: var(--paper); }
+      .device.desktop { width: 1240px; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(0,0,0,.28); }
+      .device.mobile { width: 390px; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; box-shadow: 0 24px 60px -30px rgba(0,0,0,.28); }
+      /* nav */
+      nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--paper) 82%, #fff); }
+      .brand { display: flex; align-items: center; gap: 10px; font-family: var(--serif); font-weight: 700; font-size: 20px; letter-spacing: .01em; }
+      .brand .g { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 32% 30%, #f4d98a, var(--gold) 70%); display: grid; place-items: center; color: #3a2a06; font-weight: 800; font-size: 13px; }
+      .navlinks { display: flex; gap: 26px; font-size: 14.5px; color: var(--ink-muted); }
+      .navlinks a { color: inherit; text-decoration: none; }
+      .navlinks a.active { color: var(--ink); font-weight: 600; }
+      .price-pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--ticker); font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--up); box-shadow: 0 0 0 0 rgba(21,115,71,.5); animation: pulse 2s infinite; }
+      @keyframes pulse { 0%{box-shadow:0 0 0 0 rgba(21,115,71,.45)} 70%{box-shadow:0 0 0 7px rgba(21,115,71,0)} 100%{box-shadow:0 0 0 0 rgba(21,115,71,0)} }
+      @media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+      .cta { font-family: var(--sans); font-weight: 600; font-size: 14.5px; border-radius: 999px; padding: 10px 18px; border: 0; cursor: pointer; background: var(--ink); color: var(--paper); }
+      /* hero */
+      .hero { display: grid; grid-template-columns: 1.05fr .95fr; gap: 8px; padding: 0; }
+      .hero .left { padding: 54px 44px 44px; }
+      .hero .right { padding: 44px 44px 44px 8px; border-left: 1px solid var(--line); background: linear-gradient(180deg, color-mix(in srgb, var(--gold-soft) 30%, var(--paper)), var(--paper) 60%); }
+      .kicker { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 18px; }
+      h1 { font-family: var(--serif); font-weight: 700; font-size: 30px; line-height: 1.18; letter-spacing: -.01em; color: var(--ink); max-width: 15ch; }
+      h1 em { font-style: italic; color: var(--gold); }
+      .sub { color: var(--ink-muted); font-size: 15.5px; line-height: 1.55; margin-top: 16px; max-width: 40ch; }
+      .actions { display: flex; gap: 12px; align-items: center; margin-top: 28px; }
+      .cta.gold { background: linear-gradient(180deg, #e8c877, var(--gold)); color: #2e2205; }
+      .cta.ghost { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+      .meaning { margin-top: 26px; display: inline-flex; align-items: baseline; gap: 8px; font-size: 14px; color: var(--ink-muted); border-top: 1px solid var(--line); padding-top: 18px; }
+      .meaning b { color: var(--ink); font-family: var(--ticker); }
+      /* the price */
+      .statusline { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--ink-muted); margin-bottom: 10px; }
+      .price { font-family: var(--ticker); font-variant-numeric: tabular-nums; font-weight: 600; letter-spacing: -.02em; line-height: 1; color: var(--ink); }
+      .price .big { font-size: 76px; }
+      .price .cur { font-size: 30px; color: var(--gold); vertical-align: super; margin-left: 6px; font-weight: 700; }
+      .unit { color: var(--ink-muted); font-size: 13.5px; margin-top: 8px; }
+      .delta { display: inline-flex; align-items: center; gap: 6px; color: var(--up); font-family: var(--ticker); font-size: 14px; margin-top: 14px; }
+      .spark { margin-top: 20px; height: 64px; width: 100%; }
+      .karat { margin-top: 22px; }
+      .karat .lab { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 10px; }
+      .ladder { display: flex; gap: 8px; }
+      .rung { flex: 1; text-align: center; border: 1px solid var(--line); border-radius: 12px; padding: 12px 6px; background: var(--surface); }
+      .rung.on { border-color: var(--gold); box-shadow: inset 0 0 0 1px var(--gold); background: color-mix(in srgb, var(--gold-soft) 40%, #fff); }
+      .rung .k { font-size: 12px; color: var(--ink-muted); }
+      .rung .v { font-family: var(--ticker); font-variant-numeric: tabular-nums; font-weight: 600; font-size: 16px; margin-top: 4px; }
+      .disc { font-size: 12.5px; color: var(--ink-muted); margin-top: 22px; line-height: 1.5; }
+      .disc a { color: var(--gold); }
+      /* mobile */
+      .m .hero { grid-template-columns: 1fr; }
+      .m .hero .left { padding: 26px 20px 8px; }
+      .m .hero .right { border-left: 0; border-top: 1px solid var(--line); padding: 24px 20px 26px; }
+      .m h1 { font-size: 25px; }
+      .m .price .big { font-size: 62px; }
+      .m nav { padding: 14px 18px; }
+      .m .navlinks { display: none; }
+      .tabbar { display: flex; justify-content: space-around; border-top: 1px solid var(--line); padding: 10px 6px 12px; background: color-mix(in srgb, var(--paper) 82%, #fff); font-size: 10.5px; color: var(--ink-muted); }
+      .tabbar .t { display: grid; justify-items: center; gap: 4px; }
+      .tabbar .ic { width: 20px; height: 20px; border-radius: 6px; background: var(--line); }
+      .tabbar .t.on { color: var(--ink); font-weight: 600; }
+      .tabbar .t.on .ic { background: var(--gold); }
+    </style>
+  </head>
+  <body>
+    <div class="frame-label">Concept · Homepage hero · Desktop 1240 · light · EN — the price is the page</div>
+    <div class="device desktop">
+      <nav>
+        <div class="brand"><span class="g">G</span> Gold Ticker Live</div>
+        <div class="navlinks"><a class="active">Prices</a><a>Calculator</a><a>Compare</a><a>Shops</a><a>Learn</a></div>
+        <div style="display:flex;gap:14px;align-items:center">
+          <span class="price-pill"><span class="dot"></span>XAU 4,108.70 · 24K 485.13 AED</span>
+          <button class="cta">Live Tracker</button>
+        </div>
+      </nav>
+      <div class="hero">
+        <div class="left">
+          <div class="kicker">Gold today · UAE &amp; GCC</div>
+          <h1>What is gold worth <em>right now</em>?</h1>
+          <p class="sub">One live, spot-linked reference for the UAE and Arab world — every karat, every
+            major market, in your currency. Reference prices, before shop making-charges.</p>
+          <div class="actions">
+            <button class="cta gold">Calculate my jewellery value →</button>
+            <button class="cta ghost">Compare markets</button>
+          </div>
+          <div class="meaning">A 10&nbsp;g 22K chain is worth about <b>AED&nbsp;4,446</b> today
+            &nbsp;·&nbsp; spot, before making charges</div>
+        </div>
+        <div class="right">
+          <div class="statusline"><span class="dot"></span> Live · Gold-API.com · 3 sec ago · Market open</div>
+          <div class="price"><span class="big">4,108.70</span><span class="cur">$</span></div>
+          <div class="unit">per troy ounce (31.1035 g) · XAU/USD</div>
+          <div class="delta">▲ +12.40 (+0.30%) today</div>
+          <svg class="spark" viewBox="0 0 400 64" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#b8891e" stroke-width="2"
+              points="0,50 40,46 80,48 120,40 160,42 200,34 240,30 280,32 320,22 360,18 400,14" />
+            <circle cx="400" cy="14" r="3.5" fill="#b8891e" />
+          </svg>
+          <div class="karat">
+            <div class="lab">Per gram in AED · slide a karat</div>
+            <div class="ladder">
+              <div class="rung on"><div class="k">24K</div><div class="v">485.13</div></div>
+              <div class="rung"><div class="k">22K</div><div class="v">444.70</div></div>
+              <div class="rung"><div class="k">21K</div><div class="v">424.49</div></div>
+              <div class="rung"><div class="k">18K</div><div class="v">363.85</div></div>
+            </div>
+          </div>
+          <div class="disc">Spot-linked reference · AED at the fixed 3.6725 peg · shop prices add
+            making charges, VAT &amp; margin. <a>How retail differs →</a></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="frame-label">Concept · Homepage hero · Mobile 390 · light · EN — price-first, one idea, bottom nav</div>
+    <div class="device mobile m">
+      <nav>
+        <div class="brand"><span class="g">G</span> Gold Ticker Live</div>
+        <div style="width:22px;height:16px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);position:relative"><span style="position:absolute;top:5px;left:0;right:0;height:2px;background:var(--ink)"></span></div>
+      </nav>
+      <div class="hero">
+        <div class="left">
+          <div class="kicker">Gold today · UAE</div>
+          <div class="statusline"><span class="dot"></span> Live · 3 sec ago · open</div>
+          <div class="price"><span class="big">4,108.70</span><span class="cur">$</span></div>
+          <div class="unit">per troy ounce · XAU/USD</div>
+          <div class="delta">▲ +12.40 (+0.30%) today</div>
+          <svg class="spark" viewBox="0 0 350 60" preserveAspectRatio="none">
+            <polyline fill="none" stroke="#b8891e" stroke-width="2" points="0,46 50,42 100,44 150,34 200,30 250,24 300,18 350,12" />
+            <circle cx="350" cy="12" r="3.5" fill="#b8891e" />
+          </svg>
+        </div>
+        <div class="right">
+          <div class="karat" style="margin-top:0">
+            <div class="lab">Per gram AED</div>
+            <div class="ladder">
+              <div class="rung on"><div class="k">24K</div><div class="v">485</div></div>
+              <div class="rung"><div class="k">22K</div><div class="v">445</div></div>
+              <div class="rung"><div class="k">21K</div><div class="v">424</div></div>
+              <div class="rung"><div class="k">18K</div><div class="v">364</div></div>
+            </div>
+          </div>
+          <button class="cta gold" style="width:100%;margin-top:18px">Calculate my jewellery value →</button>
+          <div class="disc">Reference · before making charges. <a>How retail differs →</a></div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="t on"><span class="ic"></span>Prices</div>
+        <div class="t"><span class="ic"></span>Calculator</div>
+        <div class="t"><span class="ic"></span>Compare</div>
+        <div class="t"><span class="ic"></span>Shops</div>
+        <div class="t"><span class="ic"></span>Menu</div>
+      </div>
+    </div>
+  </body>
+</html>

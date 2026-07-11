@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GoldTickerLive — Homepage A-synthesis (DESIGN MOCKUP)</title>
+    <style>
+      /* ============================================================================
+         DESIGN MOCKUP — not production code, not wired to live data.
+         All prices are ONE internally-consistent illustrative sample (spot $4,108.70)
+         shown identically on every surface to demonstrate the F-1 canonical-source rule.
+         Fonts are system fallbacks; production self-hosts an editorial serif + a tabular
+         "ticker" numeral face (woff2, subset, no CDN). See VISUAL_DIRECTION_V2.
+         ============================================================================ */
+      :root {
+        --paper:#f7f3ec; --paper-2:#f2ecdf; --surface:#fff; --ink:#171512; --ink-muted:#5c554b;
+        --ink-faint:#8b8375; --gold:#b8891e; --gold-deep:#916a12; --gold-soft:#e9dcc0; --up:#157347;
+        --down:#b23a2e; --line:#e7decf; --line-2:#efe7d8; --ink-panel:#17140f;
+        --serif:'Iowan Old Style','Palatino Linotype',Georgia,'Times New Roman',serif;
+        --sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+        --ticker:'SF Mono','DejaVu Sans Mono',ui-monospace,Menlo,monospace;
+        --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:64px; --s9:96px;
+        --maxw:1180px;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      html{scroll-behavior:smooth}
+      body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.5}
+      .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+      .num{font-family:var(--ticker);font-variant-numeric:tabular-nums}
+      .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-deep);font-weight:700}
+      .serif{font-family:var(--serif)}
+      a{color:inherit}
+      .dot{width:9px;height:9px;border-radius:50%;background:var(--up);display:inline-block;position:relative}
+      .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--up);opacity:.4}
+      .cta{font-family:var(--sans);font-weight:600;font-size:15px;border-radius:999px;padding:13px 24px;border:0;cursor:pointer;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+      .cta.gold{background:linear-gradient(180deg,#eccf82,var(--gold));color:#2e2205;box-shadow:0 1px 0 #f6e7bd inset}
+      .cta.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+      .cta.ink{background:var(--ink);color:var(--paper)}
+
+      /* sample-data ribbon */
+      .ribbon{background:repeating-linear-gradient(135deg,#efe7d8,#efe7d8 12px,#f2ecdf 12px,#f2ecdf 24px);color:var(--ink-muted);font-size:12px;text-align:center;padding:7px;letter-spacing:.04em;border-bottom:1px solid var(--line)}
+
+      /* nav */
+      header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--paper) 86%,#fff);backdrop-filter:saturate(1.1) blur(6px);border-bottom:1px solid var(--line)}
+      nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+      .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-weight:700;font-size:21px;letter-spacing:.01em}
+      .brand .g{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#f6e2a2,var(--gold) 68%);display:grid;place-items:center;color:#3a2a06;font-weight:800;font-size:15px;box-shadow:0 1px 2px rgba(0,0,0,.15)}
+      .brand small{display:block;font-family:var(--sans);font-weight:600;font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+      .navlinks{display:flex;gap:28px;font-size:15px;color:var(--ink-muted)}
+      .navlinks a{text-decoration:none}
+      .navlinks a.active{color:var(--ink);font-weight:600}
+      .navright{display:flex;gap:14px;align-items:center}
+      .pricepill{display:inline-flex;align-items:center;gap:9px;font-size:13px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:8px 13px}
+      .pricepill .num{font-weight:600}
+      .pricepill .g{color:var(--gold-deep)}
+
+      /* HERO */
+      .hero{padding:var(--s9) 0 var(--s7);position:relative;overflow:hidden}
+      .hero::before{content:"";position:absolute;top:-140px;right:-120px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--gold-soft) 55%,transparent),transparent 62%);pointer-events:none}
+      .hero .status{display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--ink-muted);margin-bottom:var(--s5)}
+      .hero h1.kline{font-family:var(--serif);font-weight:600;font-size:22px;color:var(--ink-muted);letter-spacing:.005em;margin-bottom:var(--s3)}
+      .hero h1.kline b{color:var(--ink)}
+      .price-xl{font-family:var(--ticker);font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:-.03em;line-height:.9;color:var(--ink);font-size:104px;display:flex;align-items:flex-start;gap:6px}
+      .price-xl .cur{font-size:40px;color:var(--gold);margin-top:8px;font-weight:700}
+      .price-sub{display:flex;align-items:center;gap:18px;margin-top:var(--s4);flex-wrap:wrap}
+      .price-sub .unit{color:var(--ink-muted);font-size:15px}
+      .delta{display:inline-flex;align-items:center;gap:7px;color:var(--up);font-family:var(--ticker);font-weight:600;font-size:16px;background:color-mix(in srgb,var(--up) 10%,transparent);padding:5px 11px;border-radius:8px}
+      .hero-spark{margin-top:var(--s5);width:100%;max-width:760px;height:70px}
+      .hero-actions{display:flex;gap:14px;align-items:center;margin-top:var(--s6);flex-wrap:wrap}
+      .hero-meaning{margin-top:var(--s5);display:inline-flex;align-items:baseline;gap:10px;font-size:15px;color:var(--ink-muted);border-top:1px solid var(--line);padding-top:var(--s4)}
+      .hero-meaning b{color:var(--ink);font-family:var(--ticker)}
+      .disc-once{margin-top:var(--s4);font-size:13px;color:var(--ink-faint)}
+      .disc-once a{color:var(--gold-deep)}
+
+      /* AUDIENCE ROUTING */
+      .routing{padding:var(--s7) 0;border-top:1px solid var(--line);background:var(--paper-2)}
+      .routing .lead{font-family:var(--serif);font-size:22px;margin-bottom:var(--s5)}
+      .routing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s4)}
+      .route{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3);text-decoration:none;transition:border-color .2s}
+      .route:hover{border-color:var(--gold)}
+      .route .rt-ic{width:40px;height:40px;border-radius:11px;background:color-mix(in srgb,var(--gold-soft) 46%,#fff);display:grid;place-items:center;color:var(--gold-deep);font-size:20px}
+      .route h3{font-size:17px}
+      .route p{font-size:14px;color:var(--ink-muted);flex:1}
+      .route .go{font-size:14px;color:var(--gold-deep);font-weight:600}
+
+      /* section shell */
+      .section{padding:var(--s8) 0;border-top:1px solid var(--line)}
+      .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s5);margin-bottom:var(--s6)}
+      .sec-head h2{font-family:var(--serif);font-size:32px;letter-spacing:-.01em;line-height:1.1}
+      .sec-head p{color:var(--ink-muted);font-size:15px;max-width:46ch;margin-top:6px}
+      .sec-head .link{font-size:14px;color:var(--gold-deep);font-weight:600;white-space:nowrap}
+
+      /* LIVE MARKET */
+      .market-grid{display:grid;grid-template-columns:1fr 300px;gap:var(--s6);align-items:stretch}
+      .chartcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:var(--s5);position:relative}
+      .chart-toggle{position:absolute;top:var(--s5);right:var(--s5);display:flex;gap:2px;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+      .chart-toggle span{font-size:12px;padding:5px 12px;border-radius:999px;color:var(--ink-muted)}
+      .chart-toggle span.on{background:var(--gold);color:#2e2205;font-weight:600}
+      .insight{display:flex;flex-direction:column;gap:var(--s4)}
+      .insight .stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:var(--s4) var(--s5)}
+      .insight .stat .l{font-size:12px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.08em}
+      .insight .stat .v{font-family:var(--ticker);font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;margin-top:4px}
+      .insight .stat.hi{background:linear-gradient(180deg,color-mix(in srgb,var(--gold-soft) 40%,var(--paper)),var(--surface));border-color:var(--gold-soft)}
+      .insight .stat .note{font-size:12.5px;color:var(--ink-muted);margin-top:4px}
+
+      /* KARAT LADDER */
+      .ladder-wrap{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:var(--s6)}
+      .ladder-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--s5);flex-wrap:wrap;gap:var(--s4)}
+      .unit-toggle{display:flex;gap:2px;background:var(--paper-2);border:1px solid var(--line);border-radius:999px;padding:3px}
+      .unit-toggle span{font-size:13px;padding:6px 15px;border-radius:999px;color:var(--ink-muted)}
+      .unit-toggle span.on{background:var(--ink);color:var(--paper);font-weight:600}
+      .ladder{position:relative;display:grid;grid-template-columns:repeat(6,1fr);gap:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+      .rung{padding:var(--s5) var(--s3);text-align:center;border-right:1px solid var(--line);position:relative;background:var(--surface)}
+      .rung:last-child{border-right:0}
+      .rung.on{background:linear-gradient(180deg,color-mix(in srgb,var(--gold-soft) 52%,#fff),var(--surface))}
+      .rung.on::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gold)}
+      .rung .k{font-size:13px;color:var(--ink-muted);font-weight:600}
+      .rung .purity{font-size:10.5px;color:var(--ink-faint);margin-top:2px}
+      .rung .v{font-family:var(--ticker);font-variant-numeric:tabular-nums;font-weight:600;font-size:21px;margin-top:var(--s3)}
+      .rung .cur{font-size:11px;color:var(--ink-faint)}
+      .ladder-foot{display:flex;align-items:center;gap:10px;margin-top:var(--s4);font-size:13px;color:var(--ink-muted)}
+
+      /* INLINE CALC */
+      .calc-band{background:linear-gradient(180deg,color-mix(in srgb,var(--gold-soft) 26%,var(--paper)),var(--paper));border-top:1px solid var(--line)}
+      .calc-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:var(--s7);align-items:center}
+      .calc-form .field{margin-top:var(--s5)}
+      .calc-form label{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted)}
+      .calc-inp{margin-top:8px;display:flex;gap:10px}
+      .calc-inp .box{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 17px;font-family:var(--ticker);font-size:22px}
+      .calc-inp .box.sel{max-width:150px;font-family:var(--sans);font-size:15px;color:var(--ink-muted);display:flex;align-items:center;justify-content:space-between}
+      .karat-pills{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+      .karat-pills span{border:1px solid var(--line);border-radius:10px;padding:9px 15px;font-size:14px;color:var(--ink-muted);background:var(--surface)}
+      .karat-pills span.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold);color:var(--ink);background:color-mix(in srgb,var(--gold-soft) 40%,#fff)}
+      .calc-result{background:var(--surface);border:1px solid var(--gold);border-radius:20px;padding:var(--s6);text-align:center}
+      .calc-result .l{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted)}
+      .calc-result .v{font-family:var(--ticker);font-variant-numeric:tabular-nums;font-weight:600;font-size:56px;margin:6px 0;line-height:1}
+      .calc-result .v small{font-size:24px;color:var(--gold)}
+      .calc-result .breakdown{font-size:13px;color:var(--ink-muted);border-top:1px solid var(--line);margin-top:var(--s4);padding-top:var(--s4)}
+
+      /* MARKETS EDITORIAL */
+      .markets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--s5)}
+      .mkt{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:var(--surface)}
+      .mkt .ph{height:180px;background:linear-gradient(135deg,#2b2118,#5a4326 60%,#8a6a35);position:relative;display:grid;place-items:center;color:#f3e6c8}
+      .mkt .ph .tag{position:absolute;top:12px;left:12px;font-size:11px;background:rgba(0,0,0,.4);padding:4px 10px;border-radius:999px;letter-spacing:.05em}
+      .mkt .ph .ico{font-size:34px;opacity:.6}
+      .mkt .body{padding:var(--s5)}
+      .mkt .body h3{font-family:var(--serif);font-size:20px}
+      .mkt .body .row{display:flex;justify-content:space-between;align-items:baseline;margin-top:var(--s3);font-size:14px;color:var(--ink-muted)}
+      .mkt .body .row .num{color:var(--ink);font-weight:600}
+
+      /* LEARN RAIL */
+      .learn-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:var(--s5)}
+      .learn-feature{background:var(--ink-panel);color:#f3eee4;border-radius:18px;padding:var(--s6);display:flex;flex-direction:column;justify-content:flex-end;min-height:260px;position:relative;overflow:hidden}
+      .learn-feature::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(184,137,30,.5),transparent 65%)}
+      .learn-feature .kicker{color:#e4b655}
+      .learn-feature h3{font-family:var(--serif);font-size:26px;margin:var(--s3) 0}
+      .learn-feature p{color:#c9bfad;font-size:14px}
+      .guide{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:var(--s5);display:flex;flex-direction:column;gap:var(--s3)}
+      .guide .badge{align-self:flex-start;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-deep);border:1px solid var(--gold-soft);border-radius:999px;padding:3px 10px}
+      .guide h4{font-size:16px}
+      .guide p{font-size:13.5px;color:var(--ink-muted);flex:1}
+      .guide .meta{font-size:12.5px;color:var(--ink-faint)}
+
+      /* FOOTER */
+      footer{background:var(--ink-panel);color:#d8cfbf;padding:var(--s8) 0 var(--s6);margin-top:var(--s8)}
+      .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:var(--s6)}
+      .foot-brand .brand{color:#f3eee4}
+      .foot-brand p{font-size:13.5px;color:#a99f8d;margin-top:var(--s4);max-width:34ch}
+      .foot-brand .pricepill{background:transparent;border-color:#3a3428;color:#e8dcc4;margin-top:var(--s4)}
+      .foot-col h5{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:#8b8171;margin-bottom:var(--s4)}
+      .foot-col a{display:block;font-size:14px;color:#d8cfbf;text-decoration:none;padding:5px 0}
+      .foot-bottom{border-top:1px solid #2a2419;margin-top:var(--s7);padding-top:var(--s5);display:flex;justify-content:space-between;font-size:12.5px;color:#8b8171;flex-wrap:wrap;gap:10px}
+
+      /* mobile */
+      @media (max-width:760px){
+        .wrap{padding:0 18px}
+        .navlinks,.pricepill{display:none}
+        .price-xl{font-size:64px}
+        .price-xl .cur{font-size:26px}
+        .hero{padding:var(--s7) 0 var(--s6)}
+        .routing-grid,.markets-grid{grid-template-columns:1fr}
+        .market-grid,.calc-grid,.learn-grid,.foot-grid{grid-template-columns:1fr}
+        .ladder{grid-template-columns:repeat(3,1fr)}
+        .rung{border-bottom:1px solid var(--line)}
+        .sec-head{flex-direction:column;align-items:flex-start}
+        .sec-head h2{font-size:26px}
+        .mobile-tabbar{display:flex}
+      }
+      .mobile-tabbar{display:none;position:sticky;bottom:0;z-index:20;justify-content:space-around;background:color-mix(in srgb,var(--paper) 88%,#fff);border-top:1px solid var(--line);padding:9px 6px calc(9px + env(safe-area-inset-bottom))}
+      .mobile-tabbar .t{display:grid;justify-items:center;gap:3px;font-size:10.5px;color:var(--ink-muted)}
+      .mobile-tabbar .t .ic{width:22px;height:22px;border-radius:7px;background:var(--line)}
+      .mobile-tabbar .t.on{color:var(--ink);font-weight:600}
+      .mobile-tabbar .t.on .ic{background:var(--gold)}
+    </style>
+  </head>
+  <body>
+    <div class="ribbon">DESIGN MOCKUP · Illustrative sample values (spot $4,108.70) shown identically on every surface — not a live price</div>
+    <header>
+      <div class="wrap">
+        <nav>
+          <div class="brand"><span class="g">G</span><div>Gold Ticker Live<small>Reference prices · GCC</small></div></div>
+          <div class="navlinks"><a class="active">Prices</a><a>Calculator</a><a>Compare</a><a>Shops</a><a>Learn</a><a>Glossary</a></div>
+          <div class="navright">
+            <span class="pricepill"><span class="dot"></span><span class="num">XAU 4,108.70</span> · <span class="num g">24K 485.13 AED/g</span></span>
+            <button class="cta ink">Live Tracker</button>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <div class="status"><span class="dot"></span> Live · Gold-API.com · 3 sec ago · Market open · <span class="num">AED @ 3.6725 peg</span></div>
+        <h1 class="kline serif">Gold today across the <b>UAE, GCC &amp; Arab world</b></h1>
+        <div class="price-xl"><span>4,108.70</span><span class="cur">$</span></div>
+        <div class="price-sub">
+          <span class="unit">per troy ounce (31.1035 g) · XAU/USD</span>
+          <span class="delta">▲ +12.40 (+0.30%) today</span>
+        </div>
+        <svg class="hero-spark" viewBox="0 0 760 70" preserveAspectRatio="none">
+          <defs><linearGradient id="hg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#b8891e" stop-opacity=".18"/><stop offset="1" stop-color="#b8891e" stop-opacity="0"/></linearGradient></defs>
+          <path d="M0,56 L60,52 L120,54 L180,44 L240,47 L300,38 L360,33 L420,35 L480,26 L540,29 L600,20 L660,15 L720,10 L760,7 L760,70 L0,70 Z" fill="url(#hg)"/>
+          <polyline fill="none" stroke="#b8891e" stroke-width="2.5" points="0,56 60,52 120,54 180,44 240,47 300,38 360,33 420,35 480,26 540,29 600,20 660,15 720,10 760,7"/>
+          <circle cx="760" cy="7" r="4" fill="#b8891e"/>
+        </svg>
+        <div class="hero-actions">
+          <a class="cta gold">Calculate my jewellery value →</a>
+          <a class="cta ghost">Open live tracker</a>
+        </div>
+        <div class="hero-meaning">Right now a <b>10&nbsp;g 22K</b> chain is worth about <b>AED&nbsp;4,446.90</b> in metal</div>
+        <div class="disc-once">Spot-linked reference prices, before shop making charges, VAT &amp; margin. <a>How retail differs →</a></div>
+      </div>
+    </section>
+
+    <!-- AUDIENCE ROUTING -->
+    <section class="routing">
+      <div class="wrap">
+        <p class="lead serif">What brings you in today?</p>
+        <div class="routing-grid">
+          <a class="route">
+            <span class="rt-ic">◆</span>
+            <h3>I'm buying jewellery</h3>
+            <p>See what your karat is worth in metal, then what a shop will really charge once making &amp; VAT are added.</p>
+            <span class="go">Calculate a piece →</span>
+          </a>
+          <a class="route">
+            <span class="rt-ic">⇄</span>
+            <h3>I'm comparing markets</h3>
+            <p>Today the cheapest all-in gram across the GCC is <b class="num">Kuwait</b>. Compare 24+ countries side by side.</p>
+            <span class="go">Compare countries →</span>
+          </a>
+          <a class="route">
+            <span class="rt-ic">↗</span>
+            <h3>I'm tracking / investing</h3>
+            <p>Prices sit near a 3-month high. See the full history, day change, and set a price alert.</p>
+            <span class="go">Open the tracker →</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE MARKET -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="kicker">The market</span><h2 class="serif">Is today a high or a low?</h2><p>XAU/USD spot, LBMA baseline combined with live session data. One value — the same one every surface on this site shows.</p></div>
+          <a class="link">Full tracker &amp; alerts →</a>
+        </div>
+        <div class="market-grid">
+          <div class="chartcard">
+            <div class="chart-toggle"><span>1M</span><span>1Y</span><span class="on">3Y</span><span>ALL</span></div>
+            <svg viewBox="0 0 820 300" preserveAspectRatio="none" style="width:100%;height:300px">
+              <g stroke="#efe7d8" stroke-width="1"><line x1="0" y1="60" x2="820" y2="60"/><line x1="0" y1="120" x2="820" y2="120"/><line x1="0" y1="180" x2="820" y2="180"/><line x1="0" y1="240" x2="820" y2="240"/></g>
+              <path d="M0,250 L80,244 L140,246 L200,220 L260,226 L320,196 L380,180 L440,184 L500,150 L560,158 L620,120 L680,96 L740,70 L820,52 L820,300 L0,300 Z" fill="rgba(184,137,30,.08)"/>
+              <polyline fill="none" stroke="#b8891e" stroke-width="2.5" points="0,250 80,244 140,246 200,220 260,226 320,196 380,180 440,184 500,150 560,158 620,120 680,96 740,70 820,52"/>
+              <circle cx="820" cy="52" r="4.5" fill="#b8891e"/>
+              <line x1="820" y1="0" x2="820" y2="300" stroke="#b8891e" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>
+            </svg>
+          </div>
+          <div class="insight">
+            <div class="stat hi"><div class="l">Today</div><div class="v" style="color:var(--up)">▲ +0.30%</div><div class="note">+$12.40 vs session open · near a 3-month high</div></div>
+            <div class="stat"><div class="l">This week</div><div class="v">+1.8%</div></div>
+            <div class="stat"><div class="l">3-year range</div><div class="v" style="font-size:19px">$1,810 – $4,120</div><div class="note">You are here → top of range</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KARAT LADDER -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="kicker">By karat</span><h2 class="serif">Every karat, one authoritative price</h2><p>Purity is simply karat ÷ 24. Slide across — each value re-rolls from the same spot, in your unit.</p></div>
+          <div class="unit-toggle"><span class="on">gram</span><span>tola</span><span>ounce</span></div>
+        </div>
+        <div class="ladder-wrap">
+          <div class="ladder-top">
+            <div><span class="kicker">AED per gram · 24K selected</span></div>
+            <div style="font-size:13px;color:var(--ink-muted)">Reference · before making charges</div>
+          </div>
+          <div class="ladder">
+            <div class="rung on"><div class="k">24K</div><div class="purity">.999 · 24/24</div><div class="v">485.13</div><div class="cur">AED/g</div></div>
+            <div class="rung"><div class="k">22K</div><div class="purity">.917 · 22/24</div><div class="v">444.70</div><div class="cur">AED/g</div></div>
+            <div class="rung"><div class="k">21K</div><div class="purity">.875 · 21/24</div><div class="v">424.49</div><div class="cur">AED/g</div></div>
+            <div class="rung"><div class="k">18K</div><div class="purity">.750 · 18/24</div><div class="v">363.85</div><div class="cur">AED/g</div></div>
+            <div class="rung"><div class="k">14K</div><div class="purity">.583 · 14/24</div><div class="v">283.00</div><div class="cur">AED/g</div></div>
+            <div class="rung"><div class="k">9K</div><div class="purity">.375 · 9/24</div><div class="v">181.92</div><div class="cur">AED/g</div></div>
+          </div>
+          <div class="ladder-foot"><span class="dot"></span> Same spot as the hero &amp; calculator · USD equivalents a tap away</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INLINE CALCULATOR -->
+    <section class="section calc-band">
+      <div class="wrap">
+        <div class="calc-grid">
+          <div class="calc-form">
+            <span class="kicker">Instant value</span>
+            <h2 class="serif" style="font-size:32px;margin-top:8px">What is your gold worth right now?</h2>
+            <div class="field"><label>Weight</label>
+              <div class="calc-inp"><div class="box">10 g</div><div class="box sel">grams <span>▾</span></div></div>
+            </div>
+            <div class="field"><label>Karat</label>
+              <div class="karat-pills"><span class="on">24K</span><span>22K</span><span>21K</span><span>18K</span><span>14K</span><span>9K</span></div>
+            </div>
+            <p style="font-size:13px;color:var(--ink-muted);margin-top:16px">Full calculator adds scrap, zakat, buying power &amp; unit conversion → </p>
+          </div>
+          <div class="calc-result">
+            <div class="l">Reference metal value</div>
+            <div class="v">4,851.30 <small>AED</small></div>
+            <div style="font-size:14px;color:var(--ink-muted)">≈ $1,320.70 · 10 g × 24K @ AED 485.13/g</div>
+            <div class="breakdown">Spot-linked · before making charges &amp; 5% VAT. <a style="color:var(--gold-deep)">See what a shop would charge →</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MARKETS EDITORIAL -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="kicker">Where to buy</span><h2 class="serif">The Gulf's great gold markets</h2><p>Reference gram prices by market, with the souks that define them. Shop quotes add making charges — always confirm in person.</p></div>
+          <a class="link">All countries &amp; shops →</a>
+        </div>
+        <div class="markets-grid">
+          <div class="mkt"><div class="ph"><span class="tag">DUBAI · UAE</span><span class="ico">🏛</span></div><div class="body"><h3>Dubai Gold Souk</h3><div class="row"><span>24K reference</span><span class="num">AED 485.13/g</span></div><div class="row"><span>vs GCC average</span><span class="num" style="color:var(--up)">−0.4%</span></div></div></div>
+          <div class="mkt"><div class="ph"><span class="tag">RIYADH · KSA</span><span class="ico">🏛</span></div><div class="body"><h3>Riyadh Gold Market</h3><div class="row"><span>24K reference</span><span class="num">SAR 495.80/g</span></div><div class="row"><span>vs GCC average</span><span class="num">+0.1%</span></div></div></div>
+          <div class="mkt"><div class="ph"><span class="tag">KUWAIT CITY</span><span class="ico">🏛</span></div><div class="body"><h3>Kuwait Gold Souk</h3><div class="row"><span>24K reference</span><span class="num">KWD 40.60/g</span></div><div class="row"><span>vs GCC average</span><span class="num" style="color:var(--up)">−0.9% cheapest</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEARN RAIL -->
+    <section class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <div><span class="kicker">Learn</span><h2 class="serif">Buy with confidence</h2><p>A small library for first-time buyers and long-term holders in the GCC.</p></div>
+          <a class="link">All 9 guides →</a>
+        </div>
+        <div class="learn-grid">
+          <a class="learn-feature">
+            <div><span class="kicker">Start here · 8 min</span><h3>24K vs 22K vs 18K — what should you actually buy?</h3><p>Purity, durability and resale value, explained for jewellery and bullion.</p></div>
+          </a>
+          <div class="guide"><span class="badge">Beginner</span><h4>Spot vs retail price</h4><p>Why a shop quote differs from the reference spot.</p><span class="meta">6 min read →</span></div>
+          <div class="guide"><span class="badge">Buying</span><h4>Making charges &amp; VAT</h4><p>What really sits on top of the metal value.</p><span class="meta">5 min read →</span></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <div class="foot-grid">
+          <div class="foot-brand">
+            <div class="brand"><span class="g">G</span><div>Gold Ticker Live</div></div>
+            <p>The trusted live gold reference for the UAE, GCC &amp; Arab world. Reference prices — always confirm final retail with your jeweller.</p>
+            <span class="pricepill"><span class="dot"></span><span class="num">XAU 4,108.70 · 24K 485.13 AED/g</span></span>
+          </div>
+          <div class="foot-col"><h5>Prices</h5><a>Live tracker</a><a>Calculator</a><a>Compare countries</a><a>World heatmap</a><a>Portfolio</a></div>
+          <div class="foot-col"><h5>Learn</h5><a>Guides</a><a>Glossary</a><a>Methodology</a><a>Spot vs retail</a><a>Find shops</a></div>
+          <div class="foot-col"><h5>Trust</h5><a>Data sources</a><a>AED 3.6725 peg</a><a>Freshness labels</a><a>Privacy</a><a>Terms</a></div>
+        </div>
+        <div class="foot-bottom">
+          <span>© 2026 Gold Ticker Live · Reference prices, not investment advice.</span>
+          <span>Source: Gold-API.com · LBMA baseline · FX at the fixed 3.6725 peg · EN / العربية</span>
+        </div>
+      </div>
+    </footer>
+
+    <div class="mobile-tabbar">
+      <div class="t on"><span class="ic"></span>Prices</div>
+      <div class="t"><span class="ic"></span>Calculator</div>
+      <div class="t"><span class="ic"></span>Compare</div>
+      <div class="t"><span class="ic"></span>Shops</div>
+      <div class="t"><span class="ic"></span>Menu</div>
+    </div>
+  </body>
+</html>
