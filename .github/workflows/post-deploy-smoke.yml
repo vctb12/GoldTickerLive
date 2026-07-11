@@ -1,0 +1,79 @@
+# ------------------------------------------------------------------
+# Post-deploy smoke — runs AFTER "Deploy to GitHub Pages" finishes and
+# verifies the NEW commit is actually live and healthy. Fails loudly
+# (red run + optional Telegram/Discord alert) so a silently-failed deploy
+# can't keep serving a stale build unnoticed (see PR #641/#652).
+#
+# Not a merge gate: it runs post-hoc against production. workflow_run
+# workflows execute from the default branch's copy of this file.
+# ------------------------------------------------------------------
+name: Post-deploy smoke
+
+on:
+  workflow_run:
+    workflows: ['Deploy to GitHub Pages']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: 'Commit SHA that should be live (blank = skip commit-match)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: post-deploy-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Verify live deploy
+    # Only run for a SUCCESSFUL deploy (or a manual dispatch). A failed deploy is
+    # already red; this guards the happy-path "deployed but stale/broken" case.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+
+      - name: Run post-deploy smoke (propagation-tolerant retry)
+        env:
+          SITE_URL: 'https://goldtickerlive.com'
+          # For a real deploy, the head_sha of the deploy run is what should be
+          # live. For manual dispatch, use the provided input (may be blank).
+          EXPECTED_SHA: ${{ github.event.workflow_run.head_sha || github.event.inputs.expected_sha }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          # Pages CDN can lag a few seconds behind a completed deploy. Retry the
+          # smoke a few times before treating a commit mismatch as a real failure,
+          # so we never cry wolf on propagation delay. The script only alerts on
+          # its final run (we suppress alerts on intermediate attempts).
+          attempts=4
+          for i in $(seq 1 $attempts); do
+            echo "── smoke attempt $i/$attempts ──"
+            if [ "$i" -lt "$attempts" ]; then
+              # Intermediate attempt: don't fire the external alert yet.
+              if env TELEGRAM_BOT_TOKEN= TELEGRAM_CHANNEL_ID= DISCORD_WEBHOOK_URL= \
+                   node scripts/node/post-deploy-smoke.js; then
+                echo "smoke passed on attempt $i"
+                exit 0
+              fi
+              echo "attempt $i failed; waiting 20s for CDN propagation…"
+              sleep 20
+            else
+              # Final attempt: alerts enabled, its exit code is the job result.
+              node scripts/node/post-deploy-smoke.js
+            fi
+          done
