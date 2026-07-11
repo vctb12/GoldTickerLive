@@ -15,7 +15,7 @@
  * this file wires it to storage, live data and the shared shell.
  */
 
-import { CONSTANTS, COUNTRIES, KARATS } from '../config/index.js';
+import { CONSTANTS, COUNTRIES, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
@@ -36,6 +36,7 @@ import {
   parsePortfolio,
   serializePortfolio,
   summarizePortfolio,
+  gainUnavailableReason,
   computeTimeline,
   holdingsToCsv,
 } from './portfolio/portfolio-core.js';
@@ -85,7 +86,6 @@ const T = {
     cardGain: 'Vs. cost',
     cardGainHint: 'Against today’s reference value',
     cardGainMixed: 'Not totalled across different cost currencies',
-    cardGainNoCost: 'Add costs to see this',
     chartTitle: 'Portfolio value over time',
     chartNote:
       'Reference value replayed from daily price snapshots saved by this browser — days without a visit have no snapshot.',
@@ -168,7 +168,6 @@ const T = {
     cardGain: 'مقارنة بالتكلفة',
     cardGainHint: 'مقابل القيمة المرجعية لليوم',
     cardGainMixed: 'لا يُجمع عبر عملات تكلفة مختلفة',
-    cardGainNoCost: 'أضف التكاليف لعرض هذا الرقم',
     chartTitle: 'قيمة المحفظة عبر الوقت',
     chartNote:
       'قيمة مرجعية مُعادة الحساب من لقطات الأسعار اليومية المحفوظة في هذا المتصفح — الأيام بلا زيارة لا تحتوي لقطة.',
@@ -248,6 +247,11 @@ const STATE = {
 
 function t() {
   return T[STATE.lang] || T.en;
+}
+/** Shared-dictionary lookup (src/config/translations.js), EN fallback. */
+function tr(key) {
+  const dict = TRANSLATIONS[STATE.lang] || TRANSLATIONS.en;
+  return dict[key] || TRANSLATIONS.en[key] || key;
 }
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -523,9 +527,18 @@ function renderSummary(summary) {
       )
     );
   } else {
-    host.appendChild(
-      card(dict.cardGain, [summary.mixedCostCurrencies ? dict.cardGainMixed : dict.cardGainNoCost])
-    );
+    // One card, three unrelated causes — name the real one instead of always
+    // claiming costs are missing (honest-freshness rule).
+    const reason = gainUnavailableReason(summary, currency);
+    const message =
+      reason === 'mixed-cost-currencies'
+        ? dict.cardGainMixed
+        : reason === 'cost-currency-differs'
+          ? tr('portfolio.gainCostCurrencyDiffers')
+          : reason === 'price-pending'
+            ? tr('portfolio.gainAwaitingPrice')
+            : tr('portfolio.gainAddCosts');
+    host.appendChild(card(dict.cardGain, [message]));
   }
 }
 
