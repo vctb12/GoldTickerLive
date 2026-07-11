@@ -72,6 +72,27 @@ html[lang='ar'] [data-lang-block='en'] {
   line-height: 1.62;
   max-width: 60ch;
 }
+.method-hero p.method-hero-reviewed {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: var(--gtl-4, 16px);
+  font-size: var(--gtl-meta, 0.8125rem);
+  font-weight: 600;
+  color: var(--color-text-faint);
+}
+.method-hero-reviewed time {
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.method-hero-reviewed-dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--color-live, #1f9d55);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-live, #1f9d55) 22%, transparent);
+  flex: none;
+}
 
 /* ── Sticky section nav (TOC) ─────────────────────────────────────────────── */
 .method-toc {
@@ -405,6 +426,104 @@ code.method-formula {
 .related-tool-link:focus-visible {
   outline: 2px solid var(--color-gold);
   outline-offset: 2px;
+}
+
+/* ── Data-flow figure (accessible HTML/CSS, no image) ─────────────────────── */
+.method-dataflow-fig {
+  margin: var(--gtl-5, 24px) 0;
+}
+.method-dataflow {
+  list-style: none;
+  margin: 0 0 var(--gtl-3, 12px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gtl-4, 16px);
+}
+
+/* `.method-dataflow` sets display:flex, equal specificity to the generic
+   [data-lang-block='ar']{display:none} toggle above but later in source order, so
+   scope the toggle here or the inactive-language flow stays visible (same fix as
+   .glossary-jump). Re-show with flex, not `revert`, to keep the flex layout. */
+.method-dataflow[data-lang-block='ar'] {
+  display: none;
+}
+html[lang='ar'] .method-dataflow[data-lang-block='ar'] {
+  display: flex;
+}
+html[lang='ar'] .method-dataflow[data-lang-block='en'] {
+  display: none;
+}
+.method-dataflow-stage {
+  position: relative;
+  padding: var(--gtl-3, 12px) var(--gtl-4, 16px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--gtl-r-md, 14px);
+  box-shadow: var(--gtl-shadow-1);
+}
+
+/* Vertical connector (mobile default). Decorative glyph in the gap. */
+.method-dataflow-stage:not(:last-child)::after {
+  content: '↓';
+  position: absolute;
+  inset-block-end: calc(var(--gtl-4, 16px) * -1);
+  inset-inline-start: 50%;
+  transform: translate(-50%, -2px);
+  color: var(--color-gold);
+  font-weight: 700;
+  line-height: 1;
+}
+.method-dataflow-label {
+  display: block;
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+}
+.method-dataflow-op {
+  display: block;
+  margin-top: 2px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.method-dataflow-stage--out {
+  border-color: var(--color-gold);
+  background:
+    radial-gradient(130% 130% at 0 0, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-surface);
+}
+.method-dataflow-cap {
+  font-size: var(--gtl-meta, 0.8125rem);
+  line-height: 1.55;
+  color: var(--color-text-faint);
+}
+
+@media (min-width: 640px) {
+  .method-dataflow {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: var(--gtl-5, 24px);
+    overflow-x: auto;
+    padding-bottom: var(--gtl-2, 8px);
+  }
+  .method-dataflow-stage {
+    flex: 1 0 0;
+    min-inline-size: 8.5rem;
+  }
+  .method-dataflow-stage:not(:last-child)::after {
+    content: '→';
+    inset-block-end: auto;
+    inset-block-start: 50%;
+    inset-inline-start: auto;
+    inset-inline-end: calc(var(--gtl-5, 24px) * -1);
+    transform: translate(0, -50%);
+  }
+  html[dir='rtl'] .method-dataflow-stage:not(:last-child)::after {
+    content: '←';
+  }
 }
 
 /* ── Responsive ───────────────────────────────────────────────────────────── */

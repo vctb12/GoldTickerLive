@@ -150,7 +150,7 @@
   "description": "How Gold Ticker Live calculates gold prices, sources data, and handles AED fixed peg, karat conversions, and data freshness.",
   "url": "https://goldtickerlive.com/methodology.html",
   "datePublished": "2026-07-04",
-  "dateModified": "2026-07-04",
+  "dateModified": "2026-07-11",
   "author": {
     "@type": "Organization",
     "name": "Gold Ticker Live"
@@ -182,6 +182,14 @@
           <h1 id="method-h1">Data Sources &amp; Methodology</h1>
           <p id="method-sub">
             How we calculate every price you see — step by step, with full source attribution.
+          </p>
+          <p class="method-hero-reviewed" data-lang-block="en">
+            <span class="method-hero-reviewed-dot" aria-hidden="true"></span>
+            Last reviewed <time datetime="2026-07-11">11 July 2026</time>
+          </p>
+          <p class="method-hero-reviewed" data-lang-block="ar" lang="ar" dir="rtl">
+            <span class="method-hero-reviewed-dot" aria-hidden="true"></span>
+            آخر مراجعة <time datetime="2026-07-11">11 يوليو 2026</time>
           </p>
         </div>
       </section>
@@ -318,10 +326,86 @@
           <h2 data-lang-block="en">Live price pipeline</h2>
           <h2 data-lang-block="ar" lang="ar" dir="rtl">مسار السعر المباشر</h2>
           <p data-lang-block="en">
-            A live worked example, built from the current canonical snapshot this page reads through
-            <code>getCanonicalSpot()</code> — the same value the calculator and homepage show at this
-            instant. Watch the international spot price flow through each step to a UAE 22K per-gram
-            reference in dirhams.
+            One chain builds every price, applied identically everywhere — from the global market to
+            a spot-linked reference value for your weight:
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            سلسلة واحدة تبني كل سعر، وتُطبَّق بالطريقة نفسها في كل مكان — من السوق العالمي إلى قيمة
+            مرجعية مرتبطة بالسعر الفوري لوزنك:
+          </p>
+
+          <figure class="method-dataflow-fig">
+            <ol class="method-dataflow" data-lang-block="en" aria-label="How a gold price is derived, stage by stage">
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">Market</span>
+                <span class="method-dataflow-op">XAU/USD spot · USD per troy ounce</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">Currency</span>
+                <span class="method-dataflow-op">× FX rate · AED uses the 3.6725 peg</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">Troy ounce</span>
+                <span class="method-dataflow-op">÷ 31.1035 · ounce → gram</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">Karat</span>
+                <span class="method-dataflow-op">× (karat ÷ 24) · purity</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">Weight</span>
+                <span class="method-dataflow-op">× grams · your piece</span>
+              </li>
+              <li class="method-dataflow-stage method-dataflow-stage--out">
+                <span class="method-dataflow-label">Reference</span>
+                <span class="method-dataflow-op">spot-linked value — not a shop quote</span>
+              </li>
+            </ol>
+            <ol class="method-dataflow" data-lang-block="ar" lang="ar" dir="rtl" aria-label="كيف يُشتق سعر الذهب مرحلةً بمرحلة">
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">السوق</span>
+                <span class="method-dataflow-op">سعر XAU/USD الفوري · دولار للأوقية التروية</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">العملة</span>
+                <span class="method-dataflow-op">× سعر الصرف · الدرهم يستخدم ربط 3.6725</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">الأوقية التروية</span>
+                <span class="method-dataflow-op">÷ 31.1035 · أوقية ← غرام</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">العيار</span>
+                <span class="method-dataflow-op">× (العيار ÷ 24) · النقاء</span>
+              </li>
+              <li class="method-dataflow-stage">
+                <span class="method-dataflow-label">الوزن</span>
+                <span class="method-dataflow-op">× الغرامات · قطعتك</span>
+              </li>
+              <li class="method-dataflow-stage method-dataflow-stage--out">
+                <span class="method-dataflow-label">المرجع</span>
+                <span class="method-dataflow-op">قيمة مرتبطة بالسعر الفوري — لا سعر محل</span>
+              </li>
+            </ol>
+            <figcaption class="method-dataflow-cap" data-lang-block="en">
+              The reference value is the pure metal at spot. Shops add making charges, VAT and dealer
+              premium on top — see “What our prices are not”.
+            </figcaption>
+            <figcaption class="method-dataflow-cap" data-lang-block="ar" lang="ar" dir="rtl">
+              القيمة المرجعية هي المعدن الخالص بالسعر الفوري. وتضيف المحلات أجور الصياغة وضريبة القيمة
+              المضافة وهامش التاجر فوقها — راجع «ما لا تمثّله أسعارنا».
+            </figcaption>
+          </figure>
+
+          <p data-lang-block="en">
+            And here it is live — a worked example built from the current canonical snapshot this page
+            reads through <code>getCanonicalSpot()</code>, the same value the calculator and homepage
+            show at this instant, resolved to a UAE 22K per-gram reference in dirhams.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            وها هي حيّة — مثال مبني على اللقطة المرجعية الحالية التي تقرؤها هذه الصفحة عبر
+            <code>getCanonicalSpot()</code>، القيمة نفسها التي تعرضها الحاسبة والصفحة الرئيسية في هذه
+            اللحظة، محسوبةً إلى سعر مرجعي للغرام من عيار 22 في الإمارات بالدرهم.
           </p>
           <p data-lang-block="ar" lang="ar" dir="rtl">
             مثال حيّ مبني على اللقطة المرجعية الحالية التي تقرؤها هذه الصفحة عبر
@@ -1074,28 +1158,59 @@
         </section>
 
         <section class="method-section" id="freshness-states">
-          <h2 data-lang-block="en">Freshness states</h2>
-          <h2 data-lang-block="ar" lang="ar" dir="rtl">حالات الحداثة</h2>
-          <p data-lang-block="en">Every visible price carries a state label so cached or delayed data is never mistaken for live trading quotes.</p>
-          <p data-lang-block="ar" lang="ar" dir="rtl">كل سعر ظاهر يحمل وسم حالة حتى لا تُخلَط البيانات المخزّنة أو المتأخرة أبداً بأسعار تداول مباشرة.</p>
+          <h2 data-lang-block="en">Data-state vocabulary</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">مفردات حالة البيانات</h2>
+          <p data-lang-block="en">
+            Every freshness-capable price discloses three things together — the <strong>state
+            label</strong>, the <strong>source</strong>, and the <strong>UTC timestamp</strong> — so a
+            cached or delayed value is never mistaken for a live trading quote. These are the exact
+            states the site can show, from freshest to least certain:
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            كل سعر قابل للحداثة يُفصح عن ثلاثة أمور معاً — <strong>وسم الحالة</strong>،
+            و<strong>المصدر</strong>، و<strong>الطابع الزمني بتوقيت UTC</strong> — حتى لا تُخلَط قيمة
+            مخزّنة أو متأخرة أبداً بسعر تداول مباشر. وهذه هي الحالات الدقيقة التي قد يعرضها الموقع،
+            من الأحدث إلى الأقل يقيناً:
+          </p>
           <ul class="method-freshness-legend" data-lang-block="en">
-            <li><span class="badge badge--live">Live</span> Fetched within the healthy window</li>
-            <li><span class="badge badge--cached">Cached</span> Browser or service-worker cache</li>
-            <li><span class="badge badge--delayed">Delayed</span> Provider lag (often FX)</li>
-            <li><span class="badge badge--stale">Stale</span> Older than our stale threshold</li>
-            <li><span class="badge badge--fallback">Fallback</span> Last known value after failure</li>
-            <li><span class="badge badge--closed">Closed</span> Market in its scheduled closed window — recent data is still labelled closed</li>
-            <li><span class="badge badge--unavailable">Unavailable</span> Timestamp missing or unreadable</li>
+            <li><span class="badge badge--live">Live</span> Fetched from a healthy provider within the live budget (≤ 5 seconds old). The only state ever shown as live.</li>
+            <li><span class="badge badge--cached">Cached</span> A recent value from the browser / service-worker cache, within the cached budget (≤ 60 seconds).</li>
+            <li><span class="badge badge--delayed">Delayed</span> Older than the cached budget but still recent (≤ 5 minutes), or the FX layer lagging behind gold.</li>
+            <li><span class="badge badge--estimated">Estimated</span> The live provider path is unavailable, so the value is carried forward beyond the delayed budget — shown with cautionary styling, never as live.</li>
+            <li><span class="badge badge--stale">Stale</span> Older than the stale threshold (gold: 75 minutes; FX: 26 hours).</li>
+            <li><span class="badge badge--fallback">Fallback</span> The last known value kept visible after a fetch failure — never blanked, never relabelled live.</li>
+            <li><span class="badge badge--closed">Closed</span> The market is in its scheduled closed window; even recent data reads closed until it reopens.</li>
+            <li><span class="badge badge--unavailable">Unavailable</span> The timestamp is missing or unreadable, so freshness can't be verified.</li>
           </ul>
           <ul class="method-freshness-legend" data-lang-block="ar" lang="ar" dir="rtl">
-            <li><span class="badge badge--live">مباشر</span> مجلوب ضمن النافذة السليمة</li>
-            <li><span class="badge badge--cached">مخزّن</span> ذاكرة المتصفح أو عامل الخدمة</li>
-            <li><span class="badge badge--delayed">متأخر</span> تأخّر المزوّد (غالباً الصرف)</li>
-            <li><span class="badge badge--stale">قديم</span> أقدم من عتبة القِدَم لدينا</li>
-            <li><span class="badge badge--fallback">احتياطي</span> آخر قيمة معروفة بعد الفشل</li>
-            <li><span class="badge badge--closed">مغلق</span> السوق في نافذة إغلاقه المجدول — تبقى البيانات الحديثة موسومة كمغلقة</li>
-            <li><span class="badge badge--unavailable">غير متاح</span> الطابع الزمني مفقود أو غير قابل للقراءة</li>
+            <li><span class="badge badge--live">مباشر</span> مجلوب من مزوّد سليم ضمن نافذة المباشر (أحدث من 5 ثوانٍ). الحالة الوحيدة التي تُعرض على أنها مباشرة.</li>
+            <li><span class="badge badge--cached">مخزّن</span> قيمة حديثة من ذاكرة المتصفح أو عامل الخدمة، ضمن نافذة التخزين (حتى 60 ثانية).</li>
+            <li><span class="badge badge--delayed">متأخر</span> أقدم من نافذة التخزين لكنها لا تزال حديثة (حتى 5 دقائق)، أو طبقة الصرف متأخرة عن الذهب.</li>
+            <li><span class="badge badge--estimated">مُقدَّر</span> مسار المزوّد المباشر غير متاح، فتُحمَل القيمة إلى ما بعد نافذة التأخير — تُعرض بنمط تحذيري، وليست مباشرة أبداً.</li>
+            <li><span class="badge badge--stale">قديم</span> أقدم من عتبة القِدَم (الذهب: 75 دقيقة؛ الصرف: 26 ساعة).</li>
+            <li><span class="badge badge--fallback">احتياطي</span> آخر قيمة معروفة تبقى ظاهرة بعد فشل الجلب — لا تُفرَّغ ولا يُعاد وسمها كمباشرة.</li>
+            <li><span class="badge badge--closed">مغلق</span> السوق في نافذة إغلاقه المجدول؛ حتى البيانات الحديثة تُقرأ كمغلقة حتى يُعاد فتحه.</li>
+            <li><span class="badge badge--unavailable">غير متاح</span> الطابع الزمني مفقود أو غير قابل للقراءة، فلا يمكن التحقق من الحداثة.</li>
           </ul>
+          <div class="method-warning method-warning--info">
+            <strong data-lang-block="en">Offline &amp; recovery</strong>
+            <strong data-lang-block="ar" lang="ar" dir="rtl">عدم الاتصال والتعافي</strong>
+            <p data-lang-block="en">
+              <strong>Offline:</strong> if your device loses its connection, the site keeps serving
+              the last cached value with an offline notice — it never blanks out, and never relabels
+              cached data as live. <strong>Recovery:</strong> after a failed fetch the value stays
+              visible as fallback or cached while the app quietly retries; the moment a fresh value
+              arrives it returns to live. There is no separate "recovering" badge — the honest state
+              you see is always the current one, not an optimistic guess.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              <strong>عدم الاتصال:</strong> إذا فقد جهازك الاتصال، يواصل الموقع عرض آخر قيمة مخزّنة مع
+              إشعار بعدم الاتصال — فلا يظهر فراغاً أبداً، ولا يُعيد وسم البيانات المخزّنة كمباشرة.
+              <strong>التعافي:</strong> بعد فشل الجلب تبقى القيمة ظاهرة كاحتياطية أو مخزّنة بينما
+              يعيد التطبيق المحاولة بهدوء؛ وفور وصول قيمة جديدة تعود إلى «مباشر». ولا يوجد وسم منفصل
+              لـ«قيد التعافي» — فالحالة الصادقة التي تراها هي الحالية دائماً، وليست تخميناً متفائلاً.
+            </p>
+          </div>
         </section>
 
         <section class="method-section" id="method-faq">
