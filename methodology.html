@@ -79,6 +79,11 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/methodology.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing scale);
+         methodology-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/methodology-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/methodology-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
@@ -188,12 +193,14 @@
           <ul class="method-toc-list">
             <li><a href="#overview" id="toc-overview">Overview</a></li>
             <li><a href="#live-formula" id="toc-live-formula">Live formula</a></li>
+            <li><a href="#resolver" id="toc-resolver">Canonical resolver</a></li>
             <li><a href="#gold-data" id="toc-gold-data">Gold Price Data</a></li>
             <li><a href="#fx-rates" id="toc-fx-rates">FX Rates</a></li>
             <li><a href="#aed-peg" id="toc-aed-peg">AED Peg</a></li>
             <li><a href="#karat-conversion" id="toc-karat">Karat Conversion</a></li>
             <li><a href="#not-included" id="toc-not-included">What We Don't Include</a></li>
             <li><a href="#fallback" id="toc-fallback">Fallback &amp; Reliability</a></li>
+            <li><a href="#tracker-exception" id="toc-tracker">Live Tracker exception</a></li>
             <li><a href="#freshness-states" id="toc-freshness-states">Freshness states</a></li>
             <li><a href="#method-faq" id="toc-method-faq">FAQ</a></li>
             <li><a href="#disclaimer" id="toc-disclaimer">Disclaimer</a></li>
@@ -204,45 +211,75 @@
       <div class="method-body">
         <!-- Section 1: Overview -->
         <section class="method-section" id="overview">
-          <h2 id="overview-h2">Overview</h2>
-          <p id="overview-p1">
+          <h2 data-lang-block="en">Overview</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">نظرة عامة</h2>
+          <p data-lang-block="en">
             Gold Ticker Live aggregates live gold spot price data and currency exchange rates to show
             indicative bullion-equivalent gold prices across 24+ countries and the karat grades listed
-            below. Our
-            goal is to give gold buyers and investors in the UAE, GCC, and wider Arab world a fast,
-            accurate reference price — available in both English and Arabic.
+            below. Our goal is to give gold buyers and investors in the UAE, GCC, and wider Arab world
+            a fast, accurate reference price — available in both English and Arabic.
           </p>
-          <p id="overview-p2">
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            يجمع Gold Ticker Live بيانات السعر الفوري للذهب وأسعار صرف العملات ليعرض أسعاراً
+            استرشادية للذهب تعادل قيمة السبائك في أكثر من 24 دولة وفي عيارات الذهب المذكورة أدناه.
+            هدفنا أن نمنح مشتري الذهب والمستثمرين في الإمارات ودول الخليج والعالم العربي الأوسع سعراً
+            مرجعياً سريعاً ودقيقاً — متاحاً بالعربية والإنجليزية.
+          </p>
+          <p data-lang-block="en">
             This is a reference and education tool, not a trading platform. Prices shown are
             estimates of the wholesale bullion-equivalent value of gold at the current moment. They
             should be used for orientation, comparison, and research — not as the basis for
             executing trades or financial transactions.
           </p>
-          <p id="overview-p3">
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            هذه أداة مرجعية وتعليمية، وليست منصة تداول. الأسعار المعروضة تقديرات لقيمة الذهب بالجملة
+            المعادلة للسبائك في اللحظة الراهنة. استخدمها للاسترشاد والمقارنة والبحث — لا كأساس لتنفيذ
+            صفقات أو معاملات مالية.
+          </p>
+          <p data-lang-block="en">
             Historical views combine different source layers depending on the range you choose. Short
             windows may use live snapshots and browser cache checkpoints, while longer windows can
             fall back to daily or monthly reference history. We label that resolution in the tracker
             and in exported files so monthly baselines are never presented as exact intraday history.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            تجمع العروض التاريخية بين طبقات مصادر مختلفة حسب النطاق الذي تختاره. قد تعتمد النطاقات
+            القصيرة على لقطات مباشرة ونقاط تخزين في المتصفح، بينما ترجع النطاقات الأطول إلى سجل مرجعي
+            يومي أو شهري. نوضّح هذه الدقة في المتتبع وفي الملفات المُصدَّرة حتى لا يظهر الخط الأساسي
+            الشهري وكأنه سجل لحظي دقيق.
+          </p>
 
           <div class="method-warning method-warning--info" id="country-reference-pages">
-            <strong>Country pages use the same trust model</strong>
-            <p>
+            <strong data-lang-block="en">Country pages use the same trust model</strong>
+            <strong data-lang-block="ar" lang="ar" dir="rtl">صفحات الدول تستخدم نموذج الثقة نفسه</strong>
+            <p data-lang-block="en">
               Country gold-price pages are not separate retail feeds. They use the same XAU/USD
               spot-linked reference logic, local-currency conversion, karat purity math, and
               freshness labels documented here. Retail shop prices can still differ because of
               making charges, VAT, dealer premium, and local market spread.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              صفحات أسعار الذهب حسب الدولة ليست تغذيات تجزئة منفصلة. فهي تستخدم المنطق المرجعي نفسه
+              المرتبط بسعر XAU/USD الفوري، والتحويل إلى العملة المحلية، وحساب نقاء العيار، ووسوم
+              الحداثة الموثّقة هنا. ومع ذلك قد تختلف أسعار المحلات بسبب أجور الصياغة وضريبة القيمة
+              المضافة وهامش التاجر وفارق السوق المحلي.
             </p>
           </div>
 
           <div class="method-source-card-row">
             <div class="method-source-card card-interactive">
               <div class="method-source-card-name">Gold-API.com</div>
-              <div class="method-source-card-role" id="source-gold-role">
+              <div class="method-source-card-role" data-lang-block="en">
                 Gold spot price (XAU/USD)
               </div>
-              <div class="method-source-card-freq" id="source-gold-freq">
+              <div class="method-source-card-role" data-lang-block="ar" lang="ar" dir="rtl">
+                السعر الفوري للذهب (XAU/USD)
+              </div>
+              <div class="method-source-card-freq" data-lang-block="en">
                 Server-side refresh: hourly during market hours · Client re-poll: ~90 s while open
+              </div>
+              <div class="method-source-card-freq" data-lang-block="ar" lang="ar" dir="rtl">
+                تحديث من الخادم: كل ساعة خلال ساعات السوق · إعادة استعلام من المتصفح: نحو 90 ثانية عند الفتح
               </div>
               <a
                 href="https://gold-api.com"
@@ -255,10 +292,16 @@
             </div>
             <div class="method-source-card card-interactive">
               <div class="method-source-card-name">open.er-api.com</div>
-              <div class="method-source-card-role" id="source-fx-role">
+              <div class="method-source-card-role" data-lang-block="en">
                 Foreign exchange rates (USD base)
               </div>
-              <div class="method-source-card-freq" id="source-fx-freq">Updated ~every 24 hours</div>
+              <div class="method-source-card-role" data-lang-block="ar" lang="ar" dir="rtl">
+                أسعار صرف العملات (بالدولار كأساس)
+              </div>
+              <div class="method-source-card-freq" data-lang-block="en">Updated ~every 24 hours</div>
+              <div class="method-source-card-freq" data-lang-block="ar" lang="ar" dir="rtl">
+                يُحدَّث كل 24 ساعة تقريباً
+              </div>
               <a
                 href="https://open.er-api.com"
                 target="_blank"
@@ -272,18 +315,37 @@
         </section>
 
         <section class="method-section" id="live-formula">
-          <h2>Live price pipeline</h2>
+          <h2 data-lang-block="en">Live price pipeline</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">مسار السعر المباشر</h2>
+          <p data-lang-block="en">
+            A live worked example, built from the current canonical snapshot this page reads through
+            <code>getCanonicalSpot()</code> — the same value the calculator and homepage show at this
+            instant. Watch the international spot price flow through each step to a UAE 22K per-gram
+            reference in dirhams.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            مثال حيّ مبني على اللقطة المرجعية الحالية التي تقرؤها هذه الصفحة عبر
+            <code>getCanonicalSpot()</code> — القيمة نفسها التي تعرضها الحاسبة والصفحة الرئيسية في
+            هذه اللحظة. تابِع كيف يتدفّق السعر الفوري العالمي عبر كل خطوة وصولاً إلى سعر مرجعي للغرام
+            من عيار 22 في الإمارات بالدرهم.
+          </p>
           <p id="method-52w-context" class="method-context-line" aria-live="polite">
             Loading live reference values…
           </p>
           <div id="method-formula-pipeline" class="method-formula-host" aria-live="polite"></div>
           <table class="method-unit-table" aria-label="Unit conversion reference">
             <thead>
-              <tr>
+              <tr data-lang-block="en">
                 <th scope="col">Unit</th>
                 <th scope="col">Karat</th>
                 <th scope="col">USD</th>
                 <th scope="col">Value</th>
+              </tr>
+              <tr data-lang-block="ar" lang="ar" dir="rtl">
+                <th scope="col">الوحدة</th>
+                <th scope="col">العيار</th>
+                <th scope="col">دولار</th>
+                <th scope="col">القيمة</th>
               </tr>
             </thead>
             <tbody id="method-unit-tbody">
@@ -294,12 +356,97 @@
           </table>
         </section>
 
+        <!-- Section: Canonical resolver (single read point) -->
+        <section class="method-section" id="resolver">
+          <h2 data-lang-block="en">The canonical resolver</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">المُحلِّل المرجعي الموحّد</h2>
+          <p data-lang-block="en">
+            Every price surface on this site — the homepage hero, the karat ladder, the inline
+            calculator, the country pages, and the bottom ticker — reads one value at any instant.
+            That single read point is <code>getCanonicalSpot()</code> (in
+            <code>src/lib/spot-resolver.js</code>). No surface runs its own separate live fetch, so
+            two panels on the page can never quietly disagree about the spot price.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            كل سطح يعرض سعراً على هذا الموقع — واجهة الصفحة الرئيسية، وسلّم العيارات، والحاسبة
+            المدمجة، وصفحات الدول، وشريط الأسعار السفلي — يقرأ قيمة واحدة في أي لحظة. نقطة القراءة
+            الموحّدة هذه هي <code>getCanonicalSpot()</code> (في
+            <code>src/lib/spot-resolver.js</code>). لا يُجري أي سطح جلبَه المباشر المنفصل، فلا يمكن
+            أن تتعارض لوحتان على الصفحة بصمت حول السعر الفوري.
+          </p>
+          <ol class="method-resolver">
+            <li class="method-resolver-step">
+              <div>
+                <p class="method-resolver-step-title" data-lang-block="en">
+                  One fetch, shared — <code>fetchGold()</code>
+                </p>
+                <p class="method-resolver-step-title" data-lang-block="ar" lang="ar" dir="rtl">
+                  جلب واحد مشترك — <code>fetchGold()</code>
+                </p>
+                <p data-lang-block="en">
+                  The resolver reads the hourly-committed <code>data/gold_price.json</code> — the
+                  identical source the calculator uses. Concurrent callers share one in-flight
+                  request, so the whole page renders from a single snapshot.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  يقرأ المُحلِّل ملف <code>data/gold_price.json</code> المُحدَّث كل ساعة — المصدر
+                  نفسه الذي تستخدمه الحاسبة. يتشارك المستدعون المتزامنون طلباً واحداً قيد التنفيذ،
+                  فتُعرَض الصفحة كاملة من لقطة واحدة.
+                </p>
+              </div>
+            </li>
+            <li class="method-resolver-step">
+              <div>
+                <p class="method-resolver-step-title" data-lang-block="en">
+                  Derive every karat — <code>deriveFromSpot()</code>
+                </p>
+                <p class="method-resolver-step-title" data-lang-block="ar" lang="ar" dir="rtl">
+                  اشتقاق كل عيار — <code>deriveFromSpot()</code>
+                </p>
+                <p data-lang-block="en">
+                  From the one spot value it derives USD and AED per-gram prices for every karat,
+                  applying the immutable invariants: troy ounce 31.1035 g, purity = karat ÷ 24, and
+                  the AED peg of 3.6725. These constants are never recomputed here.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  من قيمة الفوري الواحدة يشتقّ أسعار الغرام بالدولار والدرهم لكل عيار، مطبِّقاً
+                  الثوابت غير القابلة للتغيير: الأوقية التروية 31.1035 غرام، والنقاء = العيار ÷ 24،
+                  وربط الدرهم 3.6725. هذه الثوابت لا يُعاد حسابها هنا أبداً.
+                </p>
+              </div>
+            </li>
+            <li class="method-resolver-step">
+              <div>
+                <p class="method-resolver-step-title" data-lang-block="en">
+                  Classify freshness — <code>classifyFreshness()</code>
+                </p>
+                <p class="method-resolver-step-title" data-lang-block="ar" lang="ar" dir="rtl">
+                  تصنيف الحداثة — <code>classifyFreshness()</code>
+                </p>
+                <p data-lang-block="en">
+                  The snapshot is tagged with one honest state — live, delayed, cached, fallback, or
+                  unavailable. It is deliberately conservative: an upstream fallback or an
+                  <code>is_fresh:false</code> flag always downgrades the label and never presents a
+                  stale value as live.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  تُوسَم اللقطة بحالة واحدة صادقة — مباشر، أو متأخر، أو مخزّن، أو احتياطي، أو غير
+                  متاح. والتصنيف متحفّظ عن قصد: أي مصدر احتياطي أعلى السلسلة أو راية
+                  <code>is_fresh:false</code> يخفّض الوسم دائماً ولا يعرض قيمة قديمة على أنها مباشرة.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </section>
+
         <!-- Section 2: Gold Price Data -->
         <section class="method-section" id="gold-data">
-          <h2 id="gold-data-h2">Gold Price Data</h2>
+          <h2 data-lang-block="en">Gold Price Data</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">بيانات سعر الذهب</h2>
 
-          <h3 id="gold-data-source-h3">Source</h3>
-          <p id="gold-data-source-p">
+          <h3 data-lang-block="en">Source</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">المصدر</h3>
+          <p data-lang-block="en">
             Live reference prices use a browser-side provider waterfall (no API keys in the client
             bundle). When healthy, the homepage and tracker poll
             <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>
@@ -312,9 +459,25 @@
             fetches via <code>.github/workflows/gold-price-fetch.yml</code> keep the committed JSON
             files current during market hours.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            تستخدم الأسعار المرجعية المباشرة سلسلة مزوّدين تتدرّج داخل المتصفح (لا مفاتيح واجهات
+            برمجية في حزمة العميل). عند سلامة المصدر، تستعلم الصفحة الرئيسية والمتتبع من
+            <a href="https://gold-api.com" target="_blank" rel="nofollow noopener">gold-api.com</a>
+            عن سعر XAU/USD الفوري؛ ومصادر التحويل الاحتياطية تشمل
+            <a href="https://mintedmetal.com" target="_blank" rel="nofollow noopener"
+              >mintedmetal.com</a
+            >
+            (بيانات JSON مرتبطة بـ LBMA)، ثم ملفّي <code>data/gold_price.json</code> و<code
+              >data/last_gold_price.json</code
+            >
+            المُودَعين، ثم ذاكرة المتصفح الحديثة. وتُبقي عمليات الجلب الساعية من الخادم عبر
+            <code>.github/workflows/gold-price-fetch.yml</code> ملفات JSON المُودَعة محدَّثة خلال
+            ساعات السوق.
+          </p>
 
-          <h3 id="gold-data-update-h3">Update Frequency</h3>
-          <p id="gold-data-update-p">
+          <h3 data-lang-block="en">Update Frequency</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">معدّل التحديث</h3>
+          <p data-lang-block="en">
             <strong>Client-side (live lane):</strong> when gold-api.com is the active source, the
             homepage and tracker poll about once per second while the tab is visible; hidden tabs
             slow down. Static fallbacks (mintedmetal, committed JSON, recent cache) use slower
@@ -325,130 +488,229 @@
             source and timestamp — we never present stale or cached values as live without that
             label.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            <strong>من جانب العميل (المسار المباشر):</strong> عندما يكون gold-api.com هو المصدر
+            النشط، تستعلم الصفحة الرئيسية والمتتبع نحو مرة كل ثانية أثناء ظهور التبويب؛ وتتباطأ
+            التبويبات المخفية. أما المصادر الاحتياطية الثابتة (mintedmetal، وملفات JSON المُودَعة،
+            والذاكرة الحديثة) فتستخدم وتيرة أبطأ. <strong>من جانب الخادم:</strong> لا تزال GitHub
+            Actions تودِع تحديثات كل ساعة في <code>data/gold_price.json</code> خلال ساعات السوق. كل
+            سعر ظاهر يحمل وسم حداثة (<em>مباشر · متأخر · مخزّن · قديم · احتياطي · مغلق · غير متاح</em>)
+            مع المصدر والطابع الزمني — ولا نعرض أبداً قيمة قديمة أو مخزّنة على أنها مباشرة دون ذلك
+            الوسم.
+          </p>
 
-          <h3 id="gold-data-cache-h3">Caching</h3>
-          <p id="gold-data-cache-p">
+          <h3 data-lang-block="en">Caching</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">التخزين المؤقت</h3>
+          <p data-lang-block="en">
             The most recently fetched gold price is stored in the browser's
             <code>localStorage</code>. When you load a page, the cached price is displayed
             immediately — before a network request is made — so you always see a number rather than
             a blank. A secondary "fallback" slot stores the previous known price for additional
             resilience.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            يُخزَّن أحدث سعر ذهب مجلوب في ذاكرة المتصفح <code>localStorage</code>. وعند تحميل الصفحة
+            يظهر السعر المخزّن فوراً — قبل إجراء أي طلب شبكة — لترى دائماً رقماً بدل فراغ. وتحتفظ خانة
+            «احتياطية» ثانوية بالسعر المعروف السابق لمزيد من المتانة.
+          </p>
 
-          <h3 id="gold-data-freshness-h3">Freshness Indicator</h3>
-          <p id="gold-data-freshness-p">
+          <h3 data-lang-block="en">Freshness Indicator</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">مؤشّر الحداثة</h3>
+          <p data-lang-block="en">
             A live countdown timer and "last updated" timestamp are displayed throughout the site.
             If a live fetch fails, the UI labels the value as "Cached". Once the gold timestamp is
             older than <strong>30 minutes</strong> the UI labels the value as "Delayed", and after
             <strong>75 minutes</strong> as "Stale" (so the site never implies a value is live when it
             is multiple server refresh windows old).
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            يُعرض عبر الموقع عدّاد تنازلي حيّ وطابع زمني لـ«آخر تحديث». وإذا فشل الجلب المباشر، تَسِم
+            الواجهة القيمة بـ«مخزّن». وحين يتجاوز عمر الطابع الزمني للذهب <strong>30 دقيقة</strong>
+            تَسِمها الواجهة بـ«متأخر»، وبعد <strong>75 دقيقة</strong> بـ«قديم» (حتى لا يوحي الموقع
+            أبداً بأن قيمة مباشرة وهي أقدم من عدة نوافذ تحديث للخادم).
+          </p>
 
           <div class="method-warning" id="gold-data-warning">
-            <strong id="gold-data-warning-title">Limitation</strong>
-            <p id="gold-data-warning-body">
+            <strong data-lang-block="en">Limitation</strong>
+            <strong data-lang-block="ar" lang="ar" dir="rtl">قيد</strong>
+            <p data-lang-block="en">
               There is a potential lag of up to 90 seconds versus live institutional trading
               platforms. This site is for reference only — do not use these prices for executing
               trades or financial decisions.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              قد يوجد تأخّر يصل إلى 90 ثانية مقارنةً بمنصّات التداول المؤسسية المباشرة. هذا الموقع
+              للاسترشاد فقط — لا تستخدم هذه الأسعار لتنفيذ صفقات أو قرارات مالية.
             </p>
           </div>
         </section>
 
         <!-- Section 3: FX Rates -->
         <section class="method-section" id="fx-rates">
-          <h2 id="fx-rates-h2">Foreign Exchange Rates</h2>
+          <h2 data-lang-block="en">Foreign Exchange Rates</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">أسعار صرف العملات</h2>
 
-          <h3 id="fx-rates-source-h3">Source</h3>
-          <p id="fx-rates-source-p">
+          <h3 data-lang-block="en">Source</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">المصدر</h3>
+          <p data-lang-block="en">
             Currency exchange rates (USD as the base currency) are fetched from
             <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a>
             (free tier). This provides rates for all 24+ currencies supported by the tracker.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            تُجلب أسعار صرف العملات (بالدولار كعملة أساس) من
+            <a href="https://open.er-api.com" target="_blank" rel="noopener">open.er-api.com</a>
+            (الفئة المجانية). يوفّر هذا أسعاراً لجميع العملات — أكثر من 24 عملة — التي يدعمها المتتبع.
+          </p>
 
-          <h3 id="fx-rates-update-h3">Update Frequency</h3>
-          <p id="fx-rates-update-p">
+          <h3 data-lang-block="en">Update Frequency</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">معدّل التحديث</h3>
+          <p data-lang-block="en">
             Exchange rates are updated approximately once per 24 hours by the API provider. We cache
             the rates locally in <code>localStorage</code> and display an "FX" chip in the tracker
             showing the last update time. When FX rates are stale (the provider's
             <code>next_update</code> timestamp has passed), a visual stale indicator is shown.
           </p>
-          <p id="fx-rates-update-p2">
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            يحدِّث مزوّد الواجهة أسعار الصرف نحو مرة كل 24 ساعة. ونخزّنها محلياً في
+            <code>localStorage</code> ونعرض شارة «FX» في المتتبع تُظهر وقت آخر تحديث. وعندما تصبح
+            أسعار الصرف قديمة (بعد انقضاء الطابع الزمني <code>next_update</code> لدى المزوّد) يظهر
+            مؤشّر «قديم» مرئي.
+          </p>
+          <p data-lang-block="en">
             Gold spot freshness and FX freshness do not always move together. A gold snapshot can be
             recent while the FX layer is still daily, so the tracker and exports label each layer
             separately.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            لا تتحرك حداثة سعر الذهب وحداثة الصرف معاً دائماً. فقد تكون لقطة الذهب حديثة بينما طبقة
+            الصرف لا تزال يومية، لذلك يضع المتتبع وملفات التصدير وسماً مستقلاً لكل طبقة.
+          </p>
 
           <div class="method-warning method-warning--info" id="fx-rates-warning">
-            <strong id="fx-rates-warning-title">Important Limitation</strong>
-            <p id="fx-rates-warning-body">
+            <strong data-lang-block="en">Important Limitation</strong>
+            <strong data-lang-block="ar" lang="ar" dir="rtl">قيد مهم</strong>
+            <p data-lang-block="en">
               Exchange rates are mid-market reference rates. Actual gold trade prices — especially
               for physical import/export — reflect bid/ask spreads, dealer margins, and local market
               premiums that are not captured here.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              أسعار الصرف هي أسعار مرجعية لمنتصف السوق. أما أسعار تداول الذهب الفعلية — خصوصاً
+              للاستيراد والتصدير المادي — فتعكس فروق العرض والطلب وهوامش التجار وعلاوات السوق المحلية
+              غير المشمولة هنا.
             </p>
           </div>
         </section>
 
         <!-- Section 4: AED Peg -->
         <section class="method-section" id="aed-peg">
-          <h2 id="aed-peg-h2">The AED Fixed Peg (Special Case)</h2>
+          <h2 data-lang-block="en">The AED Fixed Peg (Special Case)</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">ربط الدرهم الثابت (حالة خاصة)</h2>
 
-          <p id="aed-peg-p1">
+          <p data-lang-block="en">
             The UAE Dirham has been officially pegged to the US Dollar at a rate of
             <strong>3.6725 AED per 1 USD</strong> since November 1997. This peg is maintained by the
             UAE Central Bank and has remained unchanged through every market cycle since.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            رُبِط الدرهم الإماراتي رسمياً بالدولار الأمريكي بسعر
+            <strong>3.6725 درهم لكل دولار واحد</strong> منذ نوفمبر 1997. ويُحافظ مصرف الإمارات
+            المركزي على هذا الربط الذي بقي ثابتاً عبر كل دورة سوق منذ ذلك الحين.
+          </p>
 
           <div class="method-formula-block">
-            <div class="method-formula-label" id="aed-formula-label">Hardcoded AED Rate</div>
-            <code class="method-formula"
+            <div class="method-formula-label" data-lang-block="en">Hardcoded AED Rate</div>
+            <div class="method-formula-label" data-lang-block="ar" lang="ar" dir="rtl">
+              سعر الدرهم المُثبَّت
+            </div>
+            <code class="method-formula" data-lang-block="en"
               >1 USD = 3.6725 AED (official Central Bank of UAE peg)</code
+            >
+            <code class="method-formula" data-lang-block="ar" lang="ar" dir="ltr"
+              >1 USD = 3.6725 AED — ربط مصرف الإمارات المركزي الرسمي</code
             >
           </div>
 
-          <h3 id="aed-peg-approach-h3">Our Approach</h3>
-          <p id="aed-peg-approach-p">
+          <h3 data-lang-block="en">Our Approach</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">نهجنا</h3>
+          <p data-lang-block="en">
             We <strong>never</strong> use the AED rate returned by the open.er-api.com API. Even
             though the API returns an AED rate, free-tier exchange rate APIs can occasionally return
             rounded or slightly off values. To keep the USD→AED conversion step exact, we hardcode
             the official peg rate of <strong>3.6725</strong> and delete any AED value from the API
             response before processing.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            نحن <strong>لا نستخدم أبداً</strong> سعر الدرهم الذي تُعيده واجهة open.er-api.com. فحتى
+            مع أن الواجهة تُعيد سعراً للدرهم، قد تُعيد الواجهات المجانية أحياناً قيماً مقرَّبة أو
+            منحرفة قليلاً. وللإبقاء على خطوة التحويل من الدولار إلى الدرهم دقيقة، نُثبِّت سعر الربط
+            الرسمي <strong>3.6725</strong> في الكود ونحذف أي قيمة للدرهم من استجابة الواجهة قبل
+            المعالجة.
+          </p>
 
-          <p id="aed-peg-effect-p">
+          <p data-lang-block="en">
             This means the USD→AED conversion step itself carries no exchange-rate uncertainty —
             because the peg has held since 1997, the hardcoded value is more reliable than a
             free-tier API rate for that one step. The AED gold price is still only as fresh and
             accurate as the XAU/USD spot input it is built on, which is why every AED figure keeps a
             freshness label and remains a reference estimate, not a guaranteed price.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            هذا يعني أن خطوة التحويل من الدولار إلى الدرهم لا تحمل عدم يقين في سعر الصرف — وبما أن
+            الربط ثابت منذ 1997، فالقيمة المُثبتة في الكود أكثر موثوقية من سعر واجهة برمجية مجانية
+            لتلك الخطوة وحدها. ومع ذلك، يبقى سعر الذهب بالدرهم بقدر حداثة ودقة مدخل XAU/USD الذي
+            يُبنى عليه، ولذلك يحتفظ كل رقم بالدرهم بوسم الحداثة ويبقى تقديراً مرجعياً وليس سعراً
+            مضموناً.
+          </p>
 
-          <p id="aed-peg-reference-p">
+          <p data-lang-block="en">
             Reference:
             <a href="https://www.centralbank.ae/" target="_blank" rel="noopener"
               >UAE Central Bank</a
             >
             official communications and regulatory framework.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            المرجع: البلاغات الرسمية والإطار التنظيمي لـ<a
+              href="https://www.centralbank.ae/"
+              target="_blank"
+              rel="noopener"
+              >مصرف الإمارات المركزي</a
+            >.
+          </p>
         </section>
 
         <!-- Section 5: Karat Conversion -->
         <section class="method-section" id="karat-conversion">
-          <h2 id="karat-h2">Karat Conversion</h2>
+          <h2 data-lang-block="en">Karat Conversion</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">تحويل العيار</h2>
 
-          <p id="karat-intro-p">
+          <p data-lang-block="en">
             Gold purity is expressed in karats, where 24 karats = pure gold (99.9% fineness). Lower
             karat grades are alloys — mixtures of gold with other metals such as silver, copper, or
             palladium. The gold content by weight is a simple fraction:
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            يُعبَّر عن نقاء الذهب بالعيار، حيث 24 قيراطاً = ذهب خالص (نقاء 99.9%). أما العيارات الأدنى
+            فهي سبائك ممزوجة — خلائط من الذهب مع معادن أخرى كالفضة أو النحاس أو البلاديوم. ومحتوى
+            الذهب بالوزن كسرٌ بسيط:
           </p>
 
           <div class="method-karat-table-wrap">
             <table class="method-karat-table">
               <thead>
-                <tr>
-                  <th id="karat-th-grade" scope="col">Karat Grade</th>
-                  <th id="karat-th-purity" scope="col">Purity</th>
-                  <th id="karat-th-fraction" scope="col">Fraction</th>
-                  <th id="karat-th-fineness" scope="col">Millesimal Fineness</th>
+                <tr data-lang-block="en">
+                  <th scope="col">Karat Grade</th>
+                  <th scope="col">Purity</th>
+                  <th scope="col">Fraction</th>
+                  <th scope="col">Millesimal Fineness</th>
+                </tr>
+                <tr data-lang-block="ar" lang="ar" dir="rtl">
+                  <th scope="col">العيار</th>
+                  <th scope="col">النقاء</th>
+                  <th scope="col">الكسر</th>
+                  <th scope="col">النقاء بالألف</th>
                 </tr>
               </thead>
               <tbody id="method-karat-tbody">
@@ -457,20 +719,31 @@
             </table>
           </div>
 
-          <h3 id="karat-formula-h3">The Price Formula</h3>
-          <p id="karat-formula-intro">
+          <h3 data-lang-block="en">The Price Formula</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">معادلة السعر</h3>
+          <p data-lang-block="en">
             All prices displayed on this site are derived from a single formula applied consistently
             across every country and karat grade:
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            تُشتق جميع الأسعار المعروضة على هذا الموقع من معادلة واحدة تُطبَّق باتساق عبر كل دولة وكل
+            عيار:
+          </p>
 
           <div class="method-formula-block">
-            <div class="method-formula-label" id="formula-label-main">Core Price Formula</div>
-            <code class="method-formula"
+            <div class="method-formula-label" data-lang-block="en">Core Price Formula</div>
+            <div class="method-formula-label" data-lang-block="ar" lang="ar" dir="rtl">
+              المعادلة الأساسية للسعر
+            </div>
+            <code class="method-formula" data-lang-block="en"
               >Price per gram = (XAU/USD spot ÷ 31.1035) × (karat ÷ 24) × FX rate</code
+            >
+            <code class="method-formula" data-lang-block="ar" lang="ar" dir="rtl"
+              >سعر الغرام = (سعر XAU/USD الفوري ÷ 31.1035) × (العيار ÷ 24) × سعر الصرف</code
             >
           </div>
 
-          <ul class="method-formula-breakdown">
+          <ul class="method-formula-breakdown" data-lang-block="en">
             <li><code>XAU/USD spot</code> — Current gold price in US Dollars per troy ounce</li>
             <li>
               <code>÷ 31.1035</code> — Converts troy ounce to grams (1 troy oz = 31.1035 g, the
@@ -481,71 +754,118 @@
               <code>× FX rate</code> — Converts USD to the target currency (AED: always 3.6725)
             </li>
           </ul>
+          <ul class="method-formula-breakdown" data-lang-block="ar" lang="ar" dir="rtl">
+            <li><code>سعر XAU/USD الفوري</code> — سعر الذهب الحالي بالدولار للأوقية التروية</li>
+            <li>
+              <code>÷ 31.1035</code> — يحوّل الأوقية التروية إلى غرامات (1 أوقية تروية = 31.1035
+              غرام، المعيار الدولي)
+            </li>
+            <li><code>× (العيار ÷ 24)</code> — يعدّل حسب النقاء (مثلاً 22/24 = 0.9167 لعيار 22)</li>
+            <li>
+              <code>× سعر الصرف</code> — يحوّل الدولار إلى العملة المستهدفة (الدرهم: دائماً 3.6725)
+            </li>
+          </ul>
 
-          <p id="karat-troy-p">
+          <p data-lang-block="en">
             The troy ounce (31.1035 grams) is the universal standard unit for precious metals
             pricing worldwide. It is distinct from the avoirdupois ounce (28.35 grams) used for
             everyday weights.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            الأوقية التروية (31.1035 غرام) هي الوحدة المعيارية العالمية لتسعير المعادن الثمينة في
+            العالم. وهي تختلف عن الأوقية الأفوردوبوا (28.35 غرام) المستخدمة للأوزان اليومية.
           </p>
         </section>
 
         <!-- Section 6: What We Don't Include -->
         <section class="method-section" id="not-included">
-          <h2 id="not-included-h2">What Our Prices Are Not</h2>
-          <p id="not-included-intro">
+          <h2 data-lang-block="en">What Our Prices Are Not</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">ما لا تمثّله أسعارنا</h2>
+          <p data-lang-block="en">
             Our prices are bullion-equivalent spot values. They intentionally exclude several
             components that affect real-world retail prices. Understanding these exclusions helps
             you interpret the numbers correctly.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            أسعارنا قيم فورية تعادل قيمة السبائك. وهي تستبعد عن قصد عدة مكوّنات تؤثر في أسعار التجزئة
+            الواقعية. وفهم هذه الاستثناءات يساعدك على قراءة الأرقام قراءةً صحيحة.
           </p>
 
           <div class="method-not-list">
             <div class="method-not-item">
               <div class="method-not-icon" aria-hidden="true"><svg class="method-not-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></div>
               <div>
-                <strong id="not-dgjg-title"
+                <strong data-lang-block="en"
                   >Not the Dubai Gold &amp; Jewellery Group (DGJG) Daily Rate</strong
                 >
-                <p id="not-dgjg-p">
+                <strong data-lang-block="ar" lang="ar" dir="rtl"
+                  >ليست سعر مجموعة دبي للذهب والمجوهرات (DGJG) اليومي</strong
+                >
+                <p data-lang-block="en">
                   The DGJG publishes a daily retail floor rate each morning based on the overnight
                   LBMA close. Our price is based on the live international spot price, which updates
                   throughout the day. The two will differ by a small amount depending on how much
                   the market has moved since the DGJG morning fix.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  تنشر مجموعة دبي للذهب والمجوهرات سعر أرضية للتجزئة كل صباح استناداً إلى إغلاق LBMA
+                  الليلي. أما سعرنا فيستند إلى السعر الفوري الدولي المباشر الذي يتحدّث طوال اليوم.
+                  وسيختلف الاثنان بمقدار بسيط حسب مدى تحرّك السوق منذ تثبيت الصباح لدى المجموعة.
                 </p>
               </div>
             </div>
             <div class="method-not-item">
               <div class="method-not-icon" aria-hidden="true"><svg class="method-not-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></div>
               <div>
-                <strong id="not-making-title">Not Inclusive of Making Charges</strong>
-                <p id="not-making-p">
+                <strong data-lang-block="en">Not Inclusive of Making Charges</strong>
+                <strong data-lang-block="ar" lang="ar" dir="rtl">لا تشمل أجور الصياغة</strong>
+                <p data-lang-block="en">
                   Jewellery prices include fabrication/making charges on top of the gold price. In
                   the Dubai Gold Souk, these typically range from AED 3–12 per gram for machine-made
                   pieces, and up to AED 30+ per gram for handmade or designer jewellery. Investment
                   bars from reputable dealers carry much smaller premiums (typically 0.5–3% over
                   spot).
                 </p>
-              </div>
-            </div>
-            <div class="method-not-item">
-              <div class="method-not-icon" aria-hidden="true"><svg class="method-not-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></div>
-              <div>
-                <strong id="not-vat-title">Not Inclusive of VAT</strong>
-                <p id="not-vat-p">
-                  VAT applies in some countries covered by this tracker. As of 2025: UAE (5%), Saudi
-                  Arabia (15%), Bahrain (10%), Oman (5%). Kuwait and Qatar do not currently levy VAT
-                  on gold. Our prices do not include any VAT component — add the applicable rate for
-                  your jurisdiction to estimate a retail total.
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  تشمل أسعار المجوهرات أجور التصنيع/الصياغة فوق سعر الذهب. وفي سوق الذهب بدبي تتراوح
+                  عادةً بين 3 و12 درهماً للغرام للقطع المصنوعة آلياً، وتصل إلى أكثر من 30 درهماً
+                  للغرام للمجوهرات المصنوعة يدوياً أو المصمَّمة. أما سبائك الاستثمار من تجار موثوقين
+                  فتحمل علاوات أصغر بكثير (عادةً 0.5–3% فوق السعر الفوري).
                 </p>
               </div>
             </div>
             <div class="method-not-item">
               <div class="method-not-icon" aria-hidden="true"><svg class="method-not-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></div>
               <div>
-                <strong id="not-advice-title">Not Financial Advice</strong>
-                <p id="not-advice-p">
+                <strong data-lang-block="en">Not Inclusive of VAT</strong>
+                <strong data-lang-block="ar" lang="ar" dir="rtl">لا تشمل ضريبة القيمة المضافة</strong>
+                <p data-lang-block="en">
+                  VAT applies in some countries covered by this tracker. As of 2025: UAE (5%), Saudi
+                  Arabia (15%), Bahrain (10%), Oman (5%). Kuwait and Qatar do not currently levy VAT
+                  on gold. Our prices do not include any VAT component — add the applicable rate for
+                  your jurisdiction to estimate a retail total.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  تُطبَّق ضريبة القيمة المضافة في بعض الدول التي يغطيها هذا المتتبع. اعتباراً من
+                  2025: الإمارات (5%)، والسعودية (15%)، والبحرين (10%)، وعُمان (5%). ولا تفرض الكويت
+                  وقطر حالياً ضريبة قيمة مضافة على الذهب. ولا تتضمن أسعارنا أي مكوّن ضريبي — أضِف
+                  النسبة المطبَّقة في بلدك لتقدير الإجمالي بالتجزئة.
+                </p>
+              </div>
+            </div>
+            <div class="method-not-item">
+              <div class="method-not-icon" aria-hidden="true"><svg class="method-not-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-close"/></svg></div>
+              <div>
+                <strong data-lang-block="en">Not Financial Advice</strong>
+                <strong data-lang-block="ar" lang="ar" dir="rtl">ليست نصيحة مالية</strong>
+                <p data-lang-block="en">
                   Nothing on this site constitutes financial, investment, or legal advice. Gold
                   markets are volatile. Always consult a qualified financial advisor before making
                   investment decisions.
+                </p>
+                <p data-lang-block="ar" lang="ar" dir="rtl">
+                  لا شيء على هذا الموقع يشكّل نصيحة مالية أو استثمارية أو قانونية. أسواق الذهب
+                  متقلّبة. استشِر دائماً مستشاراً مالياً مؤهلاً قبل اتخاذ قرارات استثمارية.
                 </p>
               </div>
             </div>
@@ -557,8 +877,9 @@
           <div class="info-box info-box--gold">
             <div class="info-box__icon" aria-hidden="true"><svg class="info-box-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" focusable="false"><use href="#i-shop"/></svg></div>
             <div class="info-box__body">
-              <p class="info-box__title">Before you visit a shop</p>
-              <p class="info-box__text">
+              <p class="info-box__title" data-lang-block="en">Before you visit a shop</p>
+              <p class="info-box__title" data-lang-block="ar" lang="ar" dir="rtl">قبل زيارة المحل</p>
+              <p class="info-box__text" data-lang-block="en">
                 Our reference price gives you a baseline — the pure gold value at current spot.
                 At any shop, you should also ask about:
                 the <strong>making charge per gram</strong>,
@@ -566,10 +887,23 @@
                 and any <strong>dealer margin or import premium</strong>.
                 Together, these additions can raise the final price 5–30% above the reference estimate shown here.
               </p>
-              <p class="info-box__text">
+              <p class="info-box__text" data-lang-block="ar" lang="ar" dir="rtl">
+                سعرنا المرجعي يمنحك خط أساس — قيمة الذهب الخالص بالسعر الفوري الحالي.
+                وفي أي محل ينبغي أن تسأل أيضاً عن:
+                <strong>أجرة الصياغة للغرام</strong>،
+                و<strong>ضريبة القيمة المضافة المطبَّقة</strong> (الإمارات: 5%، السعودية: 15%، البحرين: 10%، عُمان: 5%)،
+                وأي <strong>هامش تاجر أو علاوة استيراد</strong>.
+                ومجتمعةً قد ترفع هذه الإضافات السعر النهائي بنسبة 5–30% فوق التقدير المرجعي المعروض هنا.
+              </p>
+              <p class="info-box__text" data-lang-block="en">
                 <a href="methodology.html" class="section-anchor-link">Spot vs retail explained in full →</a>
                 &ensp;·&ensp;
                 <a href="calculator.html" class="section-anchor-link">Estimate your total in the calculator →</a>
+              </p>
+              <p class="info-box__text" data-lang-block="ar" lang="ar" dir="rtl">
+                <a href="methodology.html?lang=ar" class="section-anchor-link">شرح كامل للفرق بين السعر الفوري والتجزئة ←</a>
+                &ensp;·&ensp;
+                <a href="calculator.html?lang=ar" class="section-anchor-link">قدّر إجماليك في الحاسبة ←</a>
               </p>
             </div>
           </div>
@@ -577,75 +911,174 @@
 
         <!-- Section 7: Fallback & Reliability -->
         <section class="method-section" id="fallback">
-          <h2 id="fallback-h2">Data Fallback &amp; Reliability</h2>
-          <p id="fallback-intro">
+          <h2 data-lang-block="en">Data Fallback &amp; Reliability</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">احتياطي البيانات والموثوقية</h2>
+          <p data-lang-block="en">
             We implement a multi-tier data fallback system to ensure the site remains useful even
             when APIs are unavailable or slow.
+          </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            نطبّق نظام احتياطي متعدد الطبقات للبيانات لضمان بقاء الموقع مفيداً حتى عندما تكون الواجهات
+            غير متاحة أو بطيئة.
           </p>
 
           <div class="method-fallback-tiers">
             <div class="method-fallback-tier method-fallback-tier--1">
-              <div class="method-tier-badge">Tier 1</div>
-              <div class="method-tier-label" id="tier-1-label">gold-api.com (live)</div>
-              <div class="method-tier-desc" id="tier-1-desc">
+              <div class="method-tier-badge" data-lang-block="en">Tier 1</div>
+              <div class="method-tier-badge" data-lang-block="ar" lang="ar" dir="rtl">الطبقة 1</div>
+              <div class="method-tier-label" data-lang-block="en">gold-api.com (live)</div>
+              <div class="method-tier-label" data-lang-block="ar" lang="ar" dir="rtl">gold-api.com (مباشر)</div>
+              <div class="method-tier-desc" data-lang-block="en">
                 Browser CORS spot feed — ~1 s polling when healthy; labelled with source + age
+              </div>
+              <div class="method-tier-desc" data-lang-block="ar" lang="ar" dir="rtl">
+                تغذية فورية عبر CORS في المتصفح — استعلام كل ثانية تقريباً عند السلامة؛ مع وسم المصدر والعمر
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--2">
-              <div class="method-tier-badge">Tier 2</div>
-              <div class="method-tier-label" id="tier-2-label">mintedmetal.com (LBMA JSON)</div>
-              <div class="method-tier-desc" id="tier-2-desc">
+              <div class="method-tier-badge" data-lang-block="en">Tier 2</div>
+              <div class="method-tier-badge" data-lang-block="ar" lang="ar" dir="rtl">الطبقة 2</div>
+              <div class="method-tier-label" data-lang-block="en">mintedmetal.com (LBMA JSON)</div>
+              <div class="method-tier-label" data-lang-block="ar" lang="ar" dir="rtl">mintedmetal.com (JSON مرتبط بـ LBMA)</div>
+              <div class="method-tier-desc" data-lang-block="en">
                 Twice-daily LBMA-linked reference when the live API is unavailable
+              </div>
+              <div class="method-tier-desc" data-lang-block="ar" lang="ar" dir="rtl">
+                مرجع مرتبط بـ LBMA مرتين يومياً عند تعذّر الواجهة المباشرة
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--3">
-              <div class="method-tier-badge">Tier 3</div>
-              <div class="method-tier-label" id="tier-3-label">Committed JSON files</div>
-              <div class="method-tier-desc" id="tier-3-desc">
+              <div class="method-tier-badge" data-lang-block="en">Tier 3</div>
+              <div class="method-tier-badge" data-lang-block="ar" lang="ar" dir="rtl">الطبقة 3</div>
+              <div class="method-tier-label" data-lang-block="en">Committed JSON files</div>
+              <div class="method-tier-label" data-lang-block="ar" lang="ar" dir="rtl">ملفات JSON المُودَعة</div>
+              <div class="method-tier-desc" data-lang-block="en">
                 <code>data/gold_price.json</code> (hourly cron) then
                 <code>data/last_gold_price.json</code> when recent
               </div>
+              <div class="method-tier-desc" data-lang-block="ar" lang="ar" dir="rtl">
+                <code>data/gold_price.json</code> (مهمة ساعية) ثم
+                <code>data/last_gold_price.json</code> عند حداثته
+              </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--4">
-              <div class="method-tier-badge">Tier 4</div>
-              <div class="method-tier-label" id="tier-4-label">localStorage cache</div>
-              <div class="method-tier-desc" id="tier-4-desc">
+              <div class="method-tier-badge" data-lang-block="en">Tier 4</div>
+              <div class="method-tier-badge" data-lang-block="ar" lang="ar" dir="rtl">الطبقة 4</div>
+              <div class="method-tier-label" data-lang-block="en">localStorage cache</div>
+              <div class="method-tier-label" data-lang-block="ar" lang="ar" dir="rtl">ذاكرة localStorage</div>
+              <div class="method-tier-desc" data-lang-block="en">
                 Recent browser snapshot only (≤ 75 min) — always labelled fallback
+              </div>
+              <div class="method-tier-desc" data-lang-block="ar" lang="ar" dir="rtl">
+                لقطة متصفح حديثة فقط (≤ 75 دقيقة) — تُوسَم دائماً كاحتياطي
               </div>
             </div>
             <div class="method-fallback-tier method-fallback-tier--5">
-              <div class="method-tier-badge">Tier 5</div>
-              <div class="method-tier-label" id="tier-5-label">Error state</div>
-              <div class="method-tier-desc" id="tier-5-desc">
+              <div class="method-tier-badge" data-lang-block="en">Tier 5</div>
+              <div class="method-tier-badge" data-lang-block="ar" lang="ar" dir="rtl">الطبقة 5</div>
+              <div class="method-tier-label" data-lang-block="en">Error state</div>
+              <div class="method-tier-label" data-lang-block="ar" lang="ar" dir="rtl">حالة خطأ</div>
+              <div class="method-tier-desc" data-lang-block="en">
                 Clear error banner if every provider fails — no silent blank prices
+              </div>
+              <div class="method-tier-desc" data-lang-block="ar" lang="ar" dir="rtl">
+                شريط خطأ واضح إذا فشل كل مزوّد — دون أسعار فارغة صامتة
               </div>
             </div>
           </div>
 
-          <h3 id="fallback-stale-h3">Stale Data Handling</h3>
-          <p id="fallback-stale-p">
+          <h3 data-lang-block="en">Stale Data Handling</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">معالجة البيانات القديمة</h3>
+          <p data-lang-block="en">
             If the gold API fails on a refresh attempt, the last known price is kept visible with an
             amber "stale" indicator. We never show a blank price — but we also never silently
             pretend stale data is fresh.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            إذا فشلت واجهة الذهب في محاولة تحديث، يبقى آخر سعر معروف ظاهراً مع مؤشّر «قديم» كهرماني.
+            لا نعرض أبداً سعراً فارغاً — لكننا أيضاً لا ندّعي بصمت أن بياناتٍ قديمة حديثة.
+          </p>
 
-          <h3 id="fallback-offline-h3">Offline Mode</h3>
-          <p id="fallback-offline-p">
+          <h3 data-lang-block="en">Offline Mode</h3>
+          <h3 data-lang-block="ar" lang="ar" dir="rtl">وضع عدم الاتصال</h3>
+          <p data-lang-block="en">
             Because cached data is stored in <code>localStorage</code>, the site displays cached
             gold prices and FX rates immediately on load — even without a network connection. Cached
             data is labelled with its age so you always know what you are looking at.
           </p>
-          <p id="fallback-export-p">
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            بما أن البيانات المخزّنة محفوظة في <code>localStorage</code>، يعرض الموقع أسعار الذهب
+            والصرف المخزّنة فور التحميل — حتى دون اتصال بالشبكة. وتُوسَم البيانات المخزّنة بعمرها
+            لتعرف دائماً ما الذي تنظر إليه.
+          </p>
+          <p data-lang-block="en">
             CSV and JSON exports keep that same honesty. Every export includes a generated timestamp,
             source notes, data-resolution context, and a reminder that values are spot-linked
             reference prices rather than shop quotes.
           </p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">
+            تتبع ملفات CSV وJSON هذا الوضوح نفسه، إذ تتضمن وقت الإنشاء وملاحظات المصدر وسياق دقة
+            البيانات وتذكيراً بأن القيم مرجعية مرتبطة بالسعر الفوري وليست أسعار محلات.
+          </p>
+        </section>
+
+        <!-- Section: Live Tracker — deliberate multi-tier exception -->
+        <section class="method-section" id="tracker-exception">
+          <h2 data-lang-block="en">The Live Tracker: a deliberate exception</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">المتتبع المباشر: استثناء مقصود</h2>
+          <div class="method-exception">
+            <span class="method-exception-badge" data-lang-block="en">By design</span>
+            <span class="method-exception-badge" data-lang-block="ar" lang="ar" dir="rtl">عن قصد</span>
+            <p class="method-exception-title" data-lang-block="en">
+              The Tracker runs its own multi-tier live engine — and we keep it that way.
+            </p>
+            <p class="method-exception-title" data-lang-block="ar" lang="ar" dir="rtl">
+              يشغّل المتتبع محرّكه المباشر متعدد الطبقات — ونُبقيه كذلك عمداً.
+            </p>
+            <p data-lang-block="en">
+              Almost every surface reads the one canonical committed snapshot through
+              <code>getCanonicalSpot()</code>. The flagship Live Tracker is the one deliberate
+              exception: it drives its own real-time provider engine that races live sources first,
+              because a live ticker's whole job is up-to-the-second movement.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              يقرأ معظم الأسطح اللقطةَ المرجعية المُودَعة الواحدة عبر
+              <code>getCanonicalSpot()</code>. أما المتتبع المباشر الرئيسي فهو الاستثناء الوحيد
+              المقصود: إذ يشغّل محرّك مزوّدين لحظياً يسابق المصادر المباشرة أولاً، لأن مهمة الشريط
+              المباشر كلها هي رصد الحركة ثانيةً بثانية.
+            </p>
+            <div class="method-tier-chain" data-lang-block="en" aria-hidden="false">
+              <code>gold-api</code> <span aria-hidden="true">→</span>
+              <code>minted-metal</code> <span aria-hidden="true">→</span>
+              <span>committed / cached fallback</span>
+            </div>
+            <div class="method-tier-chain" data-lang-block="ar" lang="ar" dir="rtl">
+              <code>gold-api</code> <span aria-hidden="true">←</span>
+              <code>minted-metal</code> <span aria-hidden="true">←</span>
+              <span>الاحتياطي المُودَع/المخزّن</span>
+            </div>
+            <p data-lang-block="en">
+              This is honest, not a contradiction: the Tracker still labels every value with the
+              same freshness states, still honours the AED peg and troy/karat invariants, and falls
+              back to the same committed snapshot when live sources fail — so it can only ever be as
+              fresh as, or fresher than, the canonical value. We intentionally do <strong>not</strong>
+              migrate it to the shared resolver.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              هذا صادق وليس تناقضاً: فالمتتبع لا يزال يَسِم كل قيمة بحالات الحداثة نفسها، ويحترم ربط
+              الدرهم وثوابت الأوقية والعيار، ويرجع إلى اللقطة المُودَعة نفسها عند فشل المصادر
+              المباشرة — فلا يكون أبداً إلا بحداثة القيمة المرجعية أو أحدث منها. ونحن
+              <strong>لا</strong> ننقله عمداً إلى المُحلِّل المشترك.
+            </p>
+          </div>
         </section>
 
         <section class="method-section" id="freshness-states">
-          <h2>Freshness states</h2>
-          <p>Every visible price carries a state label so cached or delayed data is never mistaken for live trading quotes.</p>
-          <ul class="method-freshness-legend">
+          <h2 data-lang-block="en">Freshness states</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">حالات الحداثة</h2>
+          <p data-lang-block="en">Every visible price carries a state label so cached or delayed data is never mistaken for live trading quotes.</p>
+          <p data-lang-block="ar" lang="ar" dir="rtl">كل سعر ظاهر يحمل وسم حالة حتى لا تُخلَط البيانات المخزّنة أو المتأخرة أبداً بأسعار تداول مباشرة.</p>
+          <ul class="method-freshness-legend" data-lang-block="en">
             <li><span class="badge badge--live">Live</span> Fetched within the healthy window</li>
             <li><span class="badge badge--cached">Cached</span> Browser or service-worker cache</li>
             <li><span class="badge badge--delayed">Delayed</span> Provider lag (often FX)</li>
@@ -654,11 +1087,21 @@
             <li><span class="badge badge--closed">Closed</span> Market in its scheduled closed window — recent data is still labelled closed</li>
             <li><span class="badge badge--unavailable">Unavailable</span> Timestamp missing or unreadable</li>
           </ul>
+          <ul class="method-freshness-legend" data-lang-block="ar" lang="ar" dir="rtl">
+            <li><span class="badge badge--live">مباشر</span> مجلوب ضمن النافذة السليمة</li>
+            <li><span class="badge badge--cached">مخزّن</span> ذاكرة المتصفح أو عامل الخدمة</li>
+            <li><span class="badge badge--delayed">متأخر</span> تأخّر المزوّد (غالباً الصرف)</li>
+            <li><span class="badge badge--stale">قديم</span> أقدم من عتبة القِدَم لدينا</li>
+            <li><span class="badge badge--fallback">احتياطي</span> آخر قيمة معروفة بعد الفشل</li>
+            <li><span class="badge badge--closed">مغلق</span> السوق في نافذة إغلاقه المجدول — تبقى البيانات الحديثة موسومة كمغلقة</li>
+            <li><span class="badge badge--unavailable">غير متاح</span> الطابع الزمني مفقود أو غير قابل للقراءة</li>
+          </ul>
         </section>
 
         <section class="method-section" id="method-faq">
-          <h2>Frequently asked questions</h2>
-          <dl class="method-faq-list">
+          <h2 data-lang-block="en">Frequently asked questions</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">الأسئلة الشائعة</h2>
+          <dl class="method-faq-list" data-lang-block="en">
             <dt>Why does my shop quote differ?</dt>
             <dd>
               Retail prices add making charges, VAT, design premiums, and dealer margins. Our numbers are
@@ -678,31 +1121,72 @@
               UAE gram prices move deterministically with XAU/USD.
             </dd>
           </dl>
+          <dl class="method-faq-list" data-lang-block="ar" lang="ar" dir="rtl">
+            <dt>لماذا يختلف عرض السعر في محلّي؟</dt>
+            <dd>
+              تضيف أسعار التجزئة أجور الصياغة وضريبة القيمة المضافة وعلاوات التصميم وهوامش التجار.
+              أما أرقامنا فهي قيمة معدن مرجعية مرتبطة بالسعر الفوري — استخدم
+              <a href="methodology.html?lang=ar">دليل الفوري مقابل التجزئة</a> و<a
+                href="calculator.html?lang=ar"
+                >الحاسبة</a
+              >
+              للمقارنة بشفافية.
+            </dd>
+            <dt>ما مدى حداثة البيانات؟</dt>
+            <dd>
+              يُودَع السعر الفوري للذهب كل ساعة خلال ساعات السوق في <code>data/gold_price.json</code>؛
+              ويعيد المتصفح الجلب نحو كل 90 ثانية. ويتحدّث الصرف يومياً تقريباً. تحقّق من شارة الحداثة
+              على كل سطح.
+            </dd>
+            <dt>لماذا يُعدّ تسعير الدرهم خاصاً؟</dt>
+            <dd>
+              نُثبِّت في الكود ربط <strong>3.6725</strong> درهم/دولار الرسمي — لا سعر صرف متغيّر
+              أبداً — لتتحرك أسعار الغرام في الإمارات حتمياً مع XAU/USD.
+            </dd>
+          </dl>
         </section>
 
         <!-- Section 8: Disclaimer -->
         <section class="method-section" id="disclaimer">
-          <h2 id="disclaimer-h2">Disclaimer</h2>
+          <h2 data-lang-block="en">Disclaimer</h2>
+          <h2 data-lang-block="ar" lang="ar" dir="rtl">إخلاء المسؤولية</h2>
 
           <div class="method-warning method-warning--strong">
-            <strong id="disclaimer-title">Important Disclaimer</strong>
-            <p id="disclaimer-p1">
+            <strong data-lang-block="en">Important Disclaimer</strong>
+            <strong data-lang-block="ar" lang="ar" dir="rtl">إخلاء مسؤولية مهم</strong>
+            <p data-lang-block="en">
               All gold prices and currency conversions displayed on this website are estimates only.
               They are calculated from third-party data sources that may contain errors, delays, or
               inaccuracies. The prices shown represent theoretical bullion-equivalent values and do
               not reflect actual retail, wholesale, or trade prices available from any specific
               dealer, exchange, or institution.
             </p>
-            <p id="disclaimer-p2">
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              جميع أسعار الذهب وتحويلات العملات المعروضة على هذا الموقع تقديرات فقط. وتُحسب من مصادر
+              بيانات خارجية قد تحتوي أخطاءً أو تأخيراً أو عدم دقة. وتمثّل الأسعار المعروضة قيماً نظرية
+              تعادل قيمة السبائك، ولا تعكس أسعار تجزئة أو جملة أو تداول فعلية متاحة من أي تاجر أو
+              بورصة أو مؤسسة بعينها.
+            </p>
+            <p data-lang-block="en">
               Gold Ticker Live is not a financial services firm, investment advisor, or dealer in precious
               metals. Nothing on this website constitutes financial, investment, tax, or legal
               advice. Past gold price performance does not guarantee future results. Gold is a
               volatile asset — its value can fall as well as rise.
             </p>
-            <p id="disclaimer-p3">
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              Gold Ticker Live ليست شركة خدمات مالية ولا مستشاراً استثمارياً ولا تاجر معادن ثمينة.
+              ولا شيء على هذا الموقع يشكّل نصيحة مالية أو استثمارية أو ضريبية أو قانونية. والأداء
+              السابق لسعر الذهب لا يضمن نتائج مستقبلية. والذهب أصل متقلّب — قد تنخفض قيمته كما قد
+              ترتفع.
+            </p>
+            <p data-lang-block="en">
               Always verify prices with a licensed gold dealer or financial institution before
               executing any transaction. Consult a qualified financial advisor for investment
               decisions. For Zakat calculations, consult a qualified Islamic scholar.
+            </p>
+            <p data-lang-block="ar" lang="ar" dir="rtl">
+              تحقّق دائماً من الأسعار مع تاجر ذهب مرخّص أو مؤسسة مالية قبل تنفيذ أي معاملة. واستشِر
+              مستشاراً مالياً مؤهلاً لقرارات الاستثمار. ولحساب الزكاة، استشِر عالماً شرعياً مؤهلاً.
             </p>
           </div>
         </section>

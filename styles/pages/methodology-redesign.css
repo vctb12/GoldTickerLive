@@ -1,0 +1,433 @@
+/* ============================================================================
+   Methodology — premium bilingual TRUST layer (redesign/methodology)
+   ----------------------------------------------------------------------------
+   Loaded AFTER methodology.css so these rules win by source order. Pure
+   presentation + a self-contained bilingual toggle over the existing DOM — no
+   pricing logic, no invariants touched. Brings the methodology page into the
+   same publication family as the redesigned homepage / learn / dubai surfaces:
+   an editorial hero with a Playfair serif headline in antique gold, gold-glow
+   trust cards, tabular-lining numerals on every figure, gold focus rings, and
+   honest freshness. Built on shared tokens (tokens.css + design-system.css);
+   theme-aware (light + dark both correct); reduced-motion safe.
+
+   Bilingual without a JS translation map for prose: body copy is authored as
+   twin blocks —
+     <p data-lang-block="en">…</p>
+     <p data-lang-block="ar" lang="ar" dir="rtl">…</p>
+   English shows by default (no-JS fallback); html[lang='ar'] flips them. This
+   file carries the toggle locally (methodology.html does not load edu.css).
+   ========================================================================== */
+
+/* ── Bilingual twin-block toggle (self-contained) ─────────────────────────── */
+[data-lang-block='ar'] {
+  display: none;
+}
+html[lang='ar'] [data-lang-block='ar'] {
+  display: revert;
+}
+html[lang='ar'] [data-lang-block='en'] {
+  display: none;
+}
+
+/* ── Editorial hero ───────────────────────────────────────────────────────── */
+.method-hero {
+  background:
+    radial-gradient(ellipse 70% 60% at 88% -10%, var(--color-gold-glow) 0%, transparent 58%),
+    var(--color-bg);
+  border-block-end: 1px solid var(--color-border-subtle);
+  color: var(--color-text);
+  padding: var(--gtl-8, 64px) var(--gtl-5, 24px) var(--gtl-7, 48px);
+}
+.method-hero::after {
+  opacity: 0.35;
+}
+.method-hero-inner {
+  max-width: var(--content-max-width, 820px);
+}
+.method-hero-tag {
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-gold-glow);
+  color: var(--color-gold-dark);
+}
+.method-hero-tag::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.method-hero h1 {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: clamp(2.1rem, 1.4rem + 3vw, 3.35rem);
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+  max-width: 18ch;
+}
+.method-hero p {
+  color: var(--color-text-muted);
+  font-size: clamp(1.05rem, 0.98rem + 0.4vw, 1.2rem);
+  line-height: 1.62;
+  max-width: 60ch;
+}
+
+/* ── Sticky section nav (TOC) ─────────────────────────────────────────────── */
+.method-toc {
+  border-top: 1px solid var(--color-gold-glow);
+}
+.method-toc-inner {
+  max-width: var(--content-max-width, 820px);
+}
+.method-toc-label {
+  font-family: var(--gtl-sans);
+  letter-spacing: 0.14em;
+}
+.method-toc-list li a {
+  font-weight: 600;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.method-toc-list li a:hover,
+.method-toc-list li a.active {
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+}
+.method-toc-list li a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Body rhythm + editorial typography ───────────────────────────────────── */
+.method-body {
+  max-width: var(--content-max-width, 820px);
+}
+.method-section {
+  scroll-margin-block-start: calc(var(--nav-height, 56px) + 5rem);
+}
+.method-section h2 {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2rem);
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+  padding-bottom: var(--gtl-3, 12px);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+.method-section h3 {
+  font-family: var(--gtl-sans);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  letter-spacing: -0.005em;
+}
+.method-section p,
+.method-section li {
+  line-height: 1.7;
+}
+.method-section > p:first-of-type {
+  font-size: 1.05rem;
+}
+.method-section a {
+  color: var(--color-gold-dark);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.method-section a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Inline code chips — AA in BOTH themes. gold-dark is tuned for AA on surface-2
+   (not on white cards), so the chip supplies its own surface-2 ground; the block
+   formula (code.method-formula) keeps its own treatment and is excluded. */
+.method-section code:not(.method-formula) {
+  font-variant-numeric: tabular-nums lining-nums;
+  background: var(--color-surface-2);
+  color: var(--color-gold-dark);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 5px;
+  padding: 0.08em 0.42em;
+}
+
+/* ── Trust source cards ───────────────────────────────────────────────────── */
+.method-source-card {
+  border-radius: var(--gtl-r-lg, 18px);
+  box-shadow: var(--gtl-shadow-1);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.method-source-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--gtl-shadow-2);
+  transform: translateY(-2px);
+}
+.method-source-card-name {
+  font-family: var(--gtl-sans);
+  font-weight: 700;
+  color: var(--color-gold-dark);
+}
+.method-source-card-link {
+  color: var(--color-gold-dark);
+}
+.method-source-card-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* ── Formula blocks + live pipeline (every figure tabular) ────────────────── */
+.method-formula-block {
+  border-radius: var(--gtl-r-md, 14px);
+  border-inline-start: 4px solid var(--color-gold);
+}
+code.method-formula {
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--color-ink-data);
+}
+.method-formula-breakdown code,
+.method-formula-step-value,
+.method-unit-table td,
+.method-karat-table td {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.method-formula-step {
+  border-radius: var(--gtl-r-md, 14px);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+.method-formula-step:hover {
+  border-color: var(--color-gold-glow);
+}
+.method-formula-step-num {
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  font-variant-numeric: tabular-nums;
+}
+.method-formula-step-value {
+  color: var(--color-ink-data);
+  font-weight: 700;
+}
+.method-context-line {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+.method-unit-snapshot {
+  margin-top: var(--gtl-4, 16px);
+  padding-top: var(--gtl-4, 16px);
+  border-top: 1px solid var(--color-border-subtle);
+}
+.method-unit-snapshot-title {
+  font-weight: 700;
+  color: var(--color-text);
+}
+.method-unit-snapshot-list {
+  list-style: none;
+  padding: 0;
+  margin: var(--gtl-2, 8px) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gtl-2, 8px) var(--gtl-5, 24px);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--color-text-muted);
+}
+
+/* ── Karat + unit tables ──────────────────────────────────────────────────── */
+.method-karat-table-wrap {
+  border-radius: var(--gtl-r-md, 14px);
+}
+.method-karat-table th {
+  color: var(--color-gold-dark);
+  background: var(--color-surface-2);
+}
+.method-unit-table th {
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: var(--gtl-kicker, 0.72rem);
+}
+
+/* ── Canonical resolver panel (new) ───────────────────────────────────────── */
+.method-resolver {
+  display: grid;
+  gap: var(--gtl-3, 12px);
+  margin: var(--gtl-5, 24px) 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: resolver;
+}
+.method-resolver-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--gtl-4, 16px);
+  align-items: start;
+  padding: var(--gtl-4, 16px) var(--gtl-5, 24px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--gtl-r-md, 14px);
+  box-shadow: var(--gtl-shadow-1);
+}
+.method-resolver-step::before {
+  counter-increment: resolver;
+  content: counter(resolver);
+  inline-size: 2rem;
+  block-size: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-gold-tint);
+  color: var(--color-gold-dark);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.method-resolver-step-title {
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.2rem;
+}
+.method-resolver-step-title code {
+  color: var(--color-gold-dark);
+  font-size: 0.92em;
+}
+.method-resolver-step p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--color-text-muted);
+}
+
+/* ── Tracker "deliberate exception" callout (new) ─────────────────────────── */
+.method-exception {
+  position: relative;
+  margin: var(--gtl-5, 24px) 0;
+  padding: var(--gtl-5, 24px);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--gtl-r-lg, 18px);
+  background:
+    radial-gradient(130% 120% at 100% -10%, var(--color-gold-tint) 0%, transparent 46%),
+    var(--color-surface);
+  box-shadow: var(--gtl-shadow-1);
+}
+.method-exception-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-bottom: var(--gtl-3, 12px);
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--gtl-r-pill, 999px);
+  background: var(--color-gold-tint);
+  border: 1px solid var(--color-gold-glow);
+  color: var(--color-gold-dark);
+  font-size: var(--gtl-kicker, 0.72rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.method-exception-title {
+  font-family: var(--gtl-serif);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--color-text);
+  margin: 0 0 var(--gtl-2, 8px);
+}
+.method-exception p {
+  margin: 0 0 0.6rem;
+}
+.method-exception p:last-child {
+  margin-bottom: 0;
+}
+.method-exception .method-tier-chain {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+  margin: var(--gtl-2, 8px) 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--color-text);
+}
+.method-exception .method-tier-chain code {
+  font-size: 0.85em;
+}
+.method-exception .method-tier-chain span[aria-hidden] {
+  color: var(--color-gold);
+}
+
+/* ── Fallback tiers ───────────────────────────────────────────────────────── */
+.method-fallback-tiers {
+  border-radius: var(--gtl-r-lg, 18px);
+}
+
+/* Tier badge ink lifted to --color-text — AA on its light chip (muted was 4.18). */
+.method-tier-badge {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+}
+
+/* ── Freshness legend ─────────────────────────────────────────────────────── */
+.method-freshness-legend li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  padding: 0.35rem 0;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.method-freshness-legend .badge {
+  flex: none;
+}
+
+/* ── FAQ ──────────────────────────────────────────────────────────────────── */
+.method-faq-list dt {
+  font-family: var(--gtl-sans);
+  font-size: 1.02rem;
+  color: var(--color-text);
+}
+.method-faq-list dd {
+  color: var(--color-text-muted);
+  line-height: 1.7;
+  margin: 0.3rem 0 0;
+}
+
+/* ── Disclaimer emphasis (kept semantic) ──────────────────────────────────── */
+.method-warning--strong strong {
+  color: var(--color-error, #b81428);
+}
+
+/* ── Related tools row ────────────────────────────────────────────────────── */
+.related-tool-link:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .method-hero {
+    padding: var(--gtl-6, 32px) var(--gtl-4, 16px) var(--gtl-5, 24px);
+  }
+  .method-hero h1 {
+    max-width: none;
+  }
+  .method-resolver-step {
+    padding: var(--gtl-4, 16px);
+  }
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .method-source-card,
+  .method-formula-step,
+  .method-toc-list li a {
+    transition: none;
+  }
+  .method-source-card:hover {
+    transform: none;
+  }
+}
