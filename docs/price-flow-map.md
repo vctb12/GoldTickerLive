@@ -60,6 +60,17 @@ Mandatory disclosure per block: **state label + source label + UTC timestamp**.
 Trust invariants: reference estimates are never shown as retail quotes; a closed market reads
 `closed` even with recent data; cached/fallback stays visibly non-live; AED peg stays 3.6725.
 
+**Market-closed overlay is mandatory on every price surface.** `classifyFreshness` and
+`getLiveFreshness` are pure data-freshness signals — neither emits `closed`. Any surface that
+renders a freshness pill MUST wrap its resolved state key in `applyMarketClosedOverlay(key)`
+(from `live-status.js`) before mapping to a label/dot, so a freshly-fetched quote during a
+closed market never reads "Live". The shared ticker + spot bar, home, compare, and portfolio
+did this; an audit (2026-07-11) found market/dubai/shops/heatmap/invest and the calculator's
+inline note derived their pill from the raw state without the overlay — they could show "Live"
+while the same page's ticker read "Closed". Fixed so all nine non-Tracker surfaces apply the
+overlay (guarded by `tests/market-closed-overlay-coverage.test.js`). Each surface's freshness
+label map now carries a bilingual `closed` entry ("Closed"/"مغلق").
+
 ## 3. Per-surface map
 
 All "canonical" surfaces below call `getCanonicalSpot()` for the initial paint and

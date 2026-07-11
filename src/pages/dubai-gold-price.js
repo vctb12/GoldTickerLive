@@ -18,6 +18,7 @@ import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import * as cache from '../lib/cache.js';
 import { initPageEnter } from '../lib/page-enter.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { applyMarketClosedOverlay } from '../lib/live-status.js';
 import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { CONSTANTS } from '../config/index.js';
 import { formatNumber, formatCurrency, formatTimestampShort } from '../lib/formatter.js';
@@ -39,6 +40,7 @@ const T = {
     freshDelayed: 'Delayed',
     freshCached: 'Cached',
     freshStale: 'Stale',
+    freshClosed: 'Closed',
     updated: 'Updated',
   },
   ar: {
@@ -52,6 +54,7 @@ const T = {
     freshDelayed: 'متأخر',
     freshCached: 'مخزّن',
     freshStale: 'قديم',
+    freshClosed: 'مغلق',
     updated: 'آخر تحديث',
   },
 };
@@ -66,6 +69,7 @@ const FRESH_KEY = {
   cached: 'freshCached',
   fallback: 'freshStale',
   unavailable: 'freshStale',
+  closed: 'freshClosed',
 };
 
 function aedCell(id, value) {
@@ -110,9 +114,12 @@ function renderLive() {
   const pill = document.getElementById('dubai-fresh');
   const dot = document.getElementById('dubai-fresh-dot');
   const text = document.getElementById('dubai-fresh-text');
-  const key = FRESH_KEY[fresh.state];
+  // Apply the market-closed overlay so a closed-market quote never reads "Live"
+  // (freshness contract) — mirrors home/compare/portfolio and the shared ticker.
+  const displayState = applyMarketClosedOverlay(fresh.state || 'unavailable');
+  const key = FRESH_KEY[displayState];
   if (pill && dot && text && key) {
-    dot.className = `dubai-fresh-dot dubai-fresh-dot--${fresh.state}`;
+    dot.className = `dubai-fresh-dot dubai-fresh-dot--${displayState}`;
     const stamp = fresh.updatedAt ? formatTimestampShort(fresh.updatedAt, STATE.lang) : '';
     text.textContent = stamp ? `${t(key)} · ${t('updated')}: ${stamp}` : t(key);
     pill.hidden = false;

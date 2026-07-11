@@ -1,6 +1,7 @@
 import { CONSTANTS, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { applyMarketClosedOverlay } from '../lib/live-status.js';
 import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import * as cache from '../lib/cache.js';
 import { mountSkeleton } from '../components/skeleton.js';
@@ -58,6 +59,7 @@ const I18N = {
     freshDelayed: 'Delayed',
     freshCached: 'Cached',
     freshStale: 'Stale',
+    freshClosed: 'Closed',
     marketOpen: 'Market open',
     marketClosed: 'Market closed',
     openTracker: 'Open full tracker →',
@@ -152,6 +154,7 @@ const I18N = {
     freshDelayed: 'متأخر',
     freshCached: 'مخزّن',
     freshStale: 'قديم',
+    freshClosed: 'مغلق',
     marketOpen: 'السوق مفتوح',
     marketClosed: 'السوق مغلق',
     openTracker: 'افتح المتتبع الكامل ←',
@@ -1115,13 +1118,18 @@ function renderLiveCard() {
       // nothing about how old the pipeline snapshot actually is. Prefix with the
       // honest freshness state (live / delayed / cached / stale) from the
       // canonical snapshot, never faked.
+      // Apply the market-closed overlay so the freshness dot never reads "Live"
+      // while the adjacent market-status chip reads "Market closed" (they were
+      // derived from different clocks — a visible self-contradiction).
+      const displayState = applyMarketClosedOverlay(state.freshnessState || 'unavailable');
       const freshKey = {
         live: 'freshLive',
         delayed: 'freshDelayed',
         cached: 'freshCached',
         fallback: 'freshStale',
         unavailable: 'freshStale',
-      }[state.freshnessState];
+        closed: 'freshClosed',
+      }[displayState];
       const freshLabel = freshKey ? tx(freshKey) : null;
       clear(updatedEl);
       if (freshLabel) {
@@ -1129,7 +1137,7 @@ function renderLiveCard() {
           el(
             'span',
             {
-              class: `invest-fresh-dot invest-fresh-dot--${state.freshnessState}`,
+              class: `invest-fresh-dot invest-fresh-dot--${displayState}`,
               'aria-hidden': 'true',
             },
             ''
