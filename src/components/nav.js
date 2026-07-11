@@ -685,6 +685,29 @@ ${spriteMarkupIfAbsent()}
   }
 
   // ── Drawer helpers ──────────────────────────────────────────────────────────
+  // Make everything behind the open drawer `inert` so keyboard Tab order and AT
+  // virtual-cursor cannot escape into the page while the mobile menu is open.
+  // The existing hand-rolled focus trap only wraps Tab; `inert` also removes the
+  // background from the accessibility tree and blocks pointer/AT reach. The nav
+  // host (the header, which contains the nav, drawer + backdrop) stays
+  // interactive; every other top-level body child is marked only if we added it,
+  // so any pre-existing `inert` elsewhere on the page is left untouched.
+  const _navHost = navEl.closest('header') || navEl.parentElement || navEl;
+  function setBackgroundInert(on) {
+    Array.from(document.body.children).forEach((el) => {
+      if (el === _navHost || el.contains(_navHost) || _navHost.contains(el)) return;
+      if (on) {
+        if (!el.hasAttribute('inert')) {
+          el.setAttribute('inert', '');
+          el.setAttribute('data-nav-inert', '');
+        }
+      } else if (el.hasAttribute('data-nav-inert')) {
+        el.removeAttribute('inert');
+        el.removeAttribute('data-nav-inert');
+      }
+    });
+  }
+
   function setDrawerState(isOpen) {
     const d = NAV_DATA[_currentLang] || NAV_DATA.en;
     navEl.classList.toggle('nav--open', isOpen);
@@ -696,7 +719,12 @@ ${spriteMarkupIfAbsent()}
     burger.setAttribute('aria-label', isOpen ? d.closeMenu : d.openMenu);
     burger.classList.toggle('is-open', isOpen);
     if (drawerCloseBtn) drawerCloseBtn.setAttribute('aria-label', d.closeMenu);
+    // `<body>` is the scroll container on this site (html,body{height:100%;
+    // overflow:auto}); toggling its overflow locks the background scroller and
+    // preserves scrollTop on reopen. (A position:fixed lock would be wrong here —
+    // it is for window-scroller layouts, not this body-scroller one.)
     document.body.style.overflow = isOpen ? 'hidden' : '';
+    setBackgroundInert(isOpen);
     const moreBtn = document.querySelector('[data-mobile-nav="menu"]');
     if (moreBtn) moreBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   }
