@@ -1,0 +1,298 @@
+/* ============================================================================
+   Gold Glossary — premium interactive bilingual reference (redesign/glossary)
+   ----------------------------------------------------------------------------
+   Loaded AFTER glossary.css so these rules win by source order. Pure
+   presentation over the existing static bilingual DOM plus the JS-injected
+   toolbar (search + A–Z index + live count). Brings the glossary into the
+   Stage-2 editorial family: Playfair serif headings in antique gold, gold-glow
+   term cards, gold focus rings, :target deep-link highlight, honest empty
+   state. Built on shared tokens (tokens.css + design-system.css); theme-aware
+   (light + dark both correct); reduced-motion safe. The page stays fully usable
+   with zero JS — the toolbar is progressive enhancement.
+   ========================================================================== */
+
+/* ── Editorial hero ───────────────────────────────────────────────────────── */
+.glossary-hero {
+  background:
+    radial-gradient(ellipse 60% 70% at 50% -20%, var(--color-gold-glow) 0%, transparent 60%),
+    transparent;
+  padding-block: var(--gtl-7, 48px) var(--gtl-4, 16px);
+}
+.glossary-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: var(--gtl-3, 12px);
+  font-family: var(--gtl-sans);
+  font-size: var(--gtl-meta, 0.8125rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-gold-dark);
+}
+.glossary-eyebrow::before {
+  content: '';
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+}
+.glossary-hero-title {
+  font-family: var(--gtl-serif);
+  font-size: clamp(2.1rem, 1.4rem + 3vw, 3.25rem);
+  letter-spacing: -0.015em;
+  color: var(--color-gold-antique);
+}
+.glossary-hero-sub {
+  font-size: clamp(1.02rem, 0.97rem + 0.35vw, 1.15rem);
+  line-height: 1.62;
+}
+
+/* ── Toolbar: search + live count (JS-injected, sticky) ───────────────────── */
+.gloss-toolbar {
+  position: sticky;
+  inset-block-start: calc(var(--nav-height, 56px) + var(--spot-bar-height, 0px));
+  z-index: 20;
+  max-width: 1000px;
+  margin: var(--gtl-4, 16px) auto 0;
+  padding: var(--gtl-3, 12px) var(--gtl-4, 16px);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--gtl-r-lg, 18px);
+  box-shadow: var(--gtl-shadow-1);
+}
+.gloss-search {
+  display: flex;
+  align-items: center;
+  gap: var(--gtl-2, 8px);
+}
+.gloss-search-field {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.gloss-search-ico {
+  position: absolute;
+  inset-inline-start: 0.85em;
+  inline-size: 1.05em;
+  block-size: 1.05em;
+  color: var(--color-text-faint);
+  pointer-events: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.gloss-search-input {
+  inline-size: 100%;
+  font-family: var(--gtl-sans);
+  font-size: 1rem;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--gtl-r-pill, 999px);
+  padding: 0.62em 1em 0.62em 2.6em;
+}
+html[dir='rtl'] .gloss-search-input {
+  padding: 0.62em 2.6em 0.62em 1em;
+}
+.gloss-search-input::placeholder {
+  color: var(--color-text-faint);
+}
+.gloss-search-input:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 1px;
+  border-color: var(--color-gold);
+}
+.gloss-search-clear {
+  flex: none;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2.2em;
+  block-size: 2.2em;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.gloss-search-clear.is-shown {
+  display: inline-flex;
+}
+.gloss-search-clear:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+.gloss-count {
+  margin-block-start: var(--gtl-2, 8px);
+  font-size: var(--gtl-meta, 0.8125rem);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+}
+.gloss-count strong {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+/* ── A–Z index rail ───────────────────────────────────────────────────────── */
+.gloss-az {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-block-start: var(--gtl-3, 12px);
+  padding-block-start: var(--gtl-3, 12px);
+  border-block-start: 1px solid var(--color-border-subtle);
+}
+.gloss-az-btn {
+  min-inline-size: 2em;
+  padding: 0.28em 0.5em;
+  font-family: var(--gtl-num, var(--gtl-sans));
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--gtl-r-sm, 10px);
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+.gloss-az-btn:hover {
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
+}
+.gloss-az-btn[aria-pressed='true'] {
+  color: var(--color-gold-dark);
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+}
+.gloss-az-btn:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 1px;
+}
+
+/* ── Jump nav (premium pills) ─────────────────────────────────────────────── */
+.glossary-jump a {
+  color: var(--color-gold-dark);
+  border-color: var(--color-border);
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.glossary-jump a:hover {
+  background: var(--color-gold-tint);
+  border-color: var(--color-gold);
+}
+.glossary-jump a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Group titles ─────────────────────────────────────────────────────────── */
+.gloss-group {
+  scroll-margin-block-start: calc(var(--nav-height, 56px) + 5.5rem);
+}
+.gloss-group-title {
+  font-family: var(--gtl-serif);
+  letter-spacing: -0.01em;
+  color: var(--color-gold-antique);
+}
+
+/* ── Term cards ───────────────────────────────────────────────────────────── */
+.gloss-term {
+  scroll-margin-block-start: calc(var(--nav-height, 56px) + 6rem);
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+.gloss-term:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--gtl-shadow-2);
+  transform: translateY(-2px);
+}
+.gloss-term-name {
+  font-family: var(--gtl-serif);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+.gloss-term-abbr {
+  font-family: var(--gtl-sans);
+  color: var(--color-gold-dark);
+}
+.gloss-term-def {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+/* Deep-link :target highlight — a term linked via #term-… lands with a gold ring. */
+.gloss-term:target {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px var(--color-gold-glow);
+  background:
+    radial-gradient(130% 130% at 0 0, var(--color-gold-tint) 0%, transparent 55%),
+    var(--color-surface-1);
+}
+
+/* Search-hidden terms + emptied groups (JS toggles). */
+.gloss-term.is-filtered {
+  display: none;
+}
+.gloss-group.is-empty {
+  display: none;
+}
+
+/* ── Empty state (no matches) ─────────────────────────────────────────────── */
+.gloss-empty {
+  display: none;
+  max-width: 1000px;
+  margin: var(--gtl-6, 32px) auto;
+  padding: var(--gtl-6, 32px) var(--gtl-4, 16px);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+.gloss-empty.is-shown {
+  display: block;
+}
+.gloss-empty strong {
+  color: var(--color-text);
+}
+
+/* ── Foot ─────────────────────────────────────────────────────────────────── */
+.glossary-related a {
+  color: var(--color-gold-dark);
+}
+.glossary-related a:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .gloss-toolbar {
+    border-radius: var(--gtl-r-md, 14px);
+  }
+  .gloss-az {
+    gap: 3px;
+  }
+}
+
+/* ── Motion / a11y ────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .gloss-term,
+  .gloss-az-btn,
+  .glossary-jump a {
+    transition: none;
+  }
+  .gloss-term:hover {
+    transform: none;
+  }
+}

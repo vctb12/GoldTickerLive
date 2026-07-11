@@ -75,6 +75,11 @@
     <link rel="stylesheet" href="./styles/critical.css" />
     <link rel="stylesheet" href="./styles/global.css" />
     <link rel="stylesheet" href="./styles/pages/glossary.css" />
+    <!-- design-system.css = shared gtl-* tokens (Playfair serif, spacing scale);
+         glossary-redesign.css builds on it and must load last. -->
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="preload" as="style" href="./styles/pages/glossary-redesign.css" />
+    <link rel="stylesheet" href="./styles/pages/glossary-redesign.css" />
     <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
