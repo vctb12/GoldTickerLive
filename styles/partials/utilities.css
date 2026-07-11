@@ -668,11 +668,12 @@ body > * {
 }
 
 [data-theme='dark'] .mobile-bottom-nav-item {
-  color: rgb(240 237 216 / 38%);
+  /* 62% clears WCAG AA (~6.6:1 on the near-black bar); 38% was ~2.96:1. */
+  color: rgb(240 237 216 / 62%);
 }
 
 [data-theme='dark'] .mobile-bottom-nav-item:hover {
-  color: rgb(240 237 216 / 60%);
+  color: rgb(240 237 216 / 85%);
 }
 
 [data-theme='dark'] .mobile-bottom-nav-item.is-active {
@@ -689,11 +690,12 @@ body > * {
   }
 
   :root:not([data-theme='light']) .mobile-bottom-nav-item {
-    color: rgb(240 237 216 / 38%);
+    /* 62% clears WCAG AA (~6.6:1 on the near-black bar); 38% was ~2.96:1. */
+    color: rgb(240 237 216 / 62%);
   }
 
   :root:not([data-theme='light']) .mobile-bottom-nav-item:hover {
-    color: rgb(240 237 216 / 60%);
+    color: rgb(240 237 216 / 85%);
   }
 
   :root:not([data-theme='light']) .mobile-bottom-nav-item.is-active {

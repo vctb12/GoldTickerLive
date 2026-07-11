@@ -1021,3 +1021,50 @@ body.invest-page {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* ── Dark mode ─────────────────────────────────────────────────────────────
+   The investing planner + product-choice cards were authored as light "paper"
+   cards (white/cream surfaces, near-black ink). Every other surface on the
+   embedding learn page follows the tokenised dark palette, so in dark mode
+   these cards read as bright white cut-outs. Flip only the light-locked
+   surfaces to raised dark tokens and lift their ink — the many translucent
+   dark-context surfaces above already render correctly and are left untouched.
+   Scoped to [data-theme='dark'] per the page-level dark convention (the token
+   layer owns the pre-JS OS-preference fallback). */
+[data-theme='dark'] {
+  --invest-card: var(--color-surface); /* raised dark card, matches learn */
+  --invest-card-soft: var(--color-surface-2);
+  --invest-dark: var(--color-text); /* ink used on the flipped cards */
+}
+
+/* Form inputs + chips (hard-coded white bg / near-black ink) */
+[data-theme='dark'] .invest-number {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+[data-theme='dark'] .invest-chip:not(.is-active) {
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+[data-theme='dark'] .invest-label {
+  color: var(--color-text);
+}
+
+/* Product-choice compare cards (bg flips via --invest-card; lift the ink) */
+[data-theme='dark'] .invest-compare-title {
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .invest-compare-copy,
+[data-theme='dark'] .invest-compare-list {
+  color: var(--color-text-muted);
+}
+
+[data-theme='dark'] .invest-compare-tag {
+  background: var(--color-gold-bg);
+  color: var(--color-gold-light);
+}

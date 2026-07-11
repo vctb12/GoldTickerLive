@@ -55,6 +55,15 @@
   border-color: var(--color-gold);
   color: var(--color-gold-dark);
 }
+
+/* Dark mode: --color-gold-bg is a near-black tint, so the light-mode gold-dark
+   label (further dimmed to near-black by legacy compare.css `--color-on-gold`)
+   renders ~1:1 on it. Restore a legible assay-gold label matching the active
+   bottom-nav pill. Selector outranks `[data-theme='dark'] .compare-karat-btn.is-active`. */
+[data-theme='dark'] .compare-karat button[aria-pressed='true'],
+[data-theme='dark'] .compare-karat button.is-active {
+  color: var(--color-gold-light);
+}
 .compare-karat button:focus-visible,
 .compare-chip:focus-visible,
 .compare-sort-btn:focus-visible {
