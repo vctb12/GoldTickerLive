@@ -6,18 +6,41 @@
 import { SEARCH_INDEX } from './searchIndex.js';
 
 // Type boost scores (higher = appears first)
-const TYPE_BOOST = { country: 5, city: 3, page: 2, karat: 1, shop: 0 };
+const TYPE_BOOST = { country: 5, city: 3, page: 2, guide: 2, karat: 1, shop: 0 };
+
+/**
+ * Normalise a string for matching. Lowercases (a no-op on Arabic script) and
+ * folds the common Arabic orthographic variants so that queries match regardless
+ * of how the term was typed:
+ *   - strip tatweel (ـ) and harakat/diacritics + superscript alef
+ *   - alef forms (آ أ إ ٱ) → ا, taa marbuta (ة) → ه, alef maqsura (ى) → ي
+ *   - hamza-carriers (ؤ ئ) → و / ي
+ * Without this, "دبى" vs "دبي" or a diacritic'd/tatweel'd query silently misses.
+ * Latin text is unaffected (the Arabic ranges never appear in it).
+ */
+function norm(s) {
+  return (s || '')
+    .toLowerCase()
+    .trim()
+    .replace(/ـ/g, '')
+    .replace(/[ً-ْٰ]/g, '')
+    .replace(/[آأإٱ]/g, 'ا')
+    .replace(/ة/g, 'ه')
+    .replace(/ى/g, 'ي')
+    .replace(/ؤ/g, 'و')
+    .replace(/ئ/g, 'ي');
+}
 
 /**
  * Calculate relevance score for a query against an entry.
- * @param {string} q  lowercase trimmed query
+ * @param {string} q  normalised query (see norm())
  * @param {object} entry
  * @returns {number}
  */
 function score(q, entry) {
-  const label = (entry.label || '').toLowerCase();
-  const labelAr = (entry.labelAr || '').toLowerCase();
-  const kws = (entry.keywords || []).map((k) => (k || '').toLowerCase());
+  const label = norm(entry.label);
+  const labelAr = norm(entry.labelAr);
+  const kws = (entry.keywords || []).map((k) => norm(k));
   const boost = TYPE_BOOST[entry.type] || 0;
 
   // Exact match in label
@@ -71,7 +94,7 @@ function levenshtein(a, b) {
  * @returns {Array<{ label, labelAr, url, type, icon, score }>}
  */
 export function search(query, limit = 10) {
-  const q = (query || '').toLowerCase().trim();
+  const q = norm(query);
   if (q.length < 2) return [];
 
   return SEARCH_INDEX.map((entry) => ({ ...entry, _score: score(q, entry) }))
