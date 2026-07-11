@@ -67,7 +67,12 @@ test('calculator.js freshness note honors the market-closed overlay', () => {
 
 test('all overlaid surfaces still expose a bilingual closed label where they own one', () => {
   // AR "مغلق" must accompany EN "Closed" on the surfaces that own their label map.
-  for (const file of ['src/pages/market.js', 'src/pages/dubai-gold-price.js', 'src/pages/shops.js', 'src/pages/invest.js']) {
+  for (const file of [
+    'src/pages/market.js',
+    'src/pages/dubai-gold-price.js',
+    'src/pages/shops.js',
+    'src/pages/invest.js',
+  ]) {
     const src = read(file);
     assert.ok(src.includes("'Closed'"), `${file} missing EN closed label`);
     assert.ok(src.includes("'مغلق'"), `${file} missing AR closed label`);

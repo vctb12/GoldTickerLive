@@ -144,10 +144,19 @@ function buildToolbar() {
     spellcheck: 'false',
     'aria-controls': 'main-content',
   });
-  const clearBtn = el('button', { type: 'button', class: 'gloss-search-clear', 'aria-label': '' }, '×');
+  const clearBtn = el(
+    'button',
+    { type: 'button', class: 'gloss-search-clear', 'aria-label': '' },
+    '×'
+  );
   const field = el('div', { class: 'gloss-search-field' }, [magnifier(), input]);
   const search = el('div', { class: 'gloss-search' }, [field, clearBtn]);
-  const count = el('p', { class: 'gloss-count', id: 'gloss-count', role: 'status', 'aria-live': 'polite' });
+  const count = el('p', {
+    class: 'gloss-count',
+    id: 'gloss-count',
+    role: 'status',
+    'aria-live': 'polite',
+  });
   const az = el('div', { class: 'gloss-az', id: 'gloss-az', role: 'group', 'aria-label': '' });
   const toolbar = el('div', { class: 'gloss-toolbar', role: 'search' }, [search, count, az]);
 
@@ -155,7 +164,12 @@ function buildToolbar() {
 
   // Honest empty state, before the footer.
   const foot = document.querySelector('.glossary-foot');
-  const empty = el('p', { class: 'gloss-empty', id: 'gloss-empty', role: 'status', 'aria-live': 'polite' });
+  const empty = el('p', {
+    class: 'gloss-empty',
+    id: 'gloss-empty',
+    role: 'status',
+    'aria-live': 'polite',
+  });
   if (foot) foot.before(empty);
   else main.append(empty);
 
@@ -195,12 +209,20 @@ function activeTerms() {
 
 function buildAzRail() {
   if (!ui) return;
-  const letters = [...new Set(activeTerms().map((n) => initialOf(n.querySelector('.gloss-term-name')?.textContent)))]
+  const letters = [
+    ...new Set(
+      activeTerms().map((n) => initialOf(n.querySelector('.gloss-term-name')?.textContent))
+    ),
+  ]
     .filter(Boolean)
     .sort((a, b) => a.localeCompare(b, STATE.lang === 'ar' ? 'ar' : 'en'));
 
   ui.az.replaceChildren();
-  const all = el('button', { type: 'button', class: 'gloss-az-btn', 'data-letter': '' }, t('azAll'));
+  const all = el(
+    'button',
+    { type: 'button', class: 'gloss-az-btn', 'data-letter': '' },
+    t('azAll')
+  );
   all.addEventListener('click', () => {
     STATE.letter = null;
     STATE.query = '';
@@ -263,7 +285,10 @@ function applyFilter() {
 
   for (const btn of ui.az.querySelectorAll('.gloss-az-btn')) {
     const isAll = btn.getAttribute('data-letter') === '';
-    btn.setAttribute('aria-pressed', String(isAll ? !filtering : btn.getAttribute('data-letter') === STATE.letter));
+    btn.setAttribute(
+      'aria-pressed',
+      String(isAll ? !filtering : btn.getAttribute('data-letter') === STATE.letter)
+    );
   }
 }
 

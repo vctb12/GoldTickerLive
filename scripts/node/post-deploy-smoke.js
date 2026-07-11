@@ -78,7 +78,9 @@ function evaluateSnapshot(json, { now = Date.now(), warnAgeMs = DEFAULT_WARN_AGE
   const warnings = [];
   if (ageMs == null) warnings.push('snapshot timestamp missing/unparseable');
   else if (ageMs > warnAgeMs) {
-    warnings.push(`snapshot age ${(ageMs / 3.6e6).toFixed(1)}h exceeds ${(warnAgeMs / 3.6e6).toFixed(0)}h`);
+    warnings.push(
+      `snapshot age ${(ageMs / 3.6e6).toFixed(1)}h exceeds ${(warnAgeMs / 3.6e6).toFixed(0)}h`
+    );
   }
   return { ok: true, reason: 'ok', spot, ageMs, warnings };
 }
@@ -145,7 +147,9 @@ async function runSmoke({
 
   // 2. Snapshot
   try {
-    const res = await fetchImpl(`${siteUrl.replace(/\/$/, '')}/data/gold_price.json?cb=${Date.now()}`);
+    const res = await fetchImpl(
+      `${siteUrl.replace(/\/$/, '')}/data/gold_price.json?cb=${Date.now()}`
+    );
     const json = await res.json().catch(() => null);
     const snap = evaluateSnapshot(json, { now, warnAgeMs });
     snap.ok ? pass('snapshot', `spot=${snap.spot}`) : fail('snapshot', snap.reason);
@@ -210,7 +214,9 @@ async function main() {
   const expectedSha = process.env.EXPECTED_SHA || '';
   const warnAgeMs = Number(process.env.SNAPSHOT_WARN_AGE_MS) || DEFAULT_WARN_AGE_MS;
 
-  console.log(`Post-deploy smoke → ${siteUrl}${expectedSha ? ` (expect ${expectedSha.slice(0, 8)})` : ''}`);
+  console.log(
+    `Post-deploy smoke → ${siteUrl}${expectedSha ? ` (expect ${expectedSha.slice(0, 8)})` : ''}`
+  );
   const { ok, results, warnings } = await runSmoke({ siteUrl, expectedSha, warnAgeMs });
 
   for (const r of results) console.log(`  ${r.ok ? '✓' : '✗'} ${r.name} — ${r.reason}`);
@@ -221,7 +227,9 @@ async function main() {
     return 0;
   }
   const failed = results.filter((r) => !r.ok).map((r) => `${r.name}: ${r.reason}`);
-  const msg = `🚨 GoldTickerLive post-deploy smoke FAILED for ${siteUrl}\n` + failed.map((f) => `• ${f}`).join('\n');
+  const msg =
+    `🚨 GoldTickerLive post-deploy smoke FAILED for ${siteUrl}\n` +
+    failed.map((f) => `• ${f}`).join('\n');
   console.error('\n' + msg);
   await sendAlert(msg);
   return 1;

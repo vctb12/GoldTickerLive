@@ -83,7 +83,12 @@ test('provenance: EN render exposes summary, source, basis, spot-vs-retail, meth
   const dom = installMockDocument();
   try {
     const { renderPriceProvenance } = await importModule('src/components/priceProvenance.js');
-    const node = renderPriceProvenance({ lang: 'en', depth: 0, updatedAt: UPDATED, hasLiveFailure: false });
+    const node = renderPriceProvenance({
+      lang: 'en',
+      depth: 0,
+      updatedAt: UPDATED,
+      hasLiveFailure: false,
+    });
     assert.equal(node.tagName, 'DETAILS');
     const text = allText(node);
     assert.match(text, /About this price/);
@@ -94,7 +99,10 @@ test('provenance: EN render exposes summary, source, basis, spot-vs-retail, meth
     assert.match(text, /Full methodology/);
     // methodology link is depth-0 relative
     const hrefs = collectAttr(node, 'href');
-    assert.ok(hrefs.some((h) => h === './methodology.html'), `expected ./methodology.html in ${hrefs}`);
+    assert.ok(
+      hrefs.some((h) => h === './methodology.html'),
+      `expected ./methodology.html in ${hrefs}`
+    );
   } finally {
     dom.restore();
   }
@@ -120,7 +128,10 @@ test('provenance: depth adjusts the methodology href', async () => {
     const { renderPriceProvenance } = await importModule('src/components/priceProvenance.js');
     const node = renderPriceProvenance({ lang: 'en', depth: 2, updatedAt: UPDATED });
     const hrefs = collectAttr(node, 'href');
-    assert.ok(hrefs.some((h) => h === '../../methodology.html'), `expected ../../methodology.html in ${hrefs}`);
+    assert.ok(
+      hrefs.some((h) => h === '../../methodology.html'),
+      `expected ../../methodology.html in ${hrefs}`
+    );
   } finally {
     dom.restore();
   }

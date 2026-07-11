@@ -41,7 +41,8 @@ test('AED/g parity: calculator (usdPerGram×peg) === homepage resolver for every
         `karat ${k.code} @ spot ${spot}: calc ${calcAed} !== home ${row.aedPerGram}`
       );
       // …and both equal the closed-form invariant spot/31.1035 × code/24 × 3.6725
-      const invariant = (spot / CONSTANTS.TROY_OZ_GRAMS) * (Number(k.code) / 24) * CONSTANTS.AED_PEG;
+      const invariant =
+        (spot / CONSTANTS.TROY_OZ_GRAMS) * (Number(k.code) / 24) * CONSTANTS.AED_PEG;
       assert.ok(
         Math.abs(calcAed - invariant) < 1e-9,
         `karat ${k.code} @ spot ${spot}: not equal to closed-form invariant`

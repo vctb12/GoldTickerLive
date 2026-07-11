@@ -36,7 +36,9 @@ for (const [name, file, langs, vps] of TARGETS) {
       await p.goto(url, { waitUntil: 'networkidle', timeout: 30000 }).catch(() => {});
       await p.waitForTimeout(1400);
       // full height of the real content
-      const h = await p.evaluate(() => Math.max(document.body.scrollHeight, document.documentElement.scrollHeight));
+      const h = await p.evaluate(() =>
+        Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)
+      );
       // resize viewport to full height so body's 100vh becomes the full page and everything paints
       await p.setViewportSize({ width: VW[vp], height: Math.min(h, 20000) });
       // scroll through to trigger any remaining lazy/reveal sections, then back to top
@@ -57,7 +59,9 @@ for (const [name, file, langs, vps] of TARGETS) {
         const secs = [...document.querySelectorAll('main section')];
         const shown = secs.filter((s) => {
           const cs = getComputedStyle(s);
-          return +cs.opacity > 0.05 && cs.visibility !== 'hidden' && s.getBoundingClientRect().height > 8;
+          return (
+            +cs.opacity > 0.05 && cs.visibility !== 'hidden' && s.getBoundingClientRect().height > 8
+          );
         }).length;
         return `${shown}/${secs.length} sections visible`;
       });
