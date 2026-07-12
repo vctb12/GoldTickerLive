@@ -2,7 +2,7 @@
  * Learn-hub article registry.
  */
 
-import { LEARN_ARTICLE } from './content-model.js';
+import { LEARN_ARTICLE } from './content-structure.js';
 
 const ARTICLE_MODELS = new Map([[LEARN_ARTICLE.id, LEARN_ARTICLE]]);
 

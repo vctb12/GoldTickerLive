@@ -4,7 +4,7 @@
 
 import { track, EVENTS } from '../lib/analytics.js';
 import { clear, el, escape } from '../lib/safe-dom.js';
-import { resolveLearnHubText } from './content-model.js';
+import { resolveLearnHubText } from './content-text.js';
 import { createTocRenderer } from './toc-renderer.js';
 import { iconUseElement } from '../components/icon-sprite.js';
 

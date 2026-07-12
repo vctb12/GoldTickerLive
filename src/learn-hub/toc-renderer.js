@@ -3,7 +3,6 @@
  */
 
 import { clear, el, escape } from '../lib/safe-dom.js';
-import { resolveLearnHubText } from './content-model.js';
 
 function resolveContainer(container) {
   if (!container) return null;
@@ -23,7 +22,10 @@ export function createTocRenderer({
   container,
   article,
   language = 'en',
-  resolveText = resolveLearnHubText,
+  // Text-rendering callers (article-renderer) must inject the learn-hub
+  // resolver; the key-echo default keeps the EN static-enhance path free of
+  // the corpus text module (enhanceStatic never renders TOC text).
+  resolveText = (key) => String(key ?? ''),
   navLabelKey = 'learnHub.ui.sectionNavLabel',
   tocLabelKey = 'toc-label',
   onSectionChange,
