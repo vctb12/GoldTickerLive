@@ -18,6 +18,7 @@
  */
 
 import { el, clear } from '../lib/safe-dom.js';
+import { bidiIsolate } from '../lib/formatter.js';
 
 let _tickerEl = null;
 let _lang = 'en';
@@ -144,7 +145,9 @@ export function updateMarketSummaryTicker(data = {}) {
   if (data.changePct != null) {
     const changeItems = _tickerEl.querySelectorAll('.mst-item--spot .mst-item__change');
     const sign = data.changePct >= 0 ? '▲' : '▼';
-    const changeText = `${sign}${Math.abs(data.changePct).toFixed(2)}%`;
+    // bidiIsolate: the direction glyph is bidi-neutral like a leading sign — keep
+    // it attached to the digits in RTL (audit E)
+    const changeText = bidiIsolate(`${sign}${Math.abs(data.changePct).toFixed(2)}%`);
     changeItems.forEach((el) => {
       el.textContent = changeText;
     });

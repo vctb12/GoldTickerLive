@@ -1,6 +1,7 @@
 import { KARATS } from '../config/index.js';
 import { clear, el } from '../lib/safe-dom.js';
 import { tx, _currentSpot, _el, _priceFor, _state } from './_ctx.js';
+import { bidiIsolate } from '../lib/formatter.js';
 
 export function renderPresets() {
   if (!_el.presetList) return;
@@ -127,7 +128,11 @@ export function renderPlanners() {
         ),
         resultItem(
           tx('planner.gainLoss'),
-          `${gainPrefix}${gainLoss.toFixed(2)} ${_state.selectedCurrency} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)`,
+          // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E).
+          // DOM-only — this string never feeds clipboard/share/export.
+          bidiIsolate(
+            `${gainPrefix}${gainLoss.toFixed(2)} ${_state.selectedCurrency} (${gainLoss >= 0 ? '+' : ''}${gainLossPercent.toFixed(1)}%)`
+          ),
           { color: gainColor }
         )
       );

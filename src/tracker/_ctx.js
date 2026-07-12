@@ -1,5 +1,6 @@
 // tracker/_ctx.js — shared render context for tracker submodules
 import { TRANSLATIONS } from '../config/index.js';
+import { bidiIsolate } from '../lib/formatter.js';
 
 export let _state = null;
 export let _el = null;
@@ -44,9 +45,12 @@ export function formatUnitLabel(unit) {
   return unit;
 }
 
+// DOM-display only (decision cues + chart stat cards) — bidiIsolate keeps the
+// leading sign attached to the digits in RTL (audit E). The share/clipboard
+// brief (events.js) builds its own plain strings and never uses this.
 export function formatPercent(value) {
   if (!Number.isFinite(value)) return '—';
-  return `${value >= 0 ? '+' : ''}${value.toFixed(2)}%`;
+  return bidiIsolate(`${value >= 0 ? '+' : ''}${value.toFixed(2)}%`);
 }
 
 // Direction of a price delta with an explicit *flat* band, so a change that

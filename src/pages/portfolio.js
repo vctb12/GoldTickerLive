@@ -19,7 +19,7 @@ import { CONSTANTS, COUNTRIES, KARATS, TRANSLATIONS } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
-import { formatPrice } from '../lib/formatter.js';
+import { bidiIsolate, formatPrice } from '../lib/formatter.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { updateTicker } from '../components/ticker.js';
@@ -264,15 +264,20 @@ function fmtMoney(value, currency) {
   if (value == null || Number.isNaN(value)) return t().unavailable;
   return formatPrice(value, currency, currencyDecimals(currency));
 }
+// DOM-display only (via gainNodes) — bidiIsolate keeps the leading sign attached
+// to the digits in RTL (audit E). CSV/JSON exports use holdingsToCsv/serialize
+// paths and never see these strings.
 function fmtSigned(value, currency) {
   if (value == null || Number.isNaN(value)) return t().unavailable;
   const sign = value > 0 ? '+' : value < 0 ? '−' : '';
-  return `${sign}${formatPrice(Math.abs(value), currency, currencyDecimals(currency))}`;
+  return bidiIsolate(
+    `${sign}${formatPrice(Math.abs(value), currency, currencyDecimals(currency))}`
+  );
 }
 function fmtSignedPct(value) {
   if (value == null || Number.isNaN(value)) return '';
   const sign = value > 0 ? '+' : value < 0 ? '−' : '';
-  return `(${sign}${Math.abs(value).toFixed(1)}%)`;
+  return bidiIsolate(`(${sign}${Math.abs(value).toFixed(1)}%)`);
 }
 
 /**

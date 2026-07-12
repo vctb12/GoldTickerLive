@@ -143,6 +143,32 @@ export function formatPercentChange(change, base) {
 }
 
 /**
+ * Wrap a rendered string in Unicode bidi isolates: LRI (U+2066) … PDI (U+2069).
+ *
+ * Why (audit E — RTL displacement of leading signs): signed delta strings like
+ * `"+12.3%"` or `"−$36.30"` are Latin-digit numerics whose leading `+`/`−` is a
+ * bidi-neutral character. Embedded in an RTL (Arabic) paragraph, the Unicode
+ * bidi algorithm resolves that sign to the paragraph direction and displaces
+ * it to the other side of the digits — the user sees `"12.3%+"`. Wrapping the
+ * final signed string in a left-to-right isolate pins its internal order
+ * (correct for Latin-digit numerics) while keeping it a first-class isolate in
+ * the surrounding RTL flow. Harmless in LTR (English) context, so callers wrap
+ * unconditionally.
+ *
+ * Only use this on strings assigned to the DOM (textContent / text nodes /
+ * aria-labels). Never on strings that feed clipboard, share, CSV, or other
+ * plain-text exports — invisible control characters leak into pasted text.
+ *
+ * @param {string|null|undefined} text  Final display string.
+ * @returns {string|null|undefined}  Isolated string; `null`/`undefined`/`''`
+ *   pass through unchanged.
+ */
+export function bidiIsolate(text) {
+  if (text === null || text === undefined || text === '') return text;
+  return `\u2066${text}\u2069`;
+}
+
+/**
  * Format a UTC timestamp as a short date string (`"Apr 24"` style).
  * Defaults to `Asia/Dubai`.
  * Returns `'—'` for missing or invalid inputs.

@@ -485,7 +485,8 @@ function renderHeroCard() {
     const signStr = absChg >= 0 ? '+' : '−';
     const absFmt = fmt.formatPrice(Math.abs(absChg), 'USD', 2);
     const pctFmt = Math.abs(pctChg).toFixed(2);
-    changeEl.textContent = `${signStr}${absFmt}  ${signStr}${pctFmt}%`;
+    // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+    changeEl.textContent = fmt.bidiIsolate(`${signStr}${absFmt}  ${signStr}${pctFmt}%`);
     changeEl.className = 'hlc-change ' + (absChg >= 0 ? 'badge-up' : 'badge-down');
     changeEl.hidden = false;
   }
@@ -666,7 +667,8 @@ function renderPriceTrend() {
 
     const isUp = pctChange >= 0;
     const sign = isUp ? '+' : '';
-    const pctStr = `${sign}${pctChange.toFixed(1)}%`;
+    // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+    const pctStr = fmt.bidiIsolate(`${sign}${pctChange.toFixed(1)}%`);
     const priceStr = `$${curr.price.toLocaleString('en', { maximumFractionDigits: 0 })}`;
     const aedStr = `AED ${aedPerGram.toFixed(2)}`;
 
@@ -952,7 +954,12 @@ function renderGCCGrid() {
       const sign = chg >= 0 ? '+' : '';
       const cls = chg >= 0 ? 'badge-up' : 'badge-down';
       headerChildren.push(
-        el('span', { class: `gcc-change badge ${cls}` }, `${sign}${chg.toFixed(2)}%`)
+        // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+        el(
+          'span',
+          { class: `gcc-change badge ${cls}` },
+          fmt.bidiIsolate(`${sign}${chg.toFixed(2)}%`)
+        )
       );
     }
 
@@ -1556,7 +1563,8 @@ function renderMarketInsight() {
   const yearEl = document.getElementById('mi-year-value');
   if (yearEl && Number.isFinite(yearAgo?.price) && yearAgo.price > 0) {
     const pct = ((spot - yearAgo.price) / yearAgo.price) * 100;
-    yearEl.textContent = (pct >= 0 ? '+' : '−') + Math.abs(pct).toFixed(1) + '%';
+    // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+    yearEl.textContent = fmt.bidiIsolate((pct >= 0 ? '+' : '−') + Math.abs(pct).toFixed(1) + '%');
     yearEl.classList.toggle('market-insight__value--up', pct >= 0);
     yearEl.classList.toggle('market-insight__value--down', pct < 0);
   }

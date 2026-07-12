@@ -12,6 +12,7 @@ import {
   DIRECTION_GLYPH,
 } from './_ctx.js';
 import { clear, el, setText } from '../lib/safe-dom.js';
+import { bidiIsolate } from '../lib/formatter.js';
 import {
   mountSkeleton,
   skeletonNode,
@@ -64,7 +65,8 @@ function renderPriceChangeStrip(spot, dayOpenSpot) {
     strip,
     tx('heroChangeStrip', {
       sign: DIRECTION_GLYPH[dir],
-      amount: `${sign}$${Math.abs(delta).toFixed(2)}`,
+      // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+      amount: bidiIsolate(`${sign}$${Math.abs(delta).toFixed(2)}`),
       pct: Math.abs(pct).toFixed(2),
     })
   );

@@ -10,6 +10,7 @@ import {
 } from '../lib/historical-data.js';
 import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { getFreshnessModel } from './freshness.js';
+import { bidiIsolate } from '../lib/formatter.js';
 
 /**
  * Derive the provenance + freshness label for the synthetic "current price" row
@@ -410,7 +411,8 @@ export function renderChart() {
       cards.push(
         buildStatCard(
           tx('historical.summary.ytdLabel'),
-          `${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%`,
+          // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+          bidiIsolate(`${stats.ytdChange >= 0 ? '+' : ''}${stats.ytdChange.toFixed(1)}%`),
           tx('historical.summary.ytdHint')
         )
       );
@@ -418,7 +420,8 @@ export function renderChart() {
       cards.push(
         buildStatCard(
           tx('historical.summary.yoyLabel'),
-          `${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%`,
+          // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+          bidiIsolate(`${stats.yoyChange >= 0 ? '+' : ''}${stats.yoyChange.toFixed(1)}%`),
           tx('historical.summary.yoyHint')
         )
       );
