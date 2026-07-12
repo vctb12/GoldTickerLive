@@ -19,7 +19,91 @@ direction pick before any lane starts.**
 > _Populated from the design-directions workflow (3 independent directions + adversarial critique).
 > The owner picks one here; L1 and L4 unblock on that pick._
 
-<!-- DIRECTIONS_PLACEHOLDER -->
+Three directions were developed by independent design agents and stress-tested by an adversarial
+trust reviewer. **All three share the same mandatory "consolidation spine"** (pay down the 6 debts);
+they differ only in the **single bold signature** they add. So the owner's real choice is *which
+signature (if any) rides on top of the consolidation.*
+
+| | **A — Consolidate the Instrument** | **B — The Assay Stamp** | **C — The Tape** |
+| --- | --- | --- | --- |
+| **One-liner** | Keep the look; spend the budget killing the 6 debts + add the one missing catalogue item. | Strike the spot price into brushed metal so **freshness becomes a material property** (fresh catches light, stale goes cold + static). | A slow silent 15-market tape; your market pinned in gold, the world scrolling behind — **earn the name**. |
+| **Signature** | Hero sparkline **line draw-in**, endpoint reconciled to the exact spot value. | The reference readout as a **hallmark in brushed metal**; specular light driven by the 6-state freshness key. | A cross-market **ticker tape** (≤40px, translateX, pause-on-hover, freezes when not live). |
+| **Risk / effort** | YELLOW · L (high file-count, low-concept) | YELLOW · M (one new hero material) | YELLOW · M (mostly reuse of shipped ticker CSS) |
+| **New motion JS** | ~0.4 KB gz | ~1.1 KB gz | ~2.5 KB gz |
+| **Debts it kills** | **All 6** (it *is* the consolidation) | All 6 + makes debt #5 its forcing function | Debts 1–4 (rides A's spine) + collapses 2 scrolling components |
+| **Adversarial fit** | **strong** | moderate | weak |
+
+### A — Consolidate the Instrument  *(the mandatory spine)*
+- **Thesis:** the biggest trust threat here isn't the aesthetic — it's *self-contradiction* (two token
+  namespaces, parallel `base`/`redesign` stylesheets, two freshness renderers let the same price render
+  two ways). Consolidation **is** the design work.
+- **Palette/type:** change **zero** hexes and **zero** font files. Work is structural: collapse
+  `--gtl-*` onto `--color-*`, DRY the duplicated dark block, replace 2 hardcoded chart hexes with
+  theme tokens (so the chart finally flips in dark). Numeric face stays Source Sans 3 tabular+lining+zero.
+- **Signature — sparkline draw-in:** on load the price line strokes on from the inline-start, endpoint
+  landing on the exact hero value (line and readout are the *same datum*). Animates `stroke-dashoffset`
+  only, once, zero CLS; number never moves; RM writes the full line instantly; RTL flips the draw origin.
+  ~0.4 KB gz. *(Non-negotiable nuance: `stroke-dashoffset` isn't literally transform/opacity — ships
+  with a `clip-path` inset-wipe fallback if the perf gate insists.)*
+- **Honest cost:** low perceived aesthetic payoff ("looks the same") despite large effort; the merge of
+  11 `-redesign.css` pairs is a real per-page visual-diff cost; a blind `--gtl-*` rename would shift the
+  hero size/serif (a few tokens aren't clean aliases) → requires a resolve-to-computed-value token diff first.
+
+```
+LTR hero (unchanged look) — the one new moment is the sparkline drawing in:
+  AED 4,821.30  ▲ +12.40 (+0.26%)     ← count-up + tint; NUMBER never moves
+  ╱‾╲      ╱‾‾●  ← endpoint = 4,821.30  (draw-in once ≤700ms, dashoffset→0)
+  24k · 22k · 21k · 18k                 spot ≠ retail (retail shown separately)
+```
+
+### B — The Assay Stamp  *(most on-brand; highest-consequence)*
+- **Thesis:** fuse the two things the site must always say — "this is the authoritative reference" and
+  "this data is fresh right now" — into one **material read**. Fresh gold catches a warm specular that
+  tracks the pointer; stale → the light drains cold and stops. Freshness literally *is* the material's light.
+- **Signature:** pure-CSS brushed-metal plate + `--rim-inset` bevel + a specular `::after` whose
+  `translate3d`/opacity are driven by the existing 6-state freshness key. Only the specular moves; the
+  number is ink on a higher fixed layer. ~1.1 KB gz pointer handler; bails under RM/save-data/no-JS.
+- **Why the reviewer holds it back:** a textured plate *behind the LCP number* is a live WCAG-AA /
+  gold-on-light trap across 2 themes × 6 states, and a freshness-coupled moving specular means *any
+  coupling bug animates a stale lie.* **Recommended as a gated phase-2 experiment**, not part of this
+  overhaul — but its *thesis* (one 6-state machine → one readout) is adopted as the forcing function
+  that kills debt #5.
+
+### C — The Tape  *(earns the name; weakest fit)*
+- **Thesis:** a product called GoldTicker should have a real ticker — but only as an *instrument*, not a
+  marquee. Answers a job the hero can't: cross-market direction + where mine sits. Reuses the already-
+  shipped `.market-summary-ticker` CSS; freezes + dims when not live (stillness = a freshness signal).
+- **Why the reviewer rejects it:** it **reverses V2's settled decision** to retire the doubling
+  mini-ticker; it's the *one place numbers translate* (the pinned cell is the user's own number, in a
+  moving band — the closest of the three to violating "the price number never slides"); it competes with
+  the nav for the top of the viewport; and it needs per-cell freshness bookkeeping across 15+ markets —
+  **maximum trust surface for minimum debt paydown.**
+
+### Adversarial recommendation → **"Consolidate + Draw-In"**
+
+> Ship **A** as the mandatory spine and adopt its sparkline draw-in as the single signature. Fold in
+> **B's non-visual thesis only** (freshness = one 6-state machine feeding one readout) to force debt #5,
+> but implement freshness as tokenized state changes, **not** a moving specular behind the LCP number.
+> Hold B's full material as a **gated phase-2 experiment** behind the shipped `/styleguide.html` + an
+> AA-contrast gate. **Reject C** — it reverses a settled product decision and puts moving numbers on a
+> trust surface for the least debt paydown.
+
+**Recommended lane order (from the critique):** L1 token-diff-then-merge `--gtl-*`→`--color-*` (alone,
+green before anything else) → DRY the dark block + tokenize the 2 chart hexes → merge the 11
+`-redesign.css` pairs (one page per PR, each gated on `/styleguide.html`) → unify the freshness
+renderers (keep the disclosure affordance, **stale stays static**) → promote `/styleguide.html` (noindex,
+sitemap-excluded) → **ship the sparkline draw-in last**, once the styleguide can regression-test it.
+
+**Trust watch-outs to guard the whole way:** resolve-to-computed-value token diff *before* any rename
+(a blind pass shifts hero size/serif); freshness must land all 6 states with **stale static** and keep
+the "about this price" disclosure; the new styleguide route must be `noindex` + sitemap-excluded +
+canonical-checked; un-deferring homepage dark exposes untested dark price states on the highest-traffic
+page (gate on the 1623-test baseline + a11y 100); keep B's plate out of this overhaul.
+
+### Owner decision
+
+Pick the signature to ride on the (mandatory, either-way) consolidation spine — see the decision prompt.
+L1 and L4 stay `GATED_PENDING_OWNER` in the ledger until this is chosen.
 
 ---
 
