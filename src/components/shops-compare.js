@@ -259,11 +259,11 @@ export function openCompareModal() {
         <button type="button" class="shops-compare-modal-close" aria-label="${t('close')}">×</button>
       </div>
       <div class="shops-compare-modal-body">
-        <table class="shops-compare-table">
+        <table class="shops-compare-table" aria-labelledby="shops-compare-modal-title">
           <thead>
             <tr>
-              <th></th>
-              ${shops.map((s) => `<th><strong>${esc(s.name)}</strong><br><small>${esc(s.market)}</small></th>`).join('')}
+              <td></td>
+              ${shops.map((s) => `<th scope="col"><strong>${esc(s.name)}</strong><br><small>${esc(s.market)}</small></th>`).join('')}
             </tr>
           </thead>
           <tbody>
@@ -271,7 +271,7 @@ export function openCompareModal() {
               .map(
                 (row) => `
               <tr>
-                <td class="shops-compare-row-label">${t(row.key)}</td>
+                <th scope="row" class="shops-compare-row-label">${t(row.key)}</th>
                 ${shops.map((s) => `<td>${row.fn(s)}</td>`).join('')}
               </tr>
             `

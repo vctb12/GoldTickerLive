@@ -364,7 +364,9 @@
   color: var(--color-text-muted);
 }
 
-.shops-compare-row-label {
+/* Row labels are <th scope="row">; the extra specificity keeps this rule
+   winning over `.shops-compare-table th` (column-header sizing) above. */
+.shops-compare-table .shops-compare-row-label {
   font-weight: 600;
   color: var(--color-text-muted);
   font-size: var(--text-xs);
