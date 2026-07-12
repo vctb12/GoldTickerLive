@@ -206,3 +206,46 @@ moves · transform/opacity only, zero CLS · reduced-motion honored in CSS **and
 RTL-direction-aware motion · up/down never colour-only · ≤12KB gz new motion JS · dual theme as tokens ·
 self-host+subset fonts ≤180KB · Lighthouse Perf ≥90 / A11y 100 · **stay static** (no framework). Financial
 invariants (peg 3.6725, troy 31.1035, karat ÷24, real data only) are untouched by this presentation work.
+
+---
+
+## Appendix — L1 token-diff audit (the mandated precondition, run 2026-07-12)
+
+**Owner pick: "Consolidate + Draw-In" (Direction A).** Before any `--gtl-*`→`--color-*` rename, the
+critique required resolving every `--gtl-*` to its computed value. Done — and it **overturns Direction
+A's optimistic "value-identical aliases" claim.** `--gtl-*` is defined in `styles/design-system.css`
+(45 tokens); consumed **469×** across 14 files (`home-redesign.css` 222, `methodology-redesign.css` 52,
+`glossary-redesign.css`/`market-redesign.css` 25 each, `dubai-gold-price-redesign.css` 22,
+`learn-redesign.css` 21, `price-provenance.css` 5, `styleguide.html` 21, + smaller).
+
+**Class 1 — 13 clean colour aliases → mechanical rename, zero visual risk:**
+`--gtl-paper`→`--color-bg` · `--gtl-surface`→`--color-surface` · `--gtl-ink`→`--color-text` ·
+`--gtl-ink-muted`→`--color-text-muted` · `--gtl-ink-faint`→`--color-text-faint` ·
+`--gtl-ink-data`→`--color-ink-data` · `--gtl-gold`→`--color-gold` · `--gtl-gold-deep`→`--color-gold-dark` ·
+`--gtl-gold-soft`→`--color-gold-tint` · `--gtl-line`→`--color-border` · `--gtl-line-soft`→`--color-border-subtle` ·
+`--gtl-up`→`--color-move-up` · `--gtl-down`→`--color-move-down`.
+
+**Class 2 — ~32 independent scale tokens that DIFFER from `tokens.css` → a decision, not a rename:**
+
+| `--gtl-*` | Value | Nearest `tokens.css` | Verdict |
+| --- | --- | --- | --- |
+| `--gtl-price-hero` | `clamp(3.25rem, 2.2rem+4.6vw, 6.5rem)` | `--text-data-xl clamp(2.6rem,5vw,3.9rem)` | **DIFFERS** — blind rename shrinks the hero price. |
+| `--gtl-display-1/2`, `-title`, `-body`, `-meta`, `-kicker` | editorial fluid scale (kicker `0.72rem`) | `--text-*` modular 1.25 | **DIFFERS** — separate scale; not mapped. |
+| `--gtl-9` / `--gtl-10` (spacing) | `96px` / `128px` | `--space-9 80px` / `--space-10 96px` | **DIFFERS** — off-by-one at the top of the scale. |
+| `--gtl-r-sm/md/lg` | `10/14/18px` | `--radius-sm/md/lg 8/12/16px` | **DIFFERS** — 2px larger each. |
+| `--gtl-maxw` | `1180px` | `--content-max-width 1280px` | **DIFFERS** — 100px narrower. |
+| `--gtl-ease` | `cubic-bezier(.2,.7,.2,1)` | `--ease-premium cubic-bezier(.16,1,.3,1)` | **DIFFERS** — different curve. |
+| `--gtl-serif` | `…,'Iowan Old Style',Georgia,serif` | `--font-serif-display …,'Cairo',georgia,serif` | **DIFFERS** — Iowan vs Cairo fallback (RTL-relevant). |
+| `--gtl-measure`, `--gtl-shadow-1/2`, `--gtl-t-*` | `66ch`, custom shadows, 120/200/320ms | (no direct token) | **NEW** — no equivalent. |
+
+**Consequence for L1 (revised, decision-ready):** L1 is **not** a mechanical rename. The correct L1 is:
+1. Rename the **13 Class-1 aliases** mechanically (safe, do first).
+2. For **Class 2**, make a per-family call: the `--gtl-*` editorial scale is the *newer, chosen* redesign
+   language, so **promote it into `tokens.css` as canonical** (add the editorial type scale, `66ch`
+   measure, and reconcile spacing/radii) rather than snapping redesign pages back to the older values —
+   OR alias each `--gtl-*` to the nearest token and **accept + screenshot the per-page visual delta**.
+   Either way it requires a decision per family and per-page visual diffing; it is **not** blind.
+3. `--gtl-serif`: keep one serif stack; retain the `Cairo` fallback (RTL coherence) over `Iowan Old Style`.
+
+This is why the ledger keeps **L1 as its own gated lane/PR** (RED), not a task folded into this session.
+The audit means the L1 session can execute with eyes open instead of shipping a silent hero-size/serif shift.
