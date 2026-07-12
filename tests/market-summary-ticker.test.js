@@ -202,7 +202,8 @@ test('updateMarketSummaryTicker formats prices, change direction, market state, 
     );
     assert.deepEqual(
       ticker.querySelectorAll('.mst-item--spot .mst-item__change').map((node) => node.textContent),
-      ['▼1.25%', '▼1.25%']
+      // LRI…PDI (U+2066/U+2069) — bidiIsolate() pins the glyph+digits order in RTL (audit E)
+      ['\u2066▼1.25%\u2069', '\u2066▼1.25%\u2069']
     );
     assert.ok(
       ticker
