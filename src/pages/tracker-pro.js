@@ -289,7 +289,9 @@ function localizeStaticTrackerCopy() {
   if (jumpChart) {
     const arrow = document.createElement('span');
     arrow.setAttribute('aria-hidden', 'true');
-    arrow.textContent = state.lang === 'ar' ? '←' : '↓';
+    // The link scrolls DOWN the page in both languages — a vertical direction
+    // never mirrors in RTL, so the arrow is always '↓'.
+    arrow.textContent = '↓';
     jumpChart.replaceChildren(trackerTx('actions.viewChart'), ' ', arrow);
     jumpChart.setAttribute('aria-label', trackerTx('actions.jumpChartLabel'));
   }
