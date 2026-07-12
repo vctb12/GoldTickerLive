@@ -60,12 +60,7 @@ describe('gainUnavailableReason()', () => {
   test('price pending: spot loaded but display-currency FX rate missing', async () => {
     const { summarizePortfolio, gainUnavailableReason } = await loadCore();
     // SAR costs, SAR display, but no SAR rate loaded → currentDisplay is null.
-    const summary = summarizePortfolio(
-      [holding({ costCurrency: 'SAR' })],
-      SPOT,
-      {},
-      'SAR'
-    );
+    const summary = summarizePortfolio([holding({ costCurrency: 'SAR' })], SPOT, {}, 'SAR');
     assert.equal(summary.gain, null);
     assert.equal(gainUnavailableReason(summary, 'SAR'), 'price-pending');
   });

@@ -29,7 +29,7 @@ test('reports a downward move with signed change, pct and window', async () => {
   assert.equal(m.ts, TS);
   assert.ok(m.change < 0);
   // (4121.4 - 4157.7) / 4157.7 * 100 ≈ -0.873%
-  assert.ok(Math.abs(m.pct - -0.8730) < 0.01, `pct was ${m.pct}`);
+  assert.ok(Math.abs(m.pct - -0.873) < 0.01, `pct was ${m.pct}`);
   assert.equal(m.current, 4121.4);
   assert.equal(m.prior, 4157.7);
 });
