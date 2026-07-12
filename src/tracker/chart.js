@@ -327,12 +327,15 @@ export function renderChart() {
   }
 
   // Keep the module-level snapshot up to date so the once-registered
-  // mousemove handler always uses the latest rows without re-attaching.
+  // pointermove handler always uses the latest rows without re-attaching.
   _latestChartRows = rows;
 
   if (_el.chartWrap && !_chartListenersAttached) {
     _chartListenersAttached = true;
-    _el.chartWrap.addEventListener('mousemove', (e) => {
+    // pointermove (not mousemove) so touch users can inspect points on the
+    // SVG first-paint chart before GoldChart lazy-loads — same listener
+    // pattern as the heatmap (src/pages/heatmap.js).
+    _el.chartWrap.addEventListener('pointermove', (e) => {
       if (!_el.tooltip || _latestChartRows.length < 2) return;
       const rect = _el.chart.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -351,9 +354,17 @@ export function renderChart() {
       tooltip.style.top = '0px';
       tooltip.style.display = 'block';
     });
-    _el.chartWrap.addEventListener('mouseleave', () => {
+    const hideChartTooltip = () => {
       if (_el.tooltip) _el.tooltip.style.display = 'none';
+    };
+    _el.chartWrap.addEventListener('pointerleave', hideChartTooltip);
+    // Touch/pen: the pointer "leaves" by lifting the finger or by the browser
+    // taking over (scroll) — hide in both cases so the tooltip can't stick
+    // around. Mouse keeps hovering through clicks, so it only hides on leave.
+    _el.chartWrap.addEventListener('pointerup', (e) => {
+      if (e.pointerType !== 'mouse') hideChartTooltip();
     });
+    _el.chartWrap.addEventListener('pointercancel', hideChartTooltip);
   }
 
   if (_el.chartStats) {
