@@ -24,6 +24,7 @@ import { applyMarketClosedOverlay } from '../lib/live-status.js';
 import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { parseLastGoldPriceSnapshot } from '../lib/quote-providers/last-gold-price-parse.js';
 import { referenceMove } from '../lib/reference-move.js';
+import { buildMarketAnalysis } from '../analysis/market-analysis.js';
 import { CONSTANTS } from '../config/index.js';
 import {
   formatNumber,
@@ -115,6 +116,7 @@ function renderWorked() {
   }
 
   renderMove();
+  renderAnalysis();
   card.removeAttribute('aria-busy');
 }
 
@@ -161,6 +163,49 @@ function renderMove() {
 
   panel.hidden = false;
   panel.removeAttribute('aria-hidden');
+}
+
+/**
+ * "Today's movement, described" — the deterministic, template-based movement
+ * description from src/analysis/market-analysis.js, fed with the SAME
+ * reference figures the worked example above it displays (canonical snapshot
+ * + last recorded reference). No LLM, no forecasts, no invented causes; the
+ * builder's own assertDescriptiveOnly() contract is CI-locked in
+ * tests/market-analysis.test.js. Panel stays hidden until real data exists.
+ */
+function renderAnalysis() {
+  const box = document.getElementById('mkt-analysis');
+  const body = document.getElementById('mkt-analysis-body');
+  const disclaimer = document.getElementById('mkt-analysis-disclaimer');
+  if (!box || !body || !disclaimer) return;
+
+  const snap = STATE.snapshot;
+  const analysis = buildMarketAnalysis(
+    {
+      price: snap?.ok ? snap.spotUsdPerOz : null,
+      previous: STATE.prior?.price,
+      timestamp: snap?.freshness?.updatedAt || null,
+    },
+    { lang: STATE.lang }
+  );
+
+  if (analysis.status !== 'ok') {
+    box.hidden = true;
+    box.setAttribute('aria-hidden', 'true');
+    return;
+  }
+
+  // Sentences arrive pre-localized for STATE.lang (headline is sentences[0]).
+  body.textContent = analysis.sentences.join(' ');
+  disclaimer.textContent = analysis.disclaimer;
+  for (const node of [body, disclaimer]) {
+    node.setAttribute('lang', STATE.lang);
+    node.setAttribute('dir', STATE.lang === 'ar' ? 'rtl' : 'ltr');
+  }
+  // The data timestamp is already visible in the freshness pill above the
+  // worked example — the same snapshot feeds both, so it is not repeated here.
+  box.hidden = false;
+  box.removeAttribute('aria-hidden');
 }
 
 /**

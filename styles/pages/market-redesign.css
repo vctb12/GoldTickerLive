@@ -186,6 +186,53 @@
   font-style: italic;
 }
 
+/* "Today's movement, described" — deterministic template panel. */
+.mkt-analysis {
+  margin-top: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-subtle, var(--color-border));
+  border-inline-start: 3px solid var(--color-gold);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2, var(--color-surface));
+}
+
+.mkt-analysis-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 0 0.45em;
+  font-size: var(--gtl-meta);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.mkt-analysis-chip {
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: var(--gtl-meta);
+  color: var(--color-text-faint);
+  border: 1px solid var(--color-border-subtle, var(--color-border));
+  border-radius: 999px;
+  padding: 0.1em 0.7em;
+}
+
+.mkt-analysis-body {
+  margin: 0;
+  color: var(--color-text);
+  line-height: 1.65;
+}
+
+.mkt-analysis-disclaimer {
+  margin: 0.6em 0 0;
+  font-size: var(--gtl-meta);
+  color: var(--color-text-faint);
+  font-style: italic;
+}
+
 /* Flow of nodes + operators. */
 .mkt-worked-flow {
   list-style: none;

@@ -22,13 +22,14 @@ const FORECAST_PATTERNS =
 const CAUSE_PATTERNS =
   /\b(because|due to|driven by|on the back of|thanks to|owing to|as a result of)\b/i;
 
-/** Movement magnitude bands by absolute % change — descriptive only, never predictive. */
+/** Movement magnitude bands by absolute % change — descriptive only, never predictive.
+ *  `en` is the adverb form; `enAdj` the adjective used in "a … move". */
 const MAGNITUDE = [
-  { key: 'unchanged', max: 0.05, en: 'unchanged', ar: 'دون تغيير' },
-  { key: 'little-changed', max: 0.25, en: 'little changed', ar: 'شبه مستقر' },
-  { key: 'modest', max: 1, en: 'modestly', ar: 'بشكل طفيف' },
-  { key: 'notable', max: 2.5, en: 'notably', ar: 'بشكل ملحوظ' },
-  { key: 'sharp', max: Infinity, en: 'sharply', ar: 'بشكل حاد' },
+  { key: 'unchanged', max: 0.05, en: 'unchanged', enAdj: 'unchanged', ar: 'دون تغيير' },
+  { key: 'little-changed', max: 0.25, en: 'little changed', enAdj: 'small', ar: 'شبه مستقر' },
+  { key: 'modest', max: 1, en: 'modestly', enAdj: 'modest', ar: 'بشكل طفيف' },
+  { key: 'notable', max: 2.5, en: 'notably', enAdj: 'notable', ar: 'بشكل ملحوظ' },
+  { key: 'sharp', max: Infinity, en: 'sharply', enAdj: 'sharp', ar: 'بشكل حاد' },
 ];
 
 function pickLang(lang) {
@@ -116,7 +117,7 @@ export function buildMarketAnalysis(input = {}, options = {}) {
       sentences.push(
         lang === 'ar'
           ? `وهو ${fmtUsd(Math.abs(absChange))} (${fmtPct(pctChange)}) ${dir.ar} القراءة المرجعية السابقة، متغيرًا ${band.ar}.`
-          : `That is ${fmtUsd(Math.abs(absChange))} (${fmtPct(pctChange)}) ${dir.en} the previous reference reading — a ${band.en} move.`
+          : `That is ${fmtUsd(Math.abs(absChange))} (${fmtPct(pctChange)}) ${dir.en} the previous reference reading — a ${band.enAdj} move.`
       );
     }
   }
