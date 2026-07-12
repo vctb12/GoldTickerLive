@@ -895,6 +895,20 @@ function formatReadoutPrice(value, currency) {
   return currency ? `${formatted} ${currency}` : `$${formatted}`;
 }
 
+/**
+ * Live-region hygiene (audit E): #tp-hero-readout is aria-live="polite" and
+ * syncHeroReadout runs on every realtime snapshot. Assigning textContent always
+ * replaces the text node — even when the new string is identical — which makes
+ * screen readers re-announce unchanged values on every poll. Only write when
+ * the string actually changed, so the final value is still announced exactly
+ * once per real change.
+ */
+function setTextIfChanged(node, text) {
+  if (!node) return;
+  const next = text == null ? '' : String(text);
+  if (node.textContent !== next) node.textContent = next;
+}
+
 function syncHeroReadout() {
   const spotEl = document.getElementById('tp-readout-spot-value');
   const selectedEl = document.getElementById('tp-readout-selected-value');
@@ -911,22 +925,27 @@ function syncHeroReadout() {
     spot,
   });
 
-  if (spotLabelEl) spotLabelEl.textContent = trackerTx('readout.spotLabel');
+  setTextIfChanged(spotLabelEl, trackerTx('readout.spotLabel'));
   if (selectedLabelEl) {
-    selectedLabelEl.textContent =
+    setTextIfChanged(
+      selectedLabelEl,
       trackerTx('readout.selectedLabel', {
         karat: state.selectedKarat,
         currency: state.selectedCurrency,
-      }) || `${state.selectedKarat}K · ${state.selectedCurrency}`;
+      }) || `${state.selectedKarat}K · ${state.selectedCurrency}`
+    );
   }
   if (spotEl) {
-    spotEl.textContent = spot
-      ? `$${spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-      : '—';
+    setTextIfChanged(
+      spotEl,
+      spot
+        ? `$${spot.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+        : '—'
+    );
     spotEl.removeAttribute('aria-busy');
   }
   if (selectedEl) {
-    selectedEl.textContent = formatReadoutPrice(selectedPrice, state.selectedCurrency);
+    setTextIfChanged(selectedEl, formatReadoutPrice(selectedPrice, state.selectedCurrency));
     selectedEl.removeAttribute('aria-busy');
   }
   if (unitNoteEl) {
@@ -938,11 +957,9 @@ function syncHeroReadout() {
           : state.selectedUnit === 'tola'
             ? 'Tola'
             : 'Kg';
-    unitNoteEl.textContent = trackerTx(`controls.unit${unitKey}`) || state.selectedUnit;
+    setTextIfChanged(unitNoteEl, trackerTx(`controls.unit${unitKey}`) || state.selectedUnit);
   }
-  if (metaHeading) {
-    metaHeading.textContent = trackerTx('commandMeta.heading');
-  }
+  setTextIfChanged(metaHeading, trackerTx('commandMeta.heading'));
 }
 
 function syncUnitSegmented() {
