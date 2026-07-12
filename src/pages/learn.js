@@ -9,7 +9,6 @@ import * as cache from '../lib/cache.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { injectBreadcrumbs } from '../components/breadcrumbs.js';
 import { getArticle } from '../learn-hub/content-registry.js';
-import { renderArticle } from '../learn-hub/article-renderer.js';
 import { createTocRenderer } from '../learn-hub/toc-renderer.js';
 import { mountLearnHubCatalog } from './learn-hub-ui.js';
 import { initPageEnter } from '../lib/page-enter.js';
@@ -73,7 +72,22 @@ function renderMissingArticle() {
   root.appendChild(message);
 }
 
+// The article renderer (and the corpus text it resolves) loads lazily: the EN
+// fast path enhances the prerendered static HTML and must never download copy
+// it does not render. Cached so repeated language toggles import once.
+let articleRendererModulePromise = null;
+
+function loadArticleRendererModule() {
+  articleRendererModulePromise ??= import('../learn-hub/article-renderer.js');
+  return articleRendererModulePromise;
+}
+
+// Monotonic token so a slow lazy-render can never clobber a newer mount
+// (e.g. the user toggles back to English before the chunk arrives).
+let mountToken = 0;
+
 function mountArticleExperience(article) {
+  const token = ++mountToken;
   if (!article) {
     applyLang(null);
     renderMissingArticle();
@@ -92,14 +106,25 @@ function mountArticleExperience(article) {
     return { renderer: null, toc };
   }
 
-  const renderer = renderArticle({
-    article,
-    language: STATE.lang,
-    articleContainer: '#learn-article-root',
-    tocContainer: '#learn-toc-root',
-  });
-  applyLang(renderer);
-  return { renderer, toc: null };
+  const experience = { renderer: null, toc: null };
+  applyLang(null);
+  loadArticleRendererModule()
+    .then(({ renderArticle }) => {
+      if (token !== mountToken) return;
+      experience.renderer = renderArticle({
+        article,
+        language: STATE.lang,
+        articleContainer: '#learn-article-root',
+        tocContainer: '#learn-toc-root',
+      });
+      applyLang(experience.renderer);
+    })
+    .catch((error) => {
+      if (token !== mountToken) return;
+      renderMissingArticle();
+      console.error('[learn] Failed to load the learn-hub article renderer', error);
+    });
+  return experience;
 }
 
 // Hub strings live in src/config/translations.js (bilingual policy) — the
