@@ -371,6 +371,25 @@
               </p>
             </div>
 
+            <!-- Deterministic movement description — filled by buildMarketAnalysis()
+                 (src/analysis/market-analysis.js): template text derived from the
+                 same reference figures shown above. Rules-based, descriptive only;
+                 hidden until real data exists. -->
+            <div class="mkt-analysis" id="mkt-analysis" hidden aria-hidden="true">
+              <p class="mkt-analysis-label">
+                <span data-lang-block="en">Today's movement, described</span>
+                <span data-lang-block="ar" lang="ar" dir="rtl">وصف حركة اليوم</span>
+                <span class="mkt-analysis-chip">
+                  <span data-lang-block="en">Generated from the numbers above · rules-based</span>
+                  <span data-lang-block="ar" lang="ar" dir="rtl"
+                    >نص آلي من الأرقام أعلاه · قواعد ثابتة</span
+                  >
+                </span>
+              </p>
+              <p class="mkt-analysis-body" id="mkt-analysis-body"></p>
+              <p class="mkt-analysis-disclaimer" id="mkt-analysis-disclaimer"></p>
+            </div>
+
             <ol class="mkt-worked-flow">
               <li class="mkt-worked-node">
                 <span class="mkt-worked-step">
