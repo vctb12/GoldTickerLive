@@ -14,6 +14,7 @@
  */
 
 import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical-data.js';
+import { updateChartSummary } from './chart-summary.js';
 
 const CHART_CACHE_KEY = 'gold_chart_snapshots';
 const MAX_SNAPSHOTS = 5000; // ~5 days at 90s intervals
@@ -161,6 +162,10 @@ export class GoldChart {
     this._chart = this._LW.createChart(container, {
       width: container.clientWidth,
       height: chartHeight,
+      // Localize time-axis / crosshair dates to the page language, mirroring
+      // the formatter.js ar-AE / en-AE date convention. Price digits keep the
+      // library default (Latin), matching formatPrice() sitewide.
+      localization: { locale: this.lang === 'ar' ? 'ar-AE' : 'en-AE' },
       layout: {
         background: { color: 'transparent' },
         textColor: theme.text,
@@ -202,14 +207,14 @@ export class GoldChart {
       attributeFilter: ['data-theme'],
     });
 
-    const ro = new ResizeObserver(() => {
+    this._resizeObserver = new ResizeObserver(() => {
       if (this._chart) {
         const w = container.clientWidth;
         const h = wrap ? Math.max(240, wrap.clientHeight - 4) : chartHeight;
         if (w > 0) this._chart.resize(w, h);
       }
     });
-    ro.observe(container);
+    this._resizeObserver.observe(container);
 
     this._injectTradingViewAttribution(container);
 
@@ -328,6 +333,8 @@ export class GoldChart {
     const data = this._getChartData();
     if (!data || data.length < 2) {
       this._showFallback('no-data');
+      // Keep the SR summary truthful when a range switch empties the series.
+      updateChartSummary(document.getElementById(this.containerId), null, this.lang);
       return;
     }
     this._clearFallback();
@@ -350,6 +357,13 @@ export class GoldChart {
 
     this._series.setData(deduped);
     this._chart.timeScale().fitContent();
+    // Accessible text equivalent of the exact series just rendered. The
+    // USD/troy-oz unit sentence applies only to this component's own data
+    // paths (spot snapshots + unified history); custom-injected series may
+    // use other units/currencies, so their summary makes no unit claim.
+    updateChartSummary(document.getElementById(this.containerId), deduped, this.lang, {
+      unitKey: this._customData === null ? 'chart.summary.unitUsdOz' : null,
+    });
   }
 
   addPoint(price, timestamp) {
@@ -366,6 +380,11 @@ export class GoldChart {
       if (data && data.length >= 2) {
         this._clearFallback();
         this._series.update({ time, value: price });
+        // Keep the SR summary in step with the incrementally-updated canvas
+        // (data from _getChartData already includes the point just pushed).
+        updateChartSummary(document.getElementById(this.containerId), data, this.lang, {
+          unitKey: this._customData === null ? 'chart.summary.unitUsdOz' : null,
+        });
       }
     }
   }
@@ -376,6 +395,34 @@ export class GoldChart {
   }
 
   setLang(lang) {
+    if (this.lang === lang) return;
     this.lang = lang;
+    // Re-localize the time axis and refresh the SR summary in the new language.
+    if (this._chart) {
+      this._chart.applyOptions({
+        localization: { locale: lang === 'ar' ? 'ar-AE' : 'en-AE' },
+      });
+    }
+    if (this._ready) this._render();
+  }
+
+  /**
+   * Tear down the chart and its observers. Safe to call twice. Pages that
+   * re-mount charts (language/theme rebuilds) should call this to avoid
+   * leaking MutationObserver/ResizeObserver instances.
+   */
+  destroy() {
+    this._themeObserver?.disconnect();
+    this._themeObserver = null;
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
+    if (this._chart) {
+      try {
+        this._chart.remove();
+      } catch {}
+      this._chart = null;
+    }
+    this._series = null;
+    this._ready = false;
   }
 }
