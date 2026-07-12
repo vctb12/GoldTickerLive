@@ -38,7 +38,7 @@ function renderPriceChangeStrip(spot, dayOpenSpot) {
   if (!strip) return;
   if (!spot || !dayOpenSpot || dayOpenSpot <= 0) {
     strip.hidden = true;
-    strip.textContent = '';
+    if (strip.textContent) strip.textContent = '';
     return;
   }
   const delta = spot - dayOpenSpot;
@@ -47,29 +47,31 @@ function renderPriceChangeStrip(spot, dayOpenSpot) {
   // change cells (all percent-based). Classifying the strip on the dollar amount
   // let a sub-0.01% move read as ▲ here but • flat next to it.
   const dir = classifyDelta(pct);
-  strip.hidden = false;
-  strip.classList.remove(
-    'tracker-price-change-strip--up',
-    'tracker-price-change-strip--down',
-    'tracker-price-change-strip--flat'
-  );
-  strip.classList.add(`tracker-price-change-strip--${dir}`);
-  strip.setAttribute('role', 'status');
-  strip.setAttribute('aria-live', 'polite');
-  if (dir === 'flat') {
-    setText(strip, tx('heroChangeStripFlat'));
-    return;
-  }
   const sign = dir === 'up' ? '+' : '−';
-  setText(
-    strip,
-    tx('heroChangeStrip', {
-      sign: DIRECTION_GLYPH[dir],
-      // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
-      amount: bidiIsolate(`${sign}$${Math.abs(delta).toFixed(2)}`),
-      pct: Math.abs(pct).toFixed(2),
-    })
-  );
+  const text =
+    dir === 'flat'
+      ? tx('heroChangeStripFlat')
+      : tx('heroChangeStrip', {
+          sign: DIRECTION_GLYPH[dir],
+          // bidiIsolate: keep the leading sign attached to the digits in RTL (audit E)
+          amount: bidiIsolate(`${sign}$${Math.abs(delta).toFixed(2)}`),
+          pct: Math.abs(pct).toFixed(2),
+        });
+  strip.hidden = false;
+  const dirClass = `tracker-price-change-strip--${dir}`;
+  if (!strip.classList.contains(dirClass)) {
+    strip.classList.remove(
+      'tracker-price-change-strip--up',
+      'tracker-price-change-strip--down',
+      'tracker-price-change-strip--flat'
+    );
+    strip.classList.add(dirClass);
+  }
+  // Live-region hygiene (audit E): the strip is role="status" aria-live="polite"
+  // in the markup. renderHero + patchHeroLiveTick both call this on every pass;
+  // rewriting identical text re-announces it to screen readers, so only write
+  // when the string actually changed.
+  if (strip.textContent !== text) setText(strip, text);
 }
 
 function buildStackItem(title, copy, badge = null) {

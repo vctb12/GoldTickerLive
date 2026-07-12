@@ -403,7 +403,10 @@
               <span class="tracker-hint-text tracker-hint-keyboard" id="tp-hero-hints" aria-hidden="true">
                 <kbd>R</kbd> refresh · <kbd>H</kbd> live · <kbd>C</kbd> compare · <kbd>?</kbd> help
               </span>
-              <span class="tracker-hint-text tracker-hint-countdown" id="tp-countdown" aria-live="polite" aria-atomic="true"></span>
+              <!-- Live-region hygiene (audit E): the countdown rewrites every second — a polite
+                   live region here would announce forever. Refresh completion is announced by
+                   #tp-refresh-badge (role="status"); the countdown stays readable on focus. -->
+              <span class="tracker-hint-text tracker-hint-countdown" id="tp-countdown"></span>
             </div>
           </div>
 
@@ -411,10 +414,13 @@
           <aside class="tracker-hero-aside" aria-label="Quick reference">
             <div class="tracker-side-card">
               <h2 class="tracker-side-heading" id="tp-live-summary-heading">Live desk</h2>
+              <!-- Live-region hygiene (audit E): renderHero rebuilds this list wholesale on
+                   every render pass, so aria-live re-announced the whole Live desk each refresh
+                   even when nothing changed. Freshness changes are announced by
+                   #tp-refresh-badge (role="status"); the list stays reachable by navigation. -->
               <div
                 class="tracker-side-list"
                 id="tp-summary-list"
-                aria-live="polite"
                 aria-labelledby="tp-live-summary-heading"
               ></div>
             </div>
@@ -765,7 +771,11 @@
                     <th scope="col" data-i18n="karat.colVs24k">vs 24K</th>
                   </tr>
                 </thead>
-                <tbody id="tp-karat-table" aria-live="polite" aria-atomic="false"></tbody>
+                <!-- Live-region hygiene (audit E): this is a data table whose price cells are
+                     animated per-frame by countUp — aria-live here made screen readers announce
+                     dozens of intermediate values per refresh. Rows stay reachable by normal
+                     table navigation; refresh completion is announced by #tp-refresh-badge. -->
+                <tbody id="tp-karat-table"></tbody>
               </table>
             </div>
           </aside>
