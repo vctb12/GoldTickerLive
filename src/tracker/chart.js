@@ -179,7 +179,8 @@ export function renderChart() {
     t.setAttribute('x', '50%');
     t.setAttribute('y', '50%');
     t.setAttribute('text-anchor', 'middle');
-    t.setAttribute('fill', '#9d8c72');
+    // SVG presentation attributes can't hold var(); the style attribute can.
+    t.setAttribute('style', 'fill: var(--chart-axis-text, #9d8c72)');
     t.setAttribute('font-size', '14');
     t.textContent = msg;
     _el.chart.replaceChildren(t);
@@ -224,10 +225,14 @@ export function renderChart() {
     // defs: gradient
     const defs = svgEl('defs', {});
     const grad = svgEl('linearGradient', { id: gradientId, x1: '0', y1: '0', x2: '0', y2: '1' });
-    const stop1 = svgEl('stop', { offset: '0%', 'stop-color': '#b08a3e', 'stop-opacity': '0.18' });
+    const stop1 = svgEl('stop', {
+      offset: '0%',
+      style: 'stop-color: var(--chart-line, #b08a3e)',
+      'stop-opacity': '0.18',
+    });
     const stop2 = svgEl('stop', {
       offset: '100%',
-      'stop-color': '#b08a3e',
+      style: 'stop-color: var(--chart-line, #b08a3e)',
       'stop-opacity': '0.01',
     });
     grad.append(stop1, stop2);
@@ -244,7 +249,7 @@ export function renderChart() {
           y1: yPos.toFixed(1),
           x2: String(W),
           y2: yPos.toFixed(1),
-          stroke: 'rgba(196,154,68,0.12)',
+          style: 'stroke: var(--chart-grid, rgba(196, 154, 68, 0.12))',
           'stroke-width': '1',
           'stroke-dasharray': '4 6',
         }),
@@ -253,7 +258,7 @@ export function renderChart() {
           {
             x: '6',
             y: (yPos - 4).toFixed(1),
-            fill: '#9d8c72',
+            style: 'fill: var(--chart-axis-text, #9d8c72)',
             'font-size': '10',
             'font-family': 'system-ui, sans-serif',
           },
@@ -277,7 +282,7 @@ export function renderChart() {
             x: x.toFixed(1),
             y: String(H - 4),
             'text-anchor': i === 0 ? 'start' : i === dateLabelCount - 1 ? 'end' : 'middle',
-            fill: '#9d8c72',
+            style: 'fill: var(--chart-axis-text, #9d8c72)',
             'font-size': '10',
             'font-family': 'system-ui, sans-serif',
           },
@@ -299,7 +304,7 @@ export function renderChart() {
       svgEl('polyline', {
         points: pts,
         fill: 'none',
-        stroke: '#b08a3e',
+        style: 'stroke: var(--chart-line, #b08a3e)',
         'stroke-width': '2.5',
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',
@@ -314,7 +319,7 @@ export function renderChart() {
           x: String(W - 6),
           y: String(H - 4),
           'text-anchor': 'end',
-          fill: '#9d8c72',
+          style: 'fill: var(--chart-axis-text, #9d8c72)',
           'font-size': '10',
           'font-family': 'system-ui, sans-serif',
           opacity: '0.7',
