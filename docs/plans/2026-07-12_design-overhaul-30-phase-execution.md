@@ -32,17 +32,17 @@ owner-gated decision.
 | P02 | Inline the 13 Class-1 colour aliases at all `var(--gtl-…)` call sites (paper/surface/ink/gold/line/up/down → canonical `--color-*`). Mechanical, zero-visual; grep-verified count in PR.                                                | 🟢   | P01     | NOT_STARTED                               |
 | P03 | DRY the `@media (prefers-color-scheme: dark)` first-paint fallback against `[data-theme='dark']` (tokens.css self-flags this). No value changes; verify no-JS dark first paint.                                                         | 🟢   | —       | NOT_STARTED                               |
 | P04 | 🔒 **Scale-convergence decision package**: side-by-side screenshots of redesign vs base values (`maxw` 1180/1280, radii 10-14-18/8-12-16, spacing 96/80, `--gtl-ease` vs `--ease-premium`) → owner picks per family → execute the pick. | 🟡🔒 | P01     | GATED_PENDING_OWNER                       |
-| P05 | Tokenize tracker SVG chart colours (`#b08a3e` line/gradient, `rgba(196,154,68,.12)` grid → `--chart-line/-grid/-fill` tokens), value-identical; unblocks theming.                                                                       | 🟢   | —       | NOT_STARTED                               |
+| P05 | Tokenize tracker SVG chart colours (`#b08a3e` line/gradient, `rgba(196,154,68,.12)` grid → `--chart-line/-grid/-axis-text` tokens), value-identical; unblocks theming.                                                                  | 🟢   | —       | **DONE** — PR #692 (VALUE-IDENTITY: PASS) |
 | P06 | Homepage dark-mode un-defer: audit the deferred dark states on `index.html`, fix, prove with 8 screenshots; a11y 100 gate.                                                                                                              | 🟡🔴 | P03     | NOT_STARTED                               |
 | P07 | Serif stack canonicalization: one `--font-serif-display` (keep `Cairo` fallback for RTL coherence; drop the `Iowan Old Style` variant in `--gtl-serif`). Screenshot EN headings before/after.                                           | 🟡   | P01     | NOT_STARTED                               |
 
 ## Motion — L3 (P08–P10)
 
-| #   | Phase                                                                                                                                                                 | Risk | Depends | Status      |
-| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------- | ----------- |
-| P08 | Delete the 4 dead keyframes (`gold-sweep`, `slide-in-start`, `fade-scale-in`, `heading-reveal`) after grep-proving zero consumers.                                    | 🟢   | —       | NOT_STARTED |
-| P09 | Motion inventory + consolidation: dedupe shimmer/hover rules; write `docs/design/MOTION.md` documenting every animation, its token, reduced-motion and RTL behaviour. | 🟢   | P08     | NOT_STARTED |
-| P10 | Reduced-motion kill-switch audit: prove CSS **and** JS honor RM on every animation (incl. `count-up.js` writing final value); add a regression test.                  | 🟢   | P09     | NOT_STARTED |
+| #   | Phase                                                                                                                                                                 | Risk | Depends | Status             |
+| --- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------- | ------------------ |
+| P08 | Delete the 4 dead keyframes (`gold-sweep`, `slide-in-start`, `fade-scale-in`, `heading-reveal`) after grep-proving zero consumers.                                    | 🟢   | —       | **DONE** — PR #690 |
+| P09 | Motion inventory + consolidation: dedupe shimmer/hover rules; write `docs/design/MOTION.md` documenting every animation, its token, reduced-motion and RTL behaviour. | 🟢   | P08     | NOT_STARTED        |
+| P10 | Reduced-motion kill-switch audit: prove CSS **and** JS honor RM on every animation (incl. `count-up.js` writing final value); add a regression test.                  | 🟢   | P09     | NOT_STARTED        |
 
 ## Trust surface — L5 (P11–P13)
 
@@ -54,11 +54,11 @@ owner-gated decision.
 
 ## Copy & styleguide — L10/L11 (P14–P16)
 
-| #   | Phase                                                                                                                                                                                                        | Risk | Depends | Status      |
-| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- | ------- | ----------- |
-| P14 | `docs/design/COPY.md`: the EN+AR copy deck for freshness/empty/error/stale/offline states, grounded in existing `translations.js` strings (deck only — no runtime edits).                                    | 🟢   | —       | NOT_STARTED |
-| P15 | Promote the review styleguide → shipped `/styleguide.html`: noindex, sitemap-excluded, covering light+dark × LTR+RTL × all 6 freshness states × motion states. Passes the full `npm run validate` SEO chain. | 🟢   | P02     | NOT_STARTED |
-| P16 | `docs/design/DESIGN_SYSTEM.md` living spec (tokens, roles, components, dos/don'ts) + link from styleguide.                                                                                                   | 🟢   | P15     | NOT_STARTED |
+| #   | Phase                                                                                                                                                                                                        | Risk | Depends | Status             |
+| --- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---- | ------- | ------------------ |
+| P14 | `docs/design/COPY.md`: the EN+AR copy deck for freshness/empty/error/stale/offline states, grounded in existing `translations.js` strings (deck only — no runtime edits).                                    | 🟢   | —       | **DONE** — PR #691 |
+| P15 | Promote the review styleguide → shipped `/styleguide.html`: noindex, sitemap-excluded, covering light+dark × LTR+RTL × all 6 freshness states × motion states. Passes the full `npm run validate` SEO chain. | 🟢   | P02     | NOT_STARTED        |
+| P16 | `docs/design/DESIGN_SYSTEM.md` living spec (tokens, roles, components, dos/don'ts) + link from styleguide.                                                                                                   | 🟢   | P15     | NOT_STARTED        |
 
 ## Signature — L4/L6 (P17–P19)
 
