@@ -12,14 +12,25 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* ── Type scale (fluid, editorial) ─────────────────────────────────────── */
-  --gtl-price-hero: clamp(3.25rem, 2.2rem + 4.6vw, 6.5rem); /* the protagonist numeral */
-  --gtl-display-1: clamp(2rem, 1.4rem + 2.6vw, 3rem); /* page H1 (serif) */
-  --gtl-display-2: clamp(1.5rem, 1.15rem + 1.5vw, 2rem); /* section heading (serif) */
-  --gtl-title: 1.25rem;
-  --gtl-body: 1rem;
-  --gtl-meta: 0.8125rem; /* freshness, kickers, labels */
-  --gtl-kicker: 0.72rem;
+  /* ═══ L1 CONSOLIDATION CONTRACT (2026-07-12) — the --gtl-* namespace is DEPRECATED ═══════════
+     styles/partials/tokens.css is the single source of truth. Migrate `var(--gtl-*)` call sites
+     onto the canonical token in L7, then delete this :root block. Classification from the L1
+     token-diff audit (docs/plans/2026-07-12_design-motion-overhaul-plan.md → Appendix):
+       • Colour aliases below already resolve to --color-*  → safe to inline verbatim in L7.
+       • Type scale + --measure now ALIAS canonical tokens.css values (zero visual change).
+       • Spacing (--gtl-9=96 vs --space-9=80), radii (10/14/18 vs --radius 8/12/16), motion
+         (--gtl-ease), layout (--gtl-maxw=1180 vs 1280) and --gtl-serif (Iowan vs Cairo fallback)
+         still hold values that DIFFER from tokens.css — converging them is a VALUE change reserved
+         for the visual-gated L1 decision. Do NOT blind-rename them. ═══════════════════════════ */
+
+  /* ── Type scale (fluid, editorial) → canonical in tokens.css ─────────────── */
+  --gtl-price-hero: var(--text-price-hero); /* was clamp(3.25rem, 2.2rem + 4.6vw, 6.5rem) */
+  --gtl-display-1: var(--text-display-1); /* was clamp(2rem, 1.4rem + 2.6vw, 3rem) */
+  --gtl-display-2: var(--text-display-2); /* was clamp(1.5rem, 1.15rem + 1.5vw, 2rem) */
+  --gtl-title: var(--text-title); /* was 1.25rem */
+  --gtl-body: var(--text-base); /* 1rem — unchanged */
+  --gtl-meta: 0.8125rem; /* freshness/kickers/labels — no exact canonical token; kept literal */
+  --gtl-kicker: var(--text-kicker); /* was 0.72rem */
 
   /* ── Spacing scale (4px base) ──────────────────────────────────────────── */
   --gtl-1: 4px;
@@ -48,8 +59,8 @@
   --gtl-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   /* ── Layout ────────────────────────────────────────────────────────────── */
-  --gtl-maxw: 1180px;
-  --gtl-measure: 66ch;
+  --gtl-maxw: 1180px; /* DIFFERS from --content-max-width 1280px — gated L1 decision */
+  --gtl-measure: var(--measure); /* was 66ch */
 
   /* ── Semantic aliases onto the existing token system (single accent) ───── */
   --gtl-paper: var(--color-bg);
