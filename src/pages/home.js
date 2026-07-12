@@ -44,6 +44,7 @@ import { animatePrice } from '../lib/price-motion.js';
 import { copyWithToast } from '../lib/copy-toast.js';
 import { mountQuickConvertWidget } from '../components/QuickConvertWidget.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
+import { startVisibilityAwareRefresh } from '../lib/visibility-refresh.js';
 import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
 import { mountSkeleton } from '../components/skeleton.js';
 import { clear, el, safeHref } from '../lib/safe-dom.js';
@@ -96,8 +97,8 @@ let goldIsFallback = null;
 let goldProviderId = 'primary-provider';
 let _realtimeSnapshot = null;
 let _realtimeEngine = null;
-let _refreshTimer = null;
-let _freshnessTimer = null;
+let _refreshController = null;
+let _freshnessController = null;
 let _quickConvert = null;
 const _sessionPriceHistory = []; // [{price, ts}] — rolling 120-point window for sparkline
 let _homeChart = null; // GoldChart instance for the home-chart section
@@ -344,13 +345,15 @@ function freshnessAgeClass(ageMs) {
 
 /** Tick the freshness timestamp display every second.
  * DOM is only mutated when the displayed text or color class would change,
- * keeping CPU/battery impact minimal on mobile devices.
+ * keeping CPU/battery impact minimal on mobile devices. Visibility-aware: the
+ * ticker pauses while the tab is hidden (nobody sees the label) and repaints
+ * immediately on return to visible via `startVisibilityAwareRefresh`.
  */
 function startFreshnessTimer() {
-  if (_freshnessTimer) clearInterval(_freshnessTimer);
+  _freshnessController?.stop();
   let prevHlcText = '';
   let prevKstripText = '';
-  _freshnessTimer = setInterval(() => {
+  const tick = () => {
     if (!goldPrice || !goldUpdatedAt) return;
     const { ageText, statusText, sourceText, key } = getFreshnessMeta();
     const ageClass = freshnessAgeClass(getLiveFreshness({ updatedAt: goldUpdatedAt, lang }).ageMs);
@@ -373,7 +376,8 @@ function startFreshnessTimer() {
     // Keep the nav pill dot honest as age crosses live→amber→stale thresholds.
     const pillEl = _navPill || document.getElementById('nav-price-pill');
     if (pillEl) updateNavPillDot(pillEl);
-  }, 1_000);
+  };
+  _freshnessController = startVisibilityAwareRefresh(tick, { intervalMs: 1_000 });
 }
 
 // ── Render hero live card ──────────────────────────────────────────────────
@@ -2045,12 +2049,18 @@ async function init() {
   initRealtimeEngine();
   fetchLiveData();
 
-  // FX auto-refresh + canonical re-read (gold liveness handled by realtime engine)
-  if (_refreshTimer) clearInterval(_refreshTimer);
-  _refreshTimer = setInterval(() => {
-    seedCanonicalPrice();
-    fetchLiveData();
-  }, CONSTANTS.GOLD_REFRESH_MS);
+  // FX auto-refresh + canonical re-read (gold liveness handled by realtime engine).
+  // Visibility-aware (same shared helper as market/dubai/shops/invest): the 90 s
+  // cadence pauses while the tab is hidden and runs one immediate catch-up
+  // refresh when the tab returns to visible, so hidden tabs never keep fetching.
+  _refreshController?.stop();
+  _refreshController = startVisibilityAwareRefresh(
+    () => {
+      seedCanonicalPrice();
+      fetchLiveData();
+    },
+    { intervalMs: CONSTANTS.GOLD_REFRESH_MS }
+  );
 
   // Tick the "Updated X sec/min ago" label every second without a full price re-fetch.
   startFreshnessTimer();
@@ -2062,14 +2072,10 @@ async function init() {
   window.addEventListener(
     'pagehide',
     () => {
-      if (_refreshTimer) {
-        clearInterval(_refreshTimer);
-        _refreshTimer = null;
-      }
-      if (_freshnessTimer) {
-        clearInterval(_freshnessTimer);
-        _freshnessTimer = null;
-      }
+      _refreshController?.stop();
+      _refreshController = null;
+      _freshnessController?.stop();
+      _freshnessController = null;
       if (_realtimeEngine) {
         _realtimeEngine.stop();
         _realtimeEngine = null;
