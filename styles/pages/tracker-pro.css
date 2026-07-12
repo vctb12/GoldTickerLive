@@ -3417,7 +3417,10 @@ td.tracker-chg-flat {
   .tracker-main-grid,
   .tracker-utility-grid,
   .tracker-two-up {
-    grid-template-columns: 1fr;
+    /* minmax(0, 1fr), not bare 1fr: a bare 1fr track is minmax(auto, 1fr),
+       so a wide child (the 480px-min karat table) blows the single column
+       out past the viewport and its content becomes unreachable. */
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tracker-watchlist-grid {
@@ -3504,7 +3507,7 @@ td.tracker-chg-flat {
   }
 
   .tracker-main-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .tracker-panel-side {
@@ -4504,7 +4507,13 @@ td.tracker-chg-flat {
 .tracker-ladder-table-wrap {
   border-radius: var(--radius-lg);
   border: 1.5px solid var(--border-subtle);
-  overflow: hidden;
+
+  /* overflow-x: auto (from the shared scroll rule above) must survive here:
+     `overflow: hidden` made the 480px-min-width karat table unreachable at
+     mobile widths — the vs-24K / day-change columns were clipped with no
+     scroll path. Corner rounding still clips: auto clips to the padding box
+     exactly like hidden. */
+  overflow-y: hidden;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 50%);
 }
 
