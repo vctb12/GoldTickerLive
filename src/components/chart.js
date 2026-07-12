@@ -17,6 +17,7 @@ import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical
 import { updateChartSummary } from './chart-summary.js';
 import { TRANSLATIONS } from '../config/translations.js';
 import { translate } from '../lib/i18n.js';
+import { readChartTheme } from '../lib/chart-theme.js';
 
 const CHART_CACHE_KEY = 'gold_chart_snapshots';
 const MAX_SNAPSHOTS = 5000; // ~5 days at 90s intervals
@@ -58,24 +59,12 @@ const CUSTOM_RANGE_MS = {
   '1Y': 365 * 86400000,
 };
 
-function readChartTheme() {
-  const root = document.documentElement;
-  const styles = window.getComputedStyle(root);
-  const pick = (token, fallback) => styles.getPropertyValue(token).trim() || fallback;
-  return {
-    text: pick('--text-secondary', '#6a6050'),
-    grid: pick('--border-subtle', 'rgba(230,224,208,0.5)'),
-    border: pick('--border-default', 'rgba(230,224,208,0.8)'),
-    line: pick('--color-gold', '#c4902e'),
-    areaTop: pick('--color-gold-glow', 'rgba(196,144,46,0.22)'),
-    areaBottom: 'rgba(196,144,46,0.02)',
-    fontFamily: pick('--font-main', "'Source Sans 3', system-ui, sans-serif"),
-  };
-}
-
-function applyChartTheme(chart, series) {
+// Theme colors resolve from the chart's own container (container-scoped, see
+// src/lib/chart-theme.js) — NOT the document root — so a chart on the tracker's
+// always-dark terminal panel gets dark-legible colors in both site themes.
+function applyChartTheme(chart, series, containerEl) {
   if (!chart || !series) return;
-  const theme = readChartTheme();
+  const theme = readChartTheme(containerEl);
   chart.applyOptions({
     layout: {
       background: { color: 'transparent' },
@@ -114,6 +103,7 @@ export class GoldChart {
     this._ready = false;
     this._LW = null;
     this._fallbackReason = null;
+    this._themeContainer = null;
     this._loadLibrary();
   }
 
@@ -161,7 +151,10 @@ export class GoldChart {
     const wrap = container.closest('.tracker-chart-wrap');
     const chartHeight = wrap ? Math.max(240, wrap.clientHeight - 4) : 380;
 
-    const theme = readChartTheme();
+    // Container-scoped theme: the wrap (when present) is the CSS context that
+    // declares the chart tokens — e.g. the tracker's always-dark terminal.
+    this._themeContainer = wrap || container;
+    const theme = readChartTheme(this._themeContainer);
     this._chart = this._LW.createChart(container, {
       width: container.clientWidth,
       height: chartHeight,
@@ -175,17 +168,17 @@ export class GoldChart {
         fontFamily: theme.fontFamily,
       },
       grid: {
-        vertLines: { color: readChartTheme().grid },
-        horzLines: { color: readChartTheme().grid },
+        vertLines: { color: theme.grid },
+        horzLines: { color: theme.grid },
       },
       crosshair: { mode: 1 },
       rightPriceScale: {
-        borderColor: readChartTheme().border,
-        textColor: readChartTheme().text,
+        borderColor: theme.border,
+        textColor: theme.text,
         minimumWidth: 65,
       },
       timeScale: {
-        borderColor: readChartTheme().border,
+        borderColor: theme.border,
         timeVisible: true,
         secondsVisible: false,
         rightOffset: 5,
@@ -203,7 +196,7 @@ export class GoldChart {
     });
 
     this._themeObserver = new MutationObserver(() => {
-      applyChartTheme(this._chart, this._series);
+      applyChartTheme(this._chart, this._series, this._themeContainer);
     });
     this._themeObserver.observe(document.documentElement, {
       attributes: true,
@@ -239,7 +232,7 @@ export class GoldChart {
     link.rel = 'noopener noreferrer';
     link.textContent = label;
     container.appendChild(link);
-    applyChartTheme(this._chart, this._series);
+    applyChartTheme(this._chart, this._series, this._themeContainer);
   }
 
   _showFallback(reason) {
@@ -441,6 +434,7 @@ export class GoldChart {
       this._chart = null;
     }
     this._series = null;
+    this._themeContainer = null;
     this._ready = false;
   }
 }

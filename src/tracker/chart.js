@@ -11,6 +11,7 @@ import {
 import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { getFreshnessModel } from './freshness.js';
 import { bidiIsolate } from '../lib/formatter.js';
+import { readChartTheme } from '../lib/chart-theme.js';
 
 /**
  * Derive the provenance + freshness label for the synthetic "current price" row
@@ -124,8 +125,30 @@ function buildStatCard(label, value, sub) {
   ]);
 }
 
+/**
+ * Re-paint the color attributes of the already-rendered SVG from the
+ * container-scoped theme — same contract as GoldChart's `_themeObserver`
+ * (src/components/chart.js) — so the first-paint chart never shows stale
+ * colors after a site-theme toggle. The chart SVG's only color carriers are
+ * <text>/<line>/<polyline>/<stop> nodes.
+ */
+function applySvgChartTheme(theme) {
+  if (!_el.chart) return;
+  for (const node of _el.chart.querySelectorAll('text')) node.setAttribute('fill', theme.text);
+  for (const node of _el.chart.querySelectorAll('line')) node.setAttribute('stroke', theme.grid);
+  for (const node of _el.chart.querySelectorAll('polyline'))
+    node.setAttribute('stroke', theme.line);
+  for (const node of _el.chart.querySelectorAll('stop'))
+    node.setAttribute('stop-color', theme.line);
+}
+
 export function renderChart() {
   if (!_el.chart) return;
+  // Colors come from the chart wrap's CSS context (container-scoped), not the
+  // document root: the tracker terminal is always-dark in both site themes
+  // and pins dark-legible chart tokens on `.tracker-chart-wrap`
+  // (styles/pages/tracker-pro.css). See src/lib/chart-theme.js.
+  const chartTheme = readChartTheme(_el.chartWrap || _el.chart);
   if (_el.chartWrap) {
     _el.chartWrap.classList.add('is-loading');
     window.setTimeout(() => _el.chartWrap?.classList.remove('is-loading'), 250);
@@ -180,7 +203,7 @@ export function renderChart() {
     t.setAttribute('x', '50%');
     t.setAttribute('y', '50%');
     t.setAttribute('text-anchor', 'middle');
-    t.setAttribute('fill', '#9d8c72');
+    t.setAttribute('fill', chartTheme.text);
     t.setAttribute('font-size', '14');
     t.textContent = msg;
     _el.chart.replaceChildren(t);
@@ -225,10 +248,14 @@ export function renderChart() {
     // defs: gradient
     const defs = svgEl('defs', {});
     const grad = svgEl('linearGradient', { id: gradientId, x1: '0', y1: '0', x2: '0', y2: '1' });
-    const stop1 = svgEl('stop', { offset: '0%', 'stop-color': '#b08a3e', 'stop-opacity': '0.18' });
+    const stop1 = svgEl('stop', {
+      offset: '0%',
+      'stop-color': chartTheme.line,
+      'stop-opacity': '0.18',
+    });
     const stop2 = svgEl('stop', {
       offset: '100%',
-      'stop-color': '#b08a3e',
+      'stop-color': chartTheme.line,
       'stop-opacity': '0.01',
     });
     grad.append(stop1, stop2);
@@ -245,7 +272,7 @@ export function renderChart() {
           y1: yPos.toFixed(1),
           x2: String(W),
           y2: yPos.toFixed(1),
-          stroke: 'rgba(196,154,68,0.12)',
+          stroke: chartTheme.grid,
           'stroke-width': '1',
           'stroke-dasharray': '4 6',
         }),
@@ -254,7 +281,7 @@ export function renderChart() {
           {
             x: '6',
             y: (yPos - 4).toFixed(1),
-            fill: '#9d8c72',
+            fill: chartTheme.text,
             'font-size': '10',
             'font-family': 'system-ui, sans-serif',
           },
@@ -278,7 +305,7 @@ export function renderChart() {
             x: x.toFixed(1),
             y: String(H - 4),
             'text-anchor': i === 0 ? 'start' : i === dateLabelCount - 1 ? 'end' : 'middle',
-            fill: '#9d8c72',
+            fill: chartTheme.text,
             'font-size': '10',
             'font-family': 'system-ui, sans-serif',
           },
@@ -300,7 +327,7 @@ export function renderChart() {
       svgEl('polyline', {
         points: pts,
         fill: 'none',
-        stroke: '#b08a3e',
+        stroke: chartTheme.line,
         'stroke-width': '2.5',
         'stroke-linejoin': 'round',
         'stroke-linecap': 'round',
@@ -315,7 +342,7 @@ export function renderChart() {
           x: String(W - 6),
           y: String(H - 4),
           'text-anchor': 'end',
-          fill: '#9d8c72',
+          fill: chartTheme.text,
           'font-size': '10',
           'font-family': 'system-ui, sans-serif',
           opacity: '0.7',
@@ -333,6 +360,17 @@ export function renderChart() {
 
   if (_el.chartWrap && !_chartListenersAttached) {
     _chartListenersAttached = true;
+    // Mirror GoldChart's `_themeObserver` for the SVG path: when [data-theme]
+    // flips, re-resolve the container-scoped theme and re-paint in place so
+    // the fallback chart follows whatever its CSS context declares. (The
+    // tracker terminal pins theme-invariant dark tokens, so this is a no-op
+    // there by design — but the contract stays correct for any container.)
+    new MutationObserver(() => {
+      applySvgChartTheme(readChartTheme(_el.chartWrap || _el.chart));
+    }).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
     // pointermove (not mousemove) so touch users can inspect points on the
     // SVG first-paint chart before GoldChart lazy-loads — same listener
     // pattern as the heatmap (src/pages/heatmap.js).

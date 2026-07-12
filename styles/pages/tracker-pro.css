@@ -83,6 +83,18 @@
   --tp-snapshot-strong: #40bfc8;
   --tp-chart-border: color-mix(in srgb, var(--color-gold) 18%, var(--border-subtle));
   --tp-chart-grid: rgb(255 255 255 / 4%);
+
+  /* Chart terminal ink — theme-INVARIANT dark-legible values for the charts
+     rendered inside the always-dark terminal (.tracker-chart-wrap). The shared
+     reader (src/lib/chart-theme.js) resolves chart tokens from the container,
+     and the terminal stays near-black in both site themes, so these mirror the
+     tokens.css [data-theme='dark'] values (local hex by necessity: the panel
+     must NOT follow the light theme). */
+  --tp-chart-ink: #a09890; /* dark --text-secondary */
+  --tp-chart-gridline: #211f1b; /* dark --border-subtle */
+  --tp-chart-axis: #2e2b24; /* dark --border-default */
+  --tp-chart-series: #ddb040; /* dark --color-gold */
+  --tp-chart-series-glow: rgb(221 176 64 / 18%); /* dark --color-gold-glow */
 }
 
 /* ── Page base ────────────────────────────────────────────────────────────── */
@@ -1842,6 +1854,19 @@ body.tracker-workspace-basic .tracker-advanced-only {
 }
 
 .tracker-chart-wrap {
+  /* Container-scoped chart theme: this terminal is always dark (--tp-chart-bg)
+     in BOTH site themes, so it pins dark-legible values onto the token aliases
+     the shared chart-theme reader consumes (src/lib/chart-theme.js — used by
+     the GoldChart canvas AND the SVG first-paint fallback). Without this, the
+     light site theme hands parchment-tuned ink to a near-black panel. These
+     custom properties only affect var() lookups scoped inside this subtree —
+     tokens composed at :root (e.g. --tp-text-muted) are unaffected. */
+  --text-secondary: var(--tp-chart-ink);
+  --border-subtle: var(--tp-chart-gridline);
+  --border-default: var(--tp-chart-axis);
+  --color-gold: var(--tp-chart-series);
+  --color-gold-glow: var(--tp-chart-series-glow);
+
   position: relative;
   min-height: 480px;
   border-radius: var(--radius-xl);
