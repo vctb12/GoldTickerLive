@@ -190,6 +190,9 @@ export const TRANSLATIONS = {
     'chart.summary.noData': 'No chart data is available for this range yet.',
     'chart.summary.up': 'up',
     'chart.summary.down': 'down',
+    'chart.fallback.loadError': 'Chart unavailable. Check your connection.',
+    'chart.fallback.noData': 'No data for this range yet — data populates as updates arrive',
+    'chart.attribution.tradingView': 'Charts by TradingView',
     'tracker.chart.emptyTitle':
       'Waiting for price data — select a time range above or refresh to load history.',
     'tracker.chart.emptyNote':
@@ -1666,6 +1669,9 @@ export const TRANSLATIONS = {
     'chart.summary.noData': 'لا تتوفر بيانات للرسم البياني في هذا النطاق بعد.',
     'chart.summary.up': 'صعوداً',
     'chart.summary.down': 'هبوطاً',
+    'chart.fallback.loadError': 'تعذّر تحميل المخطط. تحقق من الاتصال.',
+    'chart.fallback.noData': 'لا تتوفر بيانات بعد — ستظهر البيانات عند وصول التحديثات',
+    'chart.attribution.tradingView': 'مخططات من TradingView',
     'tracker.chart.emptyTitle':
       'في انتظار بيانات السعر — اختر نطاقاً زمنياً أعلاه أو حدّث الصفحة لتحميل السجل.',
     'tracker.chart.emptyNote':

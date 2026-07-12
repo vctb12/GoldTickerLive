@@ -15,6 +15,8 @@
 
 import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical-data.js';
 import { updateChartSummary } from './chart-summary.js';
+import { TRANSLATIONS } from '../config/translations.js';
+import { translate } from '../lib/i18n.js';
 
 const CHART_CACHE_KEY = 'gold_chart_snapshots';
 const MAX_SNAPSHOTS = 5000; // ~5 days at 90s intervals
@@ -111,6 +113,7 @@ export class GoldChart {
     this._series = null;
     this._ready = false;
     this._LW = null;
+    this._fallbackReason = null;
     this._loadLibrary();
   }
 
@@ -223,14 +226,18 @@ export class GoldChart {
   }
 
   _injectTradingViewAttribution(container) {
-    if (container.querySelector('.chart-tv-attribution')) return;
-    const isAr = this.lang === 'ar';
+    const label = translate(TRANSLATIONS, this.lang, 'chart.attribution.tradingView');
+    const existing = container.querySelector('.chart-tv-attribution');
+    if (existing) {
+      existing.textContent = label;
+      return;
+    }
     const link = document.createElement('a');
     link.className = 'chart-tv-attribution';
     link.href = 'https://www.tradingview.com/';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
-    link.textContent = isAr ? 'مخططات من TradingView' : 'Charts by TradingView';
+    link.textContent = label;
     container.appendChild(link);
     applyChartTheme(this._chart, this._series);
   }
@@ -238,28 +245,25 @@ export class GoldChart {
   _showFallback(reason) {
     const container = document.getElementById(this.containerId);
     if (!container) return;
-    const msgs = {
-      'load-error':
-        this.lang === 'ar'
-          ? 'تعذّر تحميل المخطط. تحقق من الاتصال.'
-          : 'Chart unavailable. Check your connection.',
-      'no-data':
-        this.lang === 'ar'
-          ? 'لا تتوفر بيانات بعد — ستظهر البيانات عند وصول التحديثات'
-          : 'No data for this range yet — data populates as updates arrive',
-    };
+    // All user-facing strings live in translations.js (chart.fallback.*);
+    // unknown reasons fall back to the honest no-data sentence.
+    this._fallbackReason = reason === 'load-error' ? 'load-error' : 'no-data';
+    const key =
+      this._fallbackReason === 'load-error' ? 'chart.fallback.loadError' : 'chart.fallback.noData';
+    const text = translate(TRANSLATIONS, this.lang, key);
     const existing = container.querySelector('.chart-no-data');
     if (existing) {
-      existing.textContent = msgs[reason] || msgs['no-data'];
+      existing.textContent = text;
       return;
     }
     const msg = document.createElement('div');
     msg.className = 'chart-no-data';
-    msg.textContent = msgs[reason] || msgs['no-data'];
+    msg.textContent = text;
     container.appendChild(msg);
   }
 
   _clearFallback() {
+    this._fallbackReason = null;
     document.getElementById(this.containerId)?.querySelector('.chart-no-data')?.remove();
   }
 
@@ -403,7 +407,21 @@ export class GoldChart {
         localization: { locale: lang === 'ar' ? 'ar-AE' : 'en-AE' },
       });
     }
-    if (this._ready) this._render();
+    // Re-resolve translated DOM strings this component owns: the attribution
+    // link is created once in _init (never rebuilt by _render), and the
+    // load-error fallback lives outside the _render path entirely because the
+    // library never initialized. The no-data fallback re-resolves via
+    // _render() → _showFallback('no-data') updating the existing node.
+    const container = document.getElementById(this.containerId);
+    const attribution = container?.querySelector('.chart-tv-attribution');
+    if (attribution) {
+      attribution.textContent = translate(TRANSLATIONS, lang, 'chart.attribution.tradingView');
+    }
+    if (this._ready) {
+      this._render();
+    } else if (this._fallbackReason) {
+      this._showFallback(this._fallbackReason);
+    }
   }
 
   /**
