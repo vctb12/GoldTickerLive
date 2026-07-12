@@ -249,6 +249,39 @@ export function summarizePortfolio(holdings, spotUsdPerOz, rates, displayCurrenc
 }
 
 /**
+ * Why is the portfolio-level "vs. cost" figure unavailable? Distinguishes the
+ * unrelated causes that {@link summarizePortfolio} collapses into `gain: null`
+ * so the UI can explain honestly instead of always saying "add costs":
+ *
+ *   'mixed-cost-currencies' — costs span several currencies; never totalled.
+ *   'no-cost'               — at least one holding has no purchase cost.
+ *   'cost-currency-differs' — costs are in one currency, but not the display
+ *                             currency; historic costs are never FX-converted.
+ *   'price-pending'         — the live reference price / FX rate has not
+ *                             loaded yet, so there is no current value.
+ *
+ * Pure classification only — no valuation logic is repeated or changed.
+ *
+ * @param {object} summary  Result of {@link summarizePortfolio}.
+ * @param {string} displayCurrency
+ * @returns {string|null}  A cause code, or `null` when a gain figure exists
+ *   (or there is nothing to explain).
+ */
+export function gainUnavailableReason(summary, displayCurrency) {
+  if (!summary || summary.gain || !summary.count) return null;
+  if (summary.mixedCostCurrencies) return 'mixed-cost-currencies';
+  if (summary.hasMissingCost) return 'no-cost';
+  const costCurrencies = Object.keys(summary.costByCurrency || {});
+  if (costCurrencies.length === 1 && costCurrencies[0] !== displayCurrency) {
+    return 'cost-currency-differs';
+  }
+  // Costs are complete and in the display currency — the only remaining
+  // blocker in summarizePortfolio() is `currentDisplay == null` (price/FX
+  // still pending).
+  return 'price-pending';
+}
+
+/**
  * Portfolio reference value over time, replayed against the daily snapshots
  * this browser has saved (`cache.saveHistorySnapshot` — date, XAU/USD price,
  * FX rates). Only holdings already purchased on a snapshot's date count, so

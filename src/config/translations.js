@@ -130,6 +130,12 @@ export const TRANSLATIONS = {
     'nav.glossary': 'Glossary',
     'nav.market': 'How Gold Is Priced',
     'nav.portfolio': 'Portfolio',
+    /* ── Portfolio · "Vs. cost" card null-gain causes ── */
+    'portfolio.gainAwaitingPrice':
+      'Waiting for live prices — this appears once today’s reference price loads.',
+    'portfolio.gainCostCurrencyDiffers':
+      'Costs were entered in a different currency — switch the display currency to match them to compare.',
+    'portfolio.gainAddCosts': 'Add purchase costs to see this',
     'nav.dubai': 'Dubai & UAE Gold Price',
     'nav.country': 'Country',
     'breadcrumbs.ariaLabel': 'Breadcrumb',
@@ -1599,6 +1605,12 @@ export const TRANSLATIONS = {
     'nav.glossary': 'مسرد المصطلحات',
     'nav.market': 'كيف يُسعَّر الذهب',
     'nav.portfolio': 'المحفظة',
+    /* ── Portfolio · "Vs. cost" card null-gain causes ── */
+    'portfolio.gainAwaitingPrice':
+      'بانتظار الأسعار الحية — تظهر المقارنة فور تحميل السعر المرجعي لليوم.',
+    'portfolio.gainCostCurrencyDiffers':
+      'أُدخلت التكاليف بعملة مختلفة — بدّل عملة العرض لتطابقها حتى تظهر المقارنة.',
+    'portfolio.gainAddCosts': 'أضف تكاليف الشراء لعرض هذه المقارنة',
     'nav.dubai': 'سعر الذهب في دبي والإمارات',
     'nav.country': 'الدولة',
     'breadcrumbs.ariaLabel': 'مسار التنقل',
