@@ -315,6 +315,57 @@ function savePortfolio() {
 }
 
 // ── Live data ─────────────────────────────────────────────────────────────────
+// Set once the forced canonical refresh has delivered a snapshot; from then on
+// the boot seed below must never overwrite the (possibly Live) refreshed state.
+let liveRefreshLanded = false;
+
+/**
+ * Boot seed, synchronous half (audit D): value holdings immediately from the
+ * last persisted gold price — the same localStorage slots the refresh path
+ * writes via `cache.saveGoldPrice()` — instead of blocking first paint on the
+ * forced round-trip (which also waits on the external FX API). Age-gated by
+ * `getFreshBootGoldPrice` (home / tracker boot pattern) so a multi-day-old
+ * price never occupies the valuations. Always labelled 'cached/fallback' with
+ * the payload's REAL timestamp — the badge renders Cached/Stale, never Live.
+ */
+function seedSpotFromBootCache() {
+  if (STATE.spotUsdPerOz) return;
+  const cached = cache.getFreshBootGoldPrice();
+  if (!cached?.price) return;
+  STATE.spotUsdPerOz = cached.price;
+  STATE.goldPriceUsdPerOz = cached.price;
+  STATE.freshness.goldUpdatedAt = cached.updatedAt || null;
+  STATE.spotSource = 'cached/fallback';
+}
+
+/**
+ * Boot seed, async half (audit D): read the canonical resolver WITHOUT force —
+ * the SAME memoized `/data/gold_price.json` snapshot the site shell's ticker
+ * baseline resolves at mount (F-1: one snapshot for every surface, never a
+ * parallel fetch). It typically lands in milliseconds, so holdings get an
+ * honest cached valuation while the forced refresh (gold + external FX) is
+ * still in flight. The seed never claims Live: `spotSource` stays
+ * 'cached/fallback' and the freshness badge shows the snapshot's real
+ * timestamp/state; `fetchLiveData()` upgrades values + freshness in place when
+ * it lands. If the resolver fails and no cache exists, the honest
+ * "Waiting for live prices…" first paint is preserved untouched.
+ */
+async function seedSpotFromCanonicalSnapshot() {
+  try {
+    const snap = await getCanonicalSpot();
+    // A late seed must never overwrite the forced refresh's fresher result,
+    // and a failed snapshot must never fabricate a value.
+    if (liveRefreshLanded || !snap?.ok) return;
+    STATE.spotUsdPerOz = snap.spotUsdPerOz;
+    STATE.goldPriceUsdPerOz = snap.spotUsdPerOz;
+    STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || null;
+    STATE.spotSource = 'cached/fallback';
+    render();
+  } catch {
+    // Resolver unavailable — keep whatever honest state is already rendered.
+  }
+}
+
 async function fetchLiveData() {
   try {
     // F-1: read spot from the shared canonical resolver (same memoized snapshot as
@@ -326,6 +377,7 @@ async function fetchLiveData() {
     ]);
     if (snapRes.status === 'fulfilled' && snapRes.value?.ok) {
       const snap = snapRes.value;
+      liveRefreshLanded = true;
       STATE.spotUsdPerOz = snap.spotUsdPerOz;
       STATE.goldPriceUsdPerOz = snap.spotUsdPerOz;
       STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || new Date().toISOString();
@@ -1067,6 +1119,9 @@ function render() {
 async function init() {
   cache.loadState(STATE);
   loadPortfolio();
+  // Audit D: returning visitors get valuations on the very first render, from
+  // the honest age-gated localStorage price (labelled cached, never Live).
+  seedSpotFromBootCache();
 
   const urlLang = new URLSearchParams(location.search).get('lang');
   if (urlLang === 'ar' || urlLang === 'en') STATE.lang = urlLang;
@@ -1091,6 +1146,10 @@ async function init() {
 
   applyLang();
   render();
+  // Audit D: fire-and-forget boot seed from the shared canonical snapshot
+  // (already being resolved by the shell's ticker baseline) so holdings render
+  // an honest cached valuation while the forced refresh below is in flight.
+  seedSpotFromCanonicalSnapshot();
   await fetchLiveData();
 
   let refreshTimer = setInterval(fetchLiveData, CONSTANTS.GOLD_REFRESH_MS);

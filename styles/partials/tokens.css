@@ -365,6 +365,18 @@
     3.9rem
   ); /* Phase 1: hero spot price (caps the old 5.25rem/800 .hlc-price override) */
 
+  /* ── Editorial display scale — canonical (promoted from design-system.css --gtl-* in L1) ──
+     Single source of truth for the redesign's fluid editorial type. Values are IDENTICAL to the
+     former design-system.css literals, so this is zero visual change; the --gtl-* tokens now alias
+     these. NOTE: --text-price-hero (redesign hero) intentionally still DIFFERS from --text-data-xl
+     (base hero) — converging the two is a value change reserved for the visual-gated L1 decision. */
+  --text-price-hero: clamp(3.25rem, 2.2rem + 4.6vw, 6.5rem); /* redesign hero numeral */
+  --text-display-1: clamp(2rem, 1.4rem + 2.6vw, 3rem); /* redesign page H1 (serif) */
+  --text-display-2: clamp(1.5rem, 1.15rem + 1.5vw, 2rem); /* redesign section heading (serif) */
+  --text-title: 1.25rem; /* redesign card / sub headings */
+  --text-kicker: 0.72rem; /* redesign eyebrow / kicker caps */
+  --measure: 66ch; /* readable prose column width */
+
   /* Component primitive tokens */
   --control-height: 44px;
   --control-height-sm: 36px;
@@ -395,6 +407,16 @@
 
   --font-numeric-features:
     'tnum' 1, 'lnum' 1, 'zero' 1; /* tabular + lining + slashed-zero — the data voice, zero new font bytes */
+
+  /* ── Chart tokens (P05, design overhaul) — the tracker SVG fallback chart ──
+     Values are IDENTICAL to the literals previously hardcoded in
+     src/tracker/chart.js, so this is zero visual change. Defined once in :root
+     (not re-declared per theme) because the chart intentionally rendered the
+     same in both themes before; per-theme tuning is a later, visual-gated
+     decision — change these only with before/after screenshots. */
+  --chart-line: #b08a3e; /* price polyline + gradient stop colour */
+  --chart-grid: rgb(196 154 68 / 12%); /* horizontal gridlines */
+  --chart-axis-text: #9d8c72; /* axis/date/source labels + collecting-data note */
 }
 
 /* ═══════════════════════════════════════════════
