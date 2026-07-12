@@ -13,6 +13,10 @@ Statuses: `NOT_STARTED` · `IN_PROGRESS` · `BLOCKED` · `DONE` · `GATED_PENDIN
 [`docs/plans/2026-07-12_design-motion-overhaul-plan.md`](./docs/plans/2026-07-12_design-motion-overhaul-plan.md)
 **Audit:**
 [`docs/audits/2026-07-12_design-motion-overhaul-audit.md`](./docs/audits/2026-07-12_design-motion-overhaul-audit.md)
+**Execution queue (30 phases, one PR each):**
+[`docs/plans/2026-07-12_design-overhaul-30-phase-execution.md`](./docs/plans/2026-07-12_design-overhaul-30-phase-execution.md)
+**Standing operating prompt for sessions:**
+[`docs/agent/DESIGN_OVERHAUL_OPERATING_PROMPT.md`](./docs/agent/DESIGN_OVERHAUL_OPERATING_PROMPT.md)
 
 > **Reality note (§11):** this is a _consolidation + finishing_ overhaul of a mature "Editorial
 > Bullion Terminal" system, not a greenfield restyle. Scope is the 6 debts in the audit + 1 chosen
