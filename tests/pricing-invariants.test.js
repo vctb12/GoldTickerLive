@@ -19,7 +19,9 @@ const assert = require('node:assert/strict');
 
 const CONSTANTS_URL = new URL('../src/config/constants.js', `file://${__filename}`).href;
 const KARATS_URL = new URL('../src/config/karats.js', `file://${__filename}`).href;
-const CFG_URL = new URL('../src/config/index.js', `file://${__filename}`).href;
+// The combined (EN + AR) table — the runtime barrel is EN-only until
+// ensureLocale(); this trust guard must audit the full bilingual corpus.
+const CFG_URL = new URL('../src/config/translations.js', `file://${__filename}`).href;
 
 test('constants: AED/USD peg is exactly 3.6725 (fixed central-bank peg, not a live rate)', async () => {
   const { CONSTANTS } = await import(CONSTANTS_URL);

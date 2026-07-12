@@ -23,7 +23,7 @@
  * without a DOM.
  */
 
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS } from '../config/translations-runtime.js';
 import { translate } from '../lib/i18n.js';
 import { formatNumber } from '../lib/formatter.js';
 

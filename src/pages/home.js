@@ -9,6 +9,7 @@ import {
   KARATS,
   COUNTRIES,
   TRANSLATIONS,
+  ensureLocale,
   getKaratCount,
   getKaratCountLabel,
   getKaratRangeLabel,
@@ -1875,6 +1876,9 @@ async function init() {
   // Apply language direction immediately
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render. No-op (and no fetch) on the EN path.
+  await ensureLocale(lang);
   enforceCanonicalOnDocument(document, window.location.pathname);
   enforceHreflangAlternates(document, window.location.pathname);
   injectFaqSchema(document, buildMethodologyFaqSchema(lang));
@@ -1887,9 +1891,10 @@ async function init() {
   mountHomeNavPricePill();
   const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       lang = lang === 'en' ? 'ar' : 'en';
       saveLang(lang);
+      await ensureLocale(lang);
       shell.updateLang(lang);
       applyLangToPage();
       mountHomeQuickConvert();

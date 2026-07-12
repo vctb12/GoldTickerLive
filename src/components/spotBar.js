@@ -15,7 +15,7 @@
  */
 
 import { getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS, ensureLocale } from '../config/translations-runtime.js';
 import { translate } from '../lib/i18n.js';
 import {
   downgradeFreshnessForDivergence,
@@ -52,6 +52,11 @@ export function injectSpotBar(lang = 'en', depth = 0) {
   if (document.getElementById('spot-price-bar')) return;
 
   _currentLang = lang;
+  // Per-locale dictionary split: the bar's own labels are inline bilingual,
+  // but the cross-validation divergence tooltip reads the global dictionary.
+  // Kick the on-demand locale load now (no-op for EN) so it is grafted long
+  // before the first fetch-driven update can need it.
+  void ensureLocale(lang);
   const isAr = lang === 'ar';
   const trackerHref = depth === 0 ? 'tracker.html' : '../'.repeat(depth) + 'tracker.html';
 

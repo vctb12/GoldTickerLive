@@ -15,7 +15,7 @@
  * this file wires it to storage, live data and the shared shell.
  */
 
-import { CONSTANTS, COUNTRIES, KARATS, TRANSLATIONS } from '../config/index.js';
+import { CONSTANTS, COUNTRIES, KARATS, TRANSLATIONS, ensureLocale } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
@@ -1129,15 +1129,19 @@ async function init() {
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render (breadcrumbs, spot bar). No fetch on EN.
+  await ensureLocale(STATE.lang);
 
   const shell = mountSharedShell({ lang: STATE.lang, depth: 0, withSpotBar: true });
   initPageEnter('#main-content');
   injectBreadcrumbs('portfolio');
 
   shell.navCtrl.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
+      await ensureLocale(STATE.lang);
       shell.updateLang(STATE.lang);
       applyLang();
       render();

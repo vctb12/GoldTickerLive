@@ -3,7 +3,13 @@
  * - Country gold-price pages get the Phase 6 production-grade country experience.
  * - Other legacy generated pages keep the lightweight existing hydration flow.
  */
-import { BASE_PATH, CONSTANTS, DATA_ATTRIBUTION, TRANSLATIONS } from '../config/index.js';
+import {
+  BASE_PATH,
+  CONSTANTS,
+  DATA_ATTRIBUTION,
+  TRANSLATIONS,
+  ensureLocale,
+} from '../config/index.js';
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 import * as api from './api.js';
@@ -985,6 +991,10 @@ async function hydrateLegacyPage({ country, karatSlug, lang = 'en' }) {
 
 async function hydrate() {
   const lang = getLang();
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render. Leaf pages load this module as raw ESM, where
+  // the same dynamic import resolves natively against src/config/. No fetch on EN.
+  await ensureLocale(lang);
   initPageEnter('main');
   injectSpotBar(lang, depth);
   updateSpotBarLang(lang);

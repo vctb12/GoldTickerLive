@@ -1,4 +1,4 @@
-import { CONSTANTS, KARATS, TRANSLATIONS } from '../config/index.js';
+import { CONSTANTS, KARATS, TRANSLATIONS, ensureLocale } from '../config/index.js';
 import * as api from '../lib/api.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
 import { applyMarketClosedOverlay } from '../lib/live-status.js';
@@ -1250,14 +1250,18 @@ function bindBudgetInputs() {
 
 async function init() {
   state.lang = getLang();
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render. No fetch on EN.
+  await ensureLocale(state.lang);
 
   shellCtrl = mountSharedShell({ lang: state.lang, depth: 0 });
   const navCtrl = shellCtrl.navCtrl;
   // Breadcrumbs are injected by the host page (learn.js) since the knowledge-hub merge.
   navCtrl.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       state.lang = state.lang === 'en' ? 'ar' : 'en';
       saveLang(state.lang);
+      await ensureLocale(state.lang);
       applyLang();
     });
   });

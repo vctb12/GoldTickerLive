@@ -15,7 +15,7 @@
 
 import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical-data.js';
 import { updateChartSummary } from './chart-summary.js';
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS } from '../config/translations-runtime.js';
 import { translate } from '../lib/i18n.js';
 import { readChartTheme } from '../lib/chart-theme.js';
 

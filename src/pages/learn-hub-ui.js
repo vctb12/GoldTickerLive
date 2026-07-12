@@ -11,7 +11,7 @@
  * "Read 0 of N featured guides" empty state.
  */
 
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS } from '../config/translations-runtime.js';
 import {
   LEARN_GUIDE_CATEGORIES,
   countTotalGuides,
