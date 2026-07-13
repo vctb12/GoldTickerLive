@@ -146,11 +146,11 @@ via `global.css`). Line counts via `wc -l`.
 | `styles/components/edu.css`              |   383 | compare, heatmap, portfolio      |
 | `styles/components/price-provenance.css` |   166 | compare                          |
 
-### Dead / orphan
+### `-v4` import (NOT dead — corrected in Phase 2)
 
-| File                              | Lines | Status                                                                                                     |
-| --------------------------------- | ----: | ---------------------------------------------------------------------------------------------------------- |
-| `styles/pages/tracker-pro-v4.css` |   491 | **Unreferenced by any HTML page.** Delete in Phase 2. (Only mentioned in docs/prompts, never `<link>`-ed.) |
+| File                              | Lines | Status                                                                                                                                                                                                                                                                                                                     |
+| --------------------------------- | ----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `styles/pages/tracker-pro-v4.css` |   491 | **LIVE — do NOT delete.** No HTML `<link>`, but `@import`-ed at `tracker-pro.css:5`, so it ships on `tracker.html`. The plan's "dead / delete in Phase 2" premise is **false** (caught by the Phase 2 coverage pass). Consolidating this `-v4` split belongs to Phase 16 (tracker rebuild). Only 3 candidate-dead classes. |
 
 ---
 
@@ -286,7 +286,7 @@ like `styles/order.css` and is otherwise out of date — this scan supersedes it
 | design-system.css 45 `--gtl-*`                           | **45**                                           | ✅                  |
 | 11 of 12 pages double-layered                            | **11** (design-system.css on 11; redesign on 11) | ✅                  |
 | tracker.html excluded from both                          | confirmed                                        | ✅                  |
-| `tracker-pro-v4.css` dead (491)                          | **491, unreferenced by any page**                | ✅                  |
+| `tracker-pro-v4.css` dead (491)                          | **LIVE — `@import`-ed by tracker-pro.css:5**     | ❌ plan wrong       |
 | 7 `data-theme` in tokens.css; 1/12 redesign handles dark | **7; only compare-redesign (1/12)**              | ✅                  |
 | Test baseline 1282 (unconfirmed)                         | **stale — see §TL;DR for current**               | ❌ corrected        |
 | Emoji: 0 HTML, 5 in src JS                               | **0 / 0**                                        | ❌ drifted (now 0)  |
