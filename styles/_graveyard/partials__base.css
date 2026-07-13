@@ -1,0 +1,31 @@
+/* GRAVEYARD — dead rules quarantined from styles/partials/base.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+.display-1 {
+  font-family: var(--font-display);
+  font-size: var(--text-5xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+  margin: 0;
+}
+.display-2 {
+  font-family: var(--font-display);
+  font-size: var(--text-6xl);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.08;
+  letter-spacing: var(--tracking-tighter);
+  text-wrap: balance;
+  margin: 0;
+  font-optical-sizing: auto;
+}
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+.on-dark :focus-visible {
+  outline-color: var(--color-gold-bright);
+}

@@ -2408,11 +2408,6 @@
   margin-bottom: 0.75rem;
 }
 
-.ses-link {
-  color: var(--color-gold-dark);
-  text-decoration: underline;
-}
-
 /* ── Grid upgrade loading state ──────────────────────────────────────────── */
 
 /* Shown briefly while Supabase live data is being fetched to replace fallback */

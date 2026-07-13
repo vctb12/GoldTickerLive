@@ -75,11 +75,6 @@
 }
 
 /* ── Base primitives ─────────────────────────────────────────────────────── */
-.gtl-wrap {
-  max-width: var(--gtl-maxw);
-  margin-inline: auto;
-  padding-inline: var(--gtl-6);
-}
 
 @media (max-width: 760px) {
   .gtl-wrap {
@@ -313,13 +308,6 @@
 }
 
 /* Section rhythm. */
-.gtl-section {
-  padding-block: var(--gtl-8);
-  border-top: 1px solid var(--gtl-line);
-}
-.gtl-measure {
-  max-width: var(--gtl-measure);
-}
 
 /* Material moment — the soft radial gold field behind the live price (never a fill). */
 .gtl-market-field {

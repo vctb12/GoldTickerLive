@@ -625,26 +625,6 @@ h6 {
 }
 
 /* Display tier — opt-in for hero surfaces that need larger than .h1. */
-.display-1 {
-  font-family: var(--font-display);
-  font-size: var(--text-5xl);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
-  text-wrap: balance;
-  margin: 0;
-}
-
-.display-2 {
-  font-family: var(--font-display);
-  font-size: var(--text-6xl);
-  font-weight: var(--weight-extrabold);
-  line-height: 1.08;
-  letter-spacing: var(--tracking-tighter);
-  text-wrap: balance;
-  margin: 0;
-  font-optical-sizing: auto;
-}
 
 /* ── Eyebrow / kicker / label utilities ── */
 .eyebrow,
@@ -729,13 +709,6 @@ h6 {
 }
 
 /* ── Text balance utilities ── */
-.text-balance {
-  text-wrap: balance;
-}
-
-.text-pretty {
-  text-wrap: pretty;
-}
 
 /* ── Numeric rendering ── */
 .numeric {
@@ -839,9 +812,6 @@ svg {
 }
 
 /* High contrast focus ring for dark backgrounds */
-.on-dark :focus-visible {
-  outline-color: var(--color-gold-bright);
-}
 
 /* Indicate interactive elements clearly */
 [aria-expanded='true'] {

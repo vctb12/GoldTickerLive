@@ -1,0 +1,27 @@
+/* GRAVEYARD — dead rules quarantined from styles/pages/compare.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+.compare-card {
+  background: var(--gradient-card);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  transition:
+    border-color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal);
+}
+.compare-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
+  transform: translateY(-3px);
+}
+.compare-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+}
+.compare-card:hover {
+  transform: none;
+  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
+  box-shadow: var(--shadow-sm);
+}

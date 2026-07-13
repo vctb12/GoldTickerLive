@@ -1,0 +1,28 @@
+/* GRAVEYARD — dead rules quarantined from styles/partials/motion-advanced.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+
+.price-updated {
+  animation: price-flip 240ms var(--ease-bounce) both;
+}
+
+.live-pulse-ring {
+  position: relative;
+}
+
+.live-pulse-ring::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  border: 1.5px solid var(--color-live);
+  animation: pulse-ring 1.8s var(--ease-out) infinite;
+  pointer-events: none;
+}
+
+.karat-table-row,
+.tracker-row,
+.country-row,
+.shop-row {
+  contain: style;
+}

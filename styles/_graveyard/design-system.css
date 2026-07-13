@@ -1,0 +1,15 @@
+/* GRAVEYARD — dead rules quarantined from styles/design-system.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+.gtl-wrap {
+  max-width: var(--gtl-maxw);
+  margin-inline: auto;
+  padding-inline: var(--gtl-6);
+}
+.gtl-section {
+  padding-block: var(--gtl-8);
+  border-top: 1px solid var(--gtl-line);
+}
+.gtl-measure {
+  max-width: var(--gtl-measure);
+}

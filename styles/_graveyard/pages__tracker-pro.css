@@ -1,0 +1,155 @@
+/* GRAVEYARD — dead rules quarantined from styles/pages/tracker-pro.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+
+.tracker-utility-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.tracker-dense-note {
+  font-size: var(--text-xs);
+  color: var(--tp-text-faint);
+  line-height: 1.5;
+}
+
+.tracker-row-actions {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.tracker-hotkey-list {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.tracker-onboarding {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.onb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(8 6 3 / 75%);
+  backdrop-filter: blur(5px);
+}
+
+.onb-panel {
+  position: relative;
+  background: var(--surface-primary);
+  border: 1px solid var(--color-gold);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl), var(--shadow-gold-lg);
+  max-width: 440px;
+  width: 100%;
+  padding: 2rem;
+  z-index: 1;
+  animation: onb-appear 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.onb-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.onb-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.onb-title {
+  font-size: 1.15rem;
+  font-weight: var(--weight-extrabold);
+  color: var(--color-gold-dark);
+  line-height: 1.3;
+  flex: 1;
+}
+
+.onb-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: var(--tp-text-faint);
+  padding: 0 0.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.onb-close:hover {
+  color: var(--tp-text);
+}
+
+.onb-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.onb-step {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.onb-step-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  padding-top: 0.05rem;
+}
+
+.onb-footer {
+  margin-top: 1.75rem;
+}
+
+.onb-dismiss-btn {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: var(--gradient-gold);
+  color: var(--color-white);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-base);
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: var(--shadow-gold);
+  transition: var(--transition-md);
+  font-family: inherit;
+}
+
+.onb-dismiss-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.tp-control-select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  border-radius: var(--tp-radius-sm);
+  border: 1px solid var(--tp-border);
+  background: var(--tp-panel);
+  font-size: 0.88rem;
+  color: var(--tp-text);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 55%);
+  appearance: auto;
+  cursor: pointer;
+}
+
+.tp-control-select:focus {
+  outline: none;
+  border-color: var(--tp-gold);
+  box-shadow: 0 0 0 3px rgb(196 154 68 / 12%);
+}

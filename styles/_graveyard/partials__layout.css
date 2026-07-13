@@ -1,0 +1,25 @@
+/* GRAVEYARD — dead rules quarantined from styles/partials/layout.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+.surface-elevated {
+  background: var(--surface-primary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
+}
+.surface-subtle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+}
+.surface-accent {
+  background: var(--surface-accent);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-card);
+}
+.surface-glass {
+  background: var(--surface-glass);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+}

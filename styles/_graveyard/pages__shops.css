@@ -1,0 +1,8 @@
+/* GRAVEYARD — dead rules quarantined from styles/pages/shops.css (Phase 2, design revamp).
+   Reversible: paste a rule back into the source file if a regression surfaces.
+   Ships nothing: this file is imported/linked by nothing. Delete after one release cycle. */
+
+.ses-link {
+  color: var(--color-gold-dark);
+  text-decoration: underline;
+}

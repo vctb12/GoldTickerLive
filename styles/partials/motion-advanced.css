@@ -261,10 +261,6 @@
   }
 }
 
-.price-updated {
-  animation: price-flip 240ms var(--ease-bounce) both;
-}
-
 /* ── Pulse ring (for live indicators beyond hero) ── */
 @keyframes pulse-ring {
   0% {
@@ -281,20 +277,6 @@
     transform: scale(1.3);
     opacity: 0;
   }
-}
-
-.live-pulse-ring {
-  position: relative;
-}
-
-.live-pulse-ring::after {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  border: 1.5px solid var(--color-live);
-  animation: pulse-ring 1.8s var(--ease-out) infinite;
-  pointer-events: none;
 }
 
 /* prefers-reduced-motion override for all Phase 45 animations */
@@ -335,12 +317,6 @@
 }
 
 /* Table rows: paint containment for long tables */
-.karat-table-row,
-.tracker-row,
-.country-row,
-.shop-row {
-  contain: style;
-}
 
 /* Animated elements: promote to compositor layer only during hover/active */
 .gcc-card:hover,

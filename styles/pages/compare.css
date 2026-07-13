@@ -747,32 +747,11 @@
 }
 
 /* Comparison cards (result grid) */
-.compare-card {
-  background: var(--gradient-card);
-  border: 1.5px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-xs);
-  transition:
-    border-color var(--transition-normal),
-    box-shadow var(--transition-normal),
-    transform var(--transition-normal);
-}
-
-.compare-card:hover {
-  border-color: var(--color-gold);
-  box-shadow: var(--shadow-gold-lg), var(--shadow-sm);
-  transform: translateY(-3px);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .compare-card:hover {
     transform: none;
   }
-}
-
-.compare-card:focus-visible {
-  outline: 2px solid var(--color-gold);
-  outline-offset: 3px;
 }
 
 /* ── V1-VISUAL: sprite flags replacing flag emoji (src/components/icon-sprite.js) ── */
@@ -837,12 +816,6 @@
 .compare-karat-btn.is-active {
   background: var(--color-gold-dark);
   box-shadow: var(--shadow-xs);
-}
-
-.compare-card:hover {
-  transform: none;
-  border-color: color-mix(in srgb, var(--color-gold) 34%, var(--border-default));
-  box-shadow: var(--shadow-sm);
 }
 
 .compare-chip,
