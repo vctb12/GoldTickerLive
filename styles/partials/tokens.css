@@ -197,6 +197,9 @@
   --space-8: calc(var(--space-unit) * 16);
   --space-9: calc(var(--space-unit) * 20);
   --space-10: calc(var(--space-unit) * 24);
+  --space-11: calc(
+    var(--space-unit) * 32
+  ); /* 128px — Phase 4: canonical home for --gtl-10 (see docs/design/TOKENS.md) */
 
   /* ── Rhythm ── */
   --rhythm-section: var(--space-7);
@@ -235,6 +238,15 @@
   --text-5xl: 3.8125rem;
   --text-6xl: 4.75rem;
 
+  /* ── Fluid display + signature numeral — Phase 4: canonical homes for --gtl-*, see docs/design/TOKENS.md ── */
+  --text-price-hero: clamp(
+    3.25rem,
+    2.2rem + 4.6vw,
+    6.5rem
+  ); /* the protagonist numeral; Phase 12 owns its final form */
+  --text-display-1: clamp(2rem, 1.4rem + 2.6vw, 3rem); /* fluid serif H1 */
+  --text-display-2: clamp(1.5rem, 1.15rem + 1.5vw, 2rem); /* fluid serif H2 */
+
   /* ── Font weights ── */
   --weight-light: 300;
   --weight-regular: 400;
@@ -260,6 +272,7 @@
 
   /* ── Layout ── */
   --content-max-width: 1280px;
+  --measure: 66ch; /* Phase 4: reading measure — canonical home for --gtl-measure (see docs/design/TOKENS.md) */
   --page-gutter: 1.25rem;
   --nav-height: 64px;
   --mobile-bottom-nav-height: 68px;
@@ -300,6 +313,12 @@
   --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+  --ease-tick: cubic-bezier(
+    0.2,
+    0.7,
+    0.2,
+    1
+  ); /* Phase 4: signature tick easing — canonical home for --gtl-ease (Phase 12/26) */
 
   /* ── Phase 10: Comprehensive duration scale ── */
   --duration-instant: 80ms;

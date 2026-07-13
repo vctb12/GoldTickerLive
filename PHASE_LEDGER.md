@@ -3,11 +3,12 @@
 Outcome log for the 30-phase design revamp (`docs/plans/2026-07-12_design-revamp-30-phases.md`). One
 row per phase; append on completion.
 
-| Phase                               | Risk |               Status               | Date       | HEAD       | Outcome                                                                                                                                                                                             |
-| ----------------------------------- | :--: | :--------------------------------: | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1 — Design inventory & baseline** |  🟢  | ✅ **done** (screenshots deferred) | 2026-07-12 | `4b299c4`  | Built `docs/design/CSS_INVENTORY.md`; re-established the real test baseline; committed the plan. No product CSS/JS touched.                                                                         |
-| **2 — Quarantine dead CSS**         |  🟢  |            ✅ **done**             | 2026-07-13 | `02ee909`+ | Moved 388 confirmed-dead rules → `styles/_graveyard/` (reversible). Shipped CSS 41,887 → 39,336 (−2,551, ~6.1%). Corrected the plan's false "tracker-pro-v4 is dead" premise. All gates green.      |
-| **3 — Unified token contract**      |  🟢  |            ✅ **done**             | 2026-07-13 | `db208fb`+ | Wrote `docs/design/TOKENS.md`: all 45 `--gtl-*` mapped to one canonical entry (13 alias-drop, 17 exact, 6 add-in-P4, 9 harmonize-at-P7). Every target verified to exist. Spec only, no CSS changed. |
+| Phase                                 | Risk |               Status               | Date       | HEAD       | Outcome                                                                                                                                                                                                                             |
+| ------------------------------------- | :--: | :--------------------------------: | ---------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 — Design inventory & baseline**   |  🟢  | ✅ **done** (screenshots deferred) | 2026-07-12 | `4b299c4`  | Built `docs/design/CSS_INVENTORY.md`; re-established the real test baseline; committed the plan. No product CSS/JS touched.                                                                                                         |
+| **2 — Quarantine dead CSS**           |  🟢  |            ✅ **done**             | 2026-07-13 | `02ee909`+ | Moved 388 confirmed-dead rules → `styles/_graveyard/` (reversible). Shipped CSS 41,887 → 39,336 (−2,551, ~6.1%). Corrected the plan's false "tracker-pro-v4 is dead" premise. All gates green.                                      |
+| **3 — Unified token contract**        |  🟢  |            ✅ **done**             | 2026-07-13 | `db208fb`+ | Wrote `docs/design/TOKENS.md`: all 45 `--gtl-*` mapped to one canonical entry (13 alias-drop, 17 exact, 6 add-in-P4, 9 harmonize-at-P7). Every target verified to exist. Spec only, no CSS changed.                                 |
+| **4 — Land primitives in tokens.css** |  🟡  |            ✅ **done**             | 2026-07-13 | `e214b11`+ | Added the 6 canonical tokens (`--space-11`, `--text-price-hero`, `--text-display-1/2`, `--measure`, `--ease-tick`). Additive only — 0 consumers, `--gtl-*` still resolves, zero visual diff. build/test 1656/validate/stylelint ✅. |
 
 ## Phase 1 — details
 
@@ -102,6 +103,22 @@ live/dead class — need human judgement), and all `#id` selectors.
   the plan assumed.
 
 Spec only — no CSS changed this phase.
+
+---
+
+## Phase 4 — details
+
+**Delivered:** added the 6 canonical tokens from the Phase-3 contract to
+`styles/partials/tokens.css`: `--space-11` (128px), `--text-price-hero`, `--text-display-1`,
+`--text-display-2`, `--measure` (66ch), `--ease-tick`. Values copied verbatim from their `--gtl-*`
+originals.
+
+- **Additive only** — nothing consumes the new tokens yet, and `--gtl-*` in `design-system.css` is
+  untouched and still resolves. Zero visual change by construction.
+- **Gates:** `npm run build` ✅ · `npm test` **1656/1656** ✅ · `npm run validate` ✅ · `stylelint`
+  ✅.
+- Sets up Phase 5 (codemod the 12 `--gtl-*` consumer files onto canonical names) and Phase 6 (retire
+  `design-system.css`).
 
 ---
 
