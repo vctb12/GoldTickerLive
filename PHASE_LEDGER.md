@@ -3,10 +3,11 @@
 Outcome log for the 30-phase design revamp (`docs/plans/2026-07-12_design-revamp-30-phases.md`). One
 row per phase; append on completion.
 
-| Phase                               | Risk |               Status               | Date       | HEAD       | Outcome                                                                                                                                                                                        |
-| ----------------------------------- | :--: | :--------------------------------: | ---------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1 — Design inventory & baseline** |  🟢  | ✅ **done** (screenshots deferred) | 2026-07-12 | `4b299c4`  | Built `docs/design/CSS_INVENTORY.md`; re-established the real test baseline; committed the plan. No product CSS/JS touched.                                                                    |
-| **2 — Quarantine dead CSS**         |  🟢  |            ✅ **done**             | 2026-07-13 | `02ee909`+ | Moved 388 confirmed-dead rules → `styles/_graveyard/` (reversible). Shipped CSS 41,887 → 39,336 (−2,551, ~6.1%). Corrected the plan's false "tracker-pro-v4 is dead" premise. All gates green. |
+| Phase                               | Risk |               Status               | Date       | HEAD       | Outcome                                                                                                                                                                                             |
+| ----------------------------------- | :--: | :--------------------------------: | ---------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1 — Design inventory & baseline** |  🟢  | ✅ **done** (screenshots deferred) | 2026-07-12 | `4b299c4`  | Built `docs/design/CSS_INVENTORY.md`; re-established the real test baseline; committed the plan. No product CSS/JS touched.                                                                         |
+| **2 — Quarantine dead CSS**         |  🟢  |            ✅ **done**             | 2026-07-13 | `02ee909`+ | Moved 388 confirmed-dead rules → `styles/_graveyard/` (reversible). Shipped CSS 41,887 → 39,336 (−2,551, ~6.1%). Corrected the plan's false "tracker-pro-v4 is dead" premise. All gates green.      |
+| **3 — Unified token contract**      |  🟢  |            ✅ **done**             | 2026-07-13 | `db208fb`+ | Wrote `docs/design/TOKENS.md`: all 45 `--gtl-*` mapped to one canonical entry (13 alias-drop, 17 exact, 6 add-in-P4, 9 harmonize-at-P7). Every target verified to exist. Spec only, no CSS changed. |
 
 ## Phase 1 — details
 
@@ -81,6 +82,26 @@ first 🟡 visual phase.
 
 **Not touched:** 162 "REVIEW" rules (dead classes but with element/attr/id selectors or a mixed
 live/dead class — need human judgement), and all `#id` selectors.
+
+---
+
+## Phase 3 — details
+
+**Delivered:** `docs/design/TOKENS.md` — the unified token contract.
+
+- **Decision:** `styles/partials/tokens.css` (the semantic `--*` system) is canonical; `--gtl-*` is
+  retired. Namespace unchanged (canonical is the larger, more-consumed vocabulary).
+- **Complete mapping — all 45 `--gtl-*` → exactly one canonical entry:** 13 alias-drop (already
+  `var(--color-*)`), 17 exact-value renames, 6 add-in-Phase-4 (value-preserving new tokens:
+  `--space-11`, `--text-price-hero`, `--text-display-1/2`, `--ease-tick`, `--measure`), 9
+  harmonize-at-Phase-7 (near-duplicates, ≤4px/≤20ms deltas, absorbed at surface rebuild).
+- **Verified:** every canonical target (all 13 color aliases + every exact/harmonize token)
+  confirmed to exist in `tokens.css` with the stated value.
+- **Key finding:** 30 of 45 `--gtl-*` are already colour-aliases or exact duplicates, so two-thirds
+  of the Phase-5 codemod is a zero-visual-change find-replace — the token merge is lower-risk than
+  the plan assumed.
+
+Spec only — no CSS changed this phase.
 
 ---
 
