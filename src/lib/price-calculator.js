@@ -78,7 +78,7 @@ export function calculateAllPrices(spotUsdPerOz, rates, karats, countries) {
     };
 
     for (const country of countries) {
-      if (country.currency === 'AED') continue;
+      if (country.currency === 'AED' || country.currency === 'USD') continue; // computed above — never overwritten by (possibly missing) feed entries
       const rate = rates[country.currency];
       prices[karat.code][country.currency] = rate
         ? { gram: base.usdPerGram * rate, oz: base.usdPerOz * rate }
