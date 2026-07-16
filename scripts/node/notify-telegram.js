@@ -26,8 +26,7 @@ const path = require('path');
 
 const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
-const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
+const { AED_PEG, TROY_OZ_GRAMS: TROY_OZ } = require('./lib/price-constants');
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const TELEGRAM_CHANNEL_ID = process.env.TELEGRAM_CHANNEL_ID || '';

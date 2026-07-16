@@ -35,8 +35,7 @@ const url = require('url');
 const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_PRICE_FILE = require('path').resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
-const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
+const { AED_PEG, TROY_OZ_GRAMS: TROY_OZ } = require('./lib/price-constants');
 
 // Credentials from environment
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY || '';

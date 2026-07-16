@@ -24,8 +24,7 @@ const ROOT = path.resolve(__dirname, '../..');
 const OUT_FILE = path.join(ROOT, 'feed.xml');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const SITE_URL = 'https://goldtickerlive.com';
-const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
+const { AED_PEG, TROY_OZ_GRAMS: TROY_OZ } = require('./lib/price-constants');
 
 // ---------------------------------------------------------------------------
 // Helpers

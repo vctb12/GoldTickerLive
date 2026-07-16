@@ -24,9 +24,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Constants ──────────────────────────────────────────────────────────────
-TROY_OZ_GRAMS = 31.1035
-AED_PEG = 3.6725
-
+# TROY_OZ_GRAMS / AED_PEG come from utils.constants (canonical pipeline values;
+# imported below, after the sys.path setup).
 KARATS = {
     24: 1.0,
     22: 22 / 24,
@@ -39,6 +38,7 @@ KARATS = {
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_REPO_ROOT / "scripts" / "python"))
 
+from utils.constants import AED_PEG, TROY_OZ_GRAMS  # noqa: E402
 from utils.logger import get_logger  # noqa: E402
 
 log = get_logger("record_price_history")

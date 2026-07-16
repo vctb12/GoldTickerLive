@@ -15,13 +15,11 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List
 
+# Canonical pipeline constants (re-exported from gold_providers.base).
+from utils.constants import AED_PEG, TROY_OZ_GRAMS
 from utils.logger import get_logger
 
 log = get_logger("price_fetcher")
-
-# ── Constants ────────────────────────────────────────────────────────────────
-AED_PEG = 3.6725
-TROY_OZ_GRAMS = 31.1035
 
 # Repo root: scripts/python/utils/price_fetcher.py → go up 3 levels.
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent

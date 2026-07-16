@@ -10,6 +10,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { AED_PEG, TROY_OZ_GRAMS } = require('./lib/price-constants');
 
 // Configuration
 const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
@@ -69,7 +70,6 @@ async function fetchFXRates() {
 }
 
 function calculateKaratPrices(spotPrice, fxRate) {
-  const TROY_OZ_GRAMS = 31.1035;
   const usdPerGram = spotPrice / TROY_OZ_GRAMS;
 
   const karats = {
@@ -105,8 +105,7 @@ async function generateDailyDigest() {
   const gold = await fetchGoldPrice();
   const fxRates = await fetchFXRates();
 
-  // Calculate prices for UAE (AED)
-  const AED_PEG = 3.6725;
+  // Calculate prices for UAE (AED) — fixed peg from lib/price-constants.
   const aedPrices = calculateKaratPrices(gold.price, AED_PEG);
 
   // Calculate prices for Saudi Arabia (SAR)
