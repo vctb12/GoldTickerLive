@@ -160,6 +160,85 @@ test('fetchGold rejects out-of-band spot prices', async () => {
   }
 });
 
+// ── Midas phase 6 — response schema guard (fail-closed validation) ──────────
+// A payload that fails validation must normalize to `null`, which fetchGold()
+// treats as a fetch failure so the honest fallback chain takes over.
+
+test('normalizeGoldResponse rejects malformed prices (negative, string, zero, absurd)', async () => {
+  const api = await loadApiModule();
+  const base = { provider: 'gold_api_com', timestamp_utc: '2026-07-16T10:00:00Z' };
+
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: -2500 }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: 'not-a-number' }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: 0 }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: 1e9 }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: Infinity }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, xau_usd_per_oz: NaN }), null);
+  // Legacy schema path gets the same guard.
+  assert.equal(api.normalizeGoldResponse({ ...base, gold: { ounce_usd: -1 } }), null);
+  assert.equal(api.normalizeGoldResponse({ ...base, gold: { ounce_usd: 1e9 } }), null);
+  // Sanity: a valid payload still normalizes.
+  const ok = api.normalizeGoldResponse({ ...base, xau_usd_per_oz: 4002.7 });
+  assert.equal(ok.price, 4002.7);
+  assert.equal(ok.updatedAt, '2026-07-16T10:00:00Z');
+});
+
+test('normalizeGoldResponse rejects missing or unparseable timestamps', async () => {
+  const api = await loadApiModule();
+
+  // No timestamp field at all — a price without a trustworthy timestamp must
+  // never enter the freshness engine (an invented "now" could label stale
+  // data as live).
+  assert.equal(
+    api.normalizeGoldResponse({ provider: 'gold_api_com', xau_usd_per_oz: 4002.7 }),
+    null
+  );
+  // Present but garbage.
+  assert.equal(
+    api.normalizeGoldResponse({
+      provider: 'gold_api_com',
+      xau_usd_per_oz: 4002.7,
+      timestamp_utc: 'not-a-real-date',
+    }),
+    null
+  );
+  assert.equal(
+    api.normalizeGoldResponse({
+      provider: 'gold_api_com',
+      xau_usd_per_oz: 4002.7,
+      timestamp_utc: '',
+    }),
+    null
+  );
+  // Any of the accepted timestamp aliases is enough.
+  const viaFetchedAt = api.normalizeGoldResponse({
+    provider: 'gold_api_com',
+    xau_usd_per_oz: 4002.7,
+    fetched_at_utc: '2026-07-16T10:00:27Z',
+  });
+  assert.equal(viaFetchedAt.updatedAt, '2026-07-16T10:00:27Z');
+});
+
+test('fetchGold treats a payload without a timestamp as a fetch failure', async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async () => ({
+    ok: true,
+    async json() {
+      return { provider: 'gold_api_com', xau_usd_per_oz: 4002.7 };
+    },
+  });
+
+  try {
+    const api = await loadApiModule();
+    await assert.rejects(
+      () => api.fetchGold(),
+      (err) => err.name === 'NetworkError'
+    );
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
 test('fetchGold accepts numeric strings from backend payload', async () => {
   const originalFetch = global.fetch;
   global.fetch = async () => ({

@@ -115,7 +115,23 @@ function unwrapApiEnvelope(data) {
   return data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : data;
 }
 
-function normalizeGoldResponse(data) {
+/**
+ * Validate + normalize a raw gold-price payload (committed JSON or backend
+ * envelope) into the canonical `{ price, updatedAt, source, … }` shape.
+ *
+ * Schema guard (fail-closed): returns `null` — which callers treat as a fetch
+ * failure so the existing fallback chain takes over with an honest label —
+ * when:
+ *   • the price is not a finite number inside the sane XAU/USD band
+ *     (rejects negative, zero, string-garbage, and absurd values like 1e9), or
+ *   • the payload carries no timestamp, or the timestamp does not parse to a
+ *     real epoch. A price without a trustworthy timestamp must never enter the
+ *     freshness engine — an invented "now" would let stale data label as live.
+ *
+ * Exported for direct schema-guard tests; production callers go through
+ * {@link fetchGold}.
+ */
+export function normalizeGoldResponse(data) {
   if (!data || typeof data !== 'object') return null;
 
   const payload = unwrapApiEnvelope(data);
@@ -130,12 +146,17 @@ function normalizeGoldResponse(data) {
 
   if (!isSaneGoldSpotUsd(price)) return null;
 
+  const rawTimestamp =
+    payload?.timestampUtc ??
+    payload?.timestamp_utc ??
+    payload?.fetchedAtUtc ??
+    payload?.fetched_at_utc ??
+    null;
+  if (rawTimestamp == null || rawTimestamp === '') return null;
+  const timestampMs = new Date(rawTimestamp).getTime();
+  if (!Number.isFinite(timestampMs) || timestampMs <= 0) return null;
   const updatedAt =
-    payload?.timestampUtc ||
-    payload?.timestamp_utc ||
-    payload?.fetchedAtUtc ||
-    payload?.fetched_at_utc ||
-    new Date().toISOString();
+    typeof rawTimestamp === 'string' ? rawTimestamp : new Date(timestampMs).toISOString();
 
   const source =
     payload?.provider ||

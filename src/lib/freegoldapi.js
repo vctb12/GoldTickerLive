@@ -1,6 +1,20 @@
 /**
  * Optional reference historical gold prices from freegoldapi.com.
  * Community-maintained, no API key, CORS-enabled. Used as a supplement — not live spot authority.
+ *
+ * CONTAINMENT GUARANTEE (R14): this feed can lag or carry bad datapoints (its
+ * last row has been observed months stale and ~27% off spot). Every consumer
+ * must treat rows as HISTORICAL REFERENCE ONLY — never current-price context:
+ *   • `freegoldRowToRecord` stamps `freshnessState:'historical'`,
+ *     `source:'freegoldapi-reference'`, `derived:true`, and each row keeps its
+ *     own date — `historical-data.js getUnifiedHistory()` merges it into chart
+ *     history at that date only (local browser snapshots supersede it).
+ *   • The live-lane second opinion (`quote-providers/secondary-spot-check.js`)
+ *     rejects any row older than `REFERENCE_MAX_AGE_MS` (~26 h), so a stale
+ *     row can never confirm, downgrade, or masquerade as today's spot.
+ *   • Nothing here feeds `spot-resolver.js` or the realtime engine's price.
+ * Locked by tests/freegoldapi-reference-clamp.test.js — keep that suite green
+ * if you touch normalization or consumers.
  */
 
 import { isSaneGoldSpotUsd } from './quote-providers/fetch-utils.js';

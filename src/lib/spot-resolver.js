@@ -1,15 +1,22 @@
 /**
- * Canonical spot resolver — the SINGLE read point for the gold spot price and
- * every value derived from it (F-1 fix). The homepage's redesigned surfaces
- * (nav price pill, hero, karat ladder/dial, inline calculator, market read) all
- * call {@link getCanonicalSpot} so they render ONE value at any instant — the
- * same committed source the calculator uses (`/data/gold_price.json` via
- * {@link fetchGold}). No surface performs its own live third-party fetch.
+ * Canonical spot resolver — the SINGLE derivation point for the committed gold
+ * spot baseline and every value derived from it (F-1 fix). The homepage's
+ * static surfaces (nav price pill, hero, karat ladder/dial, inline calculator,
+ * market read) call {@link getCanonicalSpot} so they render ONE value at any
+ * instant — the same committed source the calculator uses
+ * (`/data/gold_price.json` via {@link fetchGold}).
  *
- * Design decision (owner-approved, F-1 bundling): the canonical source is the
- * hourly-committed data file — identical to the calculator — not a divergent
- * client-side live API. If a live path is added later it must feed THIS resolver
- * so every surface still reads one value.
+ * Reality of the live lane (documented, not a contradiction of F-1's intent):
+ * the home page and tracker ADDITIONALLY run a realtime pricing engine
+ * (`realtime-pricing-engine.js`, wired in `home.js` / `tracker-pro.js`) whose
+ * provider chain performs direct browser fetches of third-party quotes —
+ * api.gold-api.com (primary live), failing over to mintedmetal.com, then the
+ * committed `gold_price.json`, then `last_gold_price.json`, with a
+ * localStorage snapshot as the always-labelled-fallback secondary (see
+ * `quote-providers/create-providers.js`). That engine layers live quotes ON
+ * TOP of this resolver's committed baseline and carries its own freshness
+ * labelling (`freshness-policy.js`); this resolver remains the canonical
+ * committed-JSON baseline for every surface that does not run the engine.
  *
  * Immutable invariants (never re-derived here): AED peg 3.6725, troy ounce
  * 31.1035 g, karat purity = code/24, spot ≠ retail.
