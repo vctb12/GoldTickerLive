@@ -155,8 +155,9 @@ jobs:
 
       - name: Serve dist and run E2E tests
         run: |
-          # Copy country leaf pages (excluded from Vite build, served as-is in deploy)
-          cp -r countries dist/
+          # countries/ tree was deleted in the 2026-07-04 IA reset; guard the copy so
+          # the blocking e2e job cannot die on a missing directory if it ever returns.
+          if [ -d countries ]; then cp -r countries dist/; fi
           python3 -m http.server 8080 --directory dist &
           sleep 2
           npx playwright test --config=playwright.config.js --project=chromium
