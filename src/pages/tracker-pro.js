@@ -1,5 +1,5 @@
 // tracker-pro.js — slim orchestrator
-import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS } from '../config/index.js';
+import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, ensureLocale } from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
@@ -1606,13 +1606,17 @@ async function init() {
 
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
-  // Lazy-load render helpers and UI modules to reduce initial parse cost
+  // Lazy-load render helpers and UI modules to reduce initial parse cost.
+  // ensureLocale rides the same Promise.all: the AR dictionary (per-locale
+  // split) is grafted before any dictionary-driven render below — and the
+  // EN path fetches nothing.
   const [renderMod, uiMod, eventsMod, wireMod, adMod] = await Promise.all([
     import('../tracker/render.js'),
     import('../tracker/ui-shell.js'),
     import('../tracker/events.js'),
     import('../tracker/wire.js'),
     import('../components/adSlot.js'),
+    ensureLocale(state.lang),
   ]);
 
   ({

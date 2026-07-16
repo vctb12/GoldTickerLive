@@ -10,7 +10,7 @@
  */
 
 import { mountSharedShell } from '../components/site-shell.js';
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS, ensureLocale } from '../config/translations-runtime.js';
 import { getLiveFreshness } from '../lib/live-status.js';
 
 // ── Language helpers ───────────────────────────────────────────────────────
@@ -182,14 +182,17 @@ const lang = getLang();
 const shell = mountSharedShell({ lang, depth: 0 });
 document.getElementById('nf-static-header')?.remove();
 document.getElementById('nf-static-footer')?.remove();
-applyLang(lang);
+// Per-locale dictionary split: the AR dictionary is grafted on demand before
+// the dictionary-driven hydration; EN resolves immediately with no fetch.
+ensureLocale(lang).then(() => applyLang(lang));
 prefillSearch();
 renderFreshnessPill(lang);
 logNotFoundEvent();
 
 // Re-apply lang if the user toggles it via the nav language button
-document.addEventListener('langchange', (e) => {
+document.addEventListener('langchange', async (e) => {
   const newLang = e.detail?.lang === 'ar' ? 'ar' : 'en';
+  await ensureLocale(newLang);
   applyLang(newLang);
   renderFreshnessPill(newLang);
   shell.updateLang(newLang);

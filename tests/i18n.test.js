@@ -10,7 +10,9 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const I18N = new URL('../src/lib/i18n.js', `file://${__filename}`).href;
-const CFG = new URL('../src/config/index.js', `file://${__filename}`).href;
+// The combined (EN + AR) table — the runtime barrel is EN-only until
+// ensureLocale(); the sweep below must exercise real AR lookups too.
+const CFG = new URL('../src/config/translations.js', `file://${__filename}`).href;
 
 // Synthetic fixture for edge cases we can control precisely.
 const DICT = {

@@ -3,7 +3,14 @@
  * Handles 5 calculators: Value, Scrap, Zakat, Buying Power, Unit Converter.
  */
 
-import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, DATA_ATTRIBUTION } from '../config/index.js';
+import {
+  CONSTANTS,
+  KARATS,
+  COUNTRIES,
+  TRANSLATIONS,
+  DATA_ATTRIBUTION,
+  ensureLocale,
+} from '../config/index.js';
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import { getCanonicalSpot } from '../lib/spot-resolver.js';
@@ -1889,6 +1896,9 @@ async function init() {
 
   document.documentElement.lang = STATE.lang;
   document.documentElement.dir = STATE.lang === 'ar' ? 'rtl' : 'ltr';
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render (breadcrumbs, spot bar). No fetch on EN.
+  await ensureLocale(STATE.lang);
 
   const shell = mountSharedShell({ lang: STATE.lang, depth: 0, withSpotBar: true });
   initPageEnter('#main-content');
@@ -1897,9 +1907,10 @@ async function init() {
   renderAdSlot('ad-bottom', 'rectangle');
 
   navResult.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
+      await ensureLocale(STATE.lang);
       shell.updateLang(STATE.lang);
       applyLang();
       updateSpotBadge();

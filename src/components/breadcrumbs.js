@@ -9,7 +9,7 @@
  *   generateBreadcrumbSchema(items)     — generate a JSON-LD BreadcrumbList script tag
  */
 
-import { TRANSLATIONS } from '../config/index.js';
+import { TRANSLATIONS, ensureLocale } from '../config/index.js';
 
 function getLocale() {
   if (typeof document === 'undefined') return 'en';
@@ -169,6 +169,18 @@ export function injectBreadcrumbs(pageName, extra = {}) {
 
   const breadcrumbs = getBreadcrumbs(pageName, extra);
   renderBreadcrumbs(breadcrumbContainer, breadcrumbs);
+
+  // Per-locale dictionary split: pages that await ensureLocale() at boot render
+  // localized labels above. Static data-lang-block pages don't await — for them,
+  // self-heal by re-rendering once the on-demand locale dictionary is grafted
+  // (the interim render shows the EN fallback labels, never raw keys).
+  const locale = getLocale();
+  if (locale !== 'en' && !TRANSLATIONS[locale]) {
+    void ensureLocale(locale).then(() => {
+      if (!TRANSLATIONS[locale]) return; // load failed — keep the EN fallback
+      renderBreadcrumbs(breadcrumbContainer, getBreadcrumbs(pageName, extra));
+    });
+  }
 }
 
 /**

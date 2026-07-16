@@ -1,4 +1,5 @@
 // tracker/events.js — all event bindings for tracker-pro
+import { ensureLocale } from '../config/index.js';
 import { persistState } from './state.js';
 import { el } from '../lib/safe-dom.js';
 import { tx } from './_ctx.js';
@@ -109,13 +110,15 @@ export function bindCoreEvents() {
     track(EVENTS.UNIT_CHANGE, { from, to: _state.selectedUnit });
     _cb.renderAll();
   });
-  _el.language?.addEventListener('change', () => {
+  _el.language?.addEventListener('change', async () => {
     const from = _state.lang;
     _state.lang = _el.language.value;
     persistState(_state);
     if (from !== _state.lang) {
       track(EVENTS.LANGUAGE_SWITCH, { from, to: _state.lang, surface: 'tracker' });
     }
+    // Per-locale dictionary split: the AR dictionary loads on demand.
+    await ensureLocale(_state.lang);
     _cb.populateSelects();
     _cb.renderAll();
   });

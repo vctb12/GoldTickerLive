@@ -17,6 +17,14 @@ async function loadChartSummary() {
   const url = new URL(
     'file://' + path.resolve(__dirname, '..', 'src', 'components', 'chart-summary.js')
   );
+  // Per-locale dictionary split: chart-summary reads the runtime table, which
+  // starts EN-only. Production boots graft AR via ensureLocale() before any
+  // chart renders; mirror that so the Arabic assertions see real Arabic.
+  const runtimeUrl = new URL(
+    'file://' + path.resolve(__dirname, '..', 'src', 'config', 'translations-runtime.js')
+  );
+  const { ensureLocale } = await import(runtimeUrl.href);
+  await ensureLocale('ar');
   return import(url.href);
 }
 

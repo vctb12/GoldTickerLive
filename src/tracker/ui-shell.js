@@ -11,7 +11,7 @@ import {
 } from './state.js';
 import { TRACKER_PANELS, getShortcutMap, getTrackerTab } from './modes.js';
 import { track, EVENTS } from '../lib/analytics.js';
-import { TRANSLATIONS } from '../config/index.js';
+import { TRANSLATIONS, ensureLocale } from '../config/index.js';
 
 function shellTx(lang, key) {
   const fullKey = `tracker.${key}`;
@@ -36,7 +36,7 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   const shell = mountSharedShell({ lang: state.lang, depth: 0, withSpotBar: true });
   const navCtrl = shell.navCtrl;
   navCtrl.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const from = state.lang;
       state.lang = state.lang === 'en' ? 'ar' : 'en';
       persistState(state);
@@ -45,6 +45,8 @@ export function mountShell(state, els, onModeChange, onLangChange) {
       if (from !== state.lang) {
         track(EVENTS.LANGUAGE_SWITCH, { from, to: state.lang, surface: 'tracker_shell' });
       }
+      // Per-locale dictionary split: the AR dictionary loads on demand.
+      await ensureLocale(state.lang);
       shell.updateLang(state.lang);
       if (els.language) els.language.value = state.lang;
       onLangChange();
@@ -245,8 +247,10 @@ export function mountShell(state, els, onModeChange, onLangChange) {
   document.body.setAttribute('data-tracker-shell-ready', 'true');
 
   // Sync back/forward navigation
-  window.addEventListener('hashchange', () => {
+  window.addEventListener('hashchange', async () => {
     const parsed = applyUrlState(state);
+    // A hash deep-link can flip the language (per-locale dictionary split).
+    await ensureLocale(state.lang);
     const m = VALID_MODES.has(state.mode) ? state.mode : 'live';
     setMode(m);
     syncOverlayFromState();

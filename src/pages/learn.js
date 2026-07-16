@@ -15,7 +15,7 @@ import { initPageEnter } from '../lib/page-enter.js';
 import { mountRelatedGuides } from '../components/RelatedGuides.js';
 import { initInsightsFeed } from './insights/insights-feed.js';
 import { initReadingProgress } from '../lib/reading-progress.js';
-import { TRANSLATIONS } from '../config/index.js';
+import { TRANSLATIONS, ensureLocale } from '../config/index.js';
 
 const STATE = {
   lang: 'en',
@@ -143,7 +143,7 @@ function applyInsightsHeading(lang) {
   });
 }
 
-function init() {
+async function init() {
   cache.loadState(STATE);
 
   const savedLang = cache.getPreference('lang');
@@ -152,6 +152,9 @@ function init() {
   const urlLang = new URLSearchParams(location.search).get('lang');
   if (urlLang === 'ar' || urlLang === 'en') STATE.lang = urlLang;
   STATE.lang = normalizeLang(STATE.lang);
+  // Per-locale dictionary split: graft the AR dictionary before the first
+  // dictionary-driven render (hub catalog, breadcrumbs). No fetch on EN.
+  await ensureLocale(STATE.lang);
 
   const shell = mountSharedShell({ lang: STATE.lang, depth: 0 });
   const navCtrl = shell.navCtrl;
@@ -166,9 +169,10 @@ function init() {
   let experience = mountArticleExperience(article);
 
   navCtrl.getLangToggleButtons().forEach((btn) => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       STATE.lang = STATE.lang === 'en' ? 'ar' : 'en';
       cache.savePreference('lang', STATE.lang);
+      await ensureLocale(STATE.lang);
       shell.updateLang(STATE.lang);
       experience.toc?.destroy();
       experience = mountArticleExperience(article);
@@ -184,4 +188,6 @@ function init() {
   initReadingProgress();
 }
 
-init();
+init().catch((error) => {
+  console.error('[learn] init failed', error);
+});

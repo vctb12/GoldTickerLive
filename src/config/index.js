@@ -9,7 +9,7 @@ export { SITE } from './site.js';
 export { FEATURE_FLAGS, isFeatureEnabled } from './feature-flags.js';
 export { KARATS } from './karats.js';
 export { COUNTRIES } from './countries.js';
-export { TRANSLATIONS } from './translations.js';
+export { TRANSLATIONS, ensureLocale } from './translations-runtime.js';
 export {
   DATA_ATTRIBUTION,
   getKaratCount,

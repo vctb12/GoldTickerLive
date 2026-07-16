@@ -2,7 +2,7 @@
  * Inline empty state when gold/FX fetch fails and no cache is available.
  */
 
-import { TRANSLATIONS } from '../config/translations.js';
+import { TRANSLATIONS } from '../config/translations-runtime.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { iconUseElement } from './icon-sprite.js';
 
