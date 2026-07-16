@@ -68,17 +68,53 @@ export function karatPerGram(derived, karatCode, currency = 'aed') {
   return currency === 'usd' ? row.usdPerGram : row.aedPerGram;
 }
 
+// Pipeline default freshness budget (mirrors `max_freshness_seconds` written by
+// scripts/python/fetch_gold_price.py). Used only when a payload omits its own
+// `maxFreshnessSeconds` — never loosened at runtime.
+const DEFAULT_MAX_FRESHNESS_SECONDS = 900;
+
+// Tolerated forward clock skew between the pipeline/provider clock and the
+// visitor's device. A payload timestamp further in the future than this is
+// unverifiable (a wildly wrong clock could otherwise pin age at 0 and label
+// stale data "live" forever), so classification degrades instead.
+const CLOCK_SKEW_TOLERANCE_MS = 5 * 60 * 1000;
+
 /**
  * Classify a normalized gold response into one freshness state so the whole
  * homepage shows one consistent freshness object. Deliberately conservative:
  * an explicit upstream fallback/`is_fresh:false` always downgrades, never
  * mislabels a stale value as live.
  *
+ * AGE-AWARE (Midas phase 7 frozen-flag fix): the committed
+ * `data/gold_price.json` carries `freshness_seconds` stamped at pipeline
+ * write time. That number never ages client-side, so comparing it alone
+ * against `max_freshness_seconds` would classify the committed file as
+ * `live` forever. This classifier therefore recomputes the effective age
+ * from the payload timestamp (`timestamp_utc` / `fetched_at_utc`, normalized
+ * to `updatedAt`) against `now`, and takes the WORSE of (recomputed age,
+ * frozen commit-time age). `live` is only reachable when a verifiable
+ * timestamp proves the data is within the freshness budget:
+ *   - no parseable timestamp        → never `live` (frozen flag alone is not
+ *                                     proof of freshness; degrade to
+ *                                     `delayed`/`cached` by frozen tier)
+ *   - timestamp in the far future   → treated as unverifiable (clock-skew
+ *                                     guard; small skew clamps to age 0)
+ *   - effective age ≤ budget        → `live`
+ *   - effective age ≤ 2 × budget    → `delayed`
+ *   - older                         → `cached`
+ *
  * @param {object} gold normalized `fetchGold()` result
+ * @param {number} [now] reference epoch ms (injectable for tests; default `Date.now()`)
  * @returns {{ state:'live'|'delayed'|'cached'|'fallback'|'unavailable', source:string,
- *            seconds:(number|null), updatedAt:(string|null), isFallback:boolean }}
+ *            seconds:(number|null), updatedAt:(string|null), isFallback:boolean,
+ *            upstreamFresh:(boolean|null), ageSeconds:(number|null) }}
+ *   `seconds` is the effective (age-aware) freshness age; `ageSeconds` is the
+ *   recomputed timestamp age alone (null when unverifiable); `upstreamFresh`
+ *   is the raw pipeline `is_fresh` tri-state (true/false/null) so consumers
+ *   bridging into `getLiveFreshness({ isFresh })` can pass upstream truth
+ *   instead of conflating it with this age-dependent classification.
  */
-export function classifyFreshness(gold) {
+export function classifyFreshness(gold, now = Date.now()) {
   if (!gold || !Number.isFinite(Number(gold.price))) {
     return {
       state: 'unavailable',
@@ -86,27 +122,47 @@ export function classifyFreshness(gold) {
       seconds: null,
       updatedAt: null,
       isFallback: true,
+      upstreamFresh: null,
+      ageSeconds: null,
     };
   }
   const source = gold.source || 'unknown';
-  const seconds = Number.isFinite(gold.freshnessSeconds) ? gold.freshnessSeconds : null;
+  const frozenSeconds = Number.isFinite(gold.freshnessSeconds) ? gold.freshnessSeconds : null;
   const maxSeconds = Number.isFinite(gold.maxFreshnessSeconds) ? gold.maxFreshnessSeconds : null;
   const updatedAt = gold.updatedAt || null;
   const isFallback = gold.isFallback === true || source === 'cache-fallback';
+  const upstreamFresh = gold.isFresh === true ? true : gold.isFresh === false ? false : null;
+
+  // Recompute the age from the payload timestamp — never trust the frozen
+  // commit-time freshness_seconds alone. Small forward skew clamps to 0;
+  // far-future timestamps are unverifiable (null) and can never be `live`.
+  let ageSeconds = null;
+  if (updatedAt != null) {
+    const timestampMs = new Date(updatedAt).getTime();
+    if (Number.isFinite(timestampMs) && now - timestampMs >= -CLOCK_SKEW_TOLERANCE_MS) {
+      ageSeconds = Math.max(0, now - timestampMs) / 1000;
+    }
+  }
+  const seconds = ageSeconds != null ? Math.max(ageSeconds, frozenSeconds ?? 0) : frozenSeconds;
+  const budgetSeconds = maxSeconds != null ? maxSeconds : DEFAULT_MAX_FRESHNESS_SECONDS;
 
   let state;
   if (isFallback) {
     state = source === 'cache-fallback' ? 'cached' : 'fallback';
   } else if (gold.isFresh === false) {
     state = 'delayed';
-  } else if (seconds != null && maxSeconds != null) {
-    if (seconds <= maxSeconds) state = 'live';
-    else if (seconds <= maxSeconds * 2) state = 'delayed';
-    else state = 'cached';
-  } else {
+  } else if (ageSeconds == null) {
+    // No verifiable timestamp: the frozen flag/seconds alone must never grant
+    // `live`. Tier by the frozen age when present, otherwise degrade one notch.
+    state = seconds != null && seconds > budgetSeconds * 2 ? 'cached' : 'delayed';
+  } else if (seconds <= budgetSeconds) {
     state = 'live';
+  } else if (seconds <= budgetSeconds * 2) {
+    state = 'delayed';
+  } else {
+    state = 'cached';
   }
-  return { state, source, seconds, updatedAt, isFallback };
+  return { state, source, seconds, updatedAt, isFallback, upstreamFresh, ageSeconds };
 }
 
 /**

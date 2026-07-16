@@ -47,6 +47,15 @@ export const FX_MARKET = {
 /** Sentinel ageMs value for an unavailable / unresolvable timestamp. */
 const UNAVAILABLE_AGE_MS = Number.POSITIVE_INFINITY;
 
+/**
+ * Tolerated forward clock skew between the data pipeline's clock and the
+ * visitor's device. Timestamps up to this far in the future clamp to age 0;
+ * anything further ahead is unverifiable and treated as UNAVAILABLE age
+ * (degrades to `stale`) — otherwise a wildly-future timestamp would pin the
+ * age at 0 and keep a "Live" label reachable indefinitely (eternal-live).
+ */
+export const CLOCK_SKEW_TOLERANCE_MS = 5 * 60 * 1000;
+
 function toDate(value) {
   if (value === null || value === undefined || value === '') return null;
   if (value instanceof Date) return value;
@@ -94,7 +103,10 @@ export function applyMarketClosedOverlay(key, now = new Date()) {
 
 /**
  * Return the age of `updatedAt` in milliseconds relative to `now`.
- * Returns `Number.POSITIVE_INFINITY` when `updatedAt` is absent or invalid.
+ * Returns `Number.POSITIVE_INFINITY` when `updatedAt` is absent or invalid,
+ * or when it sits further than `CLOCK_SKEW_TOLERANCE_MS` in the future
+ * (unverifiable — never lets clock skew mint an eternally-fresh age of 0).
+ * Timestamps within the tolerance clamp to 0, never negative.
  *
  * @param {string|Date|number|null} updatedAt  Timestamp of the last update.
  * @param {number}                 [now]       Reference epoch ms (default: `Date.now()`).
@@ -103,6 +115,7 @@ export function applyMarketClosedOverlay(key, now = new Date()) {
 export function getAgeMs(updatedAt, now = Date.now()) {
   const date = toDate(updatedAt);
   if (!date) return UNAVAILABLE_AGE_MS;
+  if (date.getTime() - now > CLOCK_SKEW_TOLERANCE_MS) return UNAVAILABLE_AGE_MS;
   return Math.max(0, now - date.getTime());
 }
 

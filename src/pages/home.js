@@ -1631,7 +1631,17 @@ async function seedCanonicalPrice() {
     goldPrice = snap.spotUsdPerOz;
     goldUpdatedAt = snap.freshness.updatedAt || goldUpdatedAt;
     goldIsFallback = snap.freshness.isFallback === true;
-    goldIsFresh = snap.freshness.state === 'live';
+    // Bridge into getLiveFreshness({ isFresh }): pass the UPSTREAM pipeline
+    // truth flag (is_fresh tri-state), not this snapshot's age-dependent
+    // classification. classifyFreshness is now age-aware (Midas phase 7), so
+    // `state === 'live'` flips false as the committed hourly file ages; feeding
+    // that into isFresh would hard-label minutes-old data "stale"
+    // (reason `upstream-stale`) when upstream never said so. With the upstream
+    // flag, getLiveFreshness keeps applying its own age ceilings
+    // (delayed > 5 min, stale > 75 min) exactly as before — labels stay honest
+    // and unchanged. Fallback when the flag is absent: only a verified-age
+    // `live` snapshot may claim freshness.
+    goldIsFresh = snap.freshness.upstreamFresh ?? snap.freshness.state === 'live';
     cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
     updateNavPricePill(snap);
     updateRoutingCanonicalValue(snap);

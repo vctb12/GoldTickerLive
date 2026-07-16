@@ -65,18 +65,49 @@ test('karatPerGram: looks up a specific karat in AED and USD', () => {
   assert.equal(R.karatPerGram(null, '24'), null, 'null snapshot → null');
 });
 
-test('classifyFreshness: fresh committed file → live', () => {
-  const f = R.classifyFreshness({
-    price: SPOT,
-    source: 'gold_api_com',
-    isFresh: true,
-    isFallback: false,
-    freshnessSeconds: 27,
-    maxFreshnessSeconds: 900,
-    updatedAt: '2026-07-10T11:06:54Z',
-  });
+test('classifyFreshness: fresh committed file → live (verified by timestamp age, not the frozen flag)', () => {
+  // `now` is injected 27 s after the payload timestamp, matching the frozen
+  // freshness_seconds — a genuinely fresh read of the committed file.
+  const now = Date.parse('2026-07-10T11:07:21Z');
+  const f = R.classifyFreshness(
+    {
+      price: SPOT,
+      source: 'gold_api_com',
+      isFresh: true,
+      isFallback: false,
+      freshnessSeconds: 27,
+      maxFreshnessSeconds: 900,
+      updatedAt: '2026-07-10T11:06:54Z',
+    },
+    now
+  );
   assert.equal(f.state, 'live');
   assert.equal(f.isFallback, false);
+  assert.equal(f.upstreamFresh, true, 'raw pipeline is_fresh flag is exposed for bridges');
+});
+
+test('classifyFreshness: frozen-flag hole is closed — a committed file older than max_freshness_seconds never classifies live', () => {
+  // Same payload as the live case, but read 3 hours after the pipeline wrote
+  // it. The frozen freshness_seconds (27) still says "fresh at commit time";
+  // the recomputed timestamp age must win and degrade the state.
+  const writtenAt = '2026-07-10T11:06:54Z';
+  const threeHoursLater = Date.parse(writtenAt) + 3 * 60 * 60 * 1000;
+  const f = R.classifyFreshness(
+    {
+      price: SPOT,
+      source: 'gold_api_com',
+      isFresh: true,
+      isFallback: false,
+      freshnessSeconds: 27,
+      maxFreshnessSeconds: 900,
+      updatedAt: writtenAt,
+    },
+    threeHoursLater
+  );
+  assert.notEqual(f.state, 'live', 'aged committed file must not stay live');
+  assert.equal(f.state, 'cached', '3 h > 2× budget → cached');
+  assert.ok(f.seconds >= 3 * 60 * 60, 'effective seconds reflect the recomputed age');
+  assert.equal(f.upstreamFresh, true, 'upstream flag stays visible even when age degrades state');
 });
 
 test('classifyFreshness: never mislabels — fallback / delayed / cached / unavailable', () => {
@@ -104,6 +135,12 @@ test('classifyFreshness: never mislabels — fallback / delayed / cached / unava
     'cached',
     'well beyond max age → cached'
   );
+  assert.equal(
+    R.classifyFreshness({ price: SPOT, freshnessSeconds: 27, maxFreshnessSeconds: 900 }).state,
+    'delayed',
+    'no timestamp → the frozen seconds alone can never prove live'
+  );
+  assert.equal(R.classifyFreshness({ price: SPOT }).state, 'delayed', 'no metadata → not live');
   assert.equal(R.classifyFreshness(null).state, 'unavailable');
   assert.equal(R.classifyFreshness({ price: NaN }).state, 'unavailable');
 });
@@ -116,6 +153,8 @@ test('buildSnapshot: ok snapshot carries derivation + freshness; bad price → n
     isFallback: false,
     freshnessSeconds: 27,
     maxFreshnessSeconds: 900,
+    // age-aware classification requires a verifiable timestamp for `live`
+    updatedAt: new Date().toISOString(),
   });
   assert.equal(ok.ok, true);
   assert.equal(ok.karats.length, 7);
