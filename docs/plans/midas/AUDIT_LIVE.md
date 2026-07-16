@@ -1,0 +1,68 @@
+# Operation Midas — Live Production Audit (Phase 3, 2026-07-16 ~13:00–13:20 UTC)
+
+Five read-only AUDITOR probes against https://goldtickerlive.com (site had redeployed at 13:04:03
+GMT, minutes before probing — results reflect the latest deploy). Probes: homepage static HTML;
+Arabic delivery; site-wide pages/headers; price-data sanity; headless-Chromium console/hydration (JS
+on + JS off).
+
+## Seeded findings — verdicts
+
+| #   | Seeded claim                                 | Verdict                                      | Severity | Evidence (condensed)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| --- | -------------------------------------------- | -------------------------------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| F1  | Server HTML contains no prices               | **Confirmed**                                | **HIGH** | Raw HTML has zero numeric prices; hero is `<span class="skeleton-inline shell-skeleton-price-lg">` + bare `$`; karat strip values empty (`id="kstrip-24-val"` empty, `aria-busy`). With JS disabled, rendered hero = "$ — per troy ounce", "Open — High — Low —". **No `<noscript>` exists at all** (grep = 0). With JS on, hydrates correctly to 3,994.50. → Phase 9                                                                                                                                                                                                                                                                                  |
+| F2  | Title/og:title inconsistency + meta keywords | **Partial**                                  | MED      | Three variants confirmed: `<title>` "…UAE & GCC Today" vs og:title "…GCC & the Arab World \| أسعار الذهب المرجعية" vs twitter:title (third). `meta keywords` present on homepage (line 49-50) and tracker.html only; other 6 probed pages clean. → Phase 21                                                                                                                                                                                                                                                                                                                                                                                            |
+| F3  | No hreflang on homepage                      | **REFUTED — but replaced by a worse defect** | **HIGH** | hreflang x-default/en/ar triplets exist on homepage + all 7 probed pages + sitemap (`xhtml:link`). **However** the `ar` alternate targets `?lang=ar`, which serves **byte-identical English HTML** (`diff -q` identical; `<html lang="en" dir="ltr">`) whose canonical points back to the bare EN URL — contradictory signals; Google typically drops the cluster. `/ar/` and `/ar.html` both 404. Code+tests assume an `/ar/` mirror that was never deployed (`home.js:127-129` comment, `sitemap-parity.test.js:25-27` exemption). **Net: zero indexable Arabic content** while advertising ar_AE three ways. → Phase 19 (rescoped) + owner decision |
+| F4  | Country links are compare.html#hash          | **Confirmed**                                | MED      | "Browse by Country" tiles → `compare.html#compare=ae,sa&k=22` etc. (lines 1109-1134); market cards repeat the pattern. Fragments pass no crawl signal. → Phase 23                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| F5  | 24K "100% pure" vs .999 contradiction        | **Confirmed**                                | LOW      | Same document: FAQ (line 1555) "24K is 100% pure gold" vs explainer (1445) "24K is 99.9% pure" vs karat dial `.999` (line 594). Note: the **math** uses code/24 (24K = 1.0) per `karats.js` — three inconsistent public statements. → Phase 21 (copy) + Directive-3 conflict (see risk register)                                                                                                                                                                                                                                                                                                                                                       |
+| F6  | JSON-LD unconfirmed                          | **Partial**                                  | LOW      | Organization + WebSite JSON-LD present (2 blocks). FAQ uses **microdata** (`itemtype="https://schema.org/FAQPage"` + 7 Questions) — valid, just not JSON-LD. No SearchAction. BreadcrumbList unverified on inner pages. → Phase 22 (verify/extend, don't duplicate FAQ markup)                                                                                                                                                                                                                                                                                                                                                                         |
+
+## Price-data sanity (Directives 1–3 live check) — PASS
+
+- `/data/gold_price.json` live at probe: `xau_usd_per_oz` 3994.5, `usd_per_gram_24k` 128.426157,
+  `aed_per_gram_24k` 471.6451, peg 3.6725, `status:"ok"`.
+- Internal consistency verified by computation: 3994.5 / 31.1034768 = 128.42615717 (diff 1.7e-7); ×
+  3.6725 = 471.64506 (diff 3.8e-5); ounce_aed matches. Karats match **code/24** purity exactly
+  (471.65 / 432.34 / 412.69 / 353.73) — NOT the .999-fineness basis.
+- Within sanity anchors (24K 465–485 AED/g ✓). File age at probe 711 s < 900 threshold.
+- Same-vendor cross-check: live `api.gold-api.com/price/XAU` = 3989.5 twelve minutes later —
+  pipeline reproduces provider faithfully. Truly independent sources unreachable from sandbox
+  (goldprice.org 403, Yahoo 429) — external verification **Unverifiable** here.
+- Caveat: committed `is_fresh:true`/`freshness_seconds:18` are frozen at write time — file is
+  factually >900 s old for ~45 min of each hour while self-reporting fresh (client realtime engine
+  recomputes age; `spot-resolver.classifyFreshness` does not). → Phases 6–7.
+
+## Browser console & hydration (headless Chromium, live prod)
+
+- **Zero console errors / pageerrors** on `/` and `/tracker.html` (8 s hydration wait). Only failed
+  requests were Google Analytics collects blocked by the sandbox egress proxy (not a site defect).
+- Hydration works: hero → "3,994.50 … Delayed · Gold-API.com · 22 min. ago"; karat strip hydrates
+  all four values; tracker sticky bar live.
+- **Freshness labels are honest on the paths observed**: homepage correctly showed `Delayed`
+  (hourly-commit data), tracker showed "Live feed unavailable — showing last cached price" with
+  `freshness_state=cached` analytics event. No fake-`Live` observed. (Protect this; Phase 7 must
+  lock it with tests.)
+
+## Additional findings (routed)
+
+| Sev  | Finding                                                                                                                                                                                                                                                                                                           | Route            |
+| ---- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| HIGH | **No CSP, no Permissions-Policy anywhere**; HSTS lacks `includeSubDomains`/`preload`; deprecated `x-xss-protection`+`expect-ct` served; `access-control-allow-origin: *` on HTML. Realistic securityheaders grade ~C/D (plan assumed B). GH Pages ignores `_headers` — only Cloudflare rules or meta-CSP can fix. | Phase 12         |
+| MED  | Homepage status line leaks internal identifier: "Source: **PrimaryProvider**" while hero chip says "Gold-API.com" — contradictory + unresolved-config look.                                                                                                                                                       | Phase 14–17 wave |
+| MED  | og:description leaks provider/polling internals ("gold-api.com spot + open.er-api.com FX… re-poll ~90s") to social previews.                                                                                                                                                                                      | Phase 21         |
+| MED  | Prefetch of hashed `assets/compare-*.html` — wasted bytes + crawlable duplicate of compare.html.                                                                                                                                                                                                                  | Phase 23/24      |
+| MED  | `data/` internal automation state served publicly (`last_tweet_state.json`, `automation_runs.json`, `tweet_failures.json`) via deploy raw-copy.                                                                                                                                                                   | Phase 10/13      |
+| LOW  | Hydrated hero retains "$ —" placeholder fragment beside the real number ("3,994.50 $ —"); needs DOM check (visual vs hidden).                                                                                                                                                                                     | Phase 14–17 wave |
+| LOW  | Tracker cached-data banner mounted twice (duplicate text nodes).                                                                                                                                                                                                                                                  | Phase 14–17 wave |
+| LOW  | Homepage ticker marquee duplicates content — verify `aria-hidden` on clone.                                                                                                                                                                                                                                       | Phase 20         |
+| LOW  | "Critical CSS (inlined…)" head comment with no inlined block — claim without implementation.                                                                                                                                                                                                                      | Phase 25         |
+| LOW  | robots.txt `Disallow: /admin/` advertises the admin surface; rely on auth + noindex instead.                                                                                                                                                                                                                      | Phase 11/12      |
+| LOW  | freegoldapi.com optional historical feed last datapoint 2026-02-20 at $5,059 (27% above current spot) — if any chart splices it as recent, visible contradiction; verify clamping.                                                                                                                                | Phase 6          |
+| LOW  | tracker.html only page with meta keywords (leftover).                                                                                                                                                                                                                                                             | Phase 21         |
+| —    | cache-control max-age=600 with `cf-cache-status: DYNAMIC` on all HTML — no edge caching; informational for Phase 26.                                                                                                                                                                                              | Phase 26         |
+
+## Verified working (protect, don't regress)
+
+Canonical tags correct on all 7 probed pages (self-referencing); 404 is a true 404 with noindex and
+no canonical; robots.txt sane + sitemap declared; freshness vocabulary and reference-vs-retail
+disclaimers present on every probed page; no mixed content; no stray `meta robots` on indexable
+pages; Organization/WebSite JSON-LD; hydration + honest labels.
