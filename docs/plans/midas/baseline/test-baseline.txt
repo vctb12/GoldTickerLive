@@ -1,0 +1,25 @@
+  ---
+  duration_ms: 0.394048
+  type: 'test'
+  ...
+# Subtest: parse: thousands separators are stripped (ASCII, Arabic, and space)
+ok 1195 - parse: thousands separators are stripped (ASCII, Arabic, and space)
+  ---
+  duration_ms: 0.266583
+  type: 'test'
+  ...
+# Subtest: parse: isPositiveNumber guards weight/amount
+ok 1196 - parse: isPositiveNumber guards weight/amount
+  ---
+  duration_ms: 0.394687
+  type: 'test'
+  ...
+1..1196
+# tests 1668
+# suites 164
+# pass 1668
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 66218.787279

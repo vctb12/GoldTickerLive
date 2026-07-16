@@ -7,6 +7,32 @@ Statuses: `NOT_STARTED` · `IN_PROGRESS` · `BLOCKED` · `DONE` · `GATED_PENDIN
 
 ---
 
+## OPERATION MIDAS — Total Assurance Campaign (opened 2026-07-16)
+
+**Plan:** [`docs/plans/2026-07-16_operation-midas.md`](./docs/plans/2026-07-16_operation-midas.md) ·
+**Baseline:** [`docs/plans/midas/baseline/`](./docs/plans/midas/baseline/) · **Branch:**
+`claude/operation-midas-goldtickerlive-6b32h3` · **Rollback tag:** `pre-midas` (`0f61fd6`)
+
+> **Test floor: 1668 passing / 0 failing** (measured Phase 1; supersedes the plan's stale 1081).
+> Session adaptation: phases land as per-phase commits on the designated branch (harness mandates a
+> single branch); PR granularity is the owner's call at merge time. See plan §10.
+
+| Phase | Name                                  | Risk  | Status      | Evidence                                                                                                                                                   |
+| ----- | ------------------------------------- | ----- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1     | Baseline Lock & Environment Bootstrap | GREEN | DONE        | 1668/0 tests; build green (dist 6.9 MB); prod headers + sitemap + home HTML captured; `pre-midas` tag; plan-assumption corrections in `baseline/README.md` |
+| 2     | Parallel Codebase Recon (4 SCOUTs)    | GREEN | IN_PROGRESS | 4-lane fan-out dispatched                                                                                                                                  |
+| 3     | Live Production Audit                 | GREEN | IN_PROGRESS | 5 AUDITOR probes dispatched (F1–F6 + AR delivery + price sanity + console)                                                                                 |
+| 4     | Risk Register & Plan Ratification     | GREEN | NOT_STARTED | —                                                                                                                                                          |
+| 5–30  | Waves 1–7                             | —     | NOT_STARTED | —                                                                                                                                                          |
+
+### Midas session log
+
+| Date       | Session        | Phases | Result                                                                                                                                                                                                                                                                     |
+| ---------- | -------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-16 | Orchestrator 1 | 1–…    | Kickoff. Baseline locked (1668/0). Found: `/ar/` = prod 404 (no AR URL space; client-side i18n only); sitemap = 14 URLs (site is ~17 pages, not ~390); Vite build breaks on any stray `.html` in repo. Wave-0 recon + live audit dispatched as parallel read-only fan-out. |
+
+---
+
 ## DESIGN OVERHAUL — Design, Type & Motion System (opened 2026-07-12)
 
 **Plan:**

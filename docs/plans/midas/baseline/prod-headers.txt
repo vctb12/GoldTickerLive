@@ -1,0 +1,70 @@
+== curl -sI https://goldtickerlive.com/ ==
+HTTP/1.1 200 Connection Established
+
+HTTP/2 200 
+date: Thu, 16 Jul 2026 12:57:37 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+last-modified: Thu, 16 Jul 2026 12:37:13 GMT
+access-control-allow-origin: *
+strict-transport-security: max-age=31556952
+referrer-policy: same-origin
+expires: Thu, 16 Jul 2026 12:59:17 GMT
+cache-control: max-age=600
+x-xss-protection: 1; mode=block
+x-proxy-cache: MISS
+x-github-request-id: 3314:A23DD:7CBADD:8951E8:6A58D34C
+x-content-type-options: nosniff
+age: 0
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000126-IAD
+x-cache: HIT
+x-cache-hits: 0
+x-timer: S1784206658.857357,VS0,VE19
+vary: Accept-Encoding
+x-fastly-request-id: 433bc81241f38d9bf2eebc532acd06278018d2d3
+x-frame-options: SAMEORIGIN
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=XH3BbxRdtd6BvE5tK93m0boVnokDSuO5v69zm2XH%2F%2F4mGlg05s2zdD%2FGfOrzam9aS1zmVU%2Be7EkxxE3Xwr6e0IvekkXqw8iiOEMtwTrsG6Jpf2X%2BAPq%2B1LQQIzv6xftMNWo4v7E%3D"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+expect-ct: max-age=86400, enforce
+cf-ray: a1c12c7b3c4105eb-IAD
+alt-svc: h3=":443"; ma=86400
+
+
+== curl -sI https://goldtickerlive.com/ar/ ==
+HTTP/1.1 200 Connection Established
+
+HTTP/2 404 
+date: Thu, 16 Jul 2026 12:57:38 GMT
+content-type: text/html; charset=utf-8
+server: cloudflare
+access-control-allow-origin: *
+strict-transport-security: max-age=31556952
+x-content-type-options: nosniff
+x-proxy-cache: MISS
+x-github-request-id: 4EB4:3FC7C7:7ACC72:8D7335:6A58D542
+x-frame-options: SAMEORIGIN
+age: 0
+via: 1.1 varnish
+x-served-by: cache-iad-kiad7000107-IAD
+x-cache: MISS
+x-cache-hits: 0
+x-timer: S1784206659.573496,VS0,VE40
+vary: Accept-Encoding
+x-fastly-request-id: d618b5c91f3b10c979017e92590899965bbf9c85
+x-xss-protection: 1; mode=block
+cf-cache-status: DYNAMIC
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=Lz49ZxxWCr1eiRXyb139TbAIzZyx%2FfsVAzUuEIs0jmUPIokUiCwJ9JjamLIshmgEYtLcP8wrG8BSOsjHpFdDLggxgR4QMR8xudKumRO5LUMPdz5MR2aYSzPpjDKQjkbyjiLG9%2FU%3D"}]}
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+expect-ct: max-age=86400, enforce
+referrer-policy: same-origin
+cf-ray: a1c12c7ff9671309-IAD
+alt-svc: h3=":443"; ma=86400
+
+
+== robots.txt ==
+User-agent: *
+Allow: /
+Disallow: /admin/
+Sitemap: https://goldtickerlive.com/sitemap.xml

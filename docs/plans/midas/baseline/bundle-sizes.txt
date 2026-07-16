@@ -1,0 +1,30 @@
+# Bundle baseline (npm run build, 2026-07-16)
+
+6.9M	dist
+
+Top JS chunks (bytes):
+217870	dist/assets/utils-DnNsQ25S.js
+195443	dist/assets/vendor-BMyZzQ0h.js
+122147	dist/assets/world-map-data-BgdaDh-9.js
+84829	dist/assets/shops-DkCpal1C.js
+82143	dist/assets/tracker-D9HCIkze.js
+69778	dist/assets/learn-CGg5WF4y.js
+68593	dist/assets/site-shell-2QTTkoJ2.js
+54745	dist/assets/index-DLNMSN_s.js
+52151	dist/assets/calculator-B4NzHscH.js
+33767	dist/assets/article-renderer-aER_YaNH.js
+31736	dist/assets/render-B3QoFBoM.js
+27850	dist/assets/portfolio-B8EbA7Xi.js
+25009	dist/assets/freegoldapi-HBFvMcuj.js
+24034	dist/assets/heatmap-Ce4PRXqS.js
+23611	dist/assets/freshness-pulse-CkUlKYDD.js
+
+Top CSS (bytes):
+182377	dist/assets/global-BOghGyXW.css
+108046	dist/assets/tracker-CyQq_jvB.css
+82524	dist/assets/index-BiHgrUjx.css
+57960	dist/assets/shops-BxrxDrNF.css
+57918	dist/assets/learn-DuEacsX9.css
+24045	dist/assets/calculator-D4RtwAVQ.css
+21830	dist/assets/methodology-CK8QGS1v.css
+21147	dist/assets/compare-xg87Jync.css
