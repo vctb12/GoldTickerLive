@@ -236,3 +236,54 @@ describe('tracker hero module', () => {
     assert.doesNotThrow(() => mod.patchHeroLiveTick());
   });
 });
+
+// Regression: D3 (Operation Midas Wave 3) — the live badge text and the refresh
+// badge sit back-to-back inside the same #tp-live-badge pill (separated only by a
+// literal "·"). When the live feed is unavailable with no cached timestamp, both
+// surfaces used to emit tx('liveUnavailable'), printing the identical full
+// sentence twice in a row. The live badge keeps the full honest disclosure; the
+// adjacent refresh badge must fall back to the short tx('source.unavailable')
+// label so the pill never repeats the banner.
+describe('tracker hero — unavailable-state badge dedup (D3)', () => {
+  let mod;
+  let ctxMod;
+  let liveBadgeText;
+  let refreshBadge;
+  let state;
+
+  before(async () => {
+    installDom();
+    liveBadgeText = createNode('span');
+    refreshBadge = createNode('span');
+    state = {
+      lang: 'en',
+      selectedCurrency: 'AED',
+      selectedKarat: '24',
+      selectedUnit: 'gram',
+      // Live feed failed AND there is no cached timestamp → freshness key
+      // 'unavailable' with timeText '—' (no meaningful time), which is the exact
+      // branch that used to double-print the sentence.
+      hasLiveFailure: true,
+      live: { updatedAt: null, isFallback: false, isFresh: false },
+    };
+    ctxMod = await loadCtx(
+      state,
+      { liveBadgeText, refreshBadge },
+      () => null,
+      () => null // no spot
+    );
+    mod = await loadTrackerModule('hero.js');
+    mod.renderHero();
+  });
+
+  it('the live badge carries the full unavailable sentence (honest disclosure preserved)', () => {
+    assert.equal(liveBadgeText.textContent, ctxMod.tx('liveUnavailable'));
+  });
+
+  it('the adjacent refresh badge shows a distinct short label, not the same sentence', () => {
+    assert.equal(refreshBadge.textContent, ctxMod.tx('source.unavailable'));
+    assert.notEqual(refreshBadge.textContent, liveBadgeText.textContent);
+    // The refresh badge must not repeat the full banner sentence.
+    assert.notEqual(refreshBadge.textContent, ctxMod.tx('liveUnavailable'));
+  });
+});

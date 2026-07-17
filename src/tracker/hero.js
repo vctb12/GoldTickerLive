@@ -208,9 +208,18 @@ export function renderHero() {
     let refreshText;
     if (!spot) {
       if (_state.hasLiveFailure) {
+        // D3: the live badge (#tp-live-badge-text) already carries the full
+        // "Live feed unavailable — showing last cached price" sentence, and this
+        // refresh badge sits immediately after it — separated only by a literal
+        // "·" inside the same #tp-live-badge pill. When there is a cached
+        // timestamp we show the distinct "No data — last cached: {time}" form;
+        // when there is none we previously emitted tx('liveUnavailable') here too,
+        // printing the identical sentence twice back-to-back. Fall back to the
+        // short, still-honest "Unavailable" label so the pill never repeats the
+        // banner. The full disclosure remains on the live badge.
         refreshText = hasMeaningfulTime
           ? tx('refreshBadgeUnavailable', { time: freshness.timeText })
-          : tx('liveUnavailable');
+          : tx('source.unavailable');
       } else {
         refreshText = tx('connecting');
       }
