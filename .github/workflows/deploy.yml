@@ -89,7 +89,34 @@ jobs:
           cp feed.xml dist/ || true
           # ES module source files used by all leaf pages via page-hydrator.js
           cp -r src dist/
-          cp -r data dist/
+          # data/ — PUBLIC ALLOWLIST ONLY (phase-10 exposure sweep).
+          # Do NOT `cp -r data dist/`: a blanket copy publishes internal
+          # automation/persistence state to the public CDN — billing.json,
+          # leads.json, newsletter-subscribers.json, audit-logs.json,
+          # alerts-v1.json, automation_runs.json, tweet_posts.json,
+          # tweet_failures.json, last_tweet_state.json, provider_state.json,
+          # ai-drafts.json, link-audit.json, shops-data.json — none of which any
+          # browser fetches (all are read only by server/ routes or scripts/).
+          # Ship ONLY files a deployed client actually loads:
+          mkdir -p dist/data
+          # gold_price.json — live spot; fetched by src/lib/api.js,
+          #   src/lib/spot-resolver.js, src/lib/metal-feed-adapter.js,
+          #   src/lib/visibility-refresh.js, src/pages/home.js,
+          #   src/pages/portfolio.js, src/pages/tracker-pro.js, admin/pricing,
+          #   admin/social, and precached by sw.js.
+          cp data/gold_price.json dist/data/
+          # last_gold_price.json — fallback reference; fetched by
+          #   src/pages/market.js,
+          #   src/lib/quote-providers/last-gold-price-provider.js,
+          #   and precached by sw.js.
+          cp data/last_gold_price.json dist/data/
+          # shops.js — public shop directory. Already bundled into JS assets at
+          #   build (imported by src/pages/shops.js, src/search/searchIndex.js);
+          #   copied fail-open as public-safe, non-sensitive data.
+          cp data/shops.js dist/data/
+          # index.html — noindex "not a public page" /data/ directory stub. Vite
+          #   also emits it as an HTML entry; copy keeps behavior explicit.
+          cp data/index.html dist/data/
           # Root-level shared CSS/icons used by leaf pages via relative paths
           cp favicon.svg dist/
           cp manifest.json dist/
