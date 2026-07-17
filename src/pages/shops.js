@@ -1050,7 +1050,7 @@ function applyStaticText() {
   const reviewedDate = new Date(`${SHOPS_LAST_REVIEWED_ISO}T00:00:00Z`);
   const dateStr =
     STATE.lang === 'ar'
-      ? reviewedDate.toLocaleDateString('ar-EG', {
+      ? reviewedDate.toLocaleDateString('ar-AE', {
           year: 'numeric',
           month: 'short',
           day: 'numeric',

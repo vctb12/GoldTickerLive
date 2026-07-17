@@ -26,11 +26,12 @@
  * makes a formatter emit a ٠-٩ / ۰-۹ glyph and fails here.
  *
  * Scope note: this test locks the JS formatter layer, which is the authoritative
- * source for every runtime-rendered number. Hard-coded Eastern-Arabic digits
- * that still live in a handful of STATIC page-HTML blocks (market.html step
- * badges, learn.html stat pill) and one page module (shops.js review date) are
- * documented as follow-ups in docs/plans/midas/RTL_PARITY.md — they are outside
- * the formatter layer and are not asserted here.
+ * source for every runtime-rendered number. The static/page-level literals that
+ * were previously documented as follow-ups (market.html step badges, learn.html
+ * stat pill, shops.js review-date locale) have since been migrated to Western
+ * digits in phase 21 and are guarded by the static numeral sweep in
+ * tests/static-numeral-policy.test.js — they are outside the formatter layer and
+ * are not asserted here.
  */
 
 const { test, describe } = require('node:test');

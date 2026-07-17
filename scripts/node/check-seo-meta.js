@@ -66,9 +66,27 @@ function isInternal(rel) {
   return INTERNAL_PREFIXES.some((p) => rel.startsWith(p));
 }
 
+// Extract the trimmed inner text of the first <title>, or null.
+function titleOf(html) {
+  const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return m ? m[1].replace(/\s+/g, ' ').trim() : null;
+}
+
+// Extract the first meta description content attribute, or null.
+function descriptionOf(html) {
+  const m = html.match(/<meta[^>]*name="description"[^>]*content="([^"]*)"/i);
+  return m ? m[1].replace(/\s+/g, ' ').trim() : null;
+}
+
 function main() {
   const files = walk(ROOT);
   const errors = [];
+
+  // Uniqueness ledgers for public, indexable pages. Two pages sharing a <title>
+  // or a meta description dilute their own search relevance and read as
+  // duplicate/thin content — so we fail the build on any collision.
+  const titleOwners = new Map(); // normalized title -> [rel, ...]
+  const descOwners = new Map(); // normalized description -> [rel, ...]
 
   for (const rel of files) {
     if (EXEMPT_FILES.has(rel)) continue;
@@ -84,6 +102,13 @@ function main() {
     // Pages explicitly marked noindex are treated as internal/scaffolded regardless of location.
     if (/name="robots"[^>]*noindex/i.test(html)) {
       continue;
+    }
+
+    // Dead-weight meta keywords tag: ignored by every major search engine and a
+    // maintenance hazard (drifts out of sync with real copy). Not allowed on
+    // public pages.
+    if (/<meta[^>]*name="keywords"/i.test(html)) {
+      errors.push(`${rel}: remove obsolete <meta name="keywords"> (ignored by search engines)`);
     }
 
     // Public page — must have canonical
@@ -125,6 +150,19 @@ function main() {
     // Redirect stubs don't require hreflang
     if (isRedirectStub(html)) continue;
 
+    // Track title/description for the sitewide uniqueness gate below. Only full
+    // public content pages (past the redirect-stub guard) participate.
+    const title = titleOf(html);
+    if (title) {
+      if (!titleOwners.has(title)) titleOwners.set(title, []);
+      titleOwners.get(title).push(rel);
+    }
+    const desc = descriptionOf(html);
+    if (desc) {
+      if (!descOwners.has(desc)) descOwners.set(desc, []);
+      descOwners.get(desc).push(rel);
+    }
+
     // Public page — must have hreflang en, ar, x-default
     const hreflangs = Array.from(html.matchAll(/hreflang="([^"]+)"/g)).map((m) => m[1]);
     const required = ['en', 'ar', 'x-default'];
@@ -132,6 +170,21 @@ function main() {
     if (missing.length) {
       errors.push(
         `${rel}: missing hreflang=${missing.join(',')} (found: ${hreflangs.join(',') || 'none'})`
+      );
+    }
+  }
+
+  // Sitewide uniqueness: no two public content pages may share a <title> or a
+  // meta description. Report every collision (each duplicate group once).
+  for (const [title, owners] of titleOwners) {
+    if (owners.length > 1) {
+      errors.push(`duplicate <title> "${title}" on: ${owners.sort().join(', ')}`);
+    }
+  }
+  for (const [desc, owners] of descOwners) {
+    if (owners.length > 1) {
+      errors.push(
+        `duplicate <meta name="description"> "${desc.slice(0, 60)}…" on: ${owners.sort().join(', ')}`
       );
     }
   }

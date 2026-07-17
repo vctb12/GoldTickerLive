@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-07-07",
+  "generatedAtDate": "2026-07-17",
   "summary": {
     "totalHtmlFiles": 16,
     "withCanonical": 14,
@@ -227,8 +227,8 @@
       "metaDescription": "Current gold price per gram in UAE AED — reference 24K, 22K, 21K, 18K rates for GCC and 20+ Arab countries. Auto-refresh with a visible freshness label.",
       "canonical": "https://goldtickerlive.com/",
       "robots": null,
-      "ogTitle": "Gold Ticker Live — Reference Gold Prices for GCC & the Arab World | أسعار الذهب المرجعية",
-      "ogDescription": "Track gold spot prices in 24+ countries. Seven karat grades (14K–24K) from gold-api.com spot + open.er-api.com FX. Source updates hourly; pages re-poll ~90s. Bilingual EN/AR.",
+      "ogTitle": "Gold Ticker Live — Reference Gold Prices UAE & GCC Today | أسعار الذهب المرجعية",
+      "ogDescription": "Track reference gold prices across the UAE, GCC and 20+ Arab countries — seven karat grades (14K–24K), per gram and ounce, with a visible freshness label. Bilingual EN/AR.",
       "ogImage": "https://goldtickerlive.com/assets/og-image.png",
       "ogUrl": "https://goldtickerlive.com/",
       "ogType": "website",

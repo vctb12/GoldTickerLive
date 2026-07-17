@@ -1060,7 +1060,7 @@ export const TRANSLATIONS = {
       '. Spot source updates hourly during market hours; pages re-poll about every 90 seconds while open. Prices use the official AED peg of 3.6725.',
     ],
     'home.faq2A': [
-      '24K is 100% pure gold. 22K is 91.7% gold (common for Gulf jewelry). 21K is 87.5% gold (popular in Egypt and Levant). 18K is 75% gold (common for fine jewelry worldwide). The price scales with purity — see our ',
+      '24K is 99.9% pure gold. 22K is 91.7% gold (common for Gulf jewelry). 21K is 87.5% gold (popular in Egypt and Levant). 18K is 75% gold (common for fine jewelry worldwide). The price scales with purity — see our ',
       ['./learn.html', 'Learn page'],
       ' for the full breakdown.',
     ],
@@ -2532,7 +2532,7 @@ export const TRANSLATIONS = {
       '. يُحدَّث مصدر السعر الفوري كل ساعة خلال ساعات السوق؛ وتعيد الصفحات الاستعلام كل 90 ثانية تقريبًا أثناء فتحها. تعتمد الأسعار على الربط الرسمي للدرهم عند 3.6725.',
     ],
     'home.faq2A': [
-      'عيار 24 ذهب نقي 100%. وعيار 22 يحتوي 91.7% ذهبًا (شائع في مجوهرات الخليج). وعيار 21 يحتوي 87.5% (منتشر في مصر وبلاد الشام). وعيار 18 يحتوي 75% (شائع للمجوهرات الراقية عالميًا). يتناسب السعر مع النقاء — راجع ',
+      'عيار 24 ذهب نقي 99.9%. وعيار 22 يحتوي 91.7% ذهبًا (شائع في مجوهرات الخليج). وعيار 21 يحتوي 87.5% (منتشر في مصر وبلاد الشام). وعيار 18 يحتوي 75% (شائع للمجوهرات الراقية عالميًا). يتناسب السعر مع النقاء — راجع ',
       ['./learn.html', 'صفحة التعلّم'],
       ' للتفاصيل الكاملة.',
     ],
@@ -2915,7 +2915,7 @@ export const TRANSLATIONS = {
 
     // Markets hub
     'markets.heroTag': 'أسواق الذهب العالمية',
-    'markets.title': 'أسعار الذهب في أكثر من ٢٤ دولة',
+    'markets.title': 'أسعار الذهب في أكثر من 24 دولة',
     'markets.sub':
       'أسعار مرجعية مباشرة مرتبطة بالسعر الفوري عبر دول الخليج والشام وأفريقيا والأسواق العالمية — حسب العيار والعملة، مع وسم دائم.',
     'markets.searchPlaceholder': 'ابحث عن دولة…',
