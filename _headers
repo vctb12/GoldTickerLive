@@ -44,10 +44,21 @@
 # server.js:57–121 so that, when the static tier is fronted by such a host, it
 # ships the same hardening as the dynamic admin tier. See the HOST CAVEAT at the
 # top of this file: under the default GitHub Pages deploy these are inert.
-# Note: CSP is intentionally NOT set here — production CSP is enforced by Helmet
-# for the admin/API host and is locked by tests/csp-regression.test.js. Adding a
-# static-host CSP would require a parallel regression test in the same commit
-# (plan item A.A.2 #9).
+#
+# ⚠️  OPERATION MIDAS PHASE 12 — SECURITY-HEADER SOURCE OF TRUTH IS CLOUDFLARE.
+# The live public site is GitHub Pages behind Cloudflare. GitHub Pages does NOT
+# read this file, so NOTHING below ships on the live tier. The authoritative,
+# evidence-based ruleset (full CSP with inline-script hashes, connect-src
+# allowlist, HSTS/Permissions-Policy, x-xss-protection + expect-ct removal, and
+# ACAO scoping) is applied by the owner at Cloudflare per
+# docs/plans/midas/SECURITY_HEADERS.md (owner decision Q5). The CSP-Report-Only
+# line below MIRRORS that doc so this file stays correct for a future platform
+# move to Netlify / Cloudflare Pages — regenerate its inline-script hashes with
+# `node scripts/node/csp-inventory.js` whenever the built inline scripts change.
+# It is shipped as Report-Only (never blocks) to coexist with X-Frame-Options
+# below; promote to enforce per SECURITY_HEADERS.md §2 only on a host that reads
+# this file. The enforced production CSP for the admin/API host stays in Helmet
+# (server.js) and is locked by tests/csp-regression.test.js.
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
@@ -56,6 +67,7 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms; connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms; frame-ancestors 'self'; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'
 
 # Admin panel: stricter framing and no-indexing.
 /admin/*

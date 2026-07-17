@@ -1,0 +1,129 @@
+{
+  "generatedAt": "2026-07-17T15:31:23.555Z",
+  "distDir": "dist",
+  "htmlFilesScanned": 19,
+  "inlineScripts": {
+    "distinctHashes": 3,
+    "themePreinitConsistent": true,
+    "themePreinitHashCount": 1,
+    "entries": [
+      {
+        "hash": "sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=",
+        "pages": 19,
+        "files": [
+          "404.html",
+          "assets/calculator-BfkeHXf_.html",
+          "assets/compare-pOjzigOL.html",
+          "assets/index-Bu2SXQ5m.html",
+          "calculator.html",
+          "compare.html",
+          "dubai-gold-price.html",
+          "glossary.html",
+          "heatmap.html",
+          "index.html",
+          "learn.html",
+          "market.html",
+          "methodology.html",
+          "offline.html",
+          "portfolio.html",
+          "privacy.html",
+          "shops.html",
+          "terms.html",
+          "tracker.html"
+        ],
+        "byteLength": 1179,
+        "isThemePreinit": true,
+        "preview": "(function () { var el = document.documentElement; el.classLi"
+      },
+      {
+        "hash": "sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=",
+        "pages": 15,
+        "files": [
+          "assets/calculator-BfkeHXf_.html",
+          "assets/compare-pOjzigOL.html",
+          "calculator.html",
+          "compare.html",
+          "dubai-gold-price.html",
+          "glossary.html",
+          "heatmap.html",
+          "learn.html",
+          "market.html",
+          "methodology.html",
+          "portfolio.html",
+          "privacy.html",
+          "shops.html",
+          "terms.html",
+          "tracker.html"
+        ],
+        "byteLength": 123,
+        "isThemePreinit": false,
+        "preview": "if ('serviceWorker' in navigator) { navigator.serviceWorker."
+      },
+      {
+        "hash": "sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=",
+        "pages": 1,
+        "files": ["offline.html"],
+        "byteLength": 5811,
+        "isThemePreinit": false,
+        "preview": "(function () { // ── Language detection ────────────────────"
+      }
+    ]
+  },
+  "htmlResourceOrigins": {
+    "script": [],
+    "style": [],
+    "img": [],
+    "font": []
+  },
+  "htmlAbsoluteOrigins": [
+    "https://blog.gdeltproject.org",
+    "https://commons.wikimedia.org",
+    "https://datahub.io",
+    "https://docs.github.com",
+    "https://gold-api.com",
+    "https://goldtickerlive.com",
+    "https://mintedmetal.com",
+    "https://open.er-api.com",
+    "https://privacy.microsoft.com",
+    "https://www.centralbank.ae",
+    "https://www.exchangerate-api.com",
+    "https://www.gold-api.com",
+    "https://x.com"
+  ],
+  "inlineStyle": {
+    "styleTagTotal": 2,
+    "pagesWithStyleAttr": 4,
+    "styleSrcStrategy": "'unsafe-inline'",
+    "note": "Inline <style> blocks (404/offline) and style= attributes exist; hashing every attribute is impractical, so style-src uses 'unsafe-inline' (styles cannot exfiltrate data or execute — pragmatic and low-risk). Justified in SECURITY_HEADERS.md."
+  },
+  "fetchOrigins": [
+    {
+      "host": "api.gdeltproject.org",
+      "files": ["tracker/wire.js"]
+    },
+    {
+      "host": "api.gold-api.com",
+      "files": ["lib/quote-providers/gold-api-com-provider.js"]
+    },
+    {
+      "host": "freegoldapi.com",
+      "files": ["lib/freegoldapi.js"]
+    },
+    {
+      "host": "mintedmetal.com",
+      "files": ["lib/quote-providers/minted-metal-provider.js"]
+    },
+    {
+      "host": "nebdpxjazlnsrfmlpgeq.supabase.co",
+      "files": ["config/supabase.js"]
+    },
+    {
+      "host": "nominatim.openstreetmap.org",
+      "files": ["pages/shops.js"]
+    },
+    {
+      "host": "open.er-api.com",
+      "files": ["config/constants.js"]
+    }
+  ]
+}
