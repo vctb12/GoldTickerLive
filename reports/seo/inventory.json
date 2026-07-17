@@ -249,6 +249,7 @@
         }
       ],
       "jsonLdTypes": [
+        "FAQPage",
         "Organization",
         "WebSite"
       ],

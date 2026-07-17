@@ -150,6 +150,138 @@ test('calculator.html: emits a WebApplication with a featureList', () => {
   );
 });
 
+// ── Site-wide JSON-LD integrity + Directive-4 (no retail Offer/Product) guard ──
+//
+// Walks every indexable HTML page the schema injector touches and asserts:
+//   • every JSON-LD block parses;
+//   • every top-level block declares an @type;
+//   • Directive 4 — a reference price is NEVER expressed as a retail sale:
+//       - no object anywhere is a Product / AggregateOffer / product-model type;
+//       - the only permitted Offer is the zero-price "this tool is free" offer on
+//         a WebApplication (price === '0'); no other object may carry `price` or
+//         `priceCurrency`. This is what stops a gold reference price from ever
+//         being marked up as a monetary Offer/Product.
+{
+  const SKIP_DIRS = new Set(['node_modules', 'dist', '.git', 'server', 'tests', 'admin', 'embed']);
+
+  function walkHtml(dir, acc) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        if (!SKIP_DIRS.has(entry.name)) walkHtml(full, acc);
+      } else if (entry.isFile() && entry.name.endsWith('.html')) {
+        acc.push(full);
+      }
+    }
+    return acc;
+  }
+
+  function isNoindex(html) {
+    return /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(html);
+  }
+
+  // Recursively collect every nested object that carries an @type, plus a flat
+  // list of every object (typed or not) so we can scan for stray price fields.
+  function collectObjects(node, all) {
+    if (Array.isArray(node)) {
+      for (const item of node) collectObjects(item, all);
+    } else if (node && typeof node === 'object') {
+      all.push(node);
+      for (const key of Object.keys(node)) collectObjects(node[key], all);
+    }
+    return all;
+  }
+
+  const FORBIDDEN_TYPES = new Set([
+    'Product',
+    'AggregateOffer',
+    'IndividualProduct',
+    'ProductModel',
+    'ProductGroup',
+    'ProductCollection',
+  ]);
+
+  const indexablePages = walkHtml(ROOT, [])
+    .filter((f) => !isNoindex(fs.readFileSync(f, 'utf8')))
+    .map((f) => path.relative(ROOT, f));
+
+  test('site-wide: every indexable page has only valid, parseable JSON-LD', () => {
+    for (const rel of indexablePages) {
+      const blocks = jsonLdBlocks(read(rel));
+      for (const block of blocks) {
+        let parsed;
+        assert.doesNotThrow(() => {
+          parsed = JSON.parse(block);
+        }, `${rel}: invalid JSON-LD block`);
+        const roots = Array.isArray(parsed) ? parsed : [parsed];
+        for (const r of roots) {
+          assert.ok(r && r['@type'], `${rel}: JSON-LD block missing @type`);
+        }
+      }
+    }
+  });
+
+  test('site-wide Directive-4: no reference price is expressed as a retail Offer/Product', () => {
+    for (const rel of indexablePages) {
+      const objs = jsonLdObjects(read(rel));
+      const all = collectObjects(objs, []);
+      for (const obj of all) {
+        const type = obj['@type'];
+        assert.ok(
+          !FORBIDDEN_TYPES.has(type),
+          `${rel}: forbidden retail type "${type}" — reference prices must never be a Product/Offer`
+        );
+        if (type === 'Offer') {
+          // The only sanctioned Offer is the free-tool marker: price "0".
+          assert.equal(
+            obj.price,
+            '0',
+            `${rel}: the only permitted Offer is a zero-price free-tool offer (found price=${JSON.stringify(obj.price)})`
+          );
+        } else {
+          // No non-Offer object may carry a monetary price — that would imply a
+          // priced reference/gold quote (Directive 4 violation).
+          assert.ok(
+            !('price' in obj),
+            `${rel}: "${type}" carries a price field — reference data must not be priced`
+          );
+          assert.ok(
+            !('priceCurrency' in obj),
+            `${rel}: "${type}" carries priceCurrency — reference data must not be priced`
+          );
+        }
+      }
+    }
+  });
+
+  test('index.html: FAQPage JSON-LD is present and matches the visible microdata FAQ', () => {
+    const html = read('index.html');
+    const faq = jsonLdObjects(html).find((o) => o['@type'] === 'FAQPage');
+    assert.ok(faq, 'index.html: missing FAQPage JSON-LD');
+    assert.ok(
+      Array.isArray(faq.mainEntity) && faq.mainEntity.length >= 1,
+      'index.html: FAQPage must have a non-empty mainEntity'
+    );
+    // Parity with the visible microdata FAQ: one JSON-LD Question per rendered
+    // Question item, so the schema can't silently drift from the page copy.
+    const visibleQuestions = (html.match(/itemtype="https:\/\/schema\.org\/Question"/gi) || [])
+      .length;
+    assert.equal(
+      faq.mainEntity.length,
+      visibleQuestions,
+      `index.html: FAQPage has ${faq.mainEntity.length} questions but the page renders ${visibleQuestions}`
+    );
+    for (const q of faq.mainEntity) {
+      assert.equal(q['@type'], 'Question', 'each FAQ entry must be a Question');
+      assert.ok(q.name && q.name.trim(), 'each Question needs a name');
+      assert.ok(
+        q.acceptedAnswer && q.acceptedAnswer['@type'] === 'Answer' && q.acceptedAnswer.text,
+        'each Question needs an Answer with text'
+      );
+    }
+  });
+}
+
 test('calculator.html: reference framing across description, WebApplication, and social tags', () => {
   const html = read('calculator.html');
   const h = head(html);

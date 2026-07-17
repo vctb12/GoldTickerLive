@@ -251,6 +251,89 @@ function extractDlFaq(content, sectionId) {
 }
 
 /**
+ * Reference-frame body-derived FAQ prose before it enters JSON-LD.
+ *
+ * The visible page copy is allowed to say "the live gold price…", but the site's
+ * trust contract (enforced by scripts/node/reference-language-sweep.js) requires
+ * metadata and JSON-LD to describe *reference*, not "live", gold prices. The
+ * build runs this injector but NOT the sweep, so any body-derived phrasing must
+ * already be reference-framed here — otherwise the emitted JSON-LD would revert
+ * to "live …" on every build and fail `reference-language-sweep --check`.
+ *
+ * This mirrors the sweep's "live {…} gold price/rate → reference …" rules for the
+ * phrasings that can appear in FAQ answer prose. The brand name "Gold Ticker
+ * Live", feature labels ("Live Tracker"), and accurate spot-feed uses ("live
+ * XAU/USD spot") are deliberately left untouched — same as the sweep.
+ * @param {string} s
+ * @returns {string}
+ */
+function referenceFrame(s) {
+  return (
+    s
+      // "live {karat list}[ gold] rate(s)/price(s)" → "reference …"
+      .replace(
+        /\b(L)ive(\s+(?:\d+K\b[\s,]*)+(?:and\s+\d+K\b\s+)?(?:gold\s+)?(?:rate|price)s?)/gi,
+        (m, L, rest) => (L === 'L' ? 'Reference' : 'reference') + rest
+      )
+      // "live gold price(s)/rate(s)" (adjacent) → "reference gold price(s)/rate(s)"
+      .replace(
+        /\b(L)ive( gold (?:price|rate)s?)/gi,
+        (m, L, rest) => (L === 'L' ? 'Reference' : 'reference') + rest
+      )
+      // a spot price is inherently current — drop the redundant "live"
+      .replace(/\blive (gold spot price)/gi, '$1')
+  );
+}
+
+/**
+ * Extract Q&A pairs from the homepage's visible FAQ, which is authored as
+ * schema.org **microdata** (a `<div class="faq-list" itemtype=".../FAQPage">`
+ * whose items carry `itemprop="name"` on the `<summary>` and `itemprop="text"`
+ * on the answer `<div>`). We read that same visible markup at build time so the
+ * emitted JSON-LD FAQPage cannot drift from the rendered copy — the JSON-LD is a
+ * machine-preferred restatement of the exact questions and answers a visitor
+ * sees, not a hand-maintained duplicate.
+ *
+ * Answer HTML (which contains inline `<a>` links) is flattened to plain text;
+ * link anchor text is preserved inline (e.g. "see the Live Tracker"). Only the
+ * canonical-English items are kept (any question containing Arabic characters is
+ * skipped) so the schema matches the page's `lang`.
+ * @param {string} content
+ * @returns {Array<{q: string, a: string}>}
+ */
+function extractMicrodataFaq(content) {
+  const itemRe =
+    /<details[^>]*itemtype="https:\/\/schema\.org\/Question"[^>]*>([\s\S]*?)<\/details>/gi;
+  const qRe = /itemprop="name"[^>]*>([\s\S]*?)<\/summary>/i;
+  const aRe = /itemprop="text"[^>]*>([\s\S]*?)<\/div>/i;
+  const strip = (s) =>
+    referenceFrame(
+      s
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/\s+/g, ' ')
+        .replace(/\s+([.,;:!?])/g, '$1')
+        .trim()
+    );
+  const faqItems = [];
+  let match = itemRe.exec(content);
+  while (match) {
+    const inner = match[1];
+    const qMatch = inner.match(qRe);
+    const aMatch = inner.match(aRe);
+    if (qMatch && aMatch) {
+      const q = strip(qMatch[1]);
+      const a = strip(aMatch[1]);
+      if (q && a && !/[؀-ۿ]/.test(q)) {
+        faqItems.push({ q, a });
+      }
+    }
+    match = itemRe.exec(content);
+  }
+  return faqItems;
+}
+
+/**
  * Dataset schema for price data pages.
  * @param {Object} options
  */
@@ -495,6 +578,19 @@ function generateSchemasForPage(filePath, content) {
   if (pageType === 'homepage') {
     schemas.push(getOrganizationSchema());
     schemas.push(getWebSiteSchema());
+
+    // The English homepage's visible "Common Questions" FAQ is authored as
+    // microdata. Emit a JSON-LD FAQPage restatement of that SAME visible copy
+    // (Google's preferred format; the microdata stays for other consumers).
+    // Gated to the English homepage (index.html) — the /ar/ mirror's answers
+    // are not statically translated, so we do not emit an English-answer
+    // FAQPage under lang="ar".
+    if (relativePath === 'index.html') {
+      const homeFaq = extractMicrodataFaq(content);
+      if (homeFaq.length > 0) {
+        schemas.push(getFAQPageSchema(homeFaq));
+      }
+    }
   }
 
   // All pages get breadcrumb schema (except homepage)
