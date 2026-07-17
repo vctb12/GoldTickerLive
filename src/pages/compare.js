@@ -205,37 +205,56 @@ function fmtPct(value) {
 }
 
 // ── Live data ─────────────────────────────────────────────────────────────────
+// L2-COMPARE-02: the spot snapshot and the FX rates are fetched independently and
+// each triggers its OWN render the instant it resolves — the spot path is NOT
+// gated behind FX. The gold market data lands in well under a second, but
+// `api.fetchFX()` can burn ~27s (three 8s timeouts + backoff) when open.er-api.com
+// hangs. Rendering only after `Promise.allSettled([spot, fx])` used to hold the
+// USD spot badge and the AED-peg UAE prices (which need no FX) blank for that whole
+// window. Now spot → render() runs immediately; FX-dependent country rows fill in
+// on a second render() when rates arrive.
 async function fetchLiveData() {
-  try {
-    // F-1: read spot from the SAME canonical resolver the homepage + calculator
-    // use, so all three surfaces derive from one snapshot and cannot diverge.
-    const [snapRes, fxRes] = await Promise.allSettled([
-      getCanonicalSpot({ force: true }),
-      api.fetchFX(),
-    ]);
-    if (snapRes.status === 'fulfilled' && snapRes.value?.ok) {
-      const snap = snapRes.value;
-      STATE.spotUsdPerOz = snap.spotUsdPerOz;
-      STATE.goldPriceUsdPerOz = snap.spotUsdPerOz;
-      STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || new Date().toISOString();
-      STATE.spotSource = snap.freshness.state === 'live' ? 'live' : 'cached/fallback';
-      cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness.updatedAt);
-    } else if (STATE.spotUsdPerOz) {
-      STATE.spotSource = 'cached/fallback';
-    }
-    if (fxRes.status === 'fulfilled') {
-      STATE.rates = fxRes.value.rates;
-      cache.saveFXRates(fxRes.value.rates, {
-        lastUpdateUtc: fxRes.value.time_last_update_utc,
-        nextUpdateUtc: fxRes.value.time_next_update_utc,
+  // Spot path — resolves fast; renders the USD spot + AED-peg UAE prices at once.
+  // F-1: read spot from the SAME canonical resolver the homepage + calculator use,
+  // so all three surfaces derive from one snapshot and cannot diverge.
+  const spotDone = getCanonicalSpot({ force: true })
+    .then((snap) => {
+      if (snap?.ok) {
+        STATE.spotUsdPerOz = snap.spotUsdPerOz;
+        STATE.goldPriceUsdPerOz = snap.spotUsdPerOz;
+        STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || new Date().toISOString();
+        STATE.spotSource = snap.freshness.state === 'live' ? 'live' : 'cached/fallback';
+        cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness.updatedAt);
+      } else if (STATE.spotUsdPerOz) {
+        STATE.spotSource = 'cached/fallback';
+      }
+      updateSharedSurfaces();
+      render();
+    })
+    .catch((e) => {
+      console.warn('Compare spot fetch error:', e);
+    });
+
+  // FX path — resolves on its own clock. When rates land, a second render() fills
+  // in the FX-dependent (non-AED-peg) country rows.
+  const fxDone = api
+    .fetchFX()
+    .then((fx) => {
+      STATE.rates = fx.rates;
+      cache.saveFXRates(fx.rates, {
+        lastUpdateUtc: fx.time_last_update_utc,
+        nextUpdateUtc: fx.time_next_update_utc,
       });
-    }
-    cache.saveHistorySnapshot(STATE);
-    updateSharedSurfaces();
-    render();
-  } catch (e) {
-    console.warn('Compare fetch error:', e);
-  }
+      render();
+    })
+    .catch((e) => {
+      console.warn('Compare FX fetch error:', e);
+    });
+
+  // Snapshot history once both lanes have settled, so STATE carries whatever spot
+  // and rates actually arrived. Neither lane blocks the other's render.
+  await Promise.allSettled([spotDone, fxDone]);
+  cache.saveHistorySnapshot(STATE);
 }
 
 function updateSharedSurfaces() {
