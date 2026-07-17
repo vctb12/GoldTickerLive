@@ -1118,7 +1118,11 @@
 
 .shops-resource-chip--submit {
   border-color: rgb(176 138 62 / 40%);
-  color: var(--color-gold);
+
+  /* --color-gold (#b07d1f) is a graphical-only signal token (<3.6:1 as text on
+     surface-2 in light); --color-gold-dark is the AA text gold (>=5.9:1 both
+     themes). WCAG 2.1 AA color-contrast (axe-a11y gate, phase 20). */
+  color: var(--color-gold-dark);
 }
 
 /* ── Info section ────────────────────────────────────────────────────────── */
@@ -1138,7 +1142,10 @@
   font-size: var(--text-base);
   font-weight: var(--weight-bold);
   margin: 0 0 1rem;
-  color: var(--color-gold);
+
+  /* AA text gold: --color-gold (#b07d1f) is 3.62:1 on white and reserved for
+     graphical signals; --color-gold-dark clears 4.5:1 in both themes. */
+  color: var(--color-gold-dark);
   letter-spacing: -0.01em;
 }
 
