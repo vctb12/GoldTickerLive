@@ -4,7 +4,15 @@
  * Auto-generates sitemap.xml from the filesystem.
  *
  * Walks all .html files and index.html dirs, assigns priority/changefreq
- * based on depth, adds <lastmod> from file mtime, and writes sitemap.xml.
+ * based on depth, and writes sitemap.xml.
+ *
+ * <lastmod> is the date the file's CONTENT last changed, taken from git commit
+ * history — NOT filesystem mtime. The build (inject-schema, inject-theme-preinit,
+ * vite) rewrites every HTML file on each run, which resets mtime to "now"; a
+ * mtime-based sitemap therefore claimed every page changed today on every
+ * rebuild, and running the test suite re-dirtied public/sitemap.xml every time.
+ * Git commit dates only advance when the content is actually committed, so the
+ * sitemap stays truthful and stops churning on no-op rebuilds. See resolveLastmod.
  *
  * Usage:  node scripts/generate-sitemap.js [--base <url>]
  */
@@ -13,6 +21,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '../..');
 const BASE_URL = (() => {
@@ -99,6 +108,79 @@ function formatDate(ms) {
   return new Date(ms).toISOString().split('T')[0];
 }
 
+// ── Honest lastmod (git commit date, not mtime) ──────────────────────────────
+const TODAY = new Date().toISOString().split('T')[0];
+
+// Number of reachable commits. A depth-1 (shallow CI) checkout collapses every
+// file's `git log` date onto the single HEAD commit, which would make the
+// sitemap claim every page changed on the deploy day. When history is that
+// shallow we keep the lastmod already recorded in the committed sitemap instead.
+function historyDepth() {
+  try {
+    const n = parseInt(
+      execFileSync('git', ['rev-list', '--count', 'HEAD'], {
+        cwd: ROOT,
+        encoding: 'utf8',
+        stdio: ['ignore', 'pipe', 'ignore'],
+      }).trim(),
+      10
+    );
+    return Number.isFinite(n) ? n : 0;
+  } catch {
+    return 0;
+  }
+}
+
+// Date (YYYY-MM-DD) of the last commit that touched the file, or null when the
+// path is untracked / git is unavailable.
+function gitLastmod(file) {
+  try {
+    const rel = path.relative(ROOT, file);
+    const out = execFileSync('git', ['log', '-1', '--format=%cs', '--', rel], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return /^\d{4}-\d{2}-\d{2}$/.test(out) ? out : null;
+  } catch {
+    return null;
+  }
+}
+
+// loc → lastmod already committed in sitemap.xml. These dates were captured when
+// the sitemap was last generated with real history, so they are the honest
+// fallback for a shallow rebuild or an untracked/generated page — using them
+// prevents fabricating a fresh date. Read once, before we overwrite sitemap.xml.
+function readPriorLastmod() {
+  const map = new Map();
+  try {
+    const xml = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+    const re = /<loc>([^<]+)<\/loc>\s*<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g;
+    let m;
+    while ((m = re.exec(xml)) !== null) map.set(m[1].trim(), m[2]);
+  } catch {
+    /* first run — no prior sitemap on disk */
+  }
+  return map;
+}
+
+const HISTORY_OK = historyDepth() > 1;
+const PRIOR_LASTMOD = readPriorLastmod();
+
+// Resolve the truthful lastmod for a page. With real history, the git commit
+// date wins. With a collapsed (depth-1) checkout, the previously-committed date
+// wins so unchanged pages are not re-stamped. A future date is never emitted.
+function resolveLastmod(loc, file, stat) {
+  const prior = PRIOR_LASTMOD.get(loc);
+  let d;
+  if (HISTORY_OK) {
+    d = gitLastmod(file) || prior || formatDate(stat.mtimeMs);
+  } else {
+    d = prior || gitLastmod(file) || formatDate(stat.mtimeMs);
+  }
+  return d > TODAY ? TODAY : d;
+}
+
 // ── Real AR mirror resolution (2026-07-04) ──────────────────────────────────
 // Pages with a dedicated /ar/ document must declare a correct reciprocal pair
 // instead of the runtime `?lang=ar` fallback (which is nonsense for /ar/ URLs:
@@ -165,7 +247,7 @@ const urls = allEntries
   .map(({ urlPath, file }) => {
     const loc = urlPath ? `${BASE_URL}/${urlPath}` : `${BASE_URL}/`;
     const stat = fs.statSync(file);
-    const lastmod = formatDate(stat.mtimeMs);
+    const lastmod = resolveLastmod(loc, file, stat);
     const priority = getPriority(urlPath);
     const changefreq = getChangefreq(urlPath);
 
