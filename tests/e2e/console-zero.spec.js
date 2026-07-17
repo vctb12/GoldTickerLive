@@ -5,9 +5,10 @@
 // messages, ZERO uncaught page errors, and ZERO unhandled promise rejections originating from our
 // own code.
 //
-// Served exactly like the rest of the e2e suite and the CI job: a production `npm run build` output
-// hosted by `python3 -m http.server 8080 --directory dist`, which playwright.config.js reuses via
-// `reuseExistingServer` (baseURL http://localhost:8080). This spec adds NO server wiring of its own.
+// Served exactly like the rest of the e2e suite: playwright.config.js's `webServer` runs
+// `python3 -m http.server 8080` from the repo root (native-ESM source, baseURL
+// http://localhost:8080), which this spec reuses. It adds NO server wiring of its own — it inherits
+// whatever tree the shared webServer (or an already-running server on :8080) exposes.
 //
 // EXTERNAL-ORIGIN ALLOWLIST — why it exists:
 //   The page progressively enhances itself with third-party services (live gold/FX prices, OSM map
