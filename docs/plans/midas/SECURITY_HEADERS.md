@@ -83,6 +83,28 @@ drift test does not enforce them, but they are required for GA/Clarity to work):
 `https://*.google-analytics.com` for regional collect), `https://www.clarity.ms` (+
 `https://*.clarity.ms`).
 
+### 1c. Enumerated injected/CDN **resource** origins (from `src/`)
+
+`connect-src` (§1b) only covers `fetch`/XHR/EventSource data calls. Several client scripts also
+**inject `<script>`/`<link>`/`<img>` resources at runtime** — an `element.src =` assignment, a
+Leaflet templated `tileLayer()` URL, or an `UPPER_CASE` CDN url constant. These never appear as a
+static `<script src>` in the built HTML, so the earlier "everything is same-origin `/assets/*`"
+finding is true only for _static_ markup. `node scripts/node/csp-inventory.js` now scans `src/` for
+them and **exits non-zero** if any is not accounted for below; `tests/midas-csp-inventory.test.js`
+locks it. Each must appear in the relevant fetch directive (`script-src`/`style-src`/`img-src`) —
+**not** `connect-src`.
+
+| Injected origin                                        | Directive(s)                         | Purpose                                                                                                              | Source file                       |
+| ------------------------------------------------------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
+| `https://unpkg.com`                                    | `script-src`, `style-src`, `img-src` | **Shops map** (live, ungated): Leaflet JS + CSS `<link>`; Leaflet's default marker-icon PNGs load from the same base | `src/components/shops-map.js`     |
+| `https://*.tile.openstreetmap.org`                     | `img-src`                            | **Shops map** OSM tile images (`tileLayer('https://{s}.tile.openstreetmap.org/...')`)                                | `src/components/shops-map.js`     |
+| `https://cdn.jsdelivr.net`                             | `script-src`                         | **Calculator** "copy as image" injects `html2canvas@1.4.1` (public page) **and** admin loads supabase-js UMD (§6)    | `src/pages/calculator.js`, admin/ |
+| `https://pagead2.googlesyndication.com` (+ downstream) | owner opt-in — see §6a               | Google **AdSense** loader; dormant while `ADSENSE_PUBLISHER_ID` is empty                                             | `src/components/adSlot.js`        |
+
+`src/components/chart.js` sets `link.href = 'https://www.tradingview.com/'` on an `<a>` **anchor**
+(chart attribution, `target="_blank"`) — that is navigation, not a resource load, so it needs no CSP
+directive and the inventory intentionally ignores anchor `href`.
+
 ---
 
 ## 2. Rollout: Report-Only first, then enforce
@@ -116,10 +138,10 @@ the directive.
 
 ```
 default-src 'self';
-script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net;
-style-src 'self' 'unsafe-inline';
+script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net https://unpkg.com;
+style-src 'self' 'unsafe-inline' https://unpkg.com;
 font-src 'self';
-img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms;
+img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms https://unpkg.com https://*.tile.openstreetmap.org;
 connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms;
 frame-ancestors 'self';
 frame-src 'self';
@@ -134,14 +156,21 @@ report-to gtl-csp;
 Notes:
 
 - **`script-src`** — `'self'` + the three inline hashes (§1a) +
-  `googletagmanager`/`google-analytics` (GA loader + gtag) + `clarity.ms` (Microsoft Clarity tag).
-  No `'unsafe-inline'`, no `'unsafe-eval'`. `cdn.jsdelivr.net` is required **only** by the admin
-  pages (§6, supabase-js UMD bundle); if admin lives on its own hostname, drop `cdn.jsdelivr.net`
-  from the public policy and put it in the admin-scoped rule instead.
+  `googletagmanager`/`google-analytics` (GA loader + gtag) + `clarity.ms` (Microsoft Clarity tag) +
+  `cdn.jsdelivr.net` + `unpkg.com` (§1c injected resources). No `'unsafe-inline'`, no
+  `'unsafe-eval'`. `cdn.jsdelivr.net` is required by **both** the public calculator (html2canvas,
+  `src/pages/calculator.js`) **and** the admin pages (§6, supabase-js UMD); it therefore stays in
+  the public policy even if admin moves to its own host. `unpkg.com` is the shops-map Leaflet JS
+  (live, ungated) — see §1c.
+- **`style-src`** — `'self' 'unsafe-inline'` (§4) + `unpkg.com` for Leaflet's stylesheet `<link>`
+  (`'unsafe-inline'` authorizes inline `<style>`/`style=` only, **not** an external stylesheet, so
+  the origin must be listed explicitly).
 - **`connect-src`** — the seven enumerated first-party fetch origins (§1b) + GA/Clarity collect. The
   supabase project is covered by the `*.supabase.co` wildcard.
-- **`img-src`** — `'self'` + `data:` (small inline data-URI images) + GA/Clarity beacon pixels. No
-  wildcard `https:` (the audit-era `img-src https:` is unnecessary — no external `<img>` exists).
+- **`img-src`** — `'self'` + `data:` (small inline data-URI images) + GA/Clarity beacon pixels +
+  `unpkg.com` (Leaflet marker-icon PNGs) + `*.tile.openstreetmap.org` (shops-map OSM tiles, §1c). No
+  wildcard `https:` (the audit-era `img-src https:` is unnecessary — the external images are the
+  enumerated map assets, nothing else).
 - **`frame-ancestors 'self'`** — per phase spec. NB: `server.js` (admin/API tier) and the current
   `_headers` use the **stricter** `frame-ancestors 'none'` / `X-Frame-Options: DENY`. The public
   site frames nothing of its own, so the owner MAY tighten this to `'none'` for parity; `'self'` is
@@ -153,7 +182,7 @@ Notes:
 ### Report-Only header (ship this first)
 
 ```
-Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms; connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms; frame-ancestors 'self'; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'; report-to gtl-csp
+Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms https://unpkg.com https://*.tile.openstreetmap.org; connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms; frame-ancestors 'self'; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'; report-to gtl-csp
 ```
 
 ---
@@ -212,15 +241,44 @@ staleness. **Remove** them in the Transform Rule (set to empty / remove action):
 Admin pages differ from the public site:
 
 - They load the **supabase-js UMD bundle from `https://cdn.jsdelivr.net`** (a real third-party
-  `<script src>` — unlike the public pages). So `script-src` for admin **must** include
-  `https://cdn.jsdelivr.net`, and `connect-src` must include `https://*.supabase.co` (already in the
-  shared policy).
+  `<script src>`). So `script-src` for admin **must** include `https://cdn.jsdelivr.net`, and
+  `connect-src` must include `https://*.supabase.co` (already in the shared policy).
 - Admin must stay **non-indexable**: `X-Robots-Tag: noindex, nofollow` and
   `Cache-Control: private, no-store` (already in `_headers`).
 
-**Recommendation:** give `/admin/*` its own Cloudflare rule. If admin moves to a separate hostname,
-keep `cdn.jsdelivr.net` out of the **public** `script-src` and scope it to the admin host only.
-Until then, the shared policy above already covers admin because it includes `cdn.jsdelivr.net`.
+**Recommendation:** give `/admin/*` its own Cloudflare rule. Note `cdn.jsdelivr.net` is **not**
+admin-only — the public calculator's "copy as image" also injects `html2canvas` from jsdelivr (§1c),
+so the origin must stay in the **public** `script-src` regardless of where admin lives. (An earlier
+draft claimed jsdelivr was "required only by the admin pages"; that was wrong — dropping it from the
+public policy would break the calculator screenshot feature.) If admin moves to a separate hostname,
+give it its own rule but keep `cdn.jsdelivr.net` in the public `script-src`.
+
+### 6a. Google AdSense — owner opt-in origin set (currently dormant)
+
+`src/components/adSlot.js` injects the AdSense loader
+(`script.src = https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=…`), wired via
+`content-page-boot.js` / `tracker-pro.js` / `nav.js`. It is **dormant today** because
+`src/config/constants.js` ships `ADSENSE_PUBLISHER_ID: ''` — `_loadAd()` returns early on an empty
+id, so no AdSense script/frame/pixel is ever requested. The enforced CSP above therefore
+deliberately **omits** the AdSense origins (least-privilege for a feature that does not run).
+
+**The moment an owner sets a real publisher id, ads break silently under enforce** unless the CSP is
+extended in the same change. When enabling monetization, add this origin set (Google's minimum for
+AdSense display + the frames/pixels it spawns) to the relevant directives:
+
+```
+script-src   … https://pagead2.googlesyndication.com https://*.googlesyndication.com https://tpc.googlesyndication.com https://adservice.google.com;
+frame-src    … https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com;
+img-src      … https://*.googlesyndication.com https://*.g.doubleclick.net;
+connect-src  … https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.g.doubleclick.net;
+```
+
+Ship it Report-Only first (§2) with a real publisher id in a staging build, confirm ads render with
+zero violations, then enforce. Google occasionally adds ad-serving hosts, so keep AdSense on
+Report-Only telemetry after enabling. The inventory tool (§1c) treats
+`pagead2.googlesyndication.com` as documented **because it is listed here** — this section is the
+"owner opt-in origin set" the drift lock checks against, so do not delete it without also removing
+the AdSense injection from `adSlot.js`.
 
 ---
 
@@ -271,10 +329,10 @@ const CSP =
   "'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' " +
   "'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' " +
   "'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' " +
-  'https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net; ' +
-  "style-src 'self' 'unsafe-inline'; " +
+  'https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net https://unpkg.com; ' +
+  "style-src 'self' 'unsafe-inline' https://unpkg.com; " +
   "font-src 'self'; " +
-  "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms; " +
+  "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms https://unpkg.com https://*.tile.openstreetmap.org; " +
   "connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com " +
   'https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org ' +
   'https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com ' +
@@ -327,10 +385,15 @@ export default {
 
 ## 10. Repo-side artifacts (this phase)
 
-- `scripts/node/csp-inventory.js` — scans the built site, emits `reports/csp-inventory.json`, and
-  **fails on drift** (un-enumerated inline hash or a split theme-preinit).
-- `tests/midas-csp-inventory.test.js` — unit-tests the parser/hasher on fixtures + a drift-lock test
-  asserting every `src/` fetch origin is in this doc's `connect-src`.
+- `scripts/node/csp-inventory.js` — scans the built site **and** `src/`, emits
+  `reports/csp-inventory.json`, and **fails on drift**: an un-enumerated inline hash, a split
+  theme-preinit, or an injected/CDN resource origin (§1c: `element.src`, Leaflet `tileLayer`, or an
+  `UPPER_CASE` CDN url constant) not accounted for anywhere in this doc.
+- `tests/midas-csp-inventory.test.js` — unit-tests the parser/hasher on fixtures + two drift-lock
+  tests: (a) every `src/` **fetch** origin is in this doc's `connect-src`, and (b) every `src/`
+  **injected resource** origin (unpkg, OSM tiles, jsdelivr, AdSense) is documented here (active
+  directive or §6a opt-in set) — so the tooling is no longer blind to dynamically-injected
+  script/style/img loads.
 - `_headers` — mirrors this recommended set (with a loud comment that GitHub Pages ignores it). It
   is the source of truth for a future platform move to Netlify / Cloudflare Pages, **not** the live
   header source. `_redirects` is untouched.

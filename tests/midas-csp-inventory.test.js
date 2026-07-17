@@ -31,8 +31,11 @@ const {
   extractHtmlAbsoluteOrigins,
   extractInlineStyleSurface,
   collectFetchOrigins,
+  extractResourceOrigins,
+  collectResourceOrigins,
   parsePolicyHashes,
   parseConnectSrc,
+  parsePolicyOriginHosts,
   hostCoveredBy,
   POLICY_DOC,
 } = require(SCRIPT);
@@ -132,6 +135,39 @@ test('extractInlineStyleSurface: counts <style> blocks and detects style= attr',
   assert.equal(clean.hasStyleAttr, false);
 });
 
+// ── injected / CDN resource origins ──────────────────────────────────────────
+
+const RESOURCE_FIXTURE = `
+const LEAFLET_JS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+const NS = 'http://www.w3.org/2000/svg';
+const CANONICAL_BASE = 'https://goldtickerlive.com';
+script.src = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+el.src = \`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=\${id}\`;
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+a.href = 'https://www.tradingview.com/';
+`;
+
+test('extractResourceOrigins: captures injected script/style/img + tile origins', () => {
+  const hosts = extractResourceOrigins(RESOURCE_FIXTURE);
+  assert.deepEqual(hosts, [
+    'cdn.jsdelivr.net',
+    'pagead2.googlesyndication.com',
+    'unpkg.com',
+    '{s}.tile.openstreetmap.org',
+  ]);
+});
+
+test('extractResourceOrigins: ignores http XML namespaces, self, and anchor href nav', () => {
+  const hosts = extractResourceOrigins(RESOURCE_FIXTURE);
+  assert.ok(!hosts.includes('www.w3.org'), 'http:// XML namespace is not a network load');
+  assert.ok(!hosts.includes('goldtickerlive.com'), 'self origin excluded');
+  assert.ok(
+    !hosts.includes('www.tradingview.com'),
+    'anchor href navigation is not a resource load'
+  );
+});
+
 // ── policy-doc parsing ───────────────────────────────────────────────────────
 
 test('parsePolicyHashes: pulls sha256 tokens out of the policy doc', () => {
@@ -189,5 +225,44 @@ test('drift-lock: the seven known first-party fetch origins are all present', ()
     'nebdpxjazlnsrfmlpgeq.supabase.co',
   ]) {
     assert.ok(hosts.includes(expected), `expected src/ to still fetch ${expected}`);
+  }
+});
+
+// ── DRIFT LOCK: every src/ injected resource origin is documented in the doc ──
+
+test('parsePolicyOriginHosts: pulls https origin hosts (incl. wildcards) from the doc', () => {
+  const hosts = parsePolicyOriginHosts("x https://a.com https://*.b.com data: 'self' y");
+  assert.ok(hosts.has('a.com'));
+  assert.ok(hosts.has('*.b.com'));
+});
+
+test('drift-lock: every injected resource origin in src/ is documented in the policy', () => {
+  const resourceOrigins = collectResourceOrigins(SRC_DIR);
+  assert.ok(resourceOrigins.length > 0, 'expected to discover injected resource origins in src/');
+
+  const md = fs.readFileSync(POLICY_DOC, 'utf8');
+  const policyHosts = [...parsePolicyOriginHosts(md)];
+
+  const undocumented = resourceOrigins
+    .map((o) => o.host)
+    .filter((host) => !policyHosts.some((tok) => hostCoveredBy(host, tok)));
+
+  assert.deepEqual(
+    undocumented,
+    [],
+    `These src/ injected resource origins are not accounted for in ${path.relative(ROOT, POLICY_DOC)}: ${undocumented.join(', ')}`
+  );
+});
+
+test('drift-lock: the live shops-map + AdSense injected origins are actually seen (not blind)', () => {
+  const hosts = collectResourceOrigins(SRC_DIR).map((o) => o.host);
+  // These are exactly the origins the original connect-src-only inventory missed.
+  for (const expected of [
+    'unpkg.com', // Leaflet JS/CSS + marker icons (shops map)
+    '{s}.tile.openstreetmap.org', // OSM tiles (shops map)
+    'cdn.jsdelivr.net', // html2canvas (calculator) + supabase-js (admin)
+    'pagead2.googlesyndication.com', // AdSense loader (dormant, owner opt-in)
+  ]) {
+    assert.ok(hosts.includes(expected), `inventory must see injected origin ${expected}`);
   }
 });

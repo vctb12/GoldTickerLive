@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-17T15:31:23.555Z",
+  "generatedAt": "2026-07-17T15:53:17.873Z",
   "distDir": "dist",
   "htmlFilesScanned": 19,
   "inlineScripts": {
@@ -124,6 +124,40 @@
     {
       "host": "open.er-api.com",
       "files": ["config/constants.js"]
+    }
+  ],
+  "resourceOrigins": [
+    {
+      "host": "{s}.tile.openstreetmap.org",
+      "files": ["components/shops-map.js"]
+    },
+    {
+      "host": "api.gold-api.com",
+      "files": ["lib/quote-providers/gold-api-com-provider.js"]
+    },
+    {
+      "host": "cdn.jsdelivr.net",
+      "files": ["pages/calculator.js"]
+    },
+    {
+      "host": "freegoldapi.com",
+      "files": ["lib/freegoldapi.js"]
+    },
+    {
+      "host": "mintedmetal.com",
+      "files": ["lib/quote-providers/minted-metal-provider.js"]
+    },
+    {
+      "host": "nebdpxjazlnsrfmlpgeq.supabase.co",
+      "files": ["config/supabase.js"]
+    },
+    {
+      "host": "pagead2.googlesyndication.com",
+      "files": ["components/adSlot.js"]
+    },
+    {
+      "host": "unpkg.com",
+      "files": ["components/shops-map.js"]
     }
   ]
 }

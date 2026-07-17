@@ -55,6 +55,12 @@
 # line below MIRRORS that doc so this file stays correct for a future platform
 # move to Netlify / Cloudflare Pages — regenerate its inline-script hashes with
 # `node scripts/node/csp-inventory.js` whenever the built inline scripts change.
+# The CSP includes https://unpkg.com (Leaflet JS/CSS + marker icons) and
+# https://*.tile.openstreetmap.org (OSM tiles) for the LIVE, ungated shops map
+# (src/components/shops-map.js), plus https://cdn.jsdelivr.net (calculator
+# html2canvas + admin supabase-js). Google AdSense origins are intentionally
+# OMITTED here — that feature is dormant (empty ADSENSE_PUBLISHER_ID); enable it
+# via the owner opt-in origin set in SECURITY_HEADERS.md §6a.
 # It is shipped as Report-Only (never blocks) to coexist with X-Frame-Options
 # below; promote to enforce per SECURITY_HEADERS.md §2 only on a host that reads
 # this file. The enforced production CSP for the admin/API host stays in Helmet
@@ -67,7 +73,7 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms; connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms; frame-ancestors 'self'; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'sha256-hwl6qY9HumTF1GNELc9W/mYDaRMlzIH+GSXNtBbn5rE=' 'sha256-9JILtKd7BOhx0sG/TzkCDOlycX6n/Rq9jj4dioFmsYo=' 'sha256-yHJxga03lGua6eHcJx7xFPtoShrPnlgp1FoVGEsPL3A=' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; font-src 'self'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://c.clarity.ms https://unpkg.com https://*.tile.openstreetmap.org; connect-src 'self' https://api.gold-api.com https://mintedmetal.com https://open.er-api.com https://freegoldapi.com https://api.gdeltproject.org https://nominatim.openstreetmap.org https://*.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://www.clarity.ms https://*.clarity.ms; frame-ancestors 'self'; frame-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; worker-src 'self' blob:; manifest-src 'self'
 
 # Admin panel: stricter framing and no-indexing.
 /admin/*
