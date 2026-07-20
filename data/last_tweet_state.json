@@ -1,16 +1,16 @@
 {
   "schema_version": 1,
-  "last_tweet_id": "2079105133510881786",
-  "last_tweet_time_utc": "2026-07-20T07:24:26Z",
-  "last_tweet_text_hash": "023e7568b9c063868f5464265927caf645e099429cb447dcffba0174a69e5ce7",
-  "last_price_usd_oz": 4006.5,
+  "last_tweet_id": "2079106642746970125",
+  "last_tweet_time_utc": "2026-07-20T07:30:26Z",
+  "last_tweet_text_hash": "d66893bb7508b3ee1f066fbc9bbcc0a25ccd01c2fd782d8f58d6e0aad9b8a51f",
+  "last_price_usd_oz": 4005.3,
   "last_provider": "gold_api_com",
-  "last_provider_timestamp_utc": "2026-07-20T07:23:54Z",
+  "last_provider_timestamp_utc": "2026-07-20T07:29:54Z",
   "last_source_type": "spot_reference",
   "last_post_reason": "shortcut_price_moved",
   "last_trigger_source": "shortcut",
-  "last_trigger_attempt_time_utc": "2026-07-20T07:24:26Z",
+  "last_trigger_attempt_time_utc": "2026-07-20T07:30:25Z",
   "last_trigger_nonce": "none",
-  "last_trigger_run_id": "29724497377",
+  "last_trigger_run_id": "29724805547",
   "last_trigger_run_attempt": "1"
 }
