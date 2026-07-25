@@ -1375,6 +1375,7 @@ def _log_tweet_error(exc, text, post_type):
 def _parse_x_api_problem(exc):
     resp = getattr(exc, 'response', None)
     raw_text = getattr(resp, 'text', '')
+    raw_detail = str(raw_text).strip() if raw_text is not None else ""
     try:
         payload = json.loads(raw_text) if isinstance(raw_text, str) and raw_text.strip() else {}
     except Exception:
@@ -1385,6 +1386,8 @@ def _parse_x_api_problem(exc):
     for key in ("title", "detail", "type", "reset_date"):
         value = payload.get(key)
         problem[key] = str(value).strip() if value is not None else ""
+    if not problem.get("detail") and raw_detail:
+        problem["detail"] = raw_detail
     return problem
 
 
@@ -1395,8 +1398,21 @@ def _is_spend_cap_problem(problem):
     return (
         title == "spendcapreached"
         or "spend cap" in detail
+        or "credits depleted" in detail
         or "/problems/credits" in type_url
     )
+
+
+def _spend_cap_skip_payload(problem):
+    reset_date = problem.get("reset_date") or "unknown"
+    print("   SKIP: X API spend cap reached; no post was sent.")
+    print(f"   Billing cycle reset date: {reset_date}")
+    print("   Increase the spend cap in the developer console or wait for the reset date.")
+    return {
+        "posted": False,
+        "skip_reason": "spend_cap_reached",
+        "reset_date": reset_date,
+    }
 
 
 def classify_post_exception(exc, *, post_type, template_used, price, tweet_length, trigger_source, trigger_nonce):
@@ -1467,15 +1483,7 @@ def post_tweet(text, post_type='hourly'):
         _log_tweet_error(exc, text, post_type)
         problem = _parse_x_api_problem(exc)
         if _is_spend_cap_problem(problem):
-            reset_date = problem.get("reset_date") or "unknown"
-            print("   SKIP: X API spend cap reached; no post was sent.")
-            print(f"   Billing cycle reset date: {reset_date}")
-            print("   Increase the spend cap in the developer console or wait for the reset date.")
-            return {
-                "posted": False,
-                "skip_reason": "spend_cap_reached",
-                "reset_date": reset_date,
-            }
+            return _spend_cap_skip_payload(problem)
         print("   Likely cause: duplicate/near-duplicate content, or automation-rule violation."
               " Check recent posts from @GoldTickerLive.")
         raise
@@ -1493,6 +1501,12 @@ def post_tweet(text, post_type='hourly'):
         retry_after = getattr(resp, 'headers', {}).get('Retry-After') if resp is not None else None
         if retry_after is not None:
             print(f"   Retry-After: {retry_after}s")
+        raise
+    except tweepy.errors.HTTPException as exc:
+        _log_tweet_error(exc, text, post_type)
+        problem = _parse_x_api_problem(exc)
+        if _is_spend_cap_problem(problem):
+            return _spend_cap_skip_payload(problem)
         raise
     except tweepy.errors.TweepyException as exc:
         _log_tweet_error(exc, text, post_type)
