@@ -1058,10 +1058,10 @@ export const EN = {
   'home.faq6Q': 'Does the price include making charges or VAT?',
   'home.faq7Q': 'Can I use these prices when selling gold?',
   'home.faq1A': [
-    'The live gold price per gram in UAE (AED) is shown on the ',
-    ['./tracker.html', 'Live Tracker'],
+    'The reference gold price per gram in UAE (AED) is shown on the ',
+    ['./tracker.html', 'Gold Tracker'],
     ' and the ',
-    ['./compare.html', 'UAE comparison'],
+    ['./compare.html', 'country comparison'],
     '. Spot source updates hourly during market hours; pages re-poll about every 90 seconds while open. Prices use the official AED peg of 3.6725.',
   ],
   'home.faq2A': [
@@ -1348,7 +1348,7 @@ export const EN = {
   'locationGuides.sectionTitle': 'City buying guides',
   'locationGuides.sectionSub':
     'Starter local context for common karats, buyer behavior, and quote verification.',
-  'locationGuides.sectionLink': 'Browse country pages →',
+  'locationGuides.sectionLink': 'Compare countries →',
   'locationGuides.title': 'Location guide starter set',
   'locationGuides.sub': 'Use these quick cards before comparing final shop quotes.',
   'locationGuides.commonKarats': 'Common karats',
