@@ -1,5 +1,5 @@
 {
-  "auditTimestampUtc": "2026-07-29T15:11:00.161Z",
+  "auditTimestampUtc": "2026-07-29T15:20:15.784Z",
   "auditDate": "2026-07-29",
   "endpoint": "https://freegoldapi.com/data/latest.json",
   "httpStatus": 200,
@@ -7,7 +7,7 @@
   "cacheControl": "max-age=600",
   "lastModified": "Mon, 23 Feb 2026 07:06:47 GMT",
   "etag": "W/\"699bfc87-278c7\"",
-  "fetchElapsedMs": 79,
+  "fetchElapsedMs": 76,
   "rawRecordCount": 1769,
   "acceptedRecordCount": 359,
   "rejected": {

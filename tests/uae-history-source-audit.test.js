@@ -25,7 +25,9 @@ describe('audit-uae-history-source', () => {
     assert.equal(report.httpStatus, 200);
     assert.ok(report.rawRecordCount > 0);
     assert.ok(report.unifiedLatest);
-    assert.ok(['current', 'delayed', 'stale', 'unavailable'].includes(report.freshnessClassification));
+    assert.ok(
+      ['current', 'delayed', 'stale', 'unavailable'].includes(report.freshnessClassification)
+    );
     assert.ok(report.baseline.provenanceNote.includes('not documented'));
   });
 });

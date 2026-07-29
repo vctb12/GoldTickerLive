@@ -164,7 +164,9 @@ async function main() {
       monthlyObservations: slice.length - dailyCount,
       windowEnd: slice.length ? slice[slice.length - 1].date : null,
       windowStart: slice.length ? slice[0].date : null,
-      endsNearAuditDate: slice.length ? daysBetween(slice[slice.length - 1].date, auditDate) <= 7 : false,
+      endsNearAuditDate: slice.length
+        ? daysBetween(slice[slice.length - 1].date, auditDate) <= 7
+        : false,
     };
   }
 
@@ -306,7 +308,13 @@ ${report.conclusion}
   fs.writeFileSync(mdPath, md);
   console.log('Wrote', jsonPath);
   console.log('Wrote', mdPath);
-  console.log(JSON.stringify({ latest: report.unifiedLatest, ageDays: report.latestAgeDays, freshness }, null, 2));
+  console.log(
+    JSON.stringify(
+      { latest: report.unifiedLatest, ageDays: report.latestAgeDays, freshness },
+      null,
+      2
+    )
+  );
 }
 
 main().catch((err) => {

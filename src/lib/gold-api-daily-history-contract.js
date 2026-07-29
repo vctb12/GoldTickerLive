@@ -170,18 +170,25 @@ export function parseProviderHistoryBody(body, referenceDate) {
   const byDate = new Map();
 
   for (const raw of rows) {
-    if (!raw || typeof raw !== 'object') {
+    if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
       rejected++;
       continue;
     }
     const row = /** @type {Record<string, unknown>} */ (raw);
 
     let date = '';
-    if (typeof row.date === 'string' && ISO_DATE_RE.test(row.date.slice(0, 10))) {
-      date = row.date.slice(0, 10);
-    } else {
-      const ts =
-        row.timestamp ?? row.time ?? row.t ?? row.startTimestamp ?? row.start ?? row.ts;
+    // Official gold-api.com /history shape: { day: "YYYY-MM-DD", avg_price: n }
+    const groupByDate = row.day ?? row.week ?? row.month ?? row.year ?? row.date;
+    if (typeof groupByDate === 'string') {
+      const candidate = groupByDate.slice(0, 10);
+      if (ISO_DATE_RE.test(candidate)) {
+        date = candidate;
+      } else if (/^\d{4}-\d{2}$/.test(groupByDate)) {
+        date = `${groupByDate}-01`;
+      }
+    }
+    if (!date) {
+      const ts = row.timestamp ?? row.time ?? row.t ?? row.startTimestamp ?? row.start ?? row.ts;
       if (typeof ts === 'number' && Number.isFinite(ts)) {
         const ms = ts > 1e12 ? ts : ts * 1000;
         date = new Date(ms).toISOString().slice(0, 10);
@@ -200,7 +207,17 @@ export function parseProviderHistoryBody(body, referenceDate) {
     }
 
     const priceRaw =
-      row.avg ?? row.average ?? row.avgPrice ?? row.price ?? row.close ?? row.value ?? row.o;
+      row.avg_price ??
+      row.avg ??
+      row.average ??
+      row.avgPrice ??
+      row.price ??
+      row.close ??
+      row.c ??
+      row.max_price ??
+      row.min_price ??
+      row.value ??
+      row.o;
     const price = Number(priceRaw);
     if (!isSanePrice(price)) {
       rejected++;
@@ -211,7 +228,9 @@ export function parseProviderHistoryBody(body, referenceDate) {
     byDate.set(date, { date, avgUsdOz });
   }
 
-  const records = [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+  const records = [...byDate.values()].sort((a, b) =>
+    a.date < b.date ? -1 : a.date > b.date ? 1 : 0
+  );
   return { records, rejected, errors };
 }
 
@@ -250,9 +269,11 @@ export function filterRecordsByRangeDays(records, days, _referenceDate) {
 /**
  * @param {Array<{date: string}>} records
  * @param {string} [referenceDate]
+ * @param {{ allowStale?: boolean }} [options]
  * @returns {{ ok: boolean, errors: string[], stats: object }}
  */
-export function validateDailyDataset(records, referenceDate) {
+export function validateDailyDataset(records, referenceDate, options = {}) {
+  const { allowStale = false } = options;
   const ref = referenceDate || new Date().toISOString().slice(0, 10);
   const errors = [];
 
@@ -288,7 +309,7 @@ export function validateDailyDataset(records, referenceDate) {
   const end = records[records.length - 1].date;
   const ageDays = daysBetween(end, ref);
 
-  if (!isFreshnessAgeAcceptable(ageDays, ref)) {
+  if (!allowStale && !isFreshnessAgeAcceptable(ageDays, ref)) {
     errors.push(`stale_latest:${ageDays}d`);
   }
 
@@ -360,9 +381,10 @@ export function buildDatasetDocument(meta, records, generatedAt) {
  * Validate committed JSON document schema.
  * @param {unknown} doc
  * @param {string} [referenceDate]
+ * @param {{ allowStale?: boolean }} [options]
  * @returns {{ ok: boolean, errors: string[], records: Array<{date: string, avgUsdOz: number}> }}
  */
-export function validateDatasetDocument(doc, referenceDate) {
+export function validateDatasetDocument(doc, referenceDate, options = {}) {
   const errors = [];
   if (!doc || typeof doc !== 'object') {
     return { ok: false, errors: ['invalid_document'], records: [] };
@@ -387,7 +409,7 @@ export function validateDatasetDocument(doc, referenceDate) {
       }))
     : [];
 
-  const validation = validateDailyDataset(records, referenceDate);
+  const validation = validateDailyDataset(records, referenceDate, options);
   return {
     ok: errors.length === 0 && validation.ok,
     errors: [...errors, ...validation.errors],

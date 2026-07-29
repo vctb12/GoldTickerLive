@@ -60,7 +60,7 @@ export async function fetchDailyHistoryDocument(url = DAILY_HISTORY_URL, fetchFn
     return { ok: false, document: null, errors: ['invalid_json'], meta: null };
   }
 
-  const validation = validateDatasetDocument(document);
+  const validation = validateDatasetDocument(document, undefined, { allowStale: true });
   if (!validation.ok) {
     return { ok: false, document, errors: validation.errors, meta: null };
   }

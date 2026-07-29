@@ -891,8 +891,7 @@ export const AR = {
   'home.uaeHistMethodology': 'كيف نحسب الأسعار المرجعية',
   'home.uaeHistTrackerLink': 'افتح المتتبع الكامل',
   'home.uaeHist.badge': 'متوسط يومي مرجعي مرتبط بالسعر الفوري',
-  'home.uaeHist.sourceNote':
-    'متوسط XAU/USD يومي عبر {provider} · محوّل باستخدام ربط AED {peg}',
+  'home.uaeHist.sourceNote': 'متوسط XAU/USD يومي عبر {provider} · محوّل باستخدام ربط AED {peg}',
   'home.uaeHist.rangeGroupLabel': 'الفترة الزمنية للمخطط',
   'home.uaeHist.modeGroupLabel': 'نمط عرض المخطط',
   'home.uaeHist.range1M': '1ش',

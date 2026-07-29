@@ -180,7 +180,11 @@ export class UaeHistoricalKaratChart {
       id: 'uae-hist-range-subtitle',
     });
     const source = el('p', { class: 'uae-hist-chart__source', id: 'uae-hist-source' });
-    const summary = el('div', { class: 'uae-hist-chart__summary', id: 'uae-hist-summary', 'aria-live': 'polite' });
+    const summary = el('div', {
+      class: 'uae-hist-chart__summary',
+      id: 'uae-hist-summary',
+      'aria-live': 'polite',
+    });
     const controls = el('div', { class: 'uae-hist-chart__controls' });
     const modeGroup = el('div', {
       class: 'uae-hist-chart__mode-group ds-segmented',
@@ -192,7 +196,10 @@ export class UaeHistoricalKaratChart {
       role: 'group',
       id: 'uae-hist-range-group',
     });
-    const chartWrap = el('div', { class: 'uae-hist-chart__canvas-wrap', id: 'uae-hist-canvas-wrap' });
+    const chartWrap = el('div', {
+      class: 'uae-hist-chart__canvas-wrap',
+      id: 'uae-hist-canvas-wrap',
+    });
     const chartContainer = el('div', {
       class: 'uae-hist-chart__canvas',
       id: 'uae-hist-canvas',
@@ -208,9 +215,16 @@ export class UaeHistoricalKaratChart {
       hidden: '',
     });
     const srSummary = el('p', { class: 'sr-only chart-sr-summary', id: 'uae-hist-sr-summary' });
-    const legend = el('div', { class: 'uae-hist-chart__legend', id: 'uae-hist-legend', role: 'group' });
+    const legend = el('div', {
+      class: 'uae-hist-chart__legend',
+      id: 'uae-hist-legend',
+      role: 'group',
+    });
     const tableWrap = el('div', { class: 'uae-hist-chart__table-wrap', id: 'uae-hist-table-wrap' });
-    const tableActions = el('div', { class: 'uae-hist-chart__table-actions', id: 'uae-hist-table-actions' });
+    const tableActions = el('div', {
+      class: 'uae-hist-chart__table-actions',
+      id: 'uae-hist-table-actions',
+    });
 
     chartWrap.appendChild(chartContainer);
     chartWrap.appendChild(tooltip);
@@ -403,7 +417,10 @@ export class UaeHistoricalKaratChart {
         e.preventDefault();
         const delta = e.key === 'ArrowRight' ? 1 : -1;
         const max = this.filteredPoints.length - 1;
-        this._keyboardIndex = Math.max(0, Math.min(max, (this._keyboardIndex < 0 ? max : this._keyboardIndex) + delta));
+        this._keyboardIndex = Math.max(
+          0,
+          Math.min(max, (this._keyboardIndex < 0 ? max : this._keyboardIndex) + delta)
+        );
         this._showTooltipForPoint(this.filteredPoints[this._keyboardIndex]);
       } else if (e.key === 'Escape') {
         this._hideTooltip();
@@ -744,7 +761,9 @@ export class UaeHistoricalKaratChart {
     const rows = toTableRows(this.filteredPoints);
     if (!rows.length) return;
 
-    const visibleCount = this.tableExpanded ? rows.length : Math.min(TABLE_INITIAL_ROWS, rows.length);
+    const visibleCount = this.tableExpanded
+      ? rows.length
+      : Math.min(TABLE_INITIAL_ROWS, rows.length);
     const visibleRows = rows.slice(0, visibleCount);
 
     const table = el('table', { class: 'uae-hist-chart__table' });
@@ -909,7 +928,11 @@ export class UaeHistoricalKaratChart {
           this._error === 'load-error' ? 'home.uaeHist.importError' : 'home.uaeHist.noData'
         )
       );
-      const retry = el('button', { type: 'button', class: 'btn btn--ghost btn--sm', id: 'uae-hist-retry' });
+      const retry = el('button', {
+        type: 'button',
+        class: 'btn btn--ghost btn--sm',
+        id: 'uae-hist-retry',
+      });
       setText(retry, t(this.lang, 'home.uaeHist.retry'));
       canvas.appendChild(msg);
       canvas.appendChild(retry);
@@ -926,7 +949,15 @@ export class UaeHistoricalKaratChart {
     const rows = this.filteredPoints;
     if (!rows.length) return;
 
-    const header = ['Date', '24K AED/g', '22K AED/g', '21K AED/g', '18K AED/g', 'XAU/USD', 'Source'];
+    const header = [
+      'Date',
+      '24K AED/g',
+      '22K AED/g',
+      '21K AED/g',
+      '18K AED/g',
+      'XAU/USD',
+      'Source',
+    ];
     const lines = [
       '# Gold Ticker Live — UAE Historical Reference Prices (AED/gram)',
       '# Disclaimer: Spot-linked reference estimates. Not retail shop pricing.',

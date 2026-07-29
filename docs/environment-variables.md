@@ -128,21 +128,21 @@ IP from the first `X-Forwarded-For` hop (Vercel, Cloudflare, Nginx, etc). Withou
 
 These are configured as repository secrets in GitHub (Settings → Secrets → Actions):
 
-| Secret Name                 | Used By                   | Purpose                                  |
-| --------------------------- | ------------------------- | ---------------------------------------- |
-| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Primary gold spot API key (gold-api.com) |
+| Secret Name                 | Used By                       | Purpose                                                                                            |
+| --------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------- |
+| `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`        | Primary gold spot API key (gold-api.com)                                                           |
 | `GOLD_API_KEY`              | `historical-gold-refresh.yml` | Homepage daily XAU/USD history (gold-api.com `/history`; may reuse same key as `GOLD_API_COM_KEY`) |
-| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional legacy fallback key             |
-| `CONSUMER_KEY`              | Tweet workflows           | Twitter/X OAuth 1.0a API Key             |
-| `CONSUMER_SECRET`           | Tweet workflows           | Twitter/X OAuth 1.0a API Secret          |
-| `ACCESS_TOKEN`              | Tweet workflows           | Twitter/X Access Token (read-write)      |
-| `ACCESS_TOKEN_SECRET`       | Tweet workflows           | Twitter/X Access Token Secret            |
-| `SUPABASE_URL`              | DB sync, Python workflows | Supabase project URL                     |
-| `SUPABASE_SERVICE_ROLE_KEY` | DB sync, Python workflows | Supabase service-role key (admin bypass) |
-| `TELEGRAM_BOT_TOKEN`        | Telegram workflow         | Telegram Bot API token                   |
-| `TELEGRAM_CHANNEL_ID`       | Telegram workflow         | Telegram channel/group ID                |
-| `DISCORD_WEBHOOK_URL`       | Discord workflow          | Discord webhook URL                      |
-| `SUPABASE_MCP_TOKEN`        | MCP setup (optional)      | Supabase MCP bearer token                |
+| `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy)     | Optional legacy fallback key                                                                       |
+| `CONSUMER_KEY`              | Tweet workflows               | Twitter/X OAuth 1.0a API Key                                                                       |
+| `CONSUMER_SECRET`           | Tweet workflows               | Twitter/X OAuth 1.0a API Secret                                                                    |
+| `ACCESS_TOKEN`              | Tweet workflows               | Twitter/X Access Token (read-write)                                                                |
+| `ACCESS_TOKEN_SECRET`       | Tweet workflows               | Twitter/X Access Token Secret                                                                      |
+| `SUPABASE_URL`              | DB sync, Python workflows     | Supabase project URL                                                                               |
+| `SUPABASE_SERVICE_ROLE_KEY` | DB sync, Python workflows     | Supabase service-role key (admin bypass)                                                           |
+| `TELEGRAM_BOT_TOKEN`        | Telegram workflow             | Telegram Bot API token                                                                             |
+| `TELEGRAM_CHANNEL_ID`       | Telegram workflow             | Telegram channel/group ID                                                                          |
+| `DISCORD_WEBHOOK_URL`       | Discord workflow              | Discord webhook URL                                                                                |
+| `SUPABASE_MCP_TOKEN`        | MCP setup (optional)          | Supabase MCP bearer token                                                                          |
 
 > **Note**: Twitter workflow files map these secrets to `TWITTER_API_KEY`, `TWITTER_API_SECRET`,
 > etc. env vars internally. The GitHub secret names do NOT have a `TWITTER_` prefix.

@@ -1,9 +1,9 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-07-29 · **Updated by:** Cursor Cloud Agent **Purpose:** The single canonical source
-of truth for **every plan and every phase** in this repository — finished and unfinished — so no
-roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
-file is **canonical over chat memory**.
+**Last updated:** 2026-07-29 · **Updated by:** Cursor Cloud Agent **Purpose:** The single canonical
+source of truth for **every plan and every phase** in this repository — finished and unfinished — so
+no roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets.
+This file is **canonical over chat memory**.
 
 > ⚠️ Do not create competing trackers. All phase status lives here.
 
@@ -61,7 +61,7 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
 | ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | in-progress | [#714](https://github.com/vctb12/GoldTickerLive/pull/714) | gold-api.com daily pipeline added; bootstrap `GOLD_API_KEY` for live dataset refresh; full QA in progress |
+| UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | in-progress | [#714](https://github.com/vctb12/GoldTickerLive/pull/714) | Parser fixed for gold-api `{day,avg_price}`; stale display path; 13 Playwright screenshots; awaiting live bootstrap + CI green                                    |
 | Revamp Phase 17 — Design-token consolidation               | `claude/revamp-phase-17-tokens`               | in-progress | —                                                         | hex->tokens; dual-theme visual-regression                                                                                                                         |
 | Master Tracker (this doc)                                  | `claude/revamp-master-tracker`                | in-progress | —                                                         | Being created now                                                                                                                                                 |
 | Learn-Hub Reliability — real read progress + favicon 404   | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —                                                         | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix                                                                        |

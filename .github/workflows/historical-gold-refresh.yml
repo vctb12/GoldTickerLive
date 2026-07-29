@@ -10,6 +10,15 @@ on:
     # Daily ~02:45 UTC (within owner-approved 02:15–03:15 window)
     - cron: '45 2 * * *'
   workflow_dispatch:
+    inputs:
+      bootstrap_branch:
+        description: 'Commit refreshed dataset to the current branch (bootstrap only)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
   pull_request:
     paths:
       - 'scripts/node/fetch-gold-api-history.mjs'
@@ -76,7 +85,7 @@ jobs:
             node scripts/node/fetch-gold-api-history.mjs --reference-date "$REF_DATE"
           else
             node scripts/node/fetch-gold-api-history.mjs \
-              --fixture tests/fixtures/gold-api-history/provider-response.json \
+              --fixture tests/fixtures/gold-api-history/provider-response-official.json \
               --reference-date "$REF_DATE"
           fi
 
@@ -87,7 +96,7 @@ jobs:
         run: node scripts/node/fetch-gold-api-history.mjs --check
 
       - name: Commit updated dataset
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true')
         run: |
           if git diff --quiet -- data/historical/xau-usd-daily.json; then
             echo "No changes to commit."

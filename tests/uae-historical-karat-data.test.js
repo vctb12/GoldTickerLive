@@ -42,8 +42,7 @@ describe('uae-historical-karat-data', async () => {
     const v18 = aedPerGramFromSpot(SAMPLE_SPOT, '18');
 
     assert.ok(v24 > v22 && v22 > v21 && v21 > v18);
-    const expected24 =
-      (SAMPLE_SPOT / CONSTANTS.TROY_OZ_GRAMS) * 1.0 * CONSTANTS.AED_PEG;
+    const expected24 = (SAMPLE_SPOT / CONSTANTS.TROY_OZ_GRAMS) * 1.0 * CONSTANTS.AED_PEG;
     assert.ok(Math.abs(v24 - expected24) < 0.01);
   });
 
@@ -64,8 +63,18 @@ describe('uae-historical-karat-data', async () => {
 
   test('buildUaeKaratHistoryPoints dedupes by date', () => {
     const records = [
-      { date: '2024-01-01', price: 1900, source: 'monthly-baseline-embedded', granularity: 'monthly' },
-      { date: '2024-02-01', price: 1950, source: 'monthly-baseline-embedded', granularity: 'monthly' },
+      {
+        date: '2024-01-01',
+        price: 1900,
+        source: 'monthly-baseline-embedded',
+        granularity: 'monthly',
+      },
+      {
+        date: '2024-02-01',
+        price: 1950,
+        source: 'monthly-baseline-embedded',
+        granularity: 'monthly',
+      },
       { date: '2024-02-01', price: 1960, source: 'local-snapshot', granularity: 'daily' },
     ];
     const points = buildUaeKaratHistoryPoints(records);
@@ -149,7 +158,12 @@ describe('uae-historical-karat-data', async () => {
 
   test('describeRangeResolution returns semantic keys for mixed data', () => {
     const points = buildUaeKaratHistoryPoints([
-      { date: '2025-06-01', price: 2000, source: 'monthly-baseline-embedded', granularity: 'monthly' },
+      {
+        date: '2025-06-01',
+        price: 2000,
+        source: 'monthly-baseline-embedded',
+        granularity: 'monthly',
+      },
       { date: '2026-01-02', price: 2100, source: 'freegoldapi-reference', granularity: 'daily' },
       { date: '2026-02-20', price: 2200, source: 'freegoldapi-reference', granularity: 'daily' },
     ]);

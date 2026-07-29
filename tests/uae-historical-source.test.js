@@ -22,7 +22,10 @@ describe('uae-historical-source', async () => {
 
   const { CONSTANTS } = await loadModule('src/config/constants.js');
   const fixture = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'fixtures/gold-api-history/xau-usd-daily.fixture.json'), 'utf8')
+    fs.readFileSync(
+      path.join(__dirname, 'fixtures/gold-api-history/xau-usd-daily.fixture.json'),
+      'utf8'
+    )
   );
 
   test('fetchDailyHistoryDocument validates fixture document', async () => {

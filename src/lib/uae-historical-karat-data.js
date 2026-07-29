@@ -133,8 +133,7 @@ export function buildUaeKaratHistoryPoints(records) {
       source: raw.source || 'derived',
       upstreamSource: raw.upstreamSource,
       granularity:
-        raw.granularity === 'monthly' ||
-        (date.endsWith('-01') && String(raw.date).length === 7)
+        raw.granularity === 'monthly' || (date.endsWith('-01') && String(raw.date).length === 7)
           ? 'monthly'
           : raw.granularity || 'daily',
       freshnessState: raw.freshnessState || 'historical',
@@ -299,12 +298,10 @@ export function toChartSeriesData(points, karatCode) {
  * @returns {Array<{ date: string, values: Record<string, number> }>}
  */
 export function toTableRows(points) {
-  return [...points]
-    .reverse()
-    .map((p) => ({
-      date: p.date,
-      values: { ...(p.displayValues || buildDisplayValues(p.values)) },
-    }));
+  return [...points].reverse().map((p) => ({
+    date: p.date,
+    values: { ...(p.displayValues || buildDisplayValues(p.values)) },
+  }));
 }
 
 /**

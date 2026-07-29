@@ -28,7 +28,10 @@ describe('gold-api-daily-history-contract', async () => {
   } = contract;
 
   const fixturePath = path.join(__dirname, 'fixtures/gold-api-history/provider-response.json');
-  const datasetFixturePath = path.join(__dirname, 'fixtures/gold-api-history/xau-usd-daily.fixture.json');
+  const datasetFixturePath = path.join(
+    __dirname,
+    'fixtures/gold-api-history/xau-usd-daily.fixture.json'
+  );
 
   test('parseProviderHistoryBody normalizes ascending unique records', () => {
     const body = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
@@ -39,6 +42,21 @@ describe('gold-api-daily-history-contract', async () => {
     for (let i = 1; i < records.length; i++) {
       assert.ok(records[i - 1].date < records[i].date);
     }
+  });
+
+  test('parseProviderHistoryBody supports official gold-api.com day/avg_price shape', () => {
+    const body = [
+      { day: '2026-07-01', avg_price: 4200.5 },
+      { day: '2026-06-30', avg_price: 4185 },
+      { day: '2026-06-29', max_price: 4100 },
+    ];
+    const { records, rejected, errors } = parseProviderHistoryBody(body, '2026-07-29');
+    assert.equal(errors.length, 0);
+    assert.equal(rejected, 0);
+    assert.equal(records.length, 3);
+    assert.equal(records[0].date, '2026-06-29');
+    assert.equal(records[0].avgUsdOz, 4100);
+    assert.equal(records[2].avgUsdOz, 4200.5);
   });
 
   test('rejects duplicate dates deterministically', () => {
@@ -111,16 +129,25 @@ describe('gold-api-daily-history-contract', async () => {
     const result = validateDailyDataset(records, '2026-07-29');
     assert.equal(result.ok, false);
   });
+
+  test('validateDailyDataset allowStale accepts aged latest record for display', () => {
+    const doc = JSON.parse(fs.readFileSync(datasetFixturePath, 'utf8'));
+    const records = doc.records.filter((r) => r.date <= '2026-05-15');
+    const strict = validateDailyDataset(records, '2026-07-29');
+    assert.equal(strict.ok, false);
+    assert.ok(strict.errors.some((e) => e.startsWith('stale_latest')));
+    const display = validateDailyDataset(records, '2026-07-29', { allowStale: true });
+    assert.equal(display.ok, true, display.errors.join(', '));
+  });
 });
 
 describe('fetch-gold-api-history CLI', () => {
   test('missing key exits non-zero', () => {
     const { spawnSync } = require('node:child_process');
-    const res = spawnSync(
-      process.execPath,
-      ['scripts/node/fetch-gold-api-history.mjs'],
-      { cwd: path.join(__dirname, '..'), env: { ...process.env, GOLD_API_KEY: '', GOLD_API_COM_KEY: '' } }
-    );
+    const res = spawnSync(process.execPath, ['scripts/node/fetch-gold-api-history.mjs'], {
+      cwd: path.join(__dirname, '..'),
+      env: { ...process.env, GOLD_API_KEY: '', GOLD_API_COM_KEY: '' },
+    });
     assert.notEqual(res.status, 0);
     const out = `${res.stderr}${res.stdout}`;
     assert.ok(out.includes('Missing API key'));

@@ -896,8 +896,7 @@ export const EN = {
   'home.uaeHistMethodology': 'How we calculate reference prices',
   'home.uaeHistTrackerLink': 'Open full tracker',
   'home.uaeHist.badge': 'Daily average spot-linked reference',
-  'home.uaeHist.sourceNote':
-    'Daily XAU/USD average via {provider} · converted using AED {peg} peg',
+  'home.uaeHist.sourceNote': 'Daily XAU/USD average via {provider} · converted using AED {peg} peg',
   'home.uaeHist.rangeGroupLabel': 'Chart time range',
   'home.uaeHist.modeGroupLabel': 'Chart display mode',
   'home.uaeHist.range1M': '1M',
@@ -918,7 +917,8 @@ export const EN = {
   'home.uaeHist.rangeSubtitle6M': '6-month window ending {endDate}',
   'home.uaeHist.rangeSubtitle12M': '12-month window ending {endDate}',
   'home.uaeHist.coverageDelayed': 'Historical coverage delayed through {date}',
-  'home.uaeHist.importError': 'Could not load the historical chart. Check your connection and try again.',
+  'home.uaeHist.importError':
+    'Could not load the historical chart. Check your connection and try again.',
   'home.uaeHist.freshness.current': 'Current daily reference history',
   'home.uaeHist.freshness.delayed': 'Delayed daily reference history · ends {date}',
   'home.uaeHist.freshness.stale': 'Stale daily reference history · ends {date}',

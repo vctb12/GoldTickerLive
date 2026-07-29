@@ -245,10 +245,11 @@ async function main() {
     }
   }
 
-  const { records, rejected, errors: parseErrors } = parseProviderHistoryBody(
-    body,
-    opts.referenceDate
-  );
+  const {
+    records,
+    rejected,
+    errors: parseErrors,
+  } = parseProviderHistoryBody(body, opts.referenceDate);
   if (parseErrors.length) {
     console.error(`ERROR: parse failed — ${parseErrors.join(', ')}`);
     process.exit(1);
@@ -310,7 +311,10 @@ async function main() {
     provider: PROVIDER,
     endpointType: ENDPOINT_TYPE,
     aggregation: AGGREGATION,
-    crossValidation: { reason: crossValidation.reason, sampleCount: crossValidation.samples?.length || 0 },
+    crossValidation: {
+      reason: crossValidation.reason,
+      sampleCount: crossValidation.samples?.length || 0,
+    },
     ...validation.stats,
   });
 }
