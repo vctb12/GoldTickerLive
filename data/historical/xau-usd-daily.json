@@ -8,8 +8,8 @@
   "currency": "USD",
   "groupBy": "day",
   "aggregation": "daily-average",
-  "retrievedAt": "2026-07-29T16:12:57.335Z",
-  "generatedAt": "2026-07-29T16:12:57.335Z",
+  "retrievedAt": "2026-07-29T17:00:17.354Z",
+  "generatedAt": "2026-07-29T17:00:17.354Z",
   "request": {
     "startTimestamp": 1750809600,
     "endTimestamp": 1785369599,
@@ -31,13 +31,13 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "7dfd173a970a5fc77e5c5918514a0282a06b9be77e5d59f9846ee295971e7add",
-  "normalizedRecordsSha256": "770d377adecae570004cde1aa70f0e9fec551bf0a0c2ed893c306f03e40e3a94",
+  "rawResponseSha256": "a419807e727e510cc7bd46a022027ecbd77ddcfef150501422a22771221b7eb3",
+  "normalizedRecordsSha256": "062afd6a7b9852b795d4e2c2b069d61a28fd9c6507bdfdf3890b4b7368fe8f32",
   "workflow": {
     "repository": "vctb12/GoldTickerLive",
-    "runId": "30469621213",
+    "runId": "30473279767",
     "runAttempt": "1",
-    "commitSha": "9de3319d6d7ce0dd454b0dd7c198149230d4c8c0",
+    "commitSha": "deff43f5563680c364cda06254fbef6eb1fff58b",
     "ref": "refs/heads/cursor/home-uae-historical-karat-chart-6a31"
   },
   "normalizerVersion": "1.1.0",
@@ -47,7 +47,7 @@
     "maxMonotonicUp": 13,
     "maxMonotonicDown": 9,
     "maxRepeatedDelta": 1,
-    "dailyReturnStdDev": 52.2198,
+    "dailyReturnStdDev": 52.22,
     "uniqueValueRatio": 0.9975,
     "weekendRecordCount": 114,
     "maxAbsoluteDailyReturn": 386.7211,
@@ -1662,7 +1662,7 @@
     },
     {
       "date": "2026-07-29",
-      "avgUsdOz": 4027.6951
+      "avgUsdOz": 4027.2385
     }
   ]
 }
