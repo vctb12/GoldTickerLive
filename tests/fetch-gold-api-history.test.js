@@ -132,7 +132,7 @@ describe('gold-api-daily-history-contract', async () => {
 
   test('validateDailyDataset allowStale accepts aged latest record for display', () => {
     const doc = JSON.parse(fs.readFileSync(datasetFixturePath, 'utf8'));
-    const records = doc.records.filter((r) => r.date <= '2026-05-15');
+    const records = doc.records.filter((r) => r.date <= '2026-07-24');
     const strict = validateDailyDataset(records, '2026-07-29');
     assert.equal(strict.ok, false);
     assert.ok(strict.errors.some((e) => e.startsWith('stale_latest')));
