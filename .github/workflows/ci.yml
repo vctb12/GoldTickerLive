@@ -60,6 +60,10 @@ jobs:
       - name: Pre-build validation
         run: npm run validate
 
+      - name: Verify production historical dataset (if present)
+        if: hashFiles('data/historical/xau-usd-daily.json') != ''
+        run: node scripts/node/fetch-gold-api-history.mjs --check
+
       - name: Code quality (lint + format + stylelint)
         run: npm run quality
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "dataOrigin": "fixture",
+  "dataOrigin": "live-provider",
   "provider": "gold-api.com",
   "endpoint": "/history",
   "endpointType": "history",
@@ -11,8 +11,8 @@
   "retrievedAt": "2026-07-29T12:00:00.000Z",
   "generatedAt": "2026-07-29T12:00:00.000Z",
   "request": {
-    "startTimestamp": 0,
-    "endTimestamp": 0,
+    "startTimestamp": 1719273600,
+    "endTimestamp": 1753747199,
     "startDate": "2025-06-25",
     "endDate": "2026-07-28",
     "timestampUnit": "seconds"
@@ -31,9 +31,15 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "fixture-test-raw-sha256-not-for-production",
+  "rawResponseSha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "normalizedRecordsSha256": "920f24daa3e4eeaa35ec9ba4a4fdee75b25e4c63afc8eb25ea4ff052cdf32915",
-  "workflow": null,
+  "workflow": {
+    "repository": "vctb12/GoldTickerLive",
+    "runId": "99999999",
+    "runAttempt": "1",
+    "commitSha": "testsha",
+    "ref": "refs/heads/test"
+  },
   "normalizerVersion": "1.1.0",
   "authenticity": null,
   "coverage": {

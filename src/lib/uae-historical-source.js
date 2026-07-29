@@ -10,10 +10,12 @@ import { KARATS } from '../config/karats.js';
 import { usdPerGram } from './price-calculator.js';
 import {
   validateDatasetDocument,
+  validateProductionProvenance,
   classifyDatasetFreshness,
   SCHEMA_VERSION,
   PROVIDER,
   AGGREGATION,
+  DATA_ORIGIN_LIVE,
 } from './gold-api-daily-history-contract.js';
 import {
   buildUaeKaratHistoryPoints,
@@ -60,9 +62,22 @@ export async function fetchDailyHistoryDocument(url = DAILY_HISTORY_URL, fetchFn
     return { ok: false, document: null, errors: ['invalid_json'], meta: null };
   }
 
-  const validation = validateDatasetDocument(document, undefined, { allowStale: true });
-  if (!validation.ok) {
-    return { ok: false, document, errors: validation.errors, meta: null };
+  const validation = validateDatasetDocument(document, undefined, {
+    allowStale: true,
+    requireProductionProvenance: true,
+  });
+  const provenance = validateProductionProvenance(document);
+  if (!validation.ok || !provenance.ok) {
+    return {
+      ok: false,
+      document,
+      errors: [...validation.errors, ...provenance.errors, ...provenance.fatalWarnings],
+      meta: null,
+    };
+  }
+
+  if (document.dataOrigin !== DATA_ORIGIN_LIVE) {
+    return { ok: false, document, errors: ['data_origin_not_live'], meta: null };
   }
 
   const end = validation.records[validation.records.length - 1]?.date || null;

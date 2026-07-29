@@ -1,44 +1,35 @@
-# Handoff: UAE Historical Karat Chart — gold-api.com daily pipeline
+# Handoff: UAE Historical Karat Chart — production provenance correction pass
 
 **Date:** 2026-07-29  
 **Branch:** `cursor/home-uae-historical-karat-chart-6a31`  
-**PR:** [#714](https://github.com/vctb12/GoldTickerLive/pull/714) (draft)
+**PR:** [#714](https://github.com/vctb12/GoldTickerLive/pull/714) (draft — **held**)
 
-## Completed this session
+## What changed this pass
 
-- **Parser fix:** gold-api.com `/history` returns `{ day, avg_price }` per official `llms.txt` — not
-  `{ timestamp, avg }`. CI was rejecting all 400 live rows (`no_records`).
-- **`allowStale` display path:** `uae-historical-source.js` accepts aged committed files for UI
-  disclosure while fetch/CI remain strict.
-- **Workflow:** `historical-gold-refresh.yml` uses official fixture on PR without secret; optional
-  `workflow_dispatch` input `bootstrap_branch=true` commits live refresh to current branch.
-- **Live dataset committed:** `data/historical/xau-usd-daily.json` bootstrapped from CI artifact
-  (run `30465923073`) — 400 records, coverage `2025-06-25` → `2026-07-29`, `calendarAgeDays: 0`.
-- **Playwright evidence:** 20 screenshots in `reports/screenshots/uae-hist-chart/` (EN/AR,
-  light/dark, mobile, ranges, tooltip, loading, stale, error/retry, legend, lang switch).
-- **Tests:** 1717 unit tests (1 pre-existing SEO canonical failure unrelated to chart); 13/13
-  Playwright chart spec (chromium).
+- Reconciled contradictory claims vs failed run [30464818829](https://github.com/vctb12/GoldTickerLive/actions/runs/30464818829)
+- **Deleted** unverified `data/historical/xau-usd-daily.json` (was committed without provenance)
+- Added production provenance contract + loader hardening (`dataOrigin: live-provider` required)
+- Blocked fixture → production path writes
+- Split PR workflow (`historical-gold-refresh-pr.yml`) from trusted live workflow
+- Added `--diagnose-schema`, authenticity audit, cross-validation script
+- Homepage shows **unavailable** until verified live dataset exists
 
-## Secret status
+## Root cause
 
-`GOLD_API_KEY` is configured in GitHub Actions (workflow keycheck passed). Not available in Cursor
-cloud env. Daily schedule will refresh after merge.
+Parser on `609c1891` rejected all 400 real API rows (`day`/`avg_price` shape). Later “success” runs on
+PR either used fixtures or produced files without workflow provenance.
 
-## Verification run (latest)
+## Owner action (blocking)
 
-- `npm test` — 1717 pass
-- `npm run lint` / `validate` / `build` / `quality` / `check-links` — pass
-- `npm run a11y` — fails on pre-existing `shops.html` contrast (not chart-related)
-- Playwright `home-uae-hist-chart.spec.js` — 13/13 pass (chromium)
+Run **Historical Gold Refresh** → `workflow_dispatch` → `bootstrap_branch=true` on this branch.
+Verify committed file includes `workflow.runId` and `rawResponseSha256` from that run.
 
-## CI status (latest push)
+## Verification run (local)
 
-- **All PR checks green** including Audit assets/Playwright, Historical Gold Refresh, CodeQL,
-  Lighthouse, Build + audit links, Readiness gate
-- Historical workflow on live data: 400 records, `rejected: 0`, artifact uploaded
+- `tests/fetch-gold-api-history.test.js` + `tests/uae-historical-source.test.js` — 28/28 pass
+- `npm test` — 1724/1725 pass (1 pre-existing SEO canonical failure)
+- Fixture → production CLI write — **correctly fails**
 
-## Remaining before ready-for-review
+## Status
 
-- `npm run a11y` — pre-existing `shops.html` contrast + tracker anchor warnings (not introduced by
-  this PR; not in CI gate). Chart-specific surfaces pass Playwright a11y interactions.
-- Cross-validation: CI reported `comparison_source_unavailable` (FreeGoldAPI blocked on runner)
+**in-progress** — production data pipeline not proven until successful live bootstrap workflow.

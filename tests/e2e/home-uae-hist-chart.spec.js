@@ -8,7 +8,7 @@ const path = require('path');
 const SHOT_DIR = path.join(__dirname, '../../reports/screenshots/uae-hist-chart');
 const DAILY_FIXTURE = path.join(
   __dirname,
-  '../fixtures/gold-api-history/xau-usd-daily.fixture.json'
+  '../fixtures/gold-api-history/xau-usd-daily.live-fixture.json'
 );
 
 async function installDailyHistoryRoute(page) {

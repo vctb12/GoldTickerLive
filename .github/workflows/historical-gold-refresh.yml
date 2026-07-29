@@ -2,6 +2,9 @@
 # Historical gold daily refresh — homepage UAE chart data only.
 # Does NOT modify production live-price fetch (gold-price-fetch.yml).
 # Tier: data refresh (dedicated)
+#
+# SECURITY: pull_request jobs never receive GOLD_API_KEY. Live fetch runs only
+# on workflow_dispatch (bootstrap) or schedule on trusted default branch.
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
@@ -19,13 +22,14 @@ on:
         options:
           - 'false'
           - 'true'
-  pull_request:
-    paths:
-      - 'scripts/node/fetch-gold-api-history.mjs'
-      - 'src/lib/gold-api-daily-history-contract.js'
-      - 'tests/fetch-gold-api-history.test.js'
-      - 'tests/fixtures/gold-api-history/**'
-      - '.github/workflows/historical-gold-refresh.yml'
+      diagnose_schema:
+        description: 'Run live schema diagnostic only (no commit)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
 
 permissions:
   contents: write
@@ -54,6 +58,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Determine execution mode
+        id: mode
+        run: |
+          if [ "${{ github.event.inputs.diagnose_schema }}" = "true" ]; then
+            echo "mode=diagnose" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=live" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Verify API key is configured
         id: keycheck
         env:
@@ -65,39 +78,44 @@ jobs:
             echo "API key present (name not logged)."
           else
             echo "has_key=false" >> "$GITHUB_OUTPUT"
-            if [ "${{ github.event_name }}" = "pull_request" ]; then
-              echo "No API key on PR — will validate with fixture only."
-            else
-              echo "::error::Missing repository secret GOLD_API_KEY (or legacy GOLD_API_COM_KEY)."
-              exit 1
-            fi
+            echo "::error::Missing repository secret GOLD_API_KEY (or legacy GOLD_API_COM_KEY)."
+            exit 1
           fi
 
-      - name: Fetch daily history
-        id: fetch
+      - name: Diagnose live response schema
+        if: steps.mode.outputs.mode == 'diagnose'
         env:
           GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
           GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
         run: |
           set -euo pipefail
           REF_DATE="$(date -u +%F)"
-          if [ "${{ steps.keycheck.outputs.has_key }}" = "true" ]; then
-            node scripts/node/fetch-gold-api-history.mjs --reference-date "$REF_DATE"
-          else
-            node scripts/node/fetch-gold-api-history.mjs \
-              --fixture tests/fixtures/gold-api-history/provider-response-official.json \
-              --reference-date "$REF_DATE"
-          fi
+          node scripts/node/fetch-gold-api-history.mjs --diagnose-schema --reference-date "$REF_DATE"
+
+      - name: Fetch daily history (live provider)
+        if: steps.mode.outputs.mode == 'live'
+        env:
+          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
+          GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
+        run: |
+          set -euo pipefail
+          REF_DATE="$(date -u +%F)"
+          node scripts/node/fetch-gold-api-history.mjs --reference-date "$REF_DATE"
 
       - name: Run historical data tests
         run: node --test --test-concurrency=1 tests/fetch-gold-api-history.test.js tests/uae-historical-source.test.js
 
       - name: Coverage summary
+        if: steps.mode.outputs.mode == 'live' && hashFiles('data/historical/xau-usd-daily.json') != ''
         run: node scripts/node/fetch-gold-api-history.mjs --check
 
       - name: Commit updated dataset
-        if: github.event_name != 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true')
+        if: steps.mode.outputs.mode == 'live' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true'))
         run: |
+          if [ ! -f data/historical/xau-usd-daily.json ]; then
+            echo "No production dataset written — skipping commit."
+            exit 0
+          fi
           if git diff --quiet -- data/historical/xau-usd-daily.json; then
             echo "No changes to commit."
             exit 0
@@ -105,13 +123,16 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/historical/xau-usd-daily.json
-          git commit -m "chore(data): refresh XAU/USD daily history [bot]"
+          git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
           git push
 
-      - name: Upload audit artifact
+      - name: Upload audit artifacts
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: xau-usd-daily-audit
-          path: data/historical/xau-usd-daily.json
+          name: xau-usd-daily-audit-${{ github.run_id }}
+          path: |
+            data/historical/xau-usd-daily.json
+            reports/gold-api-history/diagnose-schema.json
+            reports/gold-api-history/diagnose-schema-sample.json
           if-no-files-found: ignore

@@ -21,17 +21,23 @@ describe('uae-historical-source', async () => {
   } = await loadModule('src/lib/uae-historical-source.js');
 
   const { CONSTANTS } = await loadModule('src/config/constants.js');
-  const fixture = JSON.parse(
+  const liveFixture = JSON.parse(
+    fs.readFileSync(
+      path.join(__dirname, 'fixtures/gold-api-history/xau-usd-daily.live-fixture.json'),
+      'utf8'
+    )
+  );
+  const fixtureOnly = JSON.parse(
     fs.readFileSync(
       path.join(__dirname, 'fixtures/gold-api-history/xau-usd-daily.fixture.json'),
       'utf8'
     )
   );
 
-  test('fetchDailyHistoryDocument validates fixture document', async () => {
+  test('fetchDailyHistoryDocument accepts live-provenance document', async () => {
     const fetchFn = async () => ({
       ok: true,
-      json: async () => fixture,
+      json: async () => liveFixture,
     });
     const result = await fetchDailyHistoryDocument('/test.json', fetchFn);
     assert.equal(result.ok, true);
@@ -39,10 +45,29 @@ describe('uae-historical-source', async () => {
     assert.equal(result.meta.freshness, 'current');
   });
 
+  test('fetchDailyHistoryDocument rejects fixture dataOrigin', async () => {
+    const fetchFn = async () => ({
+      ok: true,
+      json: async () => fixtureOnly,
+    });
+    const result = await fetchDailyHistoryDocument('/test.json', fetchFn);
+    assert.equal(result.ok, false);
+    assert.ok(result.errors.includes('data_origin_not_live'));
+  });
+
+  test('fetchDailyHistoryDocument rejects missing provenance', async () => {
+    const fetchFn = async () => ({
+      ok: true,
+      json: async () => ({ schemaVersion: 1, provider: 'gold-api.com', records: [] }),
+    });
+    const result = await fetchDailyHistoryDocument('/test.json', fetchFn);
+    assert.equal(result.ok, false);
+  });
+
   test('loadUaeDailyKaratHistory maintains karat ordering', async () => {
     const fetchFn = async () => ({
       ok: true,
-      json: async () => fixture,
+      json: async () => liveFixture,
     });
     const { points, errors } = await loadUaeDailyKaratHistory({ fetchFn });
     assert.equal(errors.length, 0);
