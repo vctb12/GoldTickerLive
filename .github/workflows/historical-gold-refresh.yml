@@ -8,6 +8,7 @@
 # Manual run: Actions → Historical Gold Refresh → Run workflow → branch: main
 # TEMPORARY (PR #714 bot-commit proof): exact-branch push when this workflow file
 # changes. Removed immediately after verified bot commit on feature branch.
+# Proof attempt run 30473063616 (fetch transient failure); retry on push.
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
