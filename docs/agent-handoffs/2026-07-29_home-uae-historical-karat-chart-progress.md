@@ -51,7 +51,7 @@
 - [x] `npm run validate` — pass
 - [x] `npm run build` — pass
 - [ ] Playwright screenshots — skipped (no browser env in cloud session)
-- [ ] Open PR — pending
+- [x] Open PR — [#714](https://github.com/vctb12/GoldTickerLive/pull/714)
 
 ---
 
