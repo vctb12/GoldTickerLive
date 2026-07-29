@@ -3,7 +3,7 @@
  * tests, and the homepage historical chart loader.
  */
 
-import { createHash } from 'node:crypto';
+import { sha256Hex as sha256HexDigest } from './sha256-hex.js';
 
 export const SCHEMA_VERSION = 1;
 export const NORMALIZER_VERSION = '1.1.0';
@@ -165,7 +165,7 @@ export function isExplainableGap(gapDays, prevDate, nextDate) {
  * @returns {string}
  */
 export function sha256Hex(text) {
-  return createHash('sha256').update(text).digest('hex');
+  return sha256HexDigest(text);
 }
 
 /**
