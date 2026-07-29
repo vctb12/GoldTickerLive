@@ -102,7 +102,7 @@ let _refreshController = null;
 let _freshnessController = null;
 let _quickConvert = null;
 const _sessionPriceHistory = []; // [{price, ts}] — rolling 120-point window for sparkline
-let _homeChart = null; // GoldChart instance for the home-chart section
+let _uaeHistChart = null; // UAE historical karat chart instance
 
 // Karat selected for tracker/calculator deep links — persisted in user_prefs
 let homeTrackerKarat = (() => {
@@ -404,8 +404,7 @@ function renderHeroCard() {
   if (_sessionPriceHistory.length > 120) _sessionPriceHistory.shift();
   drawHeroSparkline();
 
-  // Feed live tick into the home chart if it's loaded
-  _homeChart?.addPoint(usd24oz, Date.now());
+  // Feed live tick — UAE chart uses historical data only; no live tick injection.
 
   // Update sticky spot bar
   updateSpotBar({
@@ -706,56 +705,50 @@ function renderPriceTrend() {
   if (sub) sub.textContent = tx('priceTrendSub');
 }
 
-// ── Home interactive chart ──────────────────────────────────────────────────
+// ── UAE historical karat chart ──────────────────────────────────────────────
 function initHomeChart() {
   const wrap = document.getElementById('home-chart-wrap');
-  if (!wrap) return;
+  const root = document.getElementById('uae-hist-chart-root');
+  if (!wrap || !root) return;
 
-  // Apply i18n to section header and buttons
+  // Apply i18n to section header
   const kicker = document.getElementById('home-chart-kicker');
   const title = document.getElementById('home-chart-title');
   const sub = document.getElementById('home-chart-sub');
-  const btn1y = document.getElementById('home-chart-btn-1y');
-  const btn3y = document.getElementById('home-chart-btn-3y');
-  const btnAll = document.getElementById('home-chart-btn-all');
-  if (kicker) kicker.textContent = tx('chartKicker');
-  if (title) title.textContent = tx('chartTitle');
-  if (sub) sub.textContent = tx('chartSub');
-  if (btn1y) btn1y.textContent = tx('chartRange1Y');
-  if (btn3y) btn3y.textContent = tx('chartRange3Y');
-  if (btnAll) btnAll.textContent = tx('chartRangeAll');
+  const methodLink = document.getElementById('home-chart-methodology-link');
+  const trackerLink = document.getElementById('home-chart-tracker-link');
+  if (kicker) kicker.textContent = tx('uaeHistKicker');
+  if (title) title.textContent = tx('uaeHistTitle');
+  if (sub) sub.textContent = tx('uaeHistSub');
+  if (methodLink) methodLink.textContent = tx('uaeHistMethodology');
+  if (trackerLink) trackerLink.textContent = tx('uaeHistTrackerLink');
 
-  // Lazy-load chart when section scrolls into view
   const observer = new IntersectionObserver(
     (entries) => {
       if (!entries[0].isIntersecting) return;
       observer.disconnect();
 
-      import('../components/chart.js')
-        .then(({ GoldChart }) => {
-          const container = document.getElementById('home-chart-container');
-          if (!container) return;
-          container.removeAttribute('aria-busy');
-          _homeChart = new GoldChart('home-chart-container', lang);
-          _homeChart.setRange('ALL');
-
-          // Wire range button clicks
-          const rangeGroup = document.getElementById('home-chart-ranges');
-          if (rangeGroup) {
-            rangeGroup.addEventListener('click', (e) => {
-              const btn = e.target.closest('.home-chart-range-btn');
-              if (!btn || !_homeChart) return;
-              const range = btn.dataset.range;
-              rangeGroup.querySelectorAll('.home-chart-range-btn').forEach((b) => {
-                b.classList.toggle('is-active', b === btn);
-              });
-              _homeChart.setRange(range);
-            });
-          }
+      import('../components/UaeHistoricalKaratChart.js')
+        .then(({ UaeHistoricalKaratChart }) => {
+          root.removeAttribute('aria-busy');
+          _uaeHistChart = new UaeHistoricalKaratChart({
+            rootId: 'uae-hist-chart-root',
+            lang,
+            onAnalytics: (event, payload) => {
+              if (event === 'export_click') {
+                track(EVENTS.EXPORT_CLICK, payload);
+              } else {
+                track(EVENTS.TOOL_USE, { tool: event, ...payload });
+              }
+            },
+          });
+          _uaeHistChart.init();
         })
-        .catch(() => {});
+        .catch(() => {
+          root.removeAttribute('aria-busy');
+        });
     },
-    { threshold: 0.1 }
+    { threshold: 0.1, rootMargin: '100px' }
   );
   observer.observe(wrap);
 }
@@ -1090,7 +1083,13 @@ function applyLangToPage() {
   setTextById('route-track-title', tx('routingTrackTitle'));
   setTextById('route-track-body', tx('routingTrackBody'));
   setTextById('route-track-cta', tx('routingTrackCta'));
-  // Market-read insight labels
+  // UAE historical chart section header
+  setTextById('home-chart-kicker', tx('uaeHistKicker'));
+  setTextById('home-chart-title', tx('uaeHistTitle'));
+  setTextById('home-chart-sub', tx('uaeHistSub'));
+  setTextById('home-chart-methodology-link', tx('uaeHistMethodology'));
+  setTextById('home-chart-tracker-link', tx('uaeHistTrackerLink'));
+  // Market-read insight labels (legacy — no-op when elements absent)
   setTextById('mi-position-label', tx('miPositionLabel'));
   setTextById('mi-year-label', tx('miYearLabel'));
   setTextById('mi-range-label', tx('miRangeLabel'));
@@ -1900,7 +1899,7 @@ async function init() {
       mountHomeQuickConvert();
       // Re-localize the interactive chart (time axis + SR summary); safe
       // no-op before the lazy chart has mounted.
-      _homeChart?.setLang(lang);
+      _uaeHistChart?.setLang(lang);
       injectFaqSchema(document, buildMethodologyFaqSchema(lang));
     });
   });

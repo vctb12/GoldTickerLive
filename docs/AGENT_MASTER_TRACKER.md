@@ -1,6 +1,6 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-07-11 · **Updated by:** Claude Code **Purpose:** The single canonical source
+**Last updated:** 2026-07-29 · **Updated by:** Cursor Cloud Agent **Purpose:** The single canonical source
 of truth for **every plan and every phase** in this repository — finished and unfinished — so no
 roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
 file is **canonical over chat memory**.
@@ -61,6 +61,7 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
 | ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | in-progress | —                                                         | Multi-series AED/g chart 24K–18K, 1M–12M, line/area; plan `docs/plans/2026-07-29_home-uae-historical-karat-chart.md`                                              |
 | Revamp Phase 17 — Design-token consolidation               | `claude/revamp-phase-17-tokens`               | in-progress | —                                                         | hex->tokens; dual-theme visual-regression                                                                                                                         |
 | Master Tracker (this doc)                                  | `claude/revamp-master-tracker`                | in-progress | —                                                         | Being created now                                                                                                                                                 |
 | Learn-Hub Reliability — real read progress + favicon 404   | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —                                                         | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix                                                                        |
