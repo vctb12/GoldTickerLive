@@ -5,10 +5,18 @@
 #
 # SECURITY: pull_request jobs never receive GOLD_API_KEY. Live fetch runs only
 # on workflow_dispatch (bootstrap) or schedule on trusted default branch.
+#
+# TEMPORARY (PR #714 bootstrap): exact-branch push trigger when this workflow
+# file changes. Removed after verified production dataset is committed.
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
 on:
+  push:
+    branches:
+      - cursor/home-uae-historical-karat-chart-6a31
+    paths:
+      - '.github/workflows/historical-gold-refresh.yml'
   schedule:
     # Daily ~02:45 UTC (within owner-approved 02:15–03:15 window)
     - cron: '45 2 * * *'
@@ -41,6 +49,12 @@ concurrency:
 jobs:
   refresh:
     name: Refresh XAU/USD daily history
+    if: >-
+      github.event_name != 'push' ||
+      (
+        github.repository == 'vctb12/GoldTickerLive' &&
+        github.ref == 'refs/heads/cursor/home-uae-historical-karat-chart-6a31'
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -109,9 +123,23 @@ jobs:
         if: steps.mode.outputs.mode == 'live' && hashFiles('data/historical/xau-usd-daily.json') != ''
         run: node scripts/node/fetch-gold-api-history.mjs --check
 
+      - name: Validate production provenance before commit
+        if: steps.mode.outputs.mode == 'live' && hashFiles('data/historical/xau-usd-daily.json') != ''
+        run: node scripts/node/fetch-gold-api-history.mjs --check
+
       - name: Commit updated dataset
-        if: steps.mode.outputs.mode == 'live' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true'))
+        if: >-
+          steps.mode.outputs.mode == 'live' && (
+            github.event_name == 'schedule' ||
+            (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true') ||
+            (
+              github.event_name == 'push' &&
+              github.repository == 'vctb12/GoldTickerLive' &&
+              github.ref == 'refs/heads/cursor/home-uae-historical-karat-chart-6a31'
+            )
+          )
         run: |
+          set -euo pipefail
           if [ ! -f data/historical/xau-usd-daily.json ]; then
             echo "No production dataset written — skipping commit."
             exit 0
@@ -120,10 +148,43 @@ jobs:
             echo "No changes to commit."
             exit 0
           fi
+          DOC_CHECK="$(node -e "
+            const fs = require('fs');
+            const doc = JSON.parse(fs.readFileSync('data/historical/xau-usd-daily.json','utf8'));
+            const required = [
+              ['dataOrigin', 'live-provider'],
+              ['provider', 'gold-api.com'],
+              ['endpoint', '/history'],
+            ];
+            for (const [k, v] of required) {
+              if (doc[k] !== v) {
+                console.error('provenance_mismatch:' + k);
+                process.exit(1);
+              }
+            }
+            if (!doc.workflow?.runId) {
+              console.error('missing_workflow_run_id');
+              process.exit(1);
+            }
+            if (!doc.rawResponseSha256 || !doc.normalizedRecordsSha256) {
+              console.error('missing_hashes');
+              process.exit(1);
+            }
+            if (!Array.isArray(doc.records) || doc.records.length === 0) {
+              console.error('no_records');
+              process.exit(1);
+            }
+            console.log('provenance_ok');
+          ")"
+          echo "$DOC_CHECK"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/historical/xau-usd-daily.json
-          git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            git commit -m "chore(data): bootstrap verified XAU/USD history [bot] run=${{ github.run_id }}"
+          else
+            git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
+          fi
           git push
 
       - name: Upload audit artifacts
