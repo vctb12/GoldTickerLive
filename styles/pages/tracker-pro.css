@@ -2840,8 +2840,7 @@ td.tracker-chg-flat {
   border-color: color-mix(in srgb, var(--tp-snapshot-strong) 25%, transparent);
   color: var(--tp-snapshot-strong);
 }
-.tracker-source-badge--LBMA-baseline,
-.tracker-source-badge--monthly-baseline-embedded {
+.tracker-source-badge--LBMA-baseline {
   background: var(--tp-blue-soft);
   border-color: rgb(20 85 164 / 22%);
   color: var(--tp-blue);

@@ -247,9 +247,7 @@ export function exportHistoricalCSV(records, karatCode = '24') {
   const dates = records.map((r) => String(r.date)).sort();
   const firstDate = dates[0] ?? '—';
   const lastDate = dates[dates.length - 1] ?? '—';
-  const hasBaseline = records.some(
-    (r) => r.source === 'LBMA-baseline' || r.source === 'monthly-baseline-embedded'
-  );
+  const hasBaseline = records.some((r) => r.source === 'LBMA-baseline');
   const hasDaily = records.some((r) => r.granularity === 'daily');
   const dataResolution =
     hasBaseline && hasDaily

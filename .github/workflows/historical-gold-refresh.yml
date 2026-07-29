@@ -1,10 +1,11 @@
 # ------------------------------------------------------------------
 # Historical gold daily refresh — homepage UAE chart data only.
 # Does NOT modify production live-price fetch (gold-price-fetch.yml).
-# Tier: data refresh (dedicated)
 #
 # SECURITY: pull_request jobs never receive GOLD_API_KEY. Live fetch runs only
-# on workflow_dispatch (bootstrap) or schedule on trusted default branch.
+# on schedule or workflow_dispatch on the default branch (main).
+#
+# Manual run: Actions → Historical Gold Refresh → Run workflow → branch: main
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
@@ -14,14 +15,6 @@ on:
     - cron: '45 2 * * *'
   workflow_dispatch:
     inputs:
-      bootstrap_branch:
-        description: 'Commit refreshed dataset to the current branch (bootstrap only)'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'false'
-          - 'true'
       diagnose_schema:
         description: 'Run live schema diagnostic only (no commit)'
         required: false
@@ -43,6 +36,11 @@ jobs:
     name: Refresh XAU/USD daily history
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    # Trusted production refresh only — not feature branches.
+    if: >-
+      github.repository == 'vctb12/GoldTickerLive' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
@@ -114,11 +112,7 @@ jobs:
         run: node scripts/node/fetch-gold-api-history.mjs --check
 
       - name: Commit updated dataset
-        if: >-
-          steps.mode.outputs.mode == 'live' && (
-            github.event_name == 'schedule' ||
-            (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true')
-          )
+        if: steps.mode.outputs.mode == 'live'
         run: |
           set -euo pipefail
           if [ ! -f data/historical/xau-usd-daily.json ]; then

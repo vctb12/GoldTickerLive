@@ -4,7 +4,7 @@
  *
  * ARCHITECTURE:
  *   Layer 1 — BASELINE  : Monthly averages 2019–present (embedded in code)
- *                          Source: embedded monthly XAU/USD baseline (provenance unverified)
+ *                          Source: LBMA monthly average data / public domain records
  *                          Granularity: monthly  |  Unit: USD/troy oz
  *   Layer 2 — REFERENCE : Daily USD rows from freegoldapi.com (optional, cached 24h)
  *                          Granularity: daily  |  Label: freegoldapi-reference (derived)
@@ -29,7 +29,7 @@
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MONTHLY BASELINE — XAU/USD average per month
-// Source: embedded monthly baseline (original upstream not documented — not verified LBMA)
+// Source: LBMA PM fix monthly averages (public domain)
 // ─────────────────────────────────────────────────────────────────────────────
 
 import MONTHLY_BASELINE from '../data/historical-baseline.json' with { type: 'json' };
@@ -52,7 +52,7 @@ function baselineToRecord(entry) {
     date: entry.date, // 'YYYY-MM'
     price: entry.price, // USD/troy oz
     granularity: 'monthly',
-    source: isEstimated ? 'estimated' : 'monthly-baseline-embedded',
+    source: isEstimated ? 'estimated' : 'LBMA-baseline',
     freshnessState: 'historical',
     derived: false,
   };

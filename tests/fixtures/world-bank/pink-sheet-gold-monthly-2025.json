@@ -1,0 +1,42 @@
+{
+  "source": "World Bank Commodity Markets Pink Sheet",
+  "sourceUrl": "https://www.worldbank.org/en/research/commodity-markets",
+  "downloadUrl": "https://thedocs.worldbank.org/en/doc/18675f1d1639c7a34d463f59263ba0a2-0050012025/related/CMO-Historical-Data-Monthly.xlsx",
+  "retrievedAt": "2026-07-29T00:00:00.000Z",
+  "workbookSha256": "83a320affafc83512d4af4c7198af6ce086326c8b6923d9f64dd905172f86290",
+  "sheet": "Monthly Prices",
+  "series": "Gold",
+  "seriesDescription": "Gold",
+  "unit": "USD/troy ounce",
+  "extractionMethod": "Parsed column Gold from Monthly Prices sheet; date column B (YYYYMmm); values nominal USD/troy oz.",
+  "records": [
+    {
+      "month": "2025-06",
+      "priceUsdPerTroyOz": 3352.66
+    },
+    {
+      "month": "2025-07",
+      "priceUsdPerTroyOz": 3340.15
+    },
+    {
+      "month": "2025-08",
+      "priceUsdPerTroyOz": 3368.03
+    },
+    {
+      "month": "2025-09",
+      "priceUsdPerTroyOz": 3667.68
+    },
+    {
+      "month": "2025-10",
+      "priceUsdPerTroyOz": 4058.33
+    },
+    {
+      "month": "2025-11",
+      "priceUsdPerTroyOz": 4087.19
+    },
+    {
+      "month": "2025-12",
+      "priceUsdPerTroyOz": 4309.23
+    }
+  ]
+}
