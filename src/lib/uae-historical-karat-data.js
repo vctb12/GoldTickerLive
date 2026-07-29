@@ -8,7 +8,12 @@
 import { CONSTANTS } from '../config/constants.js';
 import { KARATS } from '../config/karats.js';
 import { usdPerGram } from './price-calculator.js';
-import { ensureRemoteHistory, getUnifiedHistory } from '../lib/historical-data.js';
+import { loadUaeDailyKaratHistory } from './uae-historical-source.js';
+import {
+  FRESHNESS_WEEKDAY_MAX_DAYS,
+  FRESHNESS_WEEKEND_MAX_DAYS,
+  isWeekendReference,
+} from './gold-api-daily-history-contract.js';
 
 /** Homepage chart karat series (24K baseline). */
 export const UAE_HISTORY_KARATS = ['24', '22', '21', '18'];
@@ -21,9 +26,9 @@ export const UAE_HISTORY_RANGES = Object.freeze({
   '12M': 365,
 });
 
-/** Days since latest record → coverage freshness classification. */
-export const HIST_COVERAGE_FRESH_DAYS = 7;
-export const HIST_COVERAGE_DELAYED_DAYS = 60;
+/** @deprecated Use gold-api-daily-history-contract freshness for daily file */
+export const HIST_COVERAGE_FRESH_DAYS = FRESHNESS_WEEKDAY_MAX_DAYS;
+export const HIST_COVERAGE_DELAYED_DAYS = FRESHNESS_WEEKEND_MAX_DAYS;
 
 const PURITY_BY_CODE = Object.fromEntries(KARATS.map((k) => [k.code, k.purity]));
 
@@ -166,8 +171,8 @@ export function classifyCoverageFreshness(latestDate, referenceDate) {
   if (!latestDate) return 'unavailable';
   const ref = referenceDate || new Date().toISOString().slice(0, 10);
   const age = daysBetweenDates(latestDate, ref);
-  if (age <= HIST_COVERAGE_FRESH_DAYS) return 'current';
-  if (age <= HIST_COVERAGE_DELAYED_DAYS) return 'delayed';
+  const limit = isWeekendReference(ref) ? FRESHNESS_WEEKEND_MAX_DAYS : FRESHNESS_WEEKDAY_MAX_DAYS;
+  if (age <= limit) return 'current';
   return 'stale';
 }
 
@@ -217,30 +222,26 @@ export function describeRangeResolution(points) {
 
   let dailyCount = 0;
   let monthlyCount = 0;
-  let hasCached = false;
   const sources = new Set();
 
   for (const p of points) {
     if (p.granularity === 'monthly') monthlyCount++;
     else dailyCount++;
     sources.add(p.source);
-    if (p.source === 'local-snapshot') hasCached = true;
   }
 
-  let key = 'daily_reference';
-  if (hasCached && dailyCount > 0 && monthlyCount === 0) {
-    key = 'cached_browser';
-  } else if (monthlyCount > 0 && dailyCount === 0) {
-    key = hasCached ? 'cached_browser' : 'monthly_baseline';
-  } else if (monthlyCount > 0 && dailyCount > 0) {
+  let key = 'daily_average_reference';
+  if (monthlyCount > 0 && dailyCount > 0) {
     key = 'mixed_daily_monthly';
+  } else if (monthlyCount > 0 && dailyCount === 0) {
+    key = 'monthly_baseline';
   }
 
   return {
     key,
     dailyCount,
     monthlyCount,
-    hasCached,
+    hasCached: false,
     sources: [...sources],
   };
 }
@@ -335,16 +336,12 @@ export function buildChartSrSummary(points, rangeKey, visibleKarats, lang = 'en'
 }
 
 /**
- * Load unified history and transform to karat points.
- * @param {Array} [localSnapshots]
- * @returns {Promise<{ points: UaeKaratHistoryPoint[], rawCount: number, coverage: object|null }>}
+ * Load committed gold-api.com daily history and transform to karat points.
+ * @returns {Promise<{ points: UaeKaratHistoryPoint[], rawCount: number, coverage: object|null, meta: object|null, errors: string[] }>}
  */
-export async function loadUaeKaratHistory(localSnapshots = []) {
-  await ensureRemoteHistory?.().catch(() => {});
-  const unified = getUnifiedHistory(localSnapshots);
-  const points = buildUaeKaratHistoryPoints(unified);
-  const coverage = computeCoverageMeta(points);
-  return { points, rawCount: unified.length, coverage };
+export async function loadUaeKaratHistory() {
+  const { points, coverage, meta, errors } = await loadUaeDailyKaratHistory();
+  return { points, rawCount: points.length, coverage, meta, errors };
 }
 
 /**

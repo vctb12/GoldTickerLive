@@ -131,6 +131,7 @@ These are configured as repository secrets in GitHub (Settings → Secrets → A
 | Secret Name                 | Used By                   | Purpose                                  |
 | --------------------------- | ------------------------- | ---------------------------------------- |
 | `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Primary gold spot API key (gold-api.com) |
+| `GOLD_API_KEY`              | `historical-gold-refresh.yml` | Homepage daily XAU/USD history (gold-api.com `/history`; may reuse same key as `GOLD_API_COM_KEY`) |
 | `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional legacy fallback key             |
 | `CONSUMER_KEY`              | Tweet workflows           | Twitter/X OAuth 1.0a API Key             |
 | `CONSUMER_SECRET`           | Tweet workflows           | Twitter/X OAuth 1.0a API Secret          |

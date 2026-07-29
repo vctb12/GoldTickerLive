@@ -6,6 +6,21 @@ const fs = require('fs');
 const path = require('path');
 
 const SHOT_DIR = path.join(__dirname, '../../reports/screenshots/uae-hist-chart');
+const DAILY_FIXTURE = path.join(
+  __dirname,
+  '../fixtures/gold-api-history/xau-usd-daily.fixture.json'
+);
+
+async function installDailyHistoryRoute(page) {
+  const body = fs.readFileSync(DAILY_FIXTURE, 'utf8');
+  await page.route('**/data/historical/xau-usd-daily.json', (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body,
+    })
+  );
+}
 
 async function scrollToChart(page) {
   const section = page.locator('#home-chart-section, .home-chart-section').first();
@@ -58,6 +73,7 @@ test.describe('UAE Historical Karat Chart', () => {
 
   test.beforeEach(async ({ page }) => {
     await page.route(/^https?:\/\/(?!localhost|127\.0\.0\.1)/, (route) => route.abort());
+    await installDailyHistoryRoute(page);
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/', { waitUntil: 'load' });
   });
@@ -84,7 +100,8 @@ test.describe('UAE Historical Karat Chart', () => {
     await scrollToChart(page);
     const source = page.locator('#uae-hist-source');
     const text = await source.textContent();
-    expect(text).not.toMatch(/Daily reference|Mixed daily/);
+    expect(text).not.toMatch(/Daily reference observations|Mixed daily/);
+    expect(text).toMatch(/gold-api\.com|متوسط XAU/);
     await capture(page, 'ar-light-desktop-6m-line');
   });
 

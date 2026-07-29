@@ -25,6 +25,7 @@ import {
   formatAedPerGramWithUnit,
   findPointByDate,
 } from '../lib/uae-historical-karat-data.js';
+import { getDailySourceAttribution } from '../lib/uae-historical-source.js';
 
 /** Series line styles for non-color differentiation. */
 const SERIES_LINE_STYLES = Object.freeze({
@@ -100,6 +101,7 @@ export class UaeHistoricalKaratChart {
     this.allPoints = [];
     this.filteredPoints = [];
     this.coverage = null;
+    this.meta = null;
     this.rangeCoverage = null;
     this.rangeResolution = null;
     this.tableExpanded = false;
@@ -136,13 +138,14 @@ export class UaeHistoricalKaratChart {
     this._renderState();
 
     try {
-      const { points, coverage } = await loadUaeKaratHistory();
+      const { points, coverage, meta, errors } = await loadUaeKaratHistory();
       this.allPoints = points;
       this.coverage = coverage;
+      this.meta = meta;
       this._loading = false;
 
-      if (!points.length) {
-        this._error = 'no-data';
+      if (errors?.length || !points.length) {
+        this._error = errors?.length ? 'load-error' : 'no-data';
         this._renderState();
         return;
       }
@@ -234,8 +237,20 @@ export class UaeHistoricalKaratChart {
 
   _localizeShell({ badge }) {
     setText(badge, t(this.lang, 'home.uaeHist.badge'));
+    this._updateSourceLine();
+  }
+
+  _updateSourceLine() {
     const sourceEl = document.getElementById('uae-hist-source');
-    if (sourceEl) setText(sourceEl, t(this.lang, 'home.uaeHist.sourceNote'));
+    if (!sourceEl) return;
+    const attr = getDailySourceAttribution(this.meta);
+    setText(
+      sourceEl,
+      t(this.lang, 'home.uaeHist.sourceNote', {
+        provider: attr.provider,
+        peg: attr.peg,
+      })
+    );
   }
 
   _populateRangeButtons(group) {
@@ -855,13 +870,17 @@ export class UaeHistoricalKaratChart {
 
   _updateResolutionLabel() {
     const sourceEl = document.getElementById('uae-hist-source');
-    if (!sourceEl || !this.rangeResolution) return;
-    const resKey = this.rangeResolution.key;
-    const base = t(this.lang, 'home.uaeHist.sourceNote');
+    if (!sourceEl) return;
+    const attr = getDailySourceAttribution(this.meta);
+    const base = t(this.lang, 'home.uaeHist.sourceNote', {
+      provider: attr.provider,
+      peg: attr.peg,
+    });
+    const resKey = this.rangeResolution?.key || 'daily_average_reference';
     const resLabel = t(this.lang, `home.uaeHist.resolution.${resKey}`);
     const endFmt = formatHistoryDate(this.rangeCoverage?.end, this.lang);
     const delayed =
-      this.rangeCoverage?.freshness === 'stale' || this.rangeCoverage?.freshness === 'delayed'
+      this.rangeCoverage?.freshness === 'stale'
         ? t(this.lang, 'home.uaeHist.coverageDelayed', { date: endFmt })
         : '';
     setText(sourceEl, [base, resLabel, delayed].filter(Boolean).join(' · '));
@@ -887,7 +906,7 @@ export class UaeHistoricalKaratChart {
         msg,
         t(
           this.lang,
-          this._error === 'load-error' ? 'chart.fallback.loadError' : 'home.uaeHist.noData'
+          this._error === 'load-error' ? 'home.uaeHist.importError' : 'home.uaeHist.noData'
         )
       );
       const retry = el('button', { type: 'button', class: 'btn btn--ghost btn--sm', id: 'uae-hist-retry' });

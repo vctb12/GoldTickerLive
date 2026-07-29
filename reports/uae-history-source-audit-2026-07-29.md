@@ -1,6 +1,6 @@
 # UAE History Source Audit — 2026-07-29
 
-**Audit UTC:** 2026-07-29T14:48:40.513Z
+**Audit UTC:** 2026-07-29T15:11:00.161Z
 
 ## Endpoint
 
@@ -11,7 +11,7 @@
 | CORS | * |
 | Cache-Control | max-age=600 |
 | Last-Modified | Mon, 23 Feb 2026 07:06:47 GMT |
-| Fetch time | 83ms |
+| Fetch time | 79ms |
 
 ## Raw vs accepted (freegoldapi)
 

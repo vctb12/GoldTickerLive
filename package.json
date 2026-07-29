@@ -81,6 +81,7 @@
     "husky": "^9.1.7",
     "linkinator": "^7.6.1",
     "lint-staged": "^17.0.8",
+    "pa11y-ci": "^4.1.1",
     "prettier": "^3.9.5",
     "stylelint": "^17.14.0",
     "stylelint-config-standard": "^40.0.0",

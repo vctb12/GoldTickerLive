@@ -11,6 +11,7 @@ Go to **Settings → Secrets and variables → Actions → New repository secret
 | Secret                      | Used by                   | How to get it                                        |
 | --------------------------- | ------------------------- | ---------------------------------------------------- |
 | `GOLD_API_COM_KEY`          | `gold-price-fetch.yml`    | Sign up at https://gold-api.com (primary provider)   |
+| `GOLD_API_KEY`              | `historical-gold-refresh.yml` | Same gold-api.com account key for daily `/history` (optional if `GOLD_API_COM_KEY` is set) |
 | `GOLDPRICEZ_API_KEY`        | Provider adapter (legacy) | Optional — https://goldpricez.com                    |
 | `CONSUMER_KEY`              | X/Twitter posts           | X Developer Portal: API Key (Consumer Key)           |
 | `CONSUMER_SECRET`           | X/Twitter posts           | X Developer Portal: API Key Secret                   |

@@ -127,11 +127,12 @@ describe('uae-historical-karat-data', async () => {
 
   test('classifyCoverageFreshness thresholds', () => {
     assert.equal(classifyCoverageFreshness('2026-07-28', '2026-07-29'), 'current');
-    assert.equal(classifyCoverageFreshness('2026-06-01', '2026-07-29'), 'delayed');
+    assert.equal(classifyCoverageFreshness('2026-07-26', '2026-07-29'), 'current');
+    assert.equal(classifyCoverageFreshness('2026-07-20', '2026-07-29'), 'stale');
     assert.equal(classifyCoverageFreshness('2026-02-20', '2026-07-29'), 'stale');
     assert.equal(classifyCoverageFreshness(null, '2026-07-29'), 'unavailable');
-    assert.ok(HIST_COVERAGE_FRESH_DAYS === 7);
-    assert.ok(HIST_COVERAGE_DELAYED_DAYS === 60);
+    assert.ok(HIST_COVERAGE_FRESH_DAYS === 3);
+    assert.ok(HIST_COVERAGE_DELAYED_DAYS === 4);
   });
 
   test('computeCoverageMeta returns range bounds and age', () => {
@@ -159,14 +160,16 @@ describe('uae-historical-karat-data', async () => {
     assert.ok(res.monthlyCount > 0);
   });
 
-  test('describeRangeResolution detects cached browser data', () => {
+  test('describeRangeResolution returns daily average for gold-api daily rows', () => {
     const points = buildUaeKaratHistoryPoints([
-      { date: '2026-02-18', price: 2100, source: 'local-snapshot', granularity: 'daily' },
-      { date: '2026-02-20', price: 2200, source: 'local-snapshot', granularity: 'daily' },
+      { date: '2026-02-18', price: 2100, source: 'gold-api-daily', granularity: 'daily' },
+      { date: '2026-02-20', price: 2200, source: 'gold-api-daily', granularity: 'daily' },
     ]);
     const res = describeRangeResolution(points);
-    assert.equal(res.key, 'cached_browser');
-    assert.equal(res.hasCached, true);
+    assert.equal(res.key, 'daily_average_reference');
+    assert.equal(res.dailyCount, 2);
+    assert.equal(res.monthlyCount, 0);
+    assert.equal(res.hasCached, false);
   });
 
   test('formatAedPerGramWithUnit includes AED/g in English', () => {
