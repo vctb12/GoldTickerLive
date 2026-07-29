@@ -5,18 +5,10 @@
 #
 # SECURITY: pull_request jobs never receive GOLD_API_KEY. Live fetch runs only
 # on workflow_dispatch (bootstrap) or schedule on trusted default branch.
-#
-# TEMPORARY (PR #714 bootstrap): exact-branch push trigger when this workflow
-# file changes. Removed after verified production dataset is committed.
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
 on:
-  push:
-    branches:
-      - cursor/home-uae-historical-karat-chart-6a31
-    paths:
-      - '.github/workflows/historical-gold-refresh.yml'
   schedule:
     # Daily ~02:45 UTC (within owner-approved 02:15–03:15 window)
     - cron: '45 2 * * *'
@@ -49,12 +41,6 @@ concurrency:
 jobs:
   refresh:
     name: Refresh XAU/USD daily history
-    if: >-
-      github.event_name != 'push' ||
-      (
-        github.repository == 'vctb12/GoldTickerLive' &&
-        github.ref == 'refs/heads/cursor/home-uae-historical-karat-chart-6a31'
-      )
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -131,12 +117,7 @@ jobs:
         if: >-
           steps.mode.outputs.mode == 'live' && (
             github.event_name == 'schedule' ||
-            (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true') ||
-            (
-              github.event_name == 'push' &&
-              github.repository == 'vctb12/GoldTickerLive' &&
-              github.ref == 'refs/heads/cursor/home-uae-historical-karat-chart-6a31'
-            )
+            (github.event_name == 'workflow_dispatch' && inputs.bootstrap_branch == 'true')
           )
         run: |
           set -euo pipefail
@@ -144,7 +125,8 @@ jobs:
             echo "No production dataset written — skipping commit."
             exit 0
           fi
-          if git diff --quiet -- data/historical/xau-usd-daily.json; then
+          git add data/historical/xau-usd-daily.json
+          if git diff --cached --quiet -- data/historical/xau-usd-daily.json; then
             echo "No changes to commit."
             exit 0
           fi
@@ -179,12 +161,7 @@ jobs:
           echo "$DOC_CHECK"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/historical/xau-usd-daily.json
-          if [ "${{ github.event_name }}" = "push" ]; then
-            git commit -m "chore(data): bootstrap verified XAU/USD history [bot] run=${{ github.run_id }}"
-          else
-            git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
-          fi
+          git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
           git push
 
       - name: Upload audit artifacts
