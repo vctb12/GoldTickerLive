@@ -12,18 +12,17 @@
   disclosure while fetch/CI remain strict.
 - **Workflow:** `historical-gold-refresh.yml` uses official fixture on PR without secret; optional
   `workflow_dispatch` input `bootstrap_branch=true` commits live refresh to current branch.
-- **Playwright evidence:** 13 screenshots in `reports/screenshots/uae-hist-chart/` (EN/AR, mobile,
-  ranges, tooltip, loading, stale, error/retry, legend, lang switch).
-- **Tests:** 1717 unit tests; 13/13 Playwright chart spec (chromium).
+- **Live dataset committed:** `data/historical/xau-usd-daily.json` bootstrapped from CI artifact
+  (run `30465923073`) — 400 records, coverage `2025-06-25` → `2026-07-29`, `calendarAgeDays: 0`.
+- **Playwright evidence:** 20 screenshots in `reports/screenshots/uae-hist-chart/` (EN/AR,
+  light/dark, mobile, ranges, tooltip, loading, stale, error/retry, legend, lang switch).
+- **Tests:** 1717 unit tests (1 pre-existing SEO canonical failure unrelated to chart); 13/13
+  Playwright chart spec (chromium).
 
-## Owner action for live dataset bootstrap
+## Secret status
 
-`GOLD_API_KEY` exists in GitHub Actions (workflow keycheck passed). After merge or on branch:
-
-1. Actions → **Historical Gold Refresh** → Run workflow
-2. Set **bootstrap_branch** = `true` to commit live `data/historical/xau-usd-daily.json` to this
-   branch (one-time bootstrap)
-3. Verify artifact + `node scripts/node/fetch-gold-api-history.mjs --check`
+`GOLD_API_KEY` is configured in GitHub Actions (workflow keycheck passed). Not available in Cursor
+cloud env. Daily schedule will refresh after merge.
 
 ## Verification run (latest)
 
@@ -34,7 +33,7 @@
 
 ## Remaining before ready-for-review
 
-- Historical Gold Refresh workflow green on PR (parser fix pushed; awaiting CI)
-- Live `xau-usd-daily.json` from gold-api.com (owner workflow_dispatch bootstrap or post-merge
-  schedule)
-- Full Playwright matrix in CI (firefox/webkit) — project default
+- Full CI green on latest push (Playwright matrix in `audit-assets` workflow)
+- `npm run a11y` — pre-existing `shops.html` contrast failures (not introduced by this PR)
+- Cross-validation: CI reported `comparison_source_unavailable` (FreeGoldAPI blocked on runner);
+  live gold-api values are internally consistent and pass sanity checks

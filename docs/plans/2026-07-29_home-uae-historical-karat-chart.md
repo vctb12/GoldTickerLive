@@ -2,8 +2,8 @@
 
 **Date:** 2026-07-29  
 **Branch:** `cursor/home-uae-historical-karat-chart-6a31`  
-**Status:** Implementation in progress — gold-api.com daily pipeline wired; awaiting live API
-bootstrap / full QA
+**Status:** Implementation complete — live gold-api.com daily dataset committed; awaiting full CI green
+before ready-for-review
 
 ## Scope
 
