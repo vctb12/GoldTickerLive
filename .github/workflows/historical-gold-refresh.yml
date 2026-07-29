@@ -6,17 +6,10 @@
 # on schedule or workflow_dispatch on the default branch (main).
 #
 # Manual run: Actions → Historical Gold Refresh → Run workflow → branch: main
-# TEMPORARY (PR #714 bot-commit proof): exact-branch push when this workflow file
-# changes. Removed immediately after verified bot commit on feature branch.
 # ------------------------------------------------------------------
 name: Historical Gold Refresh
 
 on:
-  push:
-    branches:
-      - cursor/home-uae-historical-karat-chart-6a31
-    paths:
-      - '.github/workflows/historical-gold-refresh.yml'
   schedule:
     # Daily ~02:45 UTC (within owner-approved 02:15–03:15 window)
     - cron: '45 2 * * *'
@@ -43,12 +36,11 @@ jobs:
     name: Refresh XAU/USD daily history
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    # Trusted production refresh on main; temporary exact-branch push for bot-commit proof only.
+    # Trusted production refresh only — main branch schedule/dispatch.
     if: >-
-      github.repository == 'vctb12/GoldTickerLive' && (
-        (github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')) ||
-        (github.event_name == 'push' && github.ref == 'refs/heads/cursor/home-uae-historical-karat-chart-6a31')
-      )
+      github.repository == 'vctb12/GoldTickerLive' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     steps:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
