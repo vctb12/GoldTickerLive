@@ -46,15 +46,23 @@ jobs:
         run: npm ci
 
       - name: Verify API key is configured
+        id: keycheck
         env:
           GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
           GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
         run: |
-          if [ -z "$GOLD_API_KEY" ] && [ -z "$GOLD_API_COM_KEY" ]; then
-            echo "::error::Missing repository secret GOLD_API_KEY (or legacy GOLD_API_COM_KEY)."
-            exit 1
+          if [ -n "$GOLD_API_KEY" ] || [ -n "$GOLD_API_COM_KEY" ]; then
+            echo "has_key=true" >> "$GITHUB_OUTPUT"
+            echo "API key present (name not logged)."
+          else
+            echo "has_key=false" >> "$GITHUB_OUTPUT"
+            if [ "${{ github.event_name }}" = "pull_request" ]; then
+              echo "No API key on PR — will validate with fixture only."
+            else
+              echo "::error::Missing repository secret GOLD_API_KEY (or legacy GOLD_API_COM_KEY)."
+              exit 1
+            fi
           fi
-          echo "API key present (name not logged)."
 
       - name: Fetch daily history
         id: fetch
@@ -63,13 +71,13 @@ jobs:
           GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ] && [ -z "$GOLD_API_KEY" ] && [ -z "$GOLD_API_COM_KEY" ]; then
-            echo "PR validation without secret — using fixture."
+          REF_DATE="$(date -u +%F)"
+          if [ "${{ steps.keycheck.outputs.has_key }}" = "true" ]; then
+            node scripts/node/fetch-gold-api-history.mjs --reference-date "$REF_DATE"
+          else
             node scripts/node/fetch-gold-api-history.mjs \
               --fixture tests/fixtures/gold-api-history/provider-response.json \
-              --reference-date "$(date -u +%F)"
-          else
-            node scripts/node/fetch-gold-api-history.mjs --reference-date "$(date -u +%F)"
+              --reference-date "$REF_DATE"
           fi
 
       - name: Run historical data tests
@@ -93,7 +101,7 @@ jobs:
 
       - name: Upload audit artifact
         if: always()
-        uses: actions/upload-artifact@ea165ad8cfe1f4f6c6e2e3b8a4bdb499f2a88b07 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: xau-usd-daily-audit
           path: data/historical/xau-usd-daily.json
