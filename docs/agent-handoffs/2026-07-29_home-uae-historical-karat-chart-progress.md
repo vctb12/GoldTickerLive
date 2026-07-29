@@ -31,9 +31,14 @@ cloud env. Daily schedule will refresh after merge.
 - `npm run a11y` — fails on pre-existing `shops.html` contrast (not chart-related)
 - Playwright `home-uae-hist-chart.spec.js` — 13/13 pass (chromium)
 
+## CI status (latest push)
+
+- **All PR checks green** including Audit assets/Playwright, Historical Gold Refresh, CodeQL,
+  Lighthouse, Build + audit links, Readiness gate
+- Historical workflow on live data: 400 records, `rejected: 0`, artifact uploaded
+
 ## Remaining before ready-for-review
 
-- Full CI green on latest push (Playwright matrix in `audit-assets` workflow)
-- `npm run a11y` — pre-existing `shops.html` contrast failures (not introduced by this PR)
-- Cross-validation: CI reported `comparison_source_unavailable` (FreeGoldAPI blocked on runner);
-  live gold-api values are internally consistent and pass sanity checks
+- `npm run a11y` — pre-existing `shops.html` contrast + tracker anchor warnings (not introduced by
+  this PR; not in CI gate). Chart-specific surfaces pass Playwright a11y interactions.
+- Cross-validation: CI reported `comparison_source_unavailable` (FreeGoldAPI blocked on runner)
