@@ -16,6 +16,11 @@ const auditLog = require('../../lib/audit-log');
 const shopsRepo = require('../../repositories/shops.repository');
 const auditRepo = require('../../repositories/audit.repository');
 const { ValidationError, NotFoundError: _NotFoundError } = require('../../lib/errors');
+const {
+  sanitizeString,
+  parseIntParam,
+  validateShopInput,
+} = require('../../lib/admin/validation');
 const pendingShopsRepo = require('../../repositories/pending-shops.repository');
 const leadsRepo = require('../../repositories/leads.repository');
 const newsletterRepo = require('../../repositories/newsletter.repository');
@@ -146,74 +151,7 @@ const adminRateLimiter = rateLimit({
   message: { success: false, message: 'Too many requests. Please try again later.' },
 });
 
-// ---------------------------------------------------------------------------
-// Input validation helpers
-// ---------------------------------------------------------------------------
-
-/** Sanitise a string: trim, collapse whitespace, limit length. Returns undefined for non-string values. */
-function sanitizeString(val, maxLen = 500) {
-  if (val === undefined || val === null) return undefined;
-  if (typeof val !== 'string') return undefined;
-  const cleaned = val.trim().replace(/\s+/g, ' ').slice(0, maxLen);
-  return cleaned || undefined;
-}
-
-/** Validate integer query param (returns parsed int or default). */
-function parseIntParam(val, defaultVal, min = 1, max = 1000) {
-  if (val === undefined || val === null) return defaultVal;
-  const n = parseInt(val, 10);
-  if (isNaN(n) || n < min) return defaultVal;
-  return Math.min(n, max);
-}
-
-/** Validate shop data fields. Returns sanitised object or throws ValidationError. */
-function validateShopInput(body) {
-  const cleaned = {};
-  const stringFields = [
-    'name',
-    'city',
-    'country',
-    'phone',
-    'email',
-    'website',
-    'address',
-    'hours',
-    'type',
-    'status',
-    'description',
-  ];
-  const booleanFields = ['verified', 'featured'];
-  const numberFields = ['latitude', 'longitude'];
-
-  for (const field of stringFields) {
-    if (body[field] !== undefined) {
-      const val = sanitizeString(body[field]);
-      if (val !== undefined) cleaned[field] = val;
-    }
-  }
-
-  for (const field of booleanFields) {
-    if (body[field] !== undefined) {
-      if (typeof body[field] === 'boolean') {
-        cleaned[field] = body[field];
-      } else if (body[field] === 'true' || body[field] === 'false') {
-        cleaned[field] = body[field] === 'true';
-      }
-      // Silently ignore invalid boolean values
-    }
-  }
-
-  for (const field of numberFields) {
-    if (body[field] !== undefined) {
-      const num = Number(body[field]);
-      if (!isNaN(num) && isFinite(num)) {
-        cleaned[field] = num;
-      }
-    }
-  }
-
-  return cleaned;
-}
+// Input validation helpers live in server/lib/admin/validation.js (shared + tested).
 
 function readJsonSafe(filePath, fallback = null) {
   try {
