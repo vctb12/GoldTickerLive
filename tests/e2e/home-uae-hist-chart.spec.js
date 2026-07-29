@@ -1,7 +1,12 @@
 // @ts-check
 // UAE Historical Karat Chart — visual + interaction smoke tests.
 // Serves built dist (see CI). Captures evidence screenshots to reports/screenshots/uae-hist-chart/.
+const { createHash } = require('node:crypto');
 const { test, expect } = require('@playwright/test');
+
+function hashNormalizedRecords(records) {
+  return createHash('sha256').update(JSON.stringify(records)).digest('hex');
+}
 const fs = require('fs');
 const path = require('path');
 
@@ -202,9 +207,12 @@ test.describe('UAE Historical Karat Chart', () => {
     const body = fs.readFileSync(DAILY_FIXTURE, 'utf8');
     const doc = JSON.parse(body);
     doc.records = doc.records.filter((r) => r.date <= '2026-07-24');
+    doc.coverage.start = doc.records[0]?.date;
     doc.coverage.end = '2026-07-24';
     doc.coverage.calendarAgeDays = 5;
     doc.coverage.recordCount = doc.records.length;
+    doc.acceptedRecordCount = doc.records.length;
+    doc.normalizedRecordsSha256 = hashNormalizedRecords(doc.records);
     await page.unroute('**/data/historical/xau-usd-daily.json');
     await page.route('**/data/historical/xau-usd-daily.json', (route) =>
       route.fulfill({

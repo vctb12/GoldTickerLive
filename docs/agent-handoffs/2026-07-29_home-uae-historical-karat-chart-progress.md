@@ -1,35 +1,32 @@
-# Handoff: UAE Historical Karat Chart — production provenance correction pass
+# Handoff — UAE Historical Karat Chart (PR #714)
 
 **Date:** 2026-07-29  
 **Branch:** `cursor/home-uae-historical-karat-chart-6a31`  
-**PR:** [#714](https://github.com/vctb12/GoldTickerLive/pull/714) (draft — **held**)
+**PR:** https://github.com/vctb12/GoldTickerLive/pull/714
 
-## What changed this pass
+## Done this session
 
-- Reconciled contradictory claims vs failed run [30464818829](https://github.com/vctb12/GoldTickerLive/actions/runs/30464818829)
-- **Deleted** unverified `data/historical/xau-usd-daily.json` (was committed without provenance)
-- Added production provenance contract + loader hardening (`dataOrigin: live-provider` required)
-- Blocked fixture → production path writes
-- Split PR workflow (`historical-gold-refresh-pr.yml`) from trusted live workflow
-- Added `--diagnose-schema`, authenticity audit, cross-validation script
-- Homepage shows **unavailable** until verified live dataset exists
+- Executed secure one-time bootstrap (push trigger on exact branch) because `workflow_dispatch` is
+  unavailable until merge to `main`.
+- Live run [30469621213](https://github.com/vctb12/GoldTickerLive/actions/runs/30469621213)
+  succeeded: 400/400 accepted, full provenance hashes.
+- Committed production file via artifact fallback (`c66a4e3417`) after bot commit missed untracked
+  file; fixed workflow with `git diff --cached`.
+- Removed temporary push trigger (`7c7a14978e`).
+- Fixed browser SHA-256 for client provenance validation (`0cd87cfe27`).
+- Fixed stale-state E2E test to recompute normalized hash after fixture mutation.
+- All 39 chart Playwright tests pass (chromium, firefox, webkit).
+- `npm test` 1726/1726; lint, validate, build pass.
 
-## Root cause
+## Owner next steps
 
-Parser on `609c1891` rejected all 400 real API rows (`day`/`avg_price` shape). Later “success” runs on
-PR either used fixtures or produced files without workflow provenance.
+1. Review PR #714 (draft → ready for review).
+2. After merge, first `workflow_dispatch` on `main` will work for manual refresh.
+3. Consider legal review of gold-api.com terms for rolling cache scope.
+4. Optional hardening: restrict `workflow_dispatch` secret steps to `refs/heads/main` only.
 
-## Owner action (blocking)
+## Do not
 
-Run **Historical Gold Refresh** → `workflow_dispatch` → `bootstrap_branch=true` on this branch.
-Verify committed file includes `workflow.runId` and `rawResponseSha256` from that run.
-
-## Verification run (local)
-
-- `tests/fetch-gold-api-history.test.js` + `tests/uae-historical-source.test.js` — 28/28 pass
-- `npm test` — 1724/1725 pass (1 pre-existing SEO canonical failure)
-- Fixture → production CLI write — **correctly fails**
-
-## Status
-
-**in-progress** — production data pipeline not proven until successful live bootstrap workflow.
+- Merge without human review.
+- Restore quarantined unverified dataset (`7c0c40fef0`).
+- Re-add broad push triggers.

@@ -2,8 +2,8 @@
 
 **Date:** 2026-07-29  
 **Branch:** `cursor/home-uae-historical-karat-chart-6a31`  
-**Status:** Implementation complete — live gold-api.com daily dataset committed; awaiting full CI green
-before ready-for-review
+**Status:** Live bootstrap complete (run 30469621213); production dataset committed; ready for human
+review
 
 ## Scope
 

@@ -32,6 +32,7 @@ describe('gold-api-daily-history-contract', async () => {
     formatRejectionSummary,
     diagnoseProviderResponse,
     sha256Hex,
+    hashNormalizedRecords,
   } = contract;
 
   const officialFixturePath = path.join(
@@ -212,6 +213,24 @@ describe('gold-api-daily-history-contract', async () => {
     const summary = formatRejectionSummary({ missing_avg_price: 400, missing_day: 0 });
     assert.equal(summary, 'missing_avg_price:400');
   });
+
+  test('committed production bootstrap matches verified live workflow run', () => {
+    const prodPath = path.join(__dirname, '../data/historical/xau-usd-daily.json');
+    if (!fs.existsSync(prodPath)) {
+      return; // skip when file absent (PR fixture-only paths)
+    }
+    const doc = JSON.parse(fs.readFileSync(prodPath, 'utf8'));
+    assert.equal(doc.dataOrigin, DATA_ORIGIN_LIVE);
+    assert.equal(doc.provider, 'gold-api.com');
+    assert.equal(doc.endpoint, '/history');
+    assert.equal(doc.workflow?.runId, '30469621213');
+    assert.equal(doc.workflow?.ref, 'refs/heads/cursor/home-uae-historical-karat-chart-6a31');
+    assert.ok(doc.rawResponseSha256);
+    assert.ok(doc.normalizedRecordsSha256);
+    assert.equal(doc.normalizedRecordsSha256, hashNormalizedRecords(doc.records));
+    const prov = validateProductionProvenance(doc);
+    assert.equal(prov.ok, true, prov.errors.join(', '));
+  });
 });
 
 describe('fetch-gold-api-history CLI', () => {
@@ -243,7 +262,9 @@ describe('fetch-gold-api-history CLI', () => {
       { cwd: path.join(__dirname, '..'), encoding: 'utf8' }
     );
     assert.notEqual(res.status, 0);
-    assert.ok(`${res.stderr}${res.stdout}`.includes('Fixture mode cannot write to production path'));
+    assert.ok(
+      `${res.stderr}${res.stdout}`.includes('Fixture mode cannot write to production path')
+    );
   });
 
   test('--fixture writes validated output to temp path', () => {
