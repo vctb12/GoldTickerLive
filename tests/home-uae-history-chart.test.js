@@ -25,14 +25,18 @@ describe('home UAE historical chart', () => {
     const en = fs.readFileSync('src/config/translations.en.js', 'utf8');
     assert.match(en, /home\.uaeHistTitle/);
     assert.match(en, /home\.uaeHist\.range1M/);
-    assert.match(en, /home\.uaeHist\.karat24/);
+    assert.match(en, /home\.uaeHist\.dataCoverage/);
+    assert.match(en, /home\.uaeHist\.freshness\.stale/);
+    assert.match(en, /home\.uaeHist\.summaryLatest/);
   });
 
   test('AR translations include UAE hist keys', () => {
     const ar = fs.readFileSync('src/config/translations.ar.js', 'utf8');
     assert.match(ar, /home\.uaeHistTitle/);
     assert.match(ar, /home\.uaeHist\.range1M/);
-    assert.match(ar, /home\.uaeHist\.karat24/);
+    assert.match(ar, /home\.uaeHist\.dataCoverage/);
+    assert.match(ar, /home\.uaeHist\.freshness\.stale/);
+    assert.match(ar, /home\.uaeHist\.summaryLatest/);
   });
 
   test('component file exports UaeHistoricalKaratChart class', () => {

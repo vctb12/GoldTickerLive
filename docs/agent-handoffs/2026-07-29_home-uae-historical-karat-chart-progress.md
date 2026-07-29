@@ -81,4 +81,51 @@
 
 ---
 
-*Last updated: 2026-07-29 by Cursor Cloud Agent*
+## Phase 4 — Data Freshness, Provenance and Release-Readiness Correction
+
+**Date:** 2026-07-29 (continuation session)
+
+### Audit findings (verified from Cursor environment)
+
+| Check | Result |
+|-------|--------|
+| Endpoint | `https://freegoldapi.com/data/latest.json` |
+| HTTP status | 200 |
+| CORS | `*` |
+| Last-Modified header | Mon, 23 Feb 2026 |
+| Latest raw record | `2026-02-20` (yahoo_finance) |
+| Age at audit (2026-07-29) | ~159 days → **stale** |
+| Baseline provenance | `src/data/historical-baseline.json` — upstream not documented; **LBMA/public-domain claim removed** |
+
+### Corrections applied
+
+- [x] Tracker row reverted to `in-progress`
+- [x] `scripts/node/audit-uae-history-source.js` + `reports/uae-history-source-audit-2026-07-29.md`
+- [x] Coverage UI: data coverage dates, range subtitle, freshness badge
+- [x] Stale/delayed labels — no "live/current/today" for historical end point
+- [x] Canonical display normalization (chart = table = tooltip = summary = CSV)
+- [x] Combined crosshair tooltip (4 karats + date + resolution)
+- [x] Locale-formatted table dates (EN/AR)
+- [x] Arabic resolution keys (no leaked English from `describeHistoryResolution`)
+- [x] Legend state preserved on language switch
+- [x] Non-color differentiation (line styles + legend shapes)
+- [x] Loading skeleton before async work; idempotent retry lifecycle
+- [x] Visible import-failure UI in `home.js`
+- [x] Governed series colors via CSS custom properties
+- [x] AED/g units in summary and table
+- [x] Source label: `monthly-baseline-embedded` (replaces unverified `LBMA-baseline`)
+
+### Verification status
+
+- [ ] Full `npm test` suite
+- [ ] `npm run style`, `npm run a11y`, `npm run test:playwright`
+- [ ] Required browser screenshots
+- [ ] PR #714 body updated with honest audit
+
+### Owner decision gate
+
+**Approved current daily historical source needed.** freegoldapi ends 2026-02-20. Chart shows stale coverage honestly but cannot represent "current" 1M–12M windows ending today without a new approved source or owner-approved merge strategy.
+
+---
+
+*Last updated: 2026-07-29 Phase 4 correction by Cursor Cloud Agent*

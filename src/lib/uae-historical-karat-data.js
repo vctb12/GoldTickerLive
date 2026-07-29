@@ -8,11 +8,7 @@
 import { CONSTANTS } from '../config/constants.js';
 import { KARATS } from '../config/karats.js';
 import { usdPerGram } from './price-calculator.js';
-import {
-  getUnifiedHistory,
-  describeHistoryResolution,
-  ensureRemoteHistory,
-} from '../lib/historical-data.js';
+import { ensureRemoteHistory, getUnifiedHistory } from '../lib/historical-data.js';
 
 /** Homepage chart karat series (24K baseline). */
 export const UAE_HISTORY_KARATS = ['24', '22', '21', '18'];
@@ -25,6 +21,10 @@ export const UAE_HISTORY_RANGES = Object.freeze({
   '12M': 365,
 });
 
+/** Days since latest record → coverage freshness classification. */
+export const HIST_COVERAGE_FRESH_DAYS = 7;
+export const HIST_COVERAGE_DELAYED_DAYS = 60;
+
 const PURITY_BY_CODE = Object.fromEntries(KARATS.map((k) => [k.code, k.purity]));
 
 /**
@@ -36,8 +36,19 @@ const PURITY_BY_CODE = Object.fromEntries(KARATS.map((k) => [k.code, k.purity]))
  * @property {'daily'|'monthly'} granularity
  * @property {string} freshnessState
  * @property {boolean} derived
- * @property {Record<string, number>} values - AED/gram per karat code
+ * @property {Record<string, number>} values - AED/gram per karat code (full precision)
+ * @property {Record<string, number>} displayValues - AED/gram per karat (canonical display)
  */
+
+/**
+ * Canonical display normalization — single source for chart, table, tooltip, summary, CSV.
+ * @param {number} value
+ * @returns {number|null}
+ */
+export function normalizeDisplayAed(value) {
+  if (!Number.isFinite(value) || value <= 0) return null;
+  return Math.round(value * 100) / 100;
+}
 
 /**
  * Normalize a raw history record date to YYYY-MM-DD.
@@ -67,6 +78,20 @@ export function aedPerGramFromSpot(spotUsdOz, karatCode) {
   const usdGram = usdPerGram(spotUsdOz, purity);
   if (!(usdGram > 0)) return 0;
   return usdGram * CONSTANTS.AED_PEG;
+}
+
+/**
+ * Build display value map for all karats on a point.
+ * @param {Record<string, number>} values
+ * @returns {Record<string, number>}
+ */
+export function buildDisplayValues(values) {
+  const out = {};
+  for (const code of UAE_HISTORY_KARATS) {
+    const norm = normalizeDisplayAed(values[code]);
+    if (norm != null) out[code] = norm;
+  }
+  return out;
 }
 
 /**
@@ -110,6 +135,7 @@ export function buildUaeKaratHistoryPoints(records) {
       freshnessState: raw.freshnessState || 'historical',
       derived: Boolean(raw.derived),
       values,
+      displayValues: buildDisplayValues(values),
     };
 
     // Later rows win for duplicate dates (local snapshot > reference > baseline).
@@ -117,6 +143,48 @@ export function buildUaeKaratHistoryPoints(records) {
   }
 
   return [...byDate.values()].sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
+}
+
+/**
+ * Calendar days between two YYYY-MM-DD dates (inclusive start, exclusive of negative).
+ * @param {string} startDate
+ * @param {string} endDate
+ * @returns {number}
+ */
+export function daysBetweenDates(startDate, endDate) {
+  const ms = new Date(`${endDate}T00:00:00Z`) - new Date(`${startDate}T00:00:00Z`);
+  return Math.round(ms / 86400000);
+}
+
+/**
+ * Classify how current the historical coverage end date is.
+ * @param {string|null} latestDate - YYYY-MM-DD
+ * @param {string} [referenceDate] - YYYY-MM-DD audit date
+ * @returns {'current'|'delayed'|'stale'|'unavailable'}
+ */
+export function classifyCoverageFreshness(latestDate, referenceDate) {
+  if (!latestDate) return 'unavailable';
+  const ref = referenceDate || new Date().toISOString().slice(0, 10);
+  const age = daysBetweenDates(latestDate, ref);
+  if (age <= HIST_COVERAGE_FRESH_DAYS) return 'current';
+  if (age <= HIST_COVERAGE_DELAYED_DAYS) return 'delayed';
+  return 'stale';
+}
+
+/**
+ * Coverage metadata for the full dataset or a filtered slice.
+ * @param {UaeKaratHistoryPoint[]} points
+ * @param {string} [referenceDate]
+ * @returns {object|null}
+ */
+export function computeCoverageMeta(points, referenceDate) {
+  if (!points.length) return null;
+  const start = points[0].date;
+  const end = points[points.length - 1].date;
+  const ref = referenceDate || new Date().toISOString().slice(0, 10);
+  const ageDays = daysBetweenDates(end, ref);
+  const freshness = classifyCoverageFreshness(end, ref);
+  return { start, end, ageDays, freshness, referenceDate: ref };
 }
 
 /**
@@ -138,14 +206,56 @@ export function filterUaeHistoryByRange(points, rangeKey) {
 }
 
 /**
- * Period summary for the 24K reference series.
+ * Range-specific resolution descriptor (semantic key — translate in UI).
+ * @param {UaeKaratHistoryPoint[]} points - filtered range points
+ * @returns {{ key: string, dailyCount: number, monthlyCount: number, hasCached: boolean, sources: string[] }}
+ */
+export function describeRangeResolution(points) {
+  if (!points.length) {
+    return { key: 'unavailable', dailyCount: 0, monthlyCount: 0, hasCached: false, sources: [] };
+  }
+
+  let dailyCount = 0;
+  let monthlyCount = 0;
+  let hasCached = false;
+  const sources = new Set();
+
+  for (const p of points) {
+    if (p.granularity === 'monthly') monthlyCount++;
+    else dailyCount++;
+    sources.add(p.source);
+    if (p.source === 'local-snapshot') hasCached = true;
+  }
+
+  let key = 'daily_reference';
+  if (hasCached && dailyCount > 0 && monthlyCount === 0) {
+    key = 'cached_browser';
+  } else if (monthlyCount > 0 && dailyCount === 0) {
+    key = hasCached ? 'cached_browser' : 'monthly_baseline';
+  } else if (monthlyCount > 0 && dailyCount > 0) {
+    key = 'mixed_daily_monthly';
+  }
+
+  return {
+    key,
+    dailyCount,
+    monthlyCount,
+    hasCached,
+    sources: [...sources],
+  };
+}
+
+/**
+ * Period summary for the 24K reference series (uses canonical display values).
  * @param {UaeKaratHistoryPoint[]} points
  * @returns {object|null}
  */
 export function computeUaeHistorySummary(points) {
   if (!points.length) return null;
 
-  const series24 = points.map((p) => p.values['24']).filter((v) => v > 0);
+  const series24 = points
+    .map((p) => p.displayValues?.['24'] ?? normalizeDisplayAed(p.values['24']))
+    .filter((v) => v != null);
   if (!series24.length) return null;
 
   const open = series24[0];
@@ -160,14 +270,14 @@ export function computeUaeHistorySummary(points) {
     open24: open,
     high24: high,
     low24: low,
-    absoluteChange: change,
-    percentageChange: pctChange,
+    absoluteChange: Math.round(change * 100) / 100,
+    percentageChange: Math.round(pctChange * 10) / 10,
     points: points.length,
   };
 }
 
 /**
- * Lightweight Charts series data for one karat.
+ * Lightweight Charts series data for one karat (canonical display values).
  * @param {UaeKaratHistoryPoint[]} points
  * @param {string} karatCode
  * @returns {Array<{ time: string, value: number }>}
@@ -175,15 +285,15 @@ export function computeUaeHistorySummary(points) {
 export function toChartSeriesData(points, karatCode) {
   return points
     .map((p) => {
-      const value = p.values[karatCode];
-      if (!(value > 0)) return null;
-      return { time: p.date, value: Number(value.toFixed(2)) };
+      const value = p.displayValues?.[karatCode] ?? normalizeDisplayAed(p.values[karatCode]);
+      if (value == null) return null;
+      return { time: p.date, value };
     })
     .filter(Boolean);
 }
 
 /**
- * Table rows (newest first) matching chart values exactly.
+ * Table rows (newest first) — display values match chart exactly.
  * @param {UaeKaratHistoryPoint[]} points
  * @returns {Array<{ date: string, values: Record<string, number> }>}
  */
@@ -192,7 +302,7 @@ export function toTableRows(points) {
     .reverse()
     .map((p) => ({
       date: p.date,
-      values: { ...p.values },
+      values: { ...(p.displayValues || buildDisplayValues(p.values)) },
     }));
 }
 
@@ -216,24 +326,25 @@ export function buildChartSrSummary(points, rangeKey, visibleKarats, lang = 'en'
   const start = points[0].date;
   const end = points[points.length - 1].date;
   const karatList = visibleKarats.join(', ');
+  const latest = formatAedPerGramWithUnit(summary.latest24, lang);
 
   if (lang === 'ar') {
-    return `مخطط مرجعي لأسعار الذهب في الإمارات للفترة ${rangeKey} من ${start} إلى ${end}. آخر سعر مرجعي لعيار 24: ${summary.latest24.toFixed(2)} درهم للغرام. السلاسل المرئية: ${karatList}.`;
+    return `مخطط مرجعي لأسعار الذهب في الإمارات للفترة ${rangeKey} من ${start} إلى ${end}. آخر سعر مرجعي تاريخي لعيار 24: ${latest}. السلاسل المرئية: ${karatList}.`;
   }
-  return `UAE reference gold chart for ${rangeKey} from ${start} to ${end}. Latest 24K reference: AED ${summary.latest24.toFixed(2)}/g. Visible series: ${karatList}.`;
+  return `UAE reference gold chart for ${rangeKey} from ${start} to ${end}. Latest historical 24K reference: ${latest}. Visible series: ${karatList}.`;
 }
 
 /**
  * Load unified history and transform to karat points.
  * @param {Array} [localSnapshots]
- * @returns {Promise<{ points: UaeKaratHistoryPoint[], resolution: object, rawCount: number }>}
+ * @returns {Promise<{ points: UaeKaratHistoryPoint[], rawCount: number, coverage: object|null }>}
  */
 export async function loadUaeKaratHistory(localSnapshots = []) {
   await ensureRemoteHistory?.().catch(() => {});
   const unified = getUnifiedHistory(localSnapshots);
   const points = buildUaeKaratHistoryPoints(unified);
-  const resolution = describeHistoryResolution(unified);
-  return { points, resolution, rawCount: unified.length };
+  const coverage = computeCoverageMeta(points);
+  return { points, rawCount: unified.length, coverage };
 }
 
 /**
@@ -242,6 +353,29 @@ export async function loadUaeKaratHistory(localSnapshots = []) {
  * @returns {string}
  */
 export function formatAedPerGram(value) {
-  if (!Number.isFinite(value)) return '—';
-  return value.toFixed(2);
+  const norm = normalizeDisplayAed(value);
+  if (norm == null) return '—';
+  return norm.toFixed(2);
+}
+
+/**
+ * Format AED/gram with unit suffix for UI surfaces.
+ * @param {number} value
+ * @param {'en'|'ar'} [lang]
+ * @returns {string}
+ */
+export function formatAedPerGramWithUnit(value, lang = 'en') {
+  const formatted = formatAedPerGram(value);
+  if (formatted === '—') return formatted;
+  return lang === 'ar' ? `${formatted} درهم/غ` : `${formatted} AED/g`;
+}
+
+/**
+ * Find point by chart time key.
+ * @param {UaeKaratHistoryPoint[]} points
+ * @param {string} dateKey
+ * @returns {UaeKaratHistoryPoint|undefined}
+ */
+export function findPointByDate(points, dateKey) {
+  return points.find((p) => p.date === dateKey);
 }

@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-29  
 **Branch:** `cursor/home-uae-historical-karat-chart-6a31`  
-**Status:** Implementation complete — pending verification gates
+**Status:** Implementation complete — release blocked pending data freshness, provenance, full QA and visual verification
 
 ## Scope
 
@@ -25,10 +25,10 @@ Tracker chart (`src/tracker/chart.js`, `GoldChart` on tracker) is **unchanged**.
 
 | Field | Value |
 |-------|-------|
-| **Chosen source** | Existing unified history: LBMA monthly baseline + freegoldapi reference + local snapshots |
+| **Chosen source** | Existing unified history: embedded monthly baseline (provenance unverified) + freegoldapi reference + local snapshots |
 | **Source URL** | Embedded `src/data/historical-baseline.json`; optional `https://freegoldapi.com/data/latest.json` |
-| **License** | LBMA monthly averages (public domain records); freegoldapi community dataset (derived, not live spot authority) |
-| **Coverage** | Monthly 2019-01 → 2025-08 baseline; ~daily for recent ~14 months via freegoldapi |
+| **License** | Baseline upstream not documented in git — **not verified LBMA/public domain**; freegoldapi community dataset (derived, stale as of 2026-07-29 audit) |
+| **Coverage** | Monthly 2019-01 → 2025-08 baseline; daily freegoldapi ends **2026-02-20** (~159 days stale at audit) |
 | **Granularity** | Mixed — monthly for long tail, daily/weekday for recent |
 | **Caching** | 24h localStorage for freegoldapi; 90d browser history snapshots |
 | **Failure behavior** | Degrade to baseline-only with honest resolution label; retry button on error |

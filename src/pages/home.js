@@ -746,6 +746,23 @@ function initHomeChart() {
         })
         .catch(() => {
           root.removeAttribute('aria-busy');
+          clear(root);
+          root.className = 'uae-hist-chart-root uae-hist-chart-root--error';
+          const msg = el('div', { class: 'chart-no-data' });
+          msg.textContent = tx('uaeHist.importError');
+          const retryBtn = el('button', {
+            type: 'button',
+            class: 'btn btn--ghost btn--sm',
+            id: 'uae-hist-import-retry',
+          });
+          retryBtn.textContent = tx('uaeHist.retry');
+          retryBtn.addEventListener('click', () => {
+            root.setAttribute('aria-busy', 'true');
+            clear(root);
+            initHomeChart();
+          });
+          root.appendChild(msg);
+          root.appendChild(retryBtn);
         });
     },
     { threshold: 0.1, rootMargin: '100px' }
