@@ -44,7 +44,9 @@
 # canonical destination for every country shorthand a user might type.
 /uae             /compare.html        301
 /uae/            /compare.html        301
-/dubai           /compare.html        301
+/dubai           /dubai-gold-price.html  301
+/dubai-gold-price     /dubai-gold-price.html  301
+/dubai-gold-rate      /dubai-gold-price.html  301
 /ksa             /compare.html        301
 /ksa/            /compare.html        301
 /saudi-arabia    /compare.html        301

@@ -37,7 +37,7 @@ export function renderLocationGuideSection({ lang = 'en', t = (key) => key, clas
           ? [
               el(
                 'a',
-                { href: 'content/dubai-gold-rate-guide/' },
+                { href: 'dubai-gold-price.html' },
                 t('locationGuides.linkDubaiGuide')
               ),
             ]
