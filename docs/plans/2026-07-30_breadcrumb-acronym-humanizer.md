@@ -2,7 +2,8 @@
 
 **Date:** 2026-07-30
 
-**Status:** In progress on `codex/phase-41-breadcrumb-humanizer`
+**Status:** Ready for owner review in draft PR
+[#717](https://github.com/vctb12/GoldTickerLive/pull/717)
 
 ## Verified current behavior
 
