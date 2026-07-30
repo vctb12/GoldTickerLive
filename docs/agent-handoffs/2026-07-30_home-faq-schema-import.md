@@ -5,7 +5,7 @@
   fix is low-risk and non-owner-gated.
 - Branch: `codex/initial-safe-phase`
 - Commit: `4f5266a6d0` (implementation commit)
-- Pull request: [#716](https://github.com/vctb12/GoldTickerLive/pull/716) (draft)
+- Pull request: [#716](https://github.com/vctb12/GoldTickerLive/pull/716) (ready for review)
 - Main files changed: `src/pages/home.js`, `docs/plans/2026-07-30_home-faq-schema-import.md`,
   `docs/agent-handoffs/2026-07-30_home-faq-schema-import.md`, and `docs/AGENT_MASTER_TRACKER.md`
 - Verification results:
