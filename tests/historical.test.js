@@ -169,7 +169,7 @@ describe('historical-data: baseline range and record metadata', () => {
       date: entry.date,
       price: entry.price,
       granularity: 'monthly',
-      source: isEstimated ? 'estimated' : 'LBMA-baseline',
+      source: isEstimated ? 'estimated' : 'monthly-baseline-embedded',
       freshnessState: 'historical',
       derived: false,
     };
@@ -180,10 +180,10 @@ describe('historical-data: baseline range and record metadata', () => {
     assert.equal(record.freshnessState, 'historical');
   });
 
-  test('baselineToRecord sets source to LBMA-baseline for non-estimated entries', () => {
+  test('baselineToRecord sets source to monthly-baseline-embedded for non-estimated entries', () => {
     const entry = { date: '2023-01', price: 1900 };
     const record = baselineToRecord(entry);
-    assert.equal(record.source, 'LBMA-baseline');
+    assert.equal(record.source, 'monthly-baseline-embedded');
     assert.equal(record.granularity, 'monthly');
   });
 

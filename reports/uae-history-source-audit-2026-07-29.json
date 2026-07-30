@@ -1,0 +1,99 @@
+{
+  "auditTimestampUtc": "2026-07-29T15:58:51.519Z",
+  "auditDate": "2026-07-29",
+  "endpoint": "https://freegoldapi.com/data/latest.json",
+  "httpStatus": 200,
+  "cors": "*",
+  "cacheControl": "max-age=600",
+  "lastModified": "Mon, 23 Feb 2026 07:06:47 GMT",
+  "etag": "W/\"699bfc87-278c7\"",
+  "fetchElapsedMs": 76,
+  "rawRecordCount": 1769,
+  "acceptedRecordCount": 359,
+  "rejected": {
+    "pre2019": 1410,
+    "badSource": 0,
+    "badPrice": 0,
+    "badDate": 0
+  },
+  "freegoldLatestRaw": {
+    "date": "2026-02-20",
+    "price": 5059.2998046875,
+    "source": "yahoo_finance"
+  },
+  "unifiedEarliest": "2019-01-01",
+  "unifiedLatest": "2026-02-20",
+  "latestAgeDays": 159,
+  "freshnessClassification": "stale",
+  "sourceCounts": {
+    "freegoldapi-reference": 358
+  },
+  "granularityCounts": {
+    "daily": 358
+  },
+  "maxConsecutiveDayGap": 32,
+  "rangeAnalysis": {
+    "1M": {
+      "totalObservations": 22,
+      "dailyObservations": 22,
+      "monthlyObservations": 0,
+      "windowEnd": "2026-02-20",
+      "windowStart": "2026-01-21",
+      "endsNearAuditDate": false
+    },
+    "3M": {
+      "totalObservations": 60,
+      "dailyObservations": 60,
+      "monthlyObservations": 0,
+      "windowEnd": "2026-02-20",
+      "windowStart": "2025-11-24",
+      "endsNearAuditDate": false
+    },
+    "6M": {
+      "totalObservations": 124,
+      "dailyObservations": 124,
+      "monthlyObservations": 0,
+      "windowEnd": "2026-02-20",
+      "windowStart": "2025-08-25",
+      "endsNearAuditDate": false
+    },
+    "12M": {
+      "totalObservations": 253,
+      "dailyObservations": 253,
+      "monthlyObservations": 0,
+      "windowEnd": "2026-02-20",
+      "windowStart": "2025-02-20",
+      "endsNearAuditDate": false
+    }
+  },
+  "y2025Plus": {
+    "count": 286,
+    "first": {
+      "date": "2025-01-02",
+      "price": 2658.89990234375,
+      "source": "freegoldapi-reference",
+      "upstreamSource": "yahoo_finance",
+      "granularity": "daily",
+      "derived": true
+    },
+    "last": {
+      "date": "2026-02-20",
+      "price": 5059.2998046875,
+      "source": "freegoldapi-reference",
+      "upstreamSource": "yahoo_finance",
+      "granularity": "daily",
+      "derived": true
+    },
+    "sources": {
+      "yahoo_finance": 286
+    }
+  },
+  "baseline": {
+    "file": "src/data/historical-baseline.json",
+    "count": 80,
+    "earliest": "2019-01-01",
+    "latest": "2025-08-01",
+    "provenanceNote": "Embedded monthly XAU/USD rows. Original upstream source not documented in git history; do not label as verified LBMA/public-domain without owner confirmation."
+  },
+  "conclusion": "Historical daily reference ends months before audit date. Chart must show stale/delayed coverage — not present as current."
+}

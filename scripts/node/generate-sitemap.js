@@ -36,7 +36,23 @@ const EXCLUDE = new Set([
   'config',
   'data',
   'assets',
+  // Developer / CI artifacts — must never be indexed
+  'playwright-report',
+  'test-results',
+  'reports',
+  'coverage',
 ]);
+
+/** Path prefixes that must never appear in sitemap output (regression guard). */
+const EXCLUDED_PATH_PREFIXES = [
+  'playwright-report',
+  'test-results',
+  'reports',
+  'coverage',
+  'node_modules',
+  'dist',
+  'tests/fixtures',
+];
 
 // ── Walk filesystem ──────────────────────────────────────────────────────────
 function isNoindex(filePath) {
@@ -48,10 +64,18 @@ function isNoindex(filePath) {
   }
 }
 
+function isExcludedPath(rel) {
+  if (!rel) return false;
+  const normalized = rel.replace(/\\/g, '/').replace(/\/$/, '');
+  return EXCLUDED_PATH_PREFIXES.some(
+    (prefix) => normalized === prefix || normalized.startsWith(`${prefix}/`)
+  );
+}
+
 function walk(dir, base = '', results = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const rel = base ? `${base}/${entry.name}` : entry.name;
-    if (EXCLUDE.has(entry.name) || entry.name.startsWith('.')) continue;
+    if (EXCLUDE.has(entry.name) || entry.name.startsWith('.') || isExcludedPath(rel)) continue;
 
     const full = path.join(dir, entry.name);
 

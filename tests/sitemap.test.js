@@ -129,3 +129,26 @@ test('deleted/noindex pages are excluded from sitemap', () => {
     'Excluded pages should not appear in sitemap: ' + present.join(', ')
   );
 });
+
+test('developer and CI artifact paths are excluded from sitemap', () => {
+  const xml = ensureSitemap();
+  const all = locs(xml);
+  const blockedPrefixes = [
+    '/playwright-report',
+    '/test-results',
+    '/reports',
+    '/coverage',
+    '/tests/fixtures',
+    '/node_modules',
+    '/dist',
+  ];
+  const offenders = all.filter((url) => {
+    const pathPart = url.replace(CANONICAL_ORIGIN, '');
+    return blockedPrefixes.some((p) => pathPart === p || pathPart.startsWith(`${p}/`));
+  });
+  assert.deepEqual(
+    offenders,
+    [],
+    'Developer artifact paths must not appear in sitemap: ' + offenders.slice(0, 5).join(', ')
+  );
+});

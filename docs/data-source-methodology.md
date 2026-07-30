@@ -154,8 +154,25 @@ and rollback plan.
 
 ## 8. Historical data layers and limitations
 
-Gold Ticker Live uses three data layers for historical price display, archive browsing, and exports.
-Understanding their resolution and limitations is important for honest display.
+Gold Ticker Live uses multiple data layers for historical price display, archive browsing, and
+exports. Understanding their resolution and limitations is important for honest display.
+
+### Homepage UAE karat chart — daily gold-api.com averages (committed)
+
+- **Source:** gold-api.com `/history` endpoint — daily average XAU/USD (`groupBy=day`,
+  `aggregation=avg`)
+- **File:** `data/historical/xau-usd-daily.json` (schema v1)
+- **Refresh:** `.github/workflows/historical-gold-refresh.yml` (daily ~02:45 UTC; isolated from live
+  spot fetch)
+- **Secret:** `GOLD_API_KEY` (server/workflow only — never in client code or committed JSON)
+- **Resolution:** One data point per calendar day (YYYY-MM-DD)
+- **Coverage:** ~400 calendar days (≥240 valid observations required)
+- **Trust label:** “Daily average spot-linked reference” / Arabic equivalent
+- **Formula:** AED/g (karat K) = daily avg XAU/USD ÷ troy oz grams × AED peg × karat purity
+- **Not used for:** retail shop quotes, LBMA fix, official Dubai rates, or live spot
+- **Failure behavior:** keep last good file; chart shows stale/unavailable states — no FreeGoldAPI or
+  embedded monthly baseline fallback on the homepage chart path
+- **Loader:** `src/lib/uae-historical-source.js` (does not call `getUnifiedHistory()`)
 
 ### Layer 1 — Monthly LBMA baseline (embedded)
 

@@ -1,0 +1,170 @@
+# ------------------------------------------------------------------
+# Historical gold daily refresh — homepage UAE chart data only.
+# Does NOT modify production live-price fetch (gold-price-fetch.yml).
+#
+# SECURITY: pull_request jobs never receive GOLD_API_KEY. Live fetch runs only
+# on schedule or workflow_dispatch on the default branch (main).
+#
+# Manual run: Actions → Historical Gold Refresh → Run workflow → branch: main
+# ------------------------------------------------------------------
+name: Historical Gold Refresh
+
+on:
+  schedule:
+    # Daily ~02:45 UTC (within owner-approved 02:15–03:15 window)
+    - cron: '45 2 * * *'
+  workflow_dispatch:
+    inputs:
+      diagnose_schema:
+        description: 'Run live schema diagnostic only (no commit)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: historical-gold-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Refresh XAU/USD daily history
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Trusted production refresh only — main branch schedule/dispatch.
+    if: >-
+      github.repository == 'vctb12/GoldTickerLive' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Determine execution mode
+        id: mode
+        run: |
+          if [ "${{ github.event.inputs.diagnose_schema }}" = "true" ]; then
+            echo "mode=diagnose" >> "$GITHUB_OUTPUT"
+          else
+            echo "mode=live" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify API key is configured
+        id: keycheck
+        env:
+          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
+          GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
+        run: |
+          if [ -n "$GOLD_API_KEY" ] || [ -n "$GOLD_API_COM_KEY" ]; then
+            echo "has_key=true" >> "$GITHUB_OUTPUT"
+            echo "API key present (name not logged)."
+          else
+            echo "has_key=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Missing repository secret GOLD_API_KEY (or legacy GOLD_API_COM_KEY)."
+            exit 1
+          fi
+
+      - name: Diagnose live response schema
+        if: steps.mode.outputs.mode == 'diagnose'
+        env:
+          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
+          GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
+        run: |
+          set -euo pipefail
+          REF_DATE="$(date -u +%F)"
+          node scripts/node/fetch-gold-api-history.mjs --diagnose-schema --reference-date "$REF_DATE"
+
+      - name: Fetch daily history (live provider)
+        if: steps.mode.outputs.mode == 'live'
+        env:
+          GOLD_API_KEY: ${{ secrets.GOLD_API_KEY }}
+          GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
+        run: |
+          set -euo pipefail
+          REF_DATE="$(date -u +%F)"
+          node scripts/node/fetch-gold-api-history.mjs --reference-date "$REF_DATE"
+
+      - name: Run historical data tests
+        run: node --test --test-concurrency=1 tests/fetch-gold-api-history.test.js tests/uae-historical-source.test.js
+
+      - name: Coverage summary
+        if: steps.mode.outputs.mode == 'live' && hashFiles('data/historical/xau-usd-daily.json') != ''
+        run: node scripts/node/fetch-gold-api-history.mjs --check
+
+      - name: Validate production provenance before commit
+        if: steps.mode.outputs.mode == 'live' && hashFiles('data/historical/xau-usd-daily.json') != ''
+        run: node scripts/node/fetch-gold-api-history.mjs --check
+
+      - name: Commit updated dataset
+        if: steps.mode.outputs.mode == 'live'
+        run: |
+          set -euo pipefail
+          if [ ! -f data/historical/xau-usd-daily.json ]; then
+            echo "No production dataset written — skipping commit."
+            exit 0
+          fi
+          git add data/historical/xau-usd-daily.json
+          if git diff --cached --quiet -- data/historical/xau-usd-daily.json; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          DOC_CHECK="$(node -e "
+            const fs = require('fs');
+            const doc = JSON.parse(fs.readFileSync('data/historical/xau-usd-daily.json','utf8'));
+            const required = [
+              ['dataOrigin', 'live-provider'],
+              ['provider', 'gold-api.com'],
+              ['endpoint', '/history'],
+            ];
+            for (const [k, v] of required) {
+              if (doc[k] !== v) {
+                console.error('provenance_mismatch:' + k);
+                process.exit(1);
+              }
+            }
+            if (!doc.workflow?.runId) {
+              console.error('missing_workflow_run_id');
+              process.exit(1);
+            }
+            if (!doc.rawResponseSha256 || !doc.normalizedRecordsSha256) {
+              console.error('missing_hashes');
+              process.exit(1);
+            }
+            if (!Array.isArray(doc.records) || doc.records.length === 0) {
+              console.error('no_records');
+              process.exit(1);
+            }
+            console.log('provenance_ok');
+          ")"
+          echo "$DOC_CHECK"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
+          git push
+
+      - name: Upload audit artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: xau-usd-daily-audit-${{ github.run_id }}
+          path: |
+            data/historical/xau-usd-daily.json
+            reports/gold-api-history/diagnose-schema.json
+            reports/gold-api-history/diagnose-schema-sample.json
+          if-no-files-found: ignore

@@ -1,0 +1,61 @@
+# ------------------------------------------------------------------
+# PR validation for historical gold pipeline — FIXTURE ONLY.
+# No repository secrets. No production file writes.
+# ------------------------------------------------------------------
+name: Historical Gold Refresh (PR)
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/node/fetch-gold-api-history.mjs'
+      - 'scripts/node/cross-validate-gold-api-history.mjs'
+      - 'src/lib/gold-api-daily-history-contract.js'
+      - 'src/lib/uae-historical-source.js'
+      - 'tests/fetch-gold-api-history.test.js'
+      - 'tests/uae-historical-source.test.js'
+      - 'tests/fixtures/gold-api-history/**'
+      - '.github/workflows/historical-gold-refresh.yml'
+      - '.github/workflows/historical-gold-refresh-pr.yml'
+      - 'data/historical/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: historical-gold-refresh-pr-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-fixture:
+    name: Validate historical pipeline (fixture)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Fixture fetch validation (no production write)
+        run: |
+          REF_DATE="$(date -u +%F)"
+          node scripts/node/fetch-gold-api-history.mjs \
+            --fixture tests/fixtures/gold-api-history/provider-response-official.json \
+            --output /tmp/xau-usd-daily-fixture-check.json \
+            --reference-date "$REF_DATE"
+
+      - name: Run historical data tests
+        run: node --test --test-concurrency=1 tests/fetch-gold-api-history.test.js tests/uae-historical-source.test.js
+
+      - name: Validate production dataset when present on PR
+        run: |
+          if [ ! -f data/historical/xau-usd-daily.json ]; then
+            echo "No production dataset in PR (fixture-only validation path)."
+            exit 0
+          fi
+          echo "Production dataset present — verifying live-provider provenance via --check"
+          node scripts/node/fetch-gold-api-history.mjs --check
