@@ -5,12 +5,12 @@
   fix is low-risk and non-owner-gated.
 - Branch: `codex/initial-safe-phase`
 - Commit: `4f5266a6d0` (implementation commit)
-- Pull request: pending
+- Pull request: [#716](https://github.com/vctb12/GoldTickerLive/pull/716) (draft)
 - Main files changed: `src/pages/home.js`, `docs/plans/2026-07-30_home-faq-schema-import.md`,
   `docs/AGENT_MASTER_TRACKER.md`
 - Checks: baseline install passed; baseline lint failed on the two missing imports; baseline unit
   suite has unrelated redirects/network failures; post-fix results pending.
-- Current status: implementation complete; PR preparation pending branch push.
+- Current status: implementation complete; draft PR #716 is open for owner review.
 - Remaining risk: browser verification may be limited if Playwright browsers are not installed; full
   validation/build may expose existing generated-artifact drift.
 - Owner decisions required: None.
