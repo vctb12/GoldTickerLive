@@ -52,7 +52,6 @@ import { clear, el, safeHref } from '../lib/safe-dom.js';
 import { track, EVENTS } from '../lib/analytics.js';
 import { enforceCanonicalOnDocument } from '../seo/canonical.js';
 import { enforceHreflangAlternates } from '../seo/hreflang.js';
-import { buildMethodologyFaqSchema, injectFaqSchema } from '../seo/faq-schema.js';
 import { buildHomeTrackerHref } from '../lib/cross-page-links.js';
 import { getBaselineHistory } from '../lib/historical-data.js';
 import { applyTrackerHandoffToIds, HOME_DEFAULT_TRACKER_LINK_IDS } from '../lib/page-handoff.js';
@@ -1897,7 +1896,6 @@ async function init() {
   await ensureLocale(lang);
   enforceCanonicalOnDocument(document, window.location.pathname);
   enforceHreflangAlternates(document, window.location.pathname);
-  injectFaqSchema(document, buildMethodologyFaqSchema(lang));
 
   // Nav + footer. Redesign: the redundant top spot-bar is retired on the homepage
   // (home-only) in favour of the nav price-pill (mountHomeNavPricePill); other pages

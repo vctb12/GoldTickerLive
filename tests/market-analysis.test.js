@@ -50,6 +50,34 @@ test('market-analysis: magnitude bands classify by |pct| only', async () => {
   assert.equal(buildMarketAnalysis({ price: 4305, previous: 4100 }).movement.key, 'sharp');
 });
 
+test('market-analysis: EN change sentence uses adjective forms (enAdj), not adverbs', async () => {
+  // PR #680 grammar fix: MAGNITUDE.en is adverbial ("modestly") but the template
+  // needs "a modest move". Pin the rendered adjectives so adverb leakage fails CI.
+  const { buildMarketAnalysis } = await import(MOD);
+
+  const small = buildMarketAnalysis({ price: 4105, previous: 4100 });
+  assert.ok(
+    small.sentences.some((s) => /— a small move\./.test(s)),
+    'little-changed → "a small move"'
+  );
+
+  const modest = buildMarketAnalysis({ price: 4120, previous: 4100 });
+  assert.ok(
+    modest.sentences.some((s) => /— a modest move\./.test(s)),
+    'modest → "a modest move"'
+  );
+  assert.ok(
+    !modest.sentences.some((s) => /a modestly move/.test(s)),
+    'must not insert the adverb form into the adjective slot'
+  );
+
+  const notable = buildMarketAnalysis({ price: 4180, previous: 4100 });
+  assert.ok(notable.sentences.some((s) => /— a notable move\./.test(s)));
+
+  const sharp = buildMarketAnalysis({ price: 4305, previous: 4100 });
+  assert.ok(sharp.sentences.some((s) => /— a sharp move\./.test(s)));
+});
+
 test('market-analysis: day-open and range sentences appear when data is present', async () => {
   const { buildMarketAnalysis } = await import(MOD);
   const r = buildMarketAnalysis({
