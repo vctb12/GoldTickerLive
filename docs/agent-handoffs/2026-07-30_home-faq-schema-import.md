@@ -4,7 +4,7 @@
 - Why selected: `npm run lint` reproduced two `no-undef` errors in a public-page entry module; the
   fix is low-risk and non-owner-gated.
 - Branch: `codex/initial-safe-phase`
-- Commit: `8907a4349fc29fd57b3dfb33284bfe9c7a220d1c`
+- Commit: `4f5266a6d0` (implementation commit)
 - Pull request: pending
 - Main files changed: `src/pages/home.js`, `docs/plans/2026-07-30_home-faq-schema-import.md`,
   `docs/AGENT_MASTER_TRACKER.md`
