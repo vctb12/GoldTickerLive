@@ -26,6 +26,7 @@ function getLabels(_extra = {}) {
     home: tx('nav.home', 'Home'),
     shops: tx('nav.shops', 'Shops & Markets'),
     calculator: tx('nav.calculator', 'Calculator'),
+    dealChecker: tx('dealChecker.breadcrumb', 'Deal Intelligence Lab'),
     learn: tx('nav.learn', 'Learn'),
     insights: tx('nav.insights', 'Insights'),
     methodology: tx('nav.methodology', 'Methodology'),
@@ -131,6 +132,7 @@ export function getBreadcrumbs(pageName, extra = {}) {
   const pageMap = {
     shops: [{ label: labels.shops, url: '/shops.html' }],
     calculator: [{ label: labels.calculator, url: '/calculator.html' }],
+    'deal-checker': [{ label: labels.dealChecker, url: '/deal-checker.html' }],
     learn: [{ label: labels.learn, url: '/learn.html' }],
     insights: [{ label: labels.insights, url: '/learn.html#insights' }],
     methodology: [{ label: labels.methodology, url: '/methodology.html' }],

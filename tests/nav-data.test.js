@@ -261,12 +261,13 @@ test('NAV_DATA labels are present (langToggle, openMenu, closeMenu, mainNav)', a
   }
 });
 
-test('NAV_DATA canonical 7 surfaces are present and locale-parity aligned', async () => {
+test('NAV_DATA canonical surfaces are present and locale-parity aligned', async () => {
   const { NAV_DATA } = await loadNav();
   const expected = [
     '/index.html',
     '/tracker.html',
     '/calculator.html',
+    '/deal-checker.html',
     '/compare.html',
     '/heatmap.html',
     '/portfolio.html',
