@@ -1,6 +1,6 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-07-30 · **Updated by:** Codex **Purpose:** The single canonical source of
+**Last updated:** 2026-08-04 · **Updated by:** Codex **Purpose:** The single canonical source of
 truth for **every plan and every phase** in this repository — finished and unfinished — so no
 roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
 file is **canonical over chat memory**.
@@ -28,6 +28,48 @@ file is **canonical over chat memory**.
   so the tracker is maintained on its own branch/PR (`claude/revamp-master-tracker`) and refreshed
   at each checkpoint; per-phase PRs are cross-linked here rather than editing this file on every
   phase branch (that would conflict on merge).
+
+## Repository / GitHub Reconciliation (2026-08-04)
+
+This snapshot is verified against the clean local checkout and GitHub. `origin/main` is
+`cc5b1d54fd` (`chore(data): update x automation observability logs [skip ci]`). The local branch was
+`main` and the working tree was clean before this reconciliation branch was created. GitHub shows
+one open PR, [#720](https://github.com/vctb12/GoldTickerLive/pull/720), a Dependabot GitHub Actions
+update. Since the previous tracker timestamp, [#717](https://github.com/vctb12/GoldTickerLive/pull/717),
+[#718](https://github.com/vctb12/GoldTickerLive/pull/718), and
+[#719](https://github.com/vctb12/GoldTickerLive/pull/719) merged; [#716](https://github.com/vctb12/GoldTickerLive/pull/716)
+also merged on 2026-07-30 and is included for completeness.
+
+The following tracker pointers were stale or contradictory and are corrected below:
+
+- **Stale current-active rows:** Revamp Phase 17 is already `done` as #554 in the master index;
+  Learn-Hub F1–F4 shipped in #608; UAE Historical Karat Chart shipped in #714; and G3 shipped in
+  #612. Their old branches have no active PR and are historical references, not active work.
+- **Tracker maintenance:** this reconciliation is the only current active row. No product phase is
+  started by this PR.
+- **Superseded/duplicated queues:** 50-Plan phases that explicitly overlap completed 30-Revamp
+  phases remain `not-started` only as separate historical programs and are not eligible candidates.
+  The same applies to Roadmap items already represented by 30-Revamp or continuation phases.
+- **Owner-gated work:** secondary-provider go-live, live multi-metal feeds, workflow/service-worker
+  changes, billing/Supabase/RLS, social or push automation, real API enablement, RN/native app work,
+  and AI beyond descriptive-only content remain in the Owner-Gated Decision Queue.
+
+### Next safe candidates
+
+These are the next three non-duplicative candidates from the held Canonical 60-Phase plan
+(`docs/plans/2026-07-10_CANONICAL_60_PHASE_POST_CONVERGENCE_PLAN.md`), subject to normal owner review:
+
+1. **P4 — `offline.html` `<main>` landmark (recommended next phase):** small, low-risk accessibility
+   fix with a focused regression test; no pricing, workflow, or owner-gated surface.
+2. **P5 — Firefox/WebKit E2E stability:** test-only stabilization or a documented Chromium-only CI
+   scope decision; no product behavior change.
+3. **P6 — Regression-guard consolidation:** test-fixture/helper deduplication only, after confirming
+   no overlap with existing DP guard PRs.
+
+P1/P2 remain ahead of feature expansion in that plan but are not safe autonomous candidates: P2
+requires the owner to choose the canonical committed-file versus live-API source of truth. P3 has an
+analytics/consent owner gate. Multi-metal, crypto-feed, monetization, integration, and branch-
+protection phases remain gated as documented.
 
 ## Status Legend
 
@@ -61,11 +103,7 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
 | ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | done        | [#714](https://github.com/vctb12/GoldTickerLive/pull/714) | Live bootstrap run 30469621213; production file committed; temp trigger removed; ready for human review                                                           |
-| Revamp Phase 17 — Design-token consolidation               | `claude/revamp-phase-17-tokens`               | in-progress | —                                                         | hex->tokens; dual-theme visual-regression                                                                                                                         |
-| Master Tracker (this doc)                                  | `claude/revamp-master-tracker`                | in-progress | —                                                         | Being created now                                                                                                                                                 |
-| Learn-Hub Reliability — real read progress + favicon 404   | `claude/learn-hub-progress-perception-kr5f7r` | in-progress | —                                                         | scroll-dwell completion + legacy-id migration + loading affordance + manifest icon 404 fix                                                                        |
-| Program G / G3 — View Transition abort + console stability | `claude/g3-motion-guard-bsa6kk`               | done        | [#612](https://github.com/vctb12/GoldTickerLive/pull/612) | Fully guard VT promise aborts (ready/finished/updateCallbackDone), idempotent binding, reduced-motion re-check, try/catch fallback nav, dev-only rejection beacon |
+| Master Tracker reconciliation (2026-08-04)                 | `codex/agent-tracker-reconciliation-2026-08-04` | in-progress | draft PR | Reconcile tracker rows with origin/main and GitHub; documentation only; no product phase started |
 
 ---
 
@@ -234,10 +272,10 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 | Item | Short Name                        | Status      | PR  | Scope/Blocker Note                                                                                                                                                                  |
 | ---- | --------------------------------- | ----------- | --- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F1   | Scroll/visibility read completion | in-progress | —   | `observeDwell()` in `reveal.js`; guide marked read at ≥60% visible for ≥3s; reuses `markGuideRead()`; click+hashchange kept                                                         |
-| F2   | One-time legacy-id migration      | in-progress | —   | `migrateLearnProgress()` maps slash-stripped ids → canonical hrefs, drops unknown, rewrites once (v2 flag)                                                                          |
-| F3   | Pre-hydration loading affordance  | in-progress | —   | Static fallback shows "Loading guides…" (EN+AR, parity-guarded) instead of frozen "Read 0 of 9"; no animation (reduced-motion safe); live aria-live counter takes over on hydration |
-| F4   | `/assets/favicon.svg` 404 fix     | in-progress | —   | Vite emits manifest to `/assets/`; relative icon `src` resolved to `/assets/favicon.svg` (404). Made manifest icon paths root-absolute                                              |
+| F1   | Scroll/visibility read completion | done | [#608](https://github.com/vctb12/GoldTickerLive/pull/608) | `observeDwell()` in `reveal.js`; guide marked read at ≥60% visible for ≥3s; reuses `markGuideRead()`; click+hashchange kept; merged 2026-07-09 |
+| F2   | One-time legacy-id migration      | done | [#608](https://github.com/vctb12/GoldTickerLive/pull/608) | `migrateLearnProgress()` maps slash-stripped ids → canonical hrefs, drops unknown, rewrites once (v2 flag); merged 2026-07-09 |
+| F3   | Pre-hydration loading affordance  | done | [#608](https://github.com/vctb12/GoldTickerLive/pull/608) | Static fallback shows "Loading guides…" (EN+AR, parity-guarded) instead of frozen "Read 0 of 9"; no animation; live aria-live counter takes over on hydration |
+| F4   | `/assets/favicon.svg` 404 fix     | done | [#608](https://github.com/vctb12/GoldTickerLive/pull/608) | Vite emits manifest to `/assets/`; relative icon `src` resolved to `/assets/favicon.svg` (404); manifest icon paths are root-absolute |
 
 Guardrails honored: no edits to `gold-price-fetch.yml`, `post_gold.yml`, `sw.js`, billing, or
 Supabase; EN/AR parity, RTL, freshness labels, AED peg 3.6725, troy 31.1034768 g, and spot-vs-retail
@@ -334,6 +372,11 @@ fail), `npm run build` all green.
 
 | PR   | Phase          | Title                                                  | Opened     |
 | ---- | -------------- | ------------------------------------------------------ | ---------- |
+| #720 | Dependency maintenance | Bump the github-actions group with 4 updates          | 2026-08-03 (open) |
+| #719 | Dependency maintenance | Bump stripe from 22.3.2 to 22.4.0                     | 2026-08-03 (merged 2026-08-04) |
+| #718 | Dependency maintenance | Bump the dev-dependencies group with 3 updates        | 2026-08-03 (merged 2026-08-04) |
+| #717 | Revamp Phase 41 | Preserve UAE acronym in breadcrumb schema              | 2026-07-30 (merged 2026-08-01) |
+| #716 | Homepage FAQ schema repair | Import homepage FAQ schema helpers                 | 2026-07-30 (merged 2026-07-30) |
 | #537 | 30-Revamp 1    | Baseline & rollback fences                             | 2026-07-07 |
 | #538 | 30-Revamp 2    | Runtime error audit & defect register                  | 2026-07-07 |
 | #539 | 30-Revamp 3    | Dependency/security/secrets audit + CSP inventory      | 2026-07-07 |
@@ -358,6 +401,7 @@ fail), `npm run build` all green.
 
 | Date       | Actor       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-04 | Codex       | **Repository-state and tracker reconciliation** on `codex/agent-tracker-reconciliation-2026-08-04` (docs-only). Verified clean checkout at `origin/main` `cc5b1d54fd`, one open PR (#720), and merged #716–#719; corrected stale Current Active Phase and Learn-Hub F1–F4 pointers, documented superseded/owner-gated work, and recorded P4/P5/P6 as the next safe candidates. Baseline: lint/build/diff-check passed; tests had 3 baseline failures; validate stopped on 22 theme-preinit drift files; `git fetch --all --prune` was blocked by managed `.git/FETCH_HEAD` permissions. No product code, dependencies, pricing, provider, workflow, `sw.js`, or production configuration changed. |
 | 2026-07-30 | Codex       | **Homepage FAQ schema import repair** on `codex/initial-safe-phase`: `home.js` now imports the existing `buildMethodologyFaqSchema` and `injectFaqSchema` helpers used by the EN/AR language-switch path. Baseline lint reproduced both `no-undef` errors; no pricing, workflow, provider, or protected surface changed. Draft PR [#716](https://github.com/vctb12/GoldTickerLive/pull/716); implementation commit `4f5266a6d0`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | 2026-07-11 | Claude Code | **STAGE 3 START — PR triage + 3.1 reference-movement.** Triaged the 4 open PRs: merged **#667** (design/architecture ADRs `docs/adr/` — verified 0005/0006 accurate vs the peg/troy/karat + freshness-vocab invariants), **#662** (RTL/mobile overflow guard spec + governance docs), **#666** (RTL/mobile coverage extension) — all CI-green, non-conflicting, deployed + post-deploy-smoke commit-matched. **Held #664** (prettier/stylelint debt) with a note — CONFLICTING/DIRTY, main CI never ran, only fixes non-gating lint (`validate` already green), files superseded by #659/#661 → needs rebase, not closed. **Stage 3.1 shipped — PR #670 (@`31140088d`, deployed + live-verified):** honest "Movement since the last reference we recorded" panel on `market.html`'s worked example. Verified `last_gold_price.json` semantics FIRST = the last _published_ reference (tweet-guard dedup baseline / Tracker fallback tier), **NOT** a 24h-ago price (its `posted_at_utc` was ~5 days old on the weekend) → panel shows the REAL window ("6 Jul · 5 days ago"), Now/Then figures, and an "observation … not a forecast, and not a stated cause" note; direction never colour-only (arrow + Now/Then + label). New pure `src/lib/reference-move.js` (`referenceMove` + `MOVE_FLAT_PCT`, reusable for 3.2); prior parsed via the canonical `parseLastGoldPriceSnapshot` (no duplicate price logic); `--color-move-up/down` palette (AA in light + dark); graceful degrade when the prior record is absent (panel hidden, worked example intact). Gate: 1623 tests/0, lint/stylelint/build/validate 0; Playwright EN/AR × light/dark × mobile axe-0 + console-clean; live-verified prod. Invariants intact; Tracker engine untouched. |
 | 2026-07-11 | Claude Code | **STAGE 2 CLOSED (shared price-state / trust / deploy-durability program).** Shipped+deployed+live-verified: #661 price-flow map (`docs/price-flow-map.md`) + visibility-aware polling for market/dubai/shops/invest (`src/lib/visibility-refresh.js`); #663 post-deploy smoke (`scripts/node/post-deploy-smoke.js` + `.github/workflows/post-deploy-smoke.yml` + `dist/build-info.json` fingerprint — live commit-match, "merged ≠ deployed until verified live"); #665 market-closed overlay consistency (5 surfaces + calc note no longer read "Live" while closed; guard test); #668 trust-layer pilot `priceProvenance` "About this price" control on compare (source/basis/spot-vs-retail/methodology). Closure sweep (12 pages × EN/AR × mobile+desktop): console/overflow clean; axe found 1 pre-existing `.edu-tag--medium` AA fail (4.36:1) → fixed via `--color-warning-text` token (this PR). Gate: 1618 tests/0, lint/validate/build 0. Report: `docs/stage-2-closure-report.md`. Invariants intact; Tracker engine untouched. **Next: Stage 3.**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
