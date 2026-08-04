@@ -26,6 +26,9 @@ const SITE_URL = 'https://goldtickerlive.com';
 const SITE_NAME = 'Gold Ticker Live';
 const SITE_DESCRIPTION =
   'Spot-linked reference gold prices for GCC, Arab world and global markets — with visible freshness labels';
+const BREADCRUMB_ACRONYMS = Object.freeze({
+  uae: 'UAE',
+});
 
 // ── Trusted local config loaders ────────────────────────────────────────────
 // data/shops.js and src/config/countries.js are ES modules that can't be
@@ -411,7 +414,8 @@ function generateBreadcrumbs(urlPath, canonicalUrl = null) {
     const name =
       part === 'ar'
         ? arabicSectionLabels[prevPart] || 'العربية'
-        : part
+        : BREADCRUMB_ACRONYMS[part] ||
+          part
             .split('-')
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(' ');
@@ -962,6 +966,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  generateBreadcrumbs,
   generateSchemasForPage,
   injectSchemas,
   processFile,
