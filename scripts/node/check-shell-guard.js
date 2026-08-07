@@ -12,11 +12,12 @@ const PUBLIC_HTML = fs
   .map((entry) => path.join(ROOT, entry.name));
 
 const EXPECTED_SURFACES = [
-  // 2026-07-04 owner-ordered IA reset: 9 meaningful public surfaces
-  // (docs/plans/2026-07-04_radical-page-reduction.md).
+  // Canonical public surfaces must stay synchronized with NAV_DATA and the
+  // generated sitemap. Deal Checker is a first-class tool surface.
   '/index.html',
   '/tracker.html',
   '/calculator.html',
+  '/deal-checker.html',
   '/compare.html',
   '/heatmap.html',
   '/portfolio.html',
@@ -81,7 +82,7 @@ async function checkCanonicalSurfaces() {
       );
     }
   }
-  if (errors === 0) pass('Canonical 7-surface nav coverage check passed.');
+  if (errors === 0) pass('Canonical public-surface nav coverage check passed.');
 }
 
 checkCanonicalSurfaces()
