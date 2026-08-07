@@ -10,6 +10,7 @@ export const REALTIME_POLLING_DEFAULTS = {
   fetchTimeoutMs: 4000,
   jitterMs: 250,
   backoffMs: [1000, 2000, 3000, 5000],
+  streamUrl: null,
 };
 
 /** Wire headlines + unified history — decoupled from spot poll loop. */

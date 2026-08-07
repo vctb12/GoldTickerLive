@@ -60,6 +60,7 @@ export function createRealtimePricingEngine({
       Array.isArray(config.backoffMs) && config.backoffMs.length
         ? config.backoffMs
         : DEFAULT_BACKOFF_MS,
+    streamUrl: typeof config.streamUrl === 'string' && config.streamUrl ? config.streamUrl : null,
   };
 
   const health = new ProviderHealthMonitor(nowFn);
@@ -113,6 +114,9 @@ export function createRealtimePricingEngine({
       warningFlagsKey: '',
       criticalFlagsKey: '',
     },
+    streamSource: null,
+    streamConnected: false,
+    streamLastEventAt: 0,
   };
 
   const isMarketOpen = () => getMarketStatus(new Date(nowFn())).isOpen;
@@ -286,6 +290,11 @@ export function createRealtimePricingEngine({
         consecutiveFailures: state.consecutiveFailures,
         nextPollInMs: state.metrics.nextPollInMs,
       },
+      transport: {
+        mode: state.streamConnected ? 'sse' : 'polling',
+        connected: state.streamConnected,
+        lastEventAt: state.streamLastEventAt || null,
+      },
       config: cfg,
       events: state.events.slice(-80),
     };
@@ -302,8 +311,70 @@ export function createRealtimePricingEngine({
     });
   }
 
+  function applyStreamEvent(payload) {
+    const price = Number(payload?.xauUsdPerOz);
+    if (!Number.isFinite(price) || price <= 0 || !payload?.timestampUtc) return;
+
+    const providerId = 'realtime-stream';
+    state.activeProviderId = providerId;
+    health.setActiveProvider(providerId);
+    health.recordAttempt(providerId, {
+      success: true,
+      latencyMs: 0,
+      providerTimestamp: payload.timestampUtc,
+    });
+    state.streamLastEventAt = nowFn();
+    applyQuote(
+      {
+        price,
+        providerTimestamp: payload.timestampUtc,
+        fetchedAt: payload.fetchedAtUtc || new Date(nowFn()).toISOString(),
+        providerId,
+        source: payload.provider || providerId,
+        providerRaw: payload,
+        providerPathSuccessful: payload.isFresh === true,
+        isFresh: payload.isFresh === true,
+        isFallback: payload.isFallback === true,
+        forcedState: payload.isFallback === true ? 'fallback' : null,
+      },
+      { pollStartedAt: nowFn(), applyLatencyMs: 0 }
+    );
+    notify();
+  }
+
+  function connectStream() {
+    if (!cfg.streamUrl || typeof globalThis.EventSource === 'undefined' || state.streamSource)
+      return false;
+
+    const source = new globalThis.EventSource(cfg.streamUrl);
+    state.streamSource = source;
+    source.onopen = () => {
+      state.streamConnected = true;
+      if (state.timerId) clearTimeoutFn(state.timerId);
+      state.timerId = null;
+      notify();
+    };
+    const handleStreamEvent = (event) => {
+      try {
+        applyStreamEvent(JSON.parse(event.data));
+      } catch (error) {
+        emit('STREAM_EVENT_INVALID', { error: error?.message || String(error) }, 'warning');
+      }
+    };
+    source.onmessage = handleStreamEvent;
+    source.addEventListener('price', handleStreamEvent);
+    source.onerror = () => {
+      state.streamConnected = false;
+      emit('STREAM_DISCONNECTED', {}, 'warning');
+      scheduleNextPoll();
+      notify();
+    };
+    return true;
+  }
+
   function scheduleNextPoll({ immediate = false } = {}) {
     if (!state.running) return;
+    if (state.streamConnected) return;
     if (state.timerId) clearTimeoutFn(state.timerId);
 
     const providerId = state.quote?.providerId || state.activeProviderId;
@@ -565,7 +636,7 @@ export function createRealtimePricingEngine({
     state.runId += 1;
     state.running = true;
     health.setActiveProvider(state.activeProviderId);
-    scheduleNextPoll({ immediate: true });
+    if (!connectStream()) scheduleNextPoll({ immediate: true });
     notify();
   }
 
@@ -578,6 +649,9 @@ export function createRealtimePricingEngine({
       state.inFlight.controller.abort();
       state.inFlight = null;
     }
+    state.streamSource?.close?.();
+    state.streamSource = null;
+    state.streamConnected = false;
     state.pollPromise = null;
     notify();
   }
