@@ -1437,7 +1437,10 @@ function initRealtimeEngine() {
   realtimeEngine = createRealtimePricingEngine({
     primaryProvider: createPrimaryQuoteProvider(),
     secondaryProvider: createSecondaryQuoteProvider(),
-    config: REALTIME_POLLING_DEFAULTS,
+    config: {
+      ...REALTIME_POLLING_DEFAULTS,
+      streamUrl: CONSTANTS.API_BACKEND_ENABLED ? '/api/v1/prices/stream' : null,
+    },
     debug: isRealtimeDebugEnabled(),
   });
 

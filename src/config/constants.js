@@ -3,6 +3,11 @@
 // Must match vite.config.js `base` and the service worker scope.
 export const BASE_PATH = '/';
 
+// Vite replaces this at build time. Static GitHub Pages builds keep the flag
+// off; an Express deployment can opt into the server API and SSE stream with
+// VITE_API_BACKEND_ENABLED=true without changing browser source or shipping keys.
+const API_BACKEND_ENABLED = import.meta.env?.VITE_API_BACKEND_ENABLED === 'true';
+
 export const CONSTANTS = {
   API_GOLD_URL: '/data/gold_price.json',
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
@@ -22,7 +27,7 @@ export const CONSTANTS = {
   // (`src/pages/tracker-pro.js`) so neither fires a guaranteed-404 request on
   // every page load. Does not affect pricing — static JSON remains the source
   // of truth when this is off.
-  API_BACKEND_ENABLED: false,
+  API_BACKEND_ENABLED,
 
   // Client analytics are mirrored to the Supabase `analytics_events` table with
   // the public anon key. That write returns 401 until an RLS policy grants the

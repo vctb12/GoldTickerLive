@@ -38,6 +38,8 @@ const shopsV1Routes = require('./server/routes/shops-v1');
 const alertsRoutes = require('./server/routes/alerts');
 const { publicAccountsRouter } = require('./server/routes/public-accounts');
 const developerApiRoutes = require('./server/routes/developer-api');
+const { createPriceStreamRouter } = require('./server/routes/price-stream');
+const priceStreamRoutes = createPriceStreamRouter();
 
 // Validate environment feature wiring at startup without crashing optional integrations.
 validateServerEnv(process.env, console);
@@ -305,6 +307,7 @@ app.use('/api/v1', apiV1Routes);
 app.use('/api/v1', alertsRoutes);
 app.use('/api/v1', developerApiRoutes);
 app.use('/api/v1', publicAccountsRouter);
+app.use('/api/v1', priceStreamRoutes);
 
 // Health check endpoint
 app.get('/api/health', (_req, res) => {
