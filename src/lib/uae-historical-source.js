@@ -41,9 +41,14 @@ const PURITY_BY_CODE = Object.fromEntries(KARATS.map((k) => [k.code, k.purity]))
  * Fetch and validate the committed daily history JSON.
  * @param {string} [url]
  * @param {typeof fetch} [fetchFn]
+ * @param {string} [referenceDate] YYYY-MM-DD freshness reference for deterministic callers
  * @returns {Promise<{ ok: boolean, document: object|null, errors: string[], meta: UaeDailyHistoryMeta|null }>}
  */
-export async function fetchDailyHistoryDocument(url = DAILY_HISTORY_URL, fetchFn = fetch) {
+export async function fetchDailyHistoryDocument(
+  url = DAILY_HISTORY_URL,
+  fetchFn = fetch,
+  referenceDate
+) {
   let response;
   try {
     response = await fetchFn(url, { cache: 'no-cache' });
@@ -62,7 +67,7 @@ export async function fetchDailyHistoryDocument(url = DAILY_HISTORY_URL, fetchFn
     return { ok: false, document: null, errors: ['invalid_json'], meta: null };
   }
 
-  const validation = validateDatasetDocument(document, undefined, {
+  const validation = validateDatasetDocument(document, referenceDate, {
     allowStale: true,
     requireProductionProvenance: true,
   });
@@ -86,7 +91,7 @@ export async function fetchDailyHistoryDocument(url = DAILY_HISTORY_URL, fetchFn
     aggregation: String(document.aggregation || AGGREGATION),
     generatedAt: String(document.generatedAt || ''),
     coverage: document.coverage || {},
-    freshness: classifyDatasetFreshness(end),
+    freshness: classifyDatasetFreshness(end, referenceDate),
     schemaVersion: document.schemaVersion ?? SCHEMA_VERSION,
   };
 

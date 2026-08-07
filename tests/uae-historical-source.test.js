@@ -39,7 +39,7 @@ describe('uae-historical-source', async () => {
       ok: true,
       json: async () => liveFixture,
     });
-    const result = await fetchDailyHistoryDocument('/test.json', fetchFn);
+    const result = await fetchDailyHistoryDocument('/test.json', fetchFn, '2026-07-29');
     assert.equal(result.ok, true);
     assert.equal(result.meta.provider, 'gold-api.com');
     assert.equal(result.meta.freshness, 'current');
