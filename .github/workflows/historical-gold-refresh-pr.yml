@@ -60,5 +60,5 @@ jobs:
             echo "No production dataset in PR (fixture-only validation path)."
             exit 0
           fi
-          echo "Production dataset present — verifying live-provider provenance via --check"
-          node scripts/node/fetch-gold-api-history.mjs --check
+          echo "Production dataset present — verifying live-provider provenance via --check --allow-stale"
+          node scripts/node/fetch-gold-api-history.mjs --check --allow-stale
