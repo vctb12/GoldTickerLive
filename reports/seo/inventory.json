@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAtDate": "2026-07-07",
+  "generatedAtDate": "2026-08-07",
   "summary": {
-    "totalHtmlFiles": 16,
-    "withCanonical": 14,
+    "totalHtmlFiles": 17,
+    "withCanonical": 15,
     "withoutCanonical": 2,
-    "withOgImage": 14,
+    "withOgImage": 15,
     "withoutOgImage": 2,
-    "withJsonLd": 14,
+    "withJsonLd": 15,
     "withoutJsonLd": 2,
-    "hreflangEnArPairs": 14,
+    "hreflangEnArPairs": 15,
     "noindexCount": 2
   },
   "records": [
@@ -104,6 +104,42 @@
       "jsonLdTypes": [
         "BreadcrumbList",
         "WebApplication"
+      ],
+      "hasStructuredData": true,
+      "jsonLdParseFailures": null
+    },
+    {
+      "path": "deal-checker.html",
+      "exempt": null,
+      "lang": "en",
+      "dir": "ltr",
+      "title": "Gold Deal Intelligence Lab | Gold Ticker Live",
+      "metaDescription": "Break down a gold shop quote into fine-gold value, making charges, premiums, tax, and a spot-linked reference comparison.",
+      "canonical": "https://goldtickerlive.com/deal-checker.html",
+      "robots": null,
+      "ogTitle": "Gold Deal Intelligence Lab | Gold Ticker Live",
+      "ogDescription": "Compare a seller quote with a spot-linked gold reference estimate and see the disclosed components.",
+      "ogImage": "https://goldtickerlive.com/assets/og/calculator.png",
+      "ogUrl": "https://goldtickerlive.com/deal-checker.html",
+      "ogType": "website",
+      "twitterCard": "summary_large_image",
+      "twitterImage": "https://goldtickerlive.com/assets/og/calculator.png",
+      "hreflang": [
+        {
+          "lang": "ar",
+          "href": "https://goldtickerlive.com/deal-checker.html?lang=ar"
+        },
+        {
+          "lang": "en",
+          "href": "https://goldtickerlive.com/deal-checker.html"
+        },
+        {
+          "lang": "x-default",
+          "href": "https://goldtickerlive.com/deal-checker.html"
+        }
+      ],
+      "jsonLdTypes": [
+        "BreadcrumbList"
       ],
       "hasStructuredData": true,
       "jsonLdParseFailures": null

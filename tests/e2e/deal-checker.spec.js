@@ -16,7 +16,7 @@ test.describe('Deal Intelligence Lab', () => {
     await page.locator('#deal-premium-mode').selectOption('included');
     await page.locator('#deal-tax-mode').selectOption('included');
     await expect(page.locator('#deal-reference-value')).not.toHaveText('—');
-    await expect(page.locator('#deal-status-explain')).toContainText(/configured benchmark/i);
+    await expect(page.locator('#deal-status-explain')).toContainText(/configured tolerance/i);
     await expect(page.locator('body')).not.toContainText(/good|bad|scam/i);
   });
 

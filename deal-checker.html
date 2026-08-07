@@ -231,6 +231,11 @@
       </section>
     </main>
     <noscript><p class="deal-noscript">JavaScript is required for this local quote comparison. Gold Ticker Live reference prices remain informational and are not retail shop quotes.</p></noscript>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      }
+    </script>
     <script type="module" src="./src/pages/deal-checker.js"></script>
   </body>
 </html>
