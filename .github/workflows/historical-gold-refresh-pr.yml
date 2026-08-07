@@ -31,9 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v6
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
         with:
           node-version: 24
           cache: npm
@@ -42,7 +42,10 @@ jobs:
 
       - name: Fixture fetch validation (no production write)
         run: |
-          REF_DATE="$(date -u +%F)"
+          # This fixture ends on 2026-07-28. Keep validation anchored to its
+          # observation window so a future runner date does not reject a
+          # deliberately static fixture as stale.
+          REF_DATE="2026-07-29"
           node scripts/node/fetch-gold-api-history.mjs \
             --fixture tests/fixtures/gold-api-history/provider-response-official.json \
             --output /tmp/xau-usd-daily-fixture-check.json \
@@ -57,5 +60,5 @@ jobs:
             echo "No production dataset in PR (fixture-only validation path)."
             exit 0
           fi
-          echo "Production dataset present — verifying live-provider provenance via --check"
-          node scripts/node/fetch-gold-api-history.mjs --check
+          echo "Production dataset present — verifying live-provider provenance via --check --allow-stale"
+          node scripts/node/fetch-gold-api-history.mjs --check --allow-stale

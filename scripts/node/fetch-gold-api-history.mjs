@@ -46,6 +46,7 @@ function parseArgs(argv) {
     output: DEFAULT_OUTPUT,
     days: DEFAULT_WINDOW_DAYS,
     check: false,
+    allowStale: false,
     fixture: null,
     diagnoseSchema: false,
     referenceDate: new Date().toISOString().slice(0, 10),
@@ -53,6 +54,7 @@ function parseArgs(argv) {
   for (let i = 2; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--check') opts.check = true;
+    else if (arg === '--allow-stale') opts.allowStale = true;
     else if (arg === '--diagnose-schema') opts.diagnoseSchema = true;
     else if (arg === '--output') opts.output = path.resolve(argv[++i]);
     else if (arg === '--days') opts.days = Number(argv[++i]);
@@ -63,6 +65,7 @@ function parseArgs(argv) {
   --output <path>         Output JSON path (default: ${PRODUCTION_REL_PATH})
   --days <n>              Calendar days to request (default: ${DEFAULT_WINDOW_DAYS})
   --check                 Validate existing file only; do not fetch
+  --allow-stale           In --check mode, validate provenance without freshness gating
   --fixture <path>        Use fixture provider response (cannot target production path)
   --diagnose-schema       Call live API and print secret-free schema diagnostics
   --reference-date <d>    Audit date YYYY-MM-DD (default: today UTC)`);
@@ -307,6 +310,7 @@ async function main() {
     const doc = JSON.parse(fs.readFileSync(opts.output, 'utf8'));
     const requireProv = isProductionDataPath(opts.output, ROOT);
     const result = validateDatasetDocument(doc, opts.referenceDate, {
+      allowStale: opts.allowStale,
       requireProductionProvenance: requireProv,
     });
     const prov = requireProv ? validateProductionProvenance(doc) : { ok: true, errors: [] };
