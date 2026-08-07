@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- gtl-theme-preinit: theme + reveal arming before first paint; fails open if JS is unavailable -->
+    <script>
+      (function () {
+        var el = document.documentElement;
+        el.classList.add('js');
+        try {
+          var p = JSON.parse(localStorage.getItem('user_prefs') || '{}');
+          var mode = p.theme === 'light' || p.theme === 'dark' || p.theme === 'auto' ? p.theme : 'auto';
+          var resolved =
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
+          el.setAttribute('data-theme', resolved);
+          el.setAttribute('data-theme-mode', mode);
+        } catch (e) {}
+        window.addEventListener(
+          'load',
+          function () {
+            setTimeout(function () {
+              var vh = window.innerHeight || 0;
+              var nodes = document.querySelectorAll('[data-reveal]:not(.is-in-view)');
+              for (var i = 0; i < nodes.length; i++) {
+                var r = nodes[i].getBoundingClientRect();
+                if (r.top < vh && r.bottom > 0) nodes[i].classList.add('is-in-view');
+              }
+            }, 900);
+          }
+        );
+      })();
+    </script>
+    <script src="assets/analytics.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Gold Deal Intelligence Lab | Gold Ticker Live</title>
+    <meta name="description" content="Break down a gold shop quote into fine-gold value, making charges, premiums, tax, and a spot-linked reference comparison." />
+    <link rel="canonical" href="https://goldtickerlive.com/deal-checker.html" />
+    <link rel="alternate" hreflang="x-default" href="https://goldtickerlive.com/deal-checker.html" />
+    <link rel="alternate" hreflang="en" href="https://goldtickerlive.com/deal-checker.html" />
+    <link rel="alternate" hreflang="ar" href="https://goldtickerlive.com/deal-checker.html?lang=ar" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#b08a3e" />
+    <meta property="og:title" content="Gold Deal Intelligence Lab | Gold Ticker Live" />
+    <meta property="og:description" content="Compare a seller quote with a spot-linked gold reference estimate and see the disclosed components." />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_AE" />
+    <meta property="og:url" content="https://goldtickerlive.com/deal-checker.html" />
+    <meta property="og:image" content="https://goldtickerlive.com/assets/og/calculator.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@GoldTickerLive" />
+    <meta name="twitter:title" content="Gold Deal Intelligence Lab | Gold Ticker Live" />
+    <meta name="twitter:description" content="A private, local-first breakdown of a gold quote against a spot-linked reference estimate." />
+    <meta name="twitter:image" content="https://goldtickerlive.com/assets/og/calculator.png" />
+    <link rel="preload" as="style" href="./styles/critical.css" />
+    <link rel="preload" as="style" href="./styles/global.css" />
+    <link rel="preload" as="style" href="./styles/pages/deal-checker.css" />
+    <link rel="stylesheet" href="./styles/critical.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <link rel="stylesheet" href="./styles/design-system.css" />
+    <link rel="stylesheet" href="./styles/pages/deal-checker.css" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://goldtickerlive.com"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Deal Checker",
+      "item": "https://goldtickerlive.com/deal-checker.html"
+    }
+  ]
+}
+  </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content" id="deal-skip-link">Skip to main content</a>
+    <div class="page-breadcrumbs"></div>
+    <main id="main-content" class="deal-page">
+      <section class="deal-hero" aria-labelledby="deal-title">
+        <p class="section-kicker" id="deal-eyebrow">Buyer tool</p>
+        <h1 id="deal-title">Check a gold quote with the numbers in front of you</h1>
+        <p class="deal-hero__subtitle" id="deal-subtitle">Separate fine-gold value from making charges, premiums, tax, and the seller quote.</p>
+        <p class="deal-trust-note" id="deal-reference-note" role="note">Reference estimate only. A shop quote may include design, labour, tax, negotiation, and other local adjustments.</p>
+        <div class="deal-hero__links">
+          <a href="methodology.html" id="deal-methodology-link">Read the full methodology</a>
+          <a href="learn.html" id="deal-learn-link">Read the buying guide</a>
+        </div>
+      </section>
+
+      <div class="deal-layout">
+        <section class="deal-card deal-input-card" aria-labelledby="deal-form-title">
+          <div class="deal-card__heading">
+            <div>
+              <p class="section-kicker" id="deal-form-kicker">Quote inputs</p>
+              <h2 id="deal-form-title">Enter the quote details</h2>
+            </div>
+            <span class="deal-local-badge" id="deal-local-badge">Private local workspace</span>
+          </div>
+          <p class="deal-card__intro" id="deal-form-intro">Unknown charges remain unknown in the model.</p>
+          <form id="deal-form" novalidate>
+            <div class="deal-field-grid deal-field-grid--two">
+              <label class="deal-field" for="deal-currency"><span id="deal-currency-label">Quote currency</span><select id="deal-currency" name="currency"></select></label>
+              <label class="deal-field" for="deal-purchase-type"><span id="deal-purchase-type-label">Purchase type</span><select id="deal-purchase-type" name="purchaseType"></select></label>
+            </div>
+            <div class="deal-field-grid deal-field-grid--three">
+              <label class="deal-field" for="deal-quoted-total"><span id="deal-quoted-total-label">Quoted total</span><input id="deal-quoted-total" name="quotedTotal" inputmode="decimal" min="0" step="0.01" type="number" /></label>
+              <label class="deal-field" for="deal-gross-weight"><span id="deal-gross-weight-label">Gross weight (g)</span><input id="deal-gross-weight" name="grossWeightGrams" inputmode="decimal" min="0" step="0.001" type="number" /></label>
+              <label class="deal-field" for="deal-karat"><span id="deal-karat-label">Karat</span><select id="deal-karat" name="karat"></select></label>
+            </div>
+            <label class="deal-field" for="deal-non-gold-weight"><span id="deal-non-gold-weight-label">Stone / non-gold weight (g)</span><input id="deal-non-gold-weight" name="nonGoldWeightGrams" inputmode="decimal" min="0" step="0.001" type="number" value="0" /></label>
+
+            <fieldset class="deal-fieldset">
+              <legend id="deal-making-label">Making charge</legend>
+              <div class="deal-field-grid deal-field-grid--two">
+                <label class="deal-field" for="deal-making-mode"><span class="visually-hidden">Making charge mode</span><select id="deal-making-mode" name="makingMode"></select></label>
+                <label class="deal-field" for="deal-making-value"><span id="deal-making-value-label">Amount or percentage</span><input id="deal-making-value" name="makingValue" inputmode="decimal" min="0" step="0.01" type="number" /></label>
+              </div>
+            </fieldset>
+            <fieldset class="deal-fieldset">
+              <legend id="deal-premium-label">Design or seller premium</legend>
+              <div class="deal-field-grid deal-field-grid--two">
+                <label class="deal-field" for="deal-premium-mode"><span class="visually-hidden">Premium mode</span><select id="deal-premium-mode" name="premiumMode"></select></label>
+                <label class="deal-field" for="deal-premium-value"><span id="deal-premium-value-label">Amount or percentage</span><input id="deal-premium-value" name="premiumValue" inputmode="decimal" min="0" step="0.01" type="number" /></label>
+              </div>
+            </fieldset>
+            <fieldset class="deal-fieldset">
+              <legend id="deal-tax-label">VAT or tax</legend>
+              <div class="deal-field-grid deal-field-grid--two">
+                <label class="deal-field" for="deal-tax-mode"><span class="visually-hidden">Tax mode</span><select id="deal-tax-mode" name="taxMode"></select></label>
+                <label class="deal-field" for="deal-tax-value"><span id="deal-tax-value-label">Amount or percentage</span><input id="deal-tax-value" name="taxValue" inputmode="decimal" min="0" step="0.01" type="number" /></label>
+              </div>
+            </fieldset>
+            <fieldset class="deal-fieldset">
+              <legend id="deal-discount-label">Discount</legend>
+              <div class="deal-field-grid deal-field-grid--two">
+                <label class="deal-field" for="deal-discount-mode"><span class="visually-hidden">Discount mode</span><select id="deal-discount-mode" name="discountMode"></select></label>
+                <label class="deal-field" for="deal-discount-value"><span id="deal-discount-value-label">Amount or percentage</span><input id="deal-discount-value" name="discountValue" inputmode="decimal" min="0" step="0.01" type="number" value="0" /></label>
+              </div>
+            </fieldset>
+
+            <div class="deal-field-grid deal-field-grid--two">
+              <label class="deal-field" for="deal-buyback-rate"><span id="deal-buyback-label">Estimated buyback rate (%)</span><input id="deal-buyback-rate" name="buybackRatePct" inputmode="decimal" min="0" max="100" step="0.1" type="number" /></label>
+              <label class="deal-field" for="deal-benchmark-tolerance"><span id="deal-tolerance-label">Benchmark tolerance (%)</span><input id="deal-benchmark-tolerance" name="benchmarkTolerancePct" inputmode="decimal" min="0" max="100" step="0.1" type="number" value="2.5" /><small id="deal-tolerance-hint"></small></label>
+            </div>
+            <div class="deal-field-grid deal-field-grid--two">
+              <label class="deal-field" for="deal-shop-label"><span id="deal-shop-label-label">Shop or quote label</span><input id="deal-shop-label" name="shopLabel" maxlength="120" type="text" /><small id="deal-shop-label-hint"></small></label>
+              <label class="deal-field" for="deal-quote-timestamp"><span id="deal-quote-timestamp-label">Quote date and time</span><input id="deal-quote-timestamp" name="quoteTimestamp" type="datetime-local" /><small id="deal-quote-timestamp-hint"></small></label>
+            </div>
+            <div id="deal-errors" class="deal-errors" role="alert" aria-live="assertive" hidden></div>
+            <div class="deal-form-actions">
+              <button class="btn btn-primary" type="submit" id="deal-submit">Update comparison</button>
+              <button class="btn btn-outline" type="button" id="deal-reset">Reset fields</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="deal-card deal-results-card" aria-labelledby="deal-results-title" aria-live="polite">
+          <div class="deal-card__heading">
+            <div>
+              <p class="section-kicker" id="deal-results-kicker">Reference comparison</p>
+              <h2 id="deal-results-title">Your comparison</h2>
+            </div>
+            <span class="deal-status" id="deal-benchmark-status">Incomplete disclosure</span>
+          </div>
+          <p class="deal-card__intro" id="deal-results-intro">The figures below use the selected reference snapshot and your disclosed inputs.</p>
+          <div id="deal-loading" class="deal-loading" role="status" aria-live="polite">Loading the reference snapshot…</div>
+          <div id="deal-results" hidden>
+            <div class="deal-metric-grid">
+              <article class="deal-metric deal-metric--featured"><span id="deal-reference-value-label">Spot-linked reference value</span><strong id="deal-reference-value">—</strong></article>
+              <article class="deal-metric"><span id="deal-fine-gold-label">Estimated fine gold (g)</span><strong id="deal-fine-gold">—</strong></article>
+              <article class="deal-metric"><span id="deal-reference-per-gross-label">Reference per gross gram</span><strong id="deal-reference-per-gross">—</strong></article>
+              <article class="deal-metric"><span id="deal-quoted-per-gross-label">Quoted per gross gram</span><strong id="deal-quoted-per-gross">—</strong></article>
+            </div>
+            <div class="deal-breakdown" aria-labelledby="deal-breakdown-title">
+              <h3 id="deal-breakdown-title">Quote breakdown</h3>
+              <dl id="deal-breakdown-list"></dl>
+            </div>
+            <div class="deal-insight-grid">
+              <article class="deal-insight"><span id="deal-markup-label">Quote minus reference value</span><strong id="deal-markup">—</strong><small id="deal-markup-pct">—</small><small id="deal-markup-per-gross">Markup per gross gram: —</small></article>
+              <article class="deal-insight"><span id="deal-gold-share-label">Reference value share of quote</span><strong id="deal-gold-share">—</strong></article>
+              <article class="deal-insight"><span id="deal-break-even-label">Break-even spot price</span><strong id="deal-break-even">—</strong></article>
+              <article class="deal-insight"><span id="deal-resale-label">Simple resale estimate</span><strong id="deal-resale">—</strong><small id="deal-resale-gap">—</small></article>
+            </div>
+            <p class="deal-status-explain" id="deal-status-explain"></p>
+          </div>
+          <div id="deal-empty" class="deal-empty">Enter a quoted total and gross weight to calculate the comparison.</div>
+          <div class="deal-source-panel" id="deal-source-panel">
+            <h3 id="deal-source-title">Source and freshness</h3>
+            <p id="deal-source-summary">Loading the reference snapshot…</p>
+            <dl class="deal-source-list"><div><dt id="deal-source-label">Gold source</dt><dd id="deal-source-value">—</dd></div><div><dt id="deal-fx-source-label">FX source</dt><dd id="deal-fx-source-value">—</dd></div><div><dt id="deal-freshness-label">Freshness</dt><dd id="deal-freshness-value">—</dd></div><div><dt id="deal-updated-label">Updated</dt><dd id="deal-updated-value">—</dd></div></dl>
+          </div>
+          <div class="deal-result-actions">
+            <button class="btn btn-primary" type="button" id="deal-save">Save offer locally</button>
+            <button class="btn btn-outline" type="button" id="deal-copy">Copy share link</button>
+            <button class="btn btn-outline" type="button" id="deal-export">Export JSON</button>
+            <button class="btn btn-outline" type="button" id="deal-print">Print comparison</button>
+          </div>
+          <p class="deal-action-status" id="deal-action-status" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <section class="deal-card deal-method-card" aria-labelledby="deal-method-title">
+        <h2 id="deal-method-title">Methodology and formulas</h2>
+        <p id="deal-method-body">Fine gold = chargeable weight × karat purity. Reference value = fine gold × spot USD/gram × the selected FX rate. Retail quotes can differ.</p>
+        <div class="deal-method-links"><a href="methodology.html" id="deal-methodology-link-bottom">Read the full methodology</a><a href="tracker.html" id="deal-tracker-link">Open the live tracker</a><a href="learn.html" id="deal-learn-link-bottom">Read the buying guide</a></div>
+      </section>
+      <section class="deal-card deal-privacy-card" aria-labelledby="deal-privacy-title">
+        <h2 id="deal-privacy-title">Private local workspace</h2>
+        <p id="deal-privacy-body">Saved offers and the optional shop label stay in this browser. Quote values are not sent to analytics or a server by this tool.</p>
+      </section>
+
+      <section class="deal-card deal-offers-card" aria-labelledby="deal-offers-title">
+        <div class="deal-card__heading"><h2 id="deal-offers-title">Saved offers</h2><span id="deal-offers-limit">You can keep up to three offers.</span></div>
+        <div id="deal-offers" class="deal-offers-list"></div>
+      </section>
+    </main>
+    <noscript><p class="deal-noscript">JavaScript is required for this local quote comparison. Gold Ticker Live reference prices remain informational and are not retail shop quotes.</p></noscript>
+    <script type="module" src="./src/pages/deal-checker.js"></script>
+  </body>
+</html>

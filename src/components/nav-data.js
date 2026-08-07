@@ -83,6 +83,7 @@ const RAW_NAV_DATA = {
       '/index.html',
       '/tracker.html',
       '/calculator.html',
+      '/deal-checker.html',
       '/compare.html',
       '/heatmap.html',
       '/portfolio.html',
@@ -115,6 +116,12 @@ const RAW_NAV_DATA = {
                 href: '/calculator.html',
                 label: 'Gold calculator',
                 description: 'Weight, karat, AED and USD',
+                icon: 'CALC',
+              },
+              {
+                href: '/deal-checker.html',
+                label: 'Deal Intelligence Lab',
+                description: 'Break down a seller quote against reference value',
                 icon: 'CALC',
               },
               {
@@ -288,6 +295,7 @@ const RAW_NAV_DATA = {
       '/index.html',
       '/tracker.html',
       '/calculator.html',
+      '/deal-checker.html',
       '/compare.html',
       '/heatmap.html',
       '/portfolio.html',
@@ -320,6 +328,12 @@ const RAW_NAV_DATA = {
                 href: '/calculator.html',
                 label: 'حاسبة الذهب',
                 description: 'الوزن والعيار والدرهم والدولار',
+                icon: 'CALC',
+              },
+              {
+                href: '/deal-checker.html',
+                label: 'مختبر فحص الصفقة',
+                description: 'تفصيل عرض البائع مقابل القيمة المرجعية',
                 icon: 'CALC',
               },
               {
@@ -462,6 +476,13 @@ export const PAGE_SHELLS = [
     shell: 'tool',
     accent: 'calculator',
     patterns: ['/calculator.html'],
+  },
+  {
+    page: 'deal-checker',
+    section: 'tools',
+    shell: 'tool',
+    accent: 'calculator',
+    patterns: ['/deal-checker.html'],
   },
   {
     page: 'compare',
