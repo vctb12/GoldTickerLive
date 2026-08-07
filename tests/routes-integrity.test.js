@@ -60,7 +60,7 @@ test('_redirects sweeps every removed page tree to a surviving surface', () => {
     ['/design-lab.html', '/'],
     // Country shorthand aliases now resolve to the compare tool.
     ['/uae', '/compare.html'],
-    ['/dubai', '/compare.html'],
+    ['/dubai', '/dubai-gold-price.html'],
   ];
 
   required.forEach(([from, to]) => {
