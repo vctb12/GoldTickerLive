@@ -1,4 +1,6 @@
 import { ChainedQuoteProvider } from './chained-provider.js';
+import { CONSTANTS } from '../../config/constants.js';
+import { BackendQuoteProvider } from './backend-provider.js';
 import { GoldApiComQuoteProvider } from './gold-api-com-provider.js';
 import { MintedMetalQuoteProvider } from './minted-metal-provider.js';
 import { LastGoldPriceQuoteProvider } from './last-gold-price-provider.js';
@@ -53,20 +55,30 @@ export function withTimeoutCap(provider, capMs) {
  * Secondary provider (localStorage) is wired separately on the engine.
  */
 export function createPrimaryQuoteProvider() {
+  const providers = [
+    ...(CONSTANTS.API_BACKEND_ENABLED
+      ? [
+          withTimeoutCap(
+            new BackendQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
+            LIVE_PRIMARY_TIMEOUT_MS
+          ),
+        ]
+      : []),
+    withTimeoutCap(
+      new GoldApiComQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
+      LIVE_PRIMARY_TIMEOUT_MS
+    ),
+    withTimeoutCap(
+      new MintedMetalQuoteProvider({ timeoutMs: MINTED_FAILOVER_TIMEOUT_MS }),
+      MINTED_FAILOVER_TIMEOUT_MS
+    ),
+    new PrimaryQuoteProvider({ timeoutMs: FALLBACK_JSON_TIMEOUT_MS }),
+    new LastGoldPriceQuoteProvider(),
+  ];
+
   return new ChainedQuoteProvider({
     providerId: 'live-primary',
-    providers: [
-      withTimeoutCap(
-        new GoldApiComQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
-        LIVE_PRIMARY_TIMEOUT_MS
-      ),
-      withTimeoutCap(
-        new MintedMetalQuoteProvider({ timeoutMs: MINTED_FAILOVER_TIMEOUT_MS }),
-        MINTED_FAILOVER_TIMEOUT_MS
-      ),
-      new PrimaryQuoteProvider({ timeoutMs: FALLBACK_JSON_TIMEOUT_MS }),
-      new LastGoldPriceQuoteProvider(),
-    ],
+    providers,
   });
 }
 

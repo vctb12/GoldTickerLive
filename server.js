@@ -17,6 +17,7 @@ const { successResponse } = require('./server/lib/api-response');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const HOST = process.env.HOST || '0.0.0.0';
 const IS_PROD = process.env.NODE_ENV === 'production';
 
 // Trust the first proxy hop when running behind a reverse proxy / load balancer
@@ -39,7 +40,9 @@ const alertsRoutes = require('./server/routes/alerts');
 const { publicAccountsRouter } = require('./server/routes/public-accounts');
 const developerApiRoutes = require('./server/routes/developer-api');
 const { createPriceStreamRouter } = require('./server/routes/price-stream');
-const priceStreamRoutes = createPriceStreamRouter();
+const { createRealtimePriceService } = require('./server/services/realtime-price-service');
+const priceStreamService = createRealtimePriceService();
+const priceStreamRoutes = createPriceStreamRouter({ service: priceStreamService });
 
 // Validate environment feature wiring at startup without crashing optional integrations.
 validateServerEnv(process.env, console);
@@ -426,12 +429,12 @@ app.use(errorHandler);
 // Start server only when this module is run directly (not when required by
 // tests). This keeps `require('./server')` a pure side-effect-free export.
 if (require.main === module) {
-  app.listen(PORT, () => {
+  app.listen(PORT, HOST, () => {
     console.log('\n🚀 Gold Ticker Live Server');
-    console.log(`   Local:   http://localhost:${PORT}`);
+    console.log(`   Local:   http://${HOST}:${PORT}`);
     console.log(`   Admin:   http://localhost:${PORT}/admin`);
     console.log(`   API:     http://localhost:${PORT}/api/admin`);
-    console.log(`   Health:  http://localhost:${PORT}/api/health\n`);
+    console.log(`   Health:  http://${HOST}:${PORT}/api/v1/health\n`);
   });
 }
 

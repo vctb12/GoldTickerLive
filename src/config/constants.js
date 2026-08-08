@@ -3,13 +3,21 @@
 // Must match vite.config.js `base` and the service worker scope.
 export const BASE_PATH = '/';
 
-// Vite replaces this at build time. Static GitHub Pages builds keep the flag
-// off; an Express deployment can opt into the server API and SSE stream with
-// VITE_API_BACKEND_ENABLED=true without changing browser source or shipping keys.
-const API_BACKEND_ENABLED = import.meta.env?.VITE_API_BACKEND_ENABLED === 'true';
+// Vite replaces these at build time. Only the public API origin is embedded in
+// the browser bundle; provider credentials remain server-side. Leaving the
+// origin empty preserves the static GitHub Pages fallback.
+const API_BASE_URL = String(import.meta.env?.VITE_API_BASE_URL || '')
+  .trim()
+  .replace(/\/+$/, '');
+const API_BACKEND_ENABLED =
+  import.meta.env?.VITE_API_BACKEND_ENABLED === 'true' || Boolean(API_BASE_URL);
+const apiEndpoint = (path) => `${API_BASE_URL}${path}`;
 
 export const CONSTANTS = {
   API_GOLD_URL: '/data/gold_price.json',
+  API_BASE_URL,
+  API_LATEST_URL: apiEndpoint('/api/v1/prices/live'),
+  API_STREAM_URL: apiEndpoint('/api/v1/prices/stream'),
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
   AED_PEG: 3.6725,
   TROY_OZ_GRAMS: 31.1035,
@@ -19,14 +27,11 @@ export const CONSTANTS = {
   HISTORY_DAYS: 90,
 
   // ── Integration flags ───────────────────────────────────────────────────────
-  // Production is static GitHub Pages with no Express backend, so the versioned
-  // same-origin `/api/v1/*` endpoints always 404. Leave this false for static
-  // hosting; set true only where the Node server in `server/` actually serves
-  // `/api/v1/*` (self-hosted / Replit). Gates the backend price probe
-  // (`src/lib/api.js`) and the server-alerts capability probe
-  // (`src/pages/tracker-pro.js`) so neither fires a guaranteed-404 request on
-  // every page load. Does not affect pricing — static JSON remains the source
-  // of truth when this is off.
+  // Static GitHub Pages uses the committed JSON fallback. When a public runtime
+  // origin is supplied, REST/SSE requests use that origin and retain the static
+  // fallback if the runtime is unavailable.
+  // Gates the backend price probe and the server-alerts capability probe so
+  // neither makes a request unless the runtime path is configured.
   API_BACKEND_ENABLED,
 
   // Client analytics are mirrored to the Supabase `analytics_events` table with

@@ -105,11 +105,20 @@ Startup performs non-fatal feature-aware env validation:
 
 ## Deployment Options
 
-### Option A (recommended now): split deployment
+### Option A (selected for realtime recovery): Render split deployment
 
 - Keep static site on GitHub Pages.
-- Deploy Express API separately (Render / Railway / Vercel server target).
-- Use API subdomain (example: `api.goldtickerlive.com`) and set `CORS_ORIGINS` appropriately.
+- Deploy the existing Express API as a long-lived Render Web Service using the committed
+  [`render.yaml`](../render.yaml).
+- Use `api.goldtickerlive.com` as the API subdomain and set `CORS_ORIGINS` to the two production
+  site origins.
+- Set the GitHub repository variable `VITE_API_BASE_URL=https://api.goldtickerlive.com` and run the
+  Pages workflow once so the static bundle can use REST/SSE.
+- Railway is technically compatible, but Render is selected here because the repository now carries
+  the service build, start, health-check, shutdown, and polling configuration in one manifest.
+
+Plan selection, production secrets, and DNS remain owner-controlled external setup; they are not
+committed to the repository.
 
 ### Option B (later): unified deployment
 
