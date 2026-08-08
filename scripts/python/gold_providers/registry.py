@@ -18,7 +18,11 @@ from . import (
     gold_api_com,
     goldapi_io,
     goldpricez,
+    alpha_vantage,
     metal_sentinel,
+    metals_api,
+    metals_dev,
+    metalpriceapi,
     twelvedata,
 )
 from .base import make_error
@@ -32,6 +36,10 @@ PROVIDERS: Dict[str, Callable[[], Dict[str, Any]]] = {
     "twelvedata_xauusd": twelvedata.fetch,
     "goldpricez": goldpricez.fetch,
     "gold_api_com": gold_api_com.fetch,
+    "metals_dev": metals_dev.fetch,
+    "metalpriceapi_xau": metalpriceapi.fetch,
+    "metals_api_xau": metals_api.fetch,
+    "alpha_vantage_gold": alpha_vantage.fetch,
 }
 
 

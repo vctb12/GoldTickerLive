@@ -4,15 +4,15 @@
  * Caching strategy:
  *   Precache    — main HTML shells, offline/404 pages (kept small).
  *   Runtime SWR — country/city/guide HTML, images (added lazily on first visit).
- *   Network-first — /data/gold_price.json (price freshness is critical).
+ *   Network-first — price JSON, with an explicitly labelled offline cache fallback.
  *   Cache-first   — versioned static assets (CSS, JS, fonts, manifests).
  *   Bypass        — /admin/*, /api/*, external FX APIs, ?nocache requests.
  *
  * Deployment base path: '/' (custom domain goldtickerlive.com).
  */
 
-const CACHE_NAME = 'goldtickerlive-v20';
-const RUNTIME_CACHE = 'goldtickerlive-runtime-v20';
+const CACHE_NAME = 'goldtickerlive-v21';
+const RUNTIME_CACHE = 'goldtickerlive-runtime-v21';
 
 // Static assets to pre-cache on install — kept intentionally small.
 // v20 (2026-07-04 page reduction): insights.html/invest.html removed — both
@@ -28,12 +28,13 @@ const PRECACHE_URLS = [
   '/404.html',
 ];
 
-// External origins that bypass the SW entirely (live FX data).
-const BYPASS_ORIGINS = ['open.er-api.com'];
+// External origins that bypass the SW entirely. Live quote requests must reach
+// the browser network and must never be turned into static SW assets.
+const BYPASS_ORIGINS = ['open.er-api.com', 'api.gold-api.com', 'freegoldapi.com'];
 
-// Same-origin paths that must always go to the network — no SW cache.
-// Gold price JSON is freshness-sensitive; caching it risks showing stale prices.
-const NETWORK_ONLY_PATHS = ['/data/gold_price.json', '/data/last_gold_price.json'];
+// Same-origin price snapshots use network-first. If offline, the manager
+// recalculates age from the returned timestamp and labels the cache fallback.
+const NETWORK_FIRST_PRICE_PATHS = ['/data/gold_price.json', '/data/last_gold_price.json'];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INSTALL — pre-cache the static shell
@@ -121,9 +122,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Network-only for price JSON — freshness is critical.
-  if (NETWORK_ONLY_PATHS.some((p) => url.pathname === p)) {
-    event.respondWith(networkOnly(request));
+  // Network-first for price JSON. A newer network response always wins and is
+  // cached for offline recovery; stale cached values cannot be labelled live by
+  // the browser manager because it recomputes timestamp age on every read.
+  if (NETWORK_FIRST_PRICE_PATHS.some((p) => url.pathname === p)) {
+    event.respondWith(networkFirstPriceWithFallback(request));
     return;
   }
 
@@ -159,11 +162,18 @@ self.addEventListener('fetch', (event) => {
 // STRATEGIES
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Network-only: no cache read or write (used for price JSON). */
-async function networkOnly(request) {
+/** Network-first price read with a safe offline fallback. */
+async function networkFirstPriceWithFallback(request) {
   try {
-    return await fetch(request);
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(RUNTIME_CACHE);
+      await cache.put(request, response.clone());
+    }
+    return response;
   } catch {
+    const cached = await caches.match(request);
+    if (cached) return cached;
     return new Response(JSON.stringify({ error: 'offline' }), {
       status: 503,
       headers: { 'Content-Type': 'application/json' },

@@ -67,6 +67,6 @@ test('REALTIME_POLLING_DEFAULTS backoff caps at 5s', async () => {
     'file://' + path.resolve(__dirname, '..', 'src', 'lib', 'realtime-config.js')
   );
   const { REALTIME_POLLING_DEFAULTS } = await import(url.href + `?v=${Date.now()}`);
-  assert.deepEqual(REALTIME_POLLING_DEFAULTS.backoffMs, [1000, 2000, 3000, 5000]);
-  assert.equal(REALTIME_POLLING_DEFAULTS.hiddenPollMs, 5000);
+  assert.deepEqual(REALTIME_POLLING_DEFAULTS.backoffMs, [2500, 5000, 5000]);
+  assert.equal(REALTIME_POLLING_DEFAULTS.hiddenPollMs, 60_000);
 });
