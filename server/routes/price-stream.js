@@ -7,8 +7,34 @@ function createPriceStreamRouter({ service = createRealtimePriceService() } = {}
   const router = express.Router();
   let sequence = 0;
 
+  router.get('/prices/live', (_req, res) => {
+    service.start();
+    const snapshot = service.getSnapshot();
+    if (!snapshot) {
+      return res.status(503).json({
+        ok: false,
+        error: { code: 'PRICE_UNAVAILABLE', message: 'No live price is available.' },
+      });
+    }
+
+    res.set({ 'Cache-Control': 'no-store, no-transform' });
+    return res.json({
+      ok: true,
+      data: snapshot,
+      meta: {
+        timestamp: snapshot.timestampUtc,
+        source: snapshot.provider,
+        freshness: snapshot.isFallback ? 'fallback' : snapshot.isFresh ? 'live' : 'stale',
+      },
+    });
+  });
+
   router.get('/prices/stream', (req, res) => {
     service.start();
+    // This route is intentionally long-lived; scope the timeout override to
+    // the SSE request instead of disabling timeouts for the whole server.
+    req.setTimeout(0);
+    res.setTimeout(0);
     res.status(200);
     res.set({
       'Cache-Control': 'no-cache, no-transform',

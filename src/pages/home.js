@@ -16,7 +16,7 @@ import {
 } from '../config/index.js';
 import { flagSymbolForCountry, iconUseElement } from '../components/icon-sprite.js';
 import * as api from '../lib/api.js';
-import { getCanonicalSpot } from '../lib/spot-resolver.js';
+import { buildSnapshot, getCanonicalSpot } from '../lib/spot-resolver.js';
 import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
@@ -1397,6 +1397,26 @@ function updateRoutingCanonicalValue(snapshot) {
   if (wrap) wrap.hidden = false;
 }
 
+function applyCanonicalSnapshot(snapshot, { persist = true } = {}) {
+  if (!snapshot?.ok) return false;
+  _canonicalSnapshot = snapshot;
+  goldPrice = snapshot.spotUsdPerOz;
+  goldUpdatedAt = snapshot.freshness.updatedAt || goldUpdatedAt;
+  goldIsFallback = snapshot.freshness.isFallback === true;
+  goldIsFresh = snapshot.freshness.state === 'live';
+  goldProviderId = snapshot.freshness.source || goldProviderId;
+  if (persist) cache.saveGoldPrice(snapshot.spotUsdPerOz, goldUpdatedAt);
+  updateNavPricePill(snapshot);
+  updateRoutingCanonicalValue(snapshot);
+  renderMarketInsight();
+  renderHeroCard();
+  renderKaratStrip();
+  initKaratDial();
+  updateKaratDial();
+  renderGCCGrid();
+  return true;
+}
+
 // ── Karat dial (signature interaction; teaches purity = karat ÷ 24) ──────────
 const KARAT_DIAL_CIRC = 2 * Math.PI * 84; // r=84 in the SVG
 
@@ -1643,21 +1663,7 @@ function renderMarketInsight() {
 async function seedCanonicalPrice() {
   try {
     const snap = await getCanonicalSpot({ force: true });
-    if (!snap?.ok || !Number.isFinite(snap.spotUsdPerOz)) return;
-    _canonicalSnapshot = snap;
-    goldPrice = snap.spotUsdPerOz;
-    goldUpdatedAt = snap.freshness.updatedAt || goldUpdatedAt;
-    goldIsFallback = snap.freshness.isFallback === true;
-    goldIsFresh = snap.freshness.state === 'live';
-    cache.saveGoldPrice(snap.spotUsdPerOz, goldUpdatedAt);
-    updateNavPricePill(snap);
-    updateRoutingCanonicalValue(snap);
-    renderMarketInsight();
-    renderHeroCard();
-    renderKaratStrip();
-    initKaratDial();
-    updateKaratDial();
-    renderGCCGrid();
+    applyCanonicalSnapshot(snap);
   } catch {
     // Keep the previous canonical/cached value on any resolver failure.
   }
@@ -1705,13 +1711,32 @@ function applyRealtimeSnapshot(snapshot) {
 
   const quote = snapshot?.quote;
   if (quote?.price) {
-    // F-1 (owner-approved): the realtime engine now drives liveness/SLA detection
-    // and provider identity ONLY. The DISPLAYED price stays the canonical
-    // committed-file value (seedCanonicalPrice), so the homepage never shows a
-    // number that disagrees with the calculator. We deliberately do NOT overwrite
-    // goldPrice / goldUpdatedAt / goldIsFresh / goldIsFallback with the divergent
-    // live quote here — correctness of the price pipeline wins.
-    goldProviderId = quote.providerId || goldProviderId;
+    if (
+      CONSTANTS.API_BACKEND_ENABLED &&
+      ['realtime-stream', 'runtime-api'].includes(quote.providerId)
+    ) {
+      const raw = quote.providerRaw || {};
+      applyCanonicalSnapshot(
+        buildSnapshot({
+          price: quote.price,
+          updatedAt: quote.providerTimestamp || quote.fetchedAt,
+          source: quote.source || raw.provider || quote.providerId,
+          sourceTimestamp: quote.providerTimestamp || raw.timestampUtc || null,
+          isFresh: quote.isFresh ?? raw.isFresh ?? null,
+          isFallback: quote.isFallback ?? raw.isFallback ?? false,
+          freshnessSeconds: quote.freshnessSeconds ?? raw.freshnessSeconds ?? null,
+          maxFreshnessSeconds: quote.maxFreshnessSeconds ?? raw.maxFreshnessSeconds ?? null,
+          raw,
+        }),
+        { persist: false }
+      );
+    }
+    // Runtime quotes feed the same canonical snapshot used by every homepage
+    // surface. When the runtime is unavailable, the static resolver remains the
+    // source of truth and this branch only updates provider/liveness metadata.
+    if (!['realtime-stream', 'runtime-api'].includes(quote.providerId)) {
+      goldProviderId = quote.providerId || goldProviderId;
+    }
     hideDataStatusBanner();
     if (!goldPrice) renderHeroCard();
   } else if (!goldPrice) {

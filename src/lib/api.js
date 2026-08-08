@@ -109,7 +109,7 @@ async function retryWithBackoff(fn, maxRetries = 2) {
 }
 
 const GOLD_DATA_URL = '/data/gold_price.json';
-const GOLD_BACKEND_URL = '/api/v1/prices/latest';
+const GOLD_BACKEND_URL = CONSTANTS.API_LATEST_URL;
 
 function unwrapApiEnvelope(data) {
   return data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : data;
@@ -181,24 +181,21 @@ function normalizeGoldResponse(data) {
 }
 
 /**
- * Fetch the current gold spot price (XAU/USD) from the committed static data
- * file `/data/gold_price.json`, which is refreshed hourly during market hours
- * by the `gold-price-fetch.yml` GitHub Actions workflow. Falls back to the
- * most-recent `localStorage` cache entry if the network request fails.
+ * Fetch the current gold spot price (XAU/USD) from the hosted runtime when its
+ * public origin is configured, then fall back to the committed static data
+ * file and finally the most-recent `localStorage` cache entry.
  *
  * @returns {Promise<{ price: number, updatedAt: string, source: string, raw?: object }>}
  * @throws {NetworkError} When both the data file fetch and the local cache fail.
  */
-export async function fetchGold({ signal, timeoutMs } = {}) {
+export async function fetchGold({ signal, timeoutMs, backendOnly = false } = {}) {
   if (_simulateGoldFail) throw new NetworkError('Simulated gold API failure');
   const effectiveTimeoutMs =
     Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : CONSTANTS.GOLD_FETCH_TIMEOUT;
 
-  // Prefer the versioned backend API when it is actually deployed (same-origin
-  // `/api/v1/*`), then fall back to static JSON. On static GitHub Pages there is
-  // no backend, so this probe is gated behind CONSTANTS.API_BACKEND_ENABLED to
-  // avoid a guaranteed 404 on every load; the committed JSON below is the source
-  // of truth there.
+  // Prefer the hosted runtime API when configured, then fall back to static JSON.
+  // Static GitHub Pages leaves the public origin empty, so no guaranteed-404
+  // same-origin probe is made and the committed JSON remains available.
   if (CONSTANTS.API_BACKEND_ENABLED) {
     try {
       const backendRes = await fetchWithTimeout(
@@ -209,9 +206,15 @@ export async function fetchGold({ signal, timeoutMs } = {}) {
       const backendData = await backendRes.json();
       const normalized = normalizeGoldResponse(backendData);
       if (normalized) return normalized;
-    } catch {
+      if (backendOnly) throw new DataError('Runtime backend returned an invalid price payload');
+    } catch (error) {
       // Backend unavailable or invalid; continue to static fallback.
+      if (backendOnly) throw error;
     }
+  }
+
+  if (backendOnly) {
+    throw new NetworkError('Realtime backend is not configured or unavailable');
   }
 
   try {

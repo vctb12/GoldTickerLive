@@ -19,6 +19,49 @@ test('normalizeQuote marks recent provider data fresh', () => {
   assert.equal(quote.provider, 'test');
 });
 
+test('live REST route returns the current runtime snapshot', async () => {
+  const quote = {
+    xauUsdPerOz: 4000,
+    timestampUtc: new Date().toISOString(),
+    fetchedAtUtc: new Date().toISOString(),
+    provider: 'test',
+    isFresh: true,
+    isFallback: false,
+  };
+  const service = {
+    start() {},
+    getSnapshot: () => quote,
+    subscribe() {
+      return () => {};
+    },
+    getProviderFailures: () => ({}),
+  };
+  const app = express();
+  app.use('/api/v1', createPriceStreamRouter({ service }));
+  const server = app.listen(0);
+
+  try {
+    const port = server.address().port;
+    const response = await new Promise((resolve, reject) => {
+      http
+        .get({ host: '127.0.0.1', port, path: '/api/v1/prices/live' }, (res) => {
+          let body = '';
+          res.setEncoding('utf8');
+          res.on('data', (chunk) => (body += chunk));
+          res.on('end', () => resolve({ status: res.statusCode, body }));
+        })
+        .on('error', reject);
+    });
+    const parsed = JSON.parse(response.body);
+    assert.equal(response.status, 200);
+    assert.equal(parsed.ok, true);
+    assert.equal(parsed.data.provider, 'test');
+    assert.equal(parsed.meta.freshness, 'live');
+  } finally {
+    server.close();
+  }
+});
+
 test('price stream sends named price events and heartbeats', async () => {
   let listener = null;
   const quote = {

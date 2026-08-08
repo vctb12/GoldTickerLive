@@ -5,27 +5,38 @@ pipeline, build/QA scripts, and GitHub Actions. The committed template is
 [`.env.example`](../.env.example); copy it to `.env` (gitignored) for local work. Production values
 live in GitHub Secrets only.
 
-> **Client-side code never reads env vars.** The deployed site is static (GitHub Pages); browser
-> config lives in committed constants — see
-> [Client-side config constants](#client-side-config-constants-not-env-vars) below.
+> **Client-side code reads only public Vite configuration.** The deployed site is static (GitHub
+> Pages); Public Vite configuration is limited to the runtime origin; provider credentials and
+> server secrets are never embedded in the browser bundle.
 
 ## Express server / self-hosted
 
-| Variable                    | Required    | Description                                                              | Example                       |
-| --------------------------- | ----------- | ------------------------------------------------------------------------ | ----------------------------- |
-| `JWT_SECRET`                | Server/test | Secret for signing JWT admin tokens (32+ chars)                          | `[random 64-char hex string]` |
-| `ADMIN_PASSWORD`            | Server/test | Admin panel password (bcrypt-hashed at startup)                          | `[strong password]`           |
-| `ADMIN_ACCESS_PIN`          | Server/test | 6+ digit numeric PIN gating the admin login                              | `123456`                      |
-| `API_KEY_HASH_SALT`         | API/server  | Dedicated salt for PBKDF2 API key hashing                                | `[random long string]`        |
-| `API_KEY_HASH_ITERATIONS`   | API/server  | PBKDF2 iteration count for API key hashing                               | `210000`                      |
-| `SUPABASE_URL`              | Supabase    | Supabase project URL                                                     | `https://xxxxx.supabase.co`   |
-| `SUPABASE_ANON_KEY`         | Supabase    | Supabase anonymous/public API key                                        | `eyJhbGciOi...`               |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server/CI   | Supabase service-role key (bypasses RLS)                                 | `eyJhbGciOi...`               |
-| `STORAGE_BACKEND`           | No          | `file` (default) or `supabase`                                           | `supabase`                    |
-| `SITE_URL`                  | No          | Public origin used for Stripe redirects, newsletter links, uptime checks | `https://goldtickerlive.com`  |
-| `CORS_ORIGINS`              | No          | Allowed CORS origins (comma-separated)                                   | `https://example.com`         |
-| `NODE_ENV`                  | No          | Environment mode                                                         | `production`                  |
-| `PORT`                      | No          | Server port (default: 3000)                                              | `3000`                        |
+| Variable                       | Required    | Description                                                              | Example                       |
+| ------------------------------ | ----------- | ------------------------------------------------------------------------ | ----------------------------- |
+| `JWT_SECRET`                   | Server/test | Secret for signing JWT admin tokens (32+ chars)                          | `[random 64-char hex string]` |
+| `ADMIN_PASSWORD`               | Server/test | Admin panel password (bcrypt-hashed at startup)                          | `[strong password]`           |
+| `ADMIN_ACCESS_PIN`             | Server/test | 6+ digit numeric PIN gating the admin login                              | `123456`                      |
+| `API_KEY_HASH_SALT`            | API/server  | Dedicated salt for PBKDF2 API key hashing                                | `[random long string]`        |
+| `API_KEY_HASH_ITERATIONS`      | API/server  | PBKDF2 iteration count for API key hashing                               | `210000`                      |
+| `SUPABASE_URL`                 | Supabase    | Supabase project URL                                                     | `https://xxxxx.supabase.co`   |
+| `SUPABASE_ANON_KEY`            | Supabase    | Supabase anonymous/public API key                                        | `eyJhbGciOi...`               |
+| `SUPABASE_SERVICE_ROLE_KEY`    | Server/CI   | Supabase service-role key (bypasses RLS)                                 | `eyJhbGciOi...`               |
+| `STORAGE_BACKEND`              | No          | `file` (default) or `supabase`                                           | `supabase`                    |
+| `SITE_URL`                     | No          | Public origin used for Stripe redirects, newsletter links, uptime checks | `https://goldtickerlive.com`  |
+| `CORS_ORIGINS`                 | No          | Allowed CORS origins (comma-separated)                                   | `https://example.com`         |
+| `NODE_ENV`                     | No          | Environment mode                                                         | `production`                  |
+| `PORT`                         | No          | Server port (default: 3000)                                              | `3000`                        |
+| `HOST`                         | No          | Bind address (default: `0.0.0.0` for hosted services)                    | `0.0.0.0`                     |
+| `REALTIME_PROVIDER_ORDER`      | No          | Ordered server-side runtime quote providers                              | `gold_api_com,...`            |
+| `REALTIME_POLL_MS`             | No          | Runtime provider polling interval                                        | `5000`                        |
+| `REALTIME_PROVIDER_TIMEOUT_MS` | No          | Per-provider runtime timeout                                             | `1800`                        |
+
+### Public Vite build configuration
+
+| Variable                   | Required | Description                                                                  | Example                          |
+| -------------------------- | -------- | ---------------------------------------------------------------------------- | -------------------------------- |
+| `VITE_API_BASE_URL`        | No       | Public runtime API origin; enables REST/SSE while preserving static fallback | `https://api.goldtickerlive.com` |
+| `VITE_API_BACKEND_ENABLED` | No       | Explicitly enables the runtime path; the base URL also enables it            | `true`                           |
 
 > **Note.** `JWT_SECRET`, `ADMIN_PASSWORD`, and `ADMIN_ACCESS_PIN` are **required at module load**
 > by `server/lib/auth.js` — without them the server throws at startup and `npm test` fails

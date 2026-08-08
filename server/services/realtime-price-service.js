@@ -7,7 +7,7 @@ const ROOT = path.resolve(__dirname, '../..');
 const SNAPSHOT_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const DEFAULT_ORDER = 'gold_api_com,goldapi_io,twelvedata_xauusd,fmp_gcusd,minted_metal';
 const DEFAULT_INTERVAL_MS = 5000;
-const DEFAULT_TIMEOUT_MS = 1800;
+const DEFAULT_TIMEOUT_MS = Number(process.env.REALTIME_PROVIDER_TIMEOUT_MS) || 1800;
 const LIVE_MAX_AGE_MS = 60_000;
 
 function number(value) {
@@ -121,15 +121,20 @@ function readSnapshot() {
     const price = payload?.xau_usd_per_oz ?? payload?.gold?.ounce_usd;
     const updatedAt = payload?.timestamp_utc || payload?.fetched_at_utc;
     if (!number(price) || !timestamp(updatedAt)) return null;
+    const maxFreshnessSeconds = Number(payload?.max_freshness_seconds) || null;
+    const ageMs = Math.max(0, Date.now() - Date.parse(updatedAt));
+    const isFresh =
+      payload?.is_fresh === true &&
+      (maxFreshnessSeconds == null || ageMs <= maxFreshnessSeconds * 1000);
     return {
       xauUsdPerOz: number(price),
       timestampUtc: timestamp(updatedAt),
       fetchedAtUtc: timestamp(payload?.fetched_at_utc) || timestamp(updatedAt),
       provider: payload?.provider || 'snapshot',
       sourceType: 'spot_reference',
-      freshnessSeconds: Math.floor(Math.max(0, Date.now() - Date.parse(updatedAt)) / 1000),
-      maxFreshnessSeconds: Number(payload?.max_freshness_seconds) || null,
-      isFresh: payload?.is_fresh === true,
+      freshnessSeconds: Math.floor(ageMs / 1000),
+      maxFreshnessSeconds,
+      isFresh,
       isFallback: true,
     };
   } catch {

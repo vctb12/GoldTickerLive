@@ -1439,7 +1439,7 @@ function initRealtimeEngine() {
     secondaryProvider: createSecondaryQuoteProvider(),
     config: {
       ...REALTIME_POLLING_DEFAULTS,
-      streamUrl: CONSTANTS.API_BACKEND_ENABLED ? '/api/v1/prices/stream' : null,
+      streamUrl: CONSTANTS.API_STREAM_URL,
     },
     debug: isRealtimeDebugEnabled(),
   });
