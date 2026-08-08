@@ -8,13 +8,13 @@
   "currency": "USD",
   "groupBy": "day",
   "aggregation": "daily-average",
-  "retrievedAt": "2026-08-01T03:57:54.355Z",
-  "generatedAt": "2026-08-01T03:57:54.355Z",
+  "retrievedAt": "2026-08-08T03:14:18.275Z",
+  "generatedAt": "2026-08-08T03:14:18.275Z",
   "request": {
-    "startTimestamp": 1751068800,
-    "endTimestamp": 1785628799,
-    "startDate": "2025-06-28",
-    "endDate": "2026-08-01",
+    "startTimestamp": 1751673600,
+    "endTimestamp": 1786233599,
+    "startDate": "2025-07-05",
+    "endDate": "2026-08-08",
     "timestampUnit": "seconds"
   },
   "providerResponseRecordCount": 400,
@@ -31,13 +31,13 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "4162e22cb996f34cd5b2fa2e64824de1a6b87fd04925db4402accc6260d1ebf9",
-  "normalizedRecordsSha256": "0fb4ecc8dcfe23f70c028969d68127847b57810625dd7a340dc0252018bc6a62",
+  "rawResponseSha256": "03f4a6cb18f30799fce20da59af61da2c50103ba4f085c672085abc66fd36980",
+  "normalizedRecordsSha256": "8b85f93c5ede38379f07035b16b1f4609a2e5fcf59ca586e0095a78e5509a4ca",
   "workflow": {
     "repository": "vctb12/GoldTickerLive",
-    "runId": "30682977584",
+    "runId": "31236728660",
     "runAttempt": "1",
-    "commitSha": "8189de595a54ce03f46dd9bc79916d34035f88fe",
+    "commitSha": "5371125522ce16d33a572d9cb36e66c3c809e2cb",
     "ref": "refs/heads/main"
   },
   "normalizerVersion": "1.1.0",
@@ -47,51 +47,23 @@
     "maxMonotonicUp": 13,
     "maxMonotonicDown": 9,
     "maxRepeatedDelta": 1,
-    "dailyReturnStdDev": 52.2385,
+    "dailyReturnStdDev": 52.7123,
     "uniqueValueRatio": 0.9975,
     "weekendRecordCount": 115,
     "maxAbsoluteDailyReturn": 386.7211,
-    "minAbsoluteNonZeroDailyReturn": 0.0129,
+    "minAbsoluteNonZeroDailyReturn": 0.0161,
     "dominantDecimalSuffix": {
       "suffix": "",
       "count": 11
     }
   },
   "coverage": {
-    "start": "2025-06-28",
-    "end": "2026-08-01",
+    "start": "2025-07-05",
+    "end": "2026-08-08",
     "recordCount": 400,
     "calendarAgeDays": 0
   },
   "records": [
-    {
-      "date": "2025-06-28",
-      "avgUsdOz": 3274.8
-    },
-    {
-      "date": "2025-06-29",
-      "avgUsdOz": 3274.8129
-    },
-    {
-      "date": "2025-06-30",
-      "avgUsdOz": 3294.3936
-    },
-    {
-      "date": "2025-07-01",
-      "avgUsdOz": 3339.7476
-    },
-    {
-      "date": "2025-07-02",
-      "avgUsdOz": 3344.7558
-    },
-    {
-      "date": "2025-07-03",
-      "avgUsdOz": 3340.9133
-    },
-    {
-      "date": "2025-07-04",
-      "avgUsdOz": 3337.0026
-    },
     {
       "date": "2025-07-05",
       "avgUsdOz": 3337.9299
@@ -1663,6 +1635,34 @@
     {
       "date": "2026-08-01",
       "avgUsdOz": 4043.7
+    },
+    {
+      "date": "2026-08-02",
+      "avgUsdOz": 4045.881
+    },
+    {
+      "date": "2026-08-03",
+      "avgUsdOz": 4053.0481
+    },
+    {
+      "date": "2026-08-04",
+      "avgUsdOz": 4070.502
+    },
+    {
+      "date": "2026-08-05",
+      "avgUsdOz": 4191.378
+    },
+    {
+      "date": "2026-08-06",
+      "avgUsdOz": 4260.0384
+    },
+    {
+      "date": "2026-08-07",
+      "avgUsdOz": 4312.5712
+    },
+    {
+      "date": "2026-08-08",
+      "avgUsdOz": 4343.2998
     }
   ]
 }
