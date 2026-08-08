@@ -716,6 +716,31 @@ export function createRealtimePricingEngine({
     notify();
   }
 
+  /** Seed a normalized quote from another tab or a live-manager LKG record.
+   * The quote still passes the monotonic timestamp guard and freshness policy;
+   * persisted `isFresh` flags are never trusted on restore.
+   */
+  function seedQuote(quote) {
+    if (!quote?.price) return false;
+    const applied = applyQuote(
+      {
+        ...quote,
+        price: Number(quote.price),
+        providerTimestamp:
+          quote.providerTimestamp || quote.updatedAt || new Date(nowFn()).toISOString(),
+        fetchedAt: quote.fetchedAt || new Date(nowFn()).toISOString(),
+        providerId: quote.providerId || 'cache',
+        providerPathSuccessful: quote.providerPathSuccessful === true,
+        isFresh: null,
+        isFallback: quote.isFallback !== false,
+        forcedState: quote.forcedState || (quote.isFallback === false ? null : 'cached'),
+      },
+      { pollStartedAt: nowFn(), applyLatencyMs: 0 }
+    );
+    if (applied) notify();
+    return applied;
+  }
+
   return {
     start,
     stop,
@@ -723,6 +748,7 @@ export function createRealtimePricingEngine({
     subscribe,
     setVisibility,
     seedFromCache,
+    seedQuote,
     getSnapshot: snapshot,
   };
 }

@@ -4,21 +4,21 @@ _Single reference for how the gold spot price reaches every public surface: sour
 resolver, cache, fallback, timestamp, freshness state, and refresh/visibility behaviour. Written for
 the Stage-2 shared-price-state work; keep in sync when a surface's price path changes._
 
-Last mapped: 2026-07-11.
+Last mapped: 2026-08-08.
 
 ## 1. One canonical source, one resolver (non-Tracker surfaces)
 
-Every non-Tracker surface reads the same value through one memoized read point:
+Every non-Tracker surface has the same canonical resolver, while the homepage and Tracker receive
+near-realtime updates through the one shared browser manager:
 
-- **Source of truth:** `/data/gold_price.json` — committed by the hourly `gold-price-fetch.yml`
-  workflow (minute :02, market hours). Fields consumed: `xau_usd_per_oz`, `timestamp_utc`,
-  `fetched_at_utc`, `is_fresh`, `is_fallback`, `freshness_seconds`, `max_freshness_seconds`.
+- **Emergency source:** `/data/gold_price.json` — committed by the five-minute
+  `gold-price-fetch.yml` workflow (minute :02, market hours). Fields consumed: `xau_usd_per_oz`,
+  `timestamp_utc`, `fetched_at_utc`, `is_fresh`, `is_fallback`, `freshness_seconds`,
+  `max_freshness_seconds`.
 - **Fetch layer:** `src/lib/api.js` → `fetchGold()`.
   - URL is cache-busted per call: `/data/gold_price.json?t=<Date.now()>`.
   - Retry with exponential back-off (`retryWithBackoff`, 2 retries, 1s/2s).
   - Timeout via `fetchWithTimeout` (`CONSTANTS.GOLD_FETCH_TIMEOUT`), abortable via `signal`.
-  - Optional versioned backend (`/api/v1/prices/latest`) is probed **only** when
-    `CONSTANTS.API_BACKEND_ENABLED` (false on static Pages, so no guaranteed 404).
   - **Fallback:** on total fetch failure, `getFallbackGoldPrice()` returns the last `localStorage`
     cache with `source: 'cache-fallback'`. If that too is empty, `fetchGold` throws `NetworkError`
     (offline with no cache → surface shows its error/unavailable state, never a fabricated number).
@@ -73,19 +73,19 @@ All "canonical" surfaces below call `getCanonicalSpot()` for the initial paint a
 `getCanonicalSpot({ force: true })` on refresh. Timestamp source = `snapshot.freshness.updatedAt`
 (the committed `timestamp_utc`/`fetched_at_utc`).
 
-| Surface                                    | Controller                                                      | Price path                                                                                                                      | Refresh (every `GOLD_REFRESH_MS`=90s)                          | Visibility-aware?                     |
-| ------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------- |
-| Global bottom ticker                       | `components/ticker.js` + `site-shell.js` `feedTickerBaseline()` | canonical baseline, **guarded** — only writes while `data-freshness==='unavailable'` so any page that fed real data first wins  | fed once at mount; tool controllers re-feed via `updateTicker` | n/a (event-driven)                    |
-| Homepage                                   | `pages/home.js`                                                 | **dual**: realtime engine (`createPrimaryQuoteProvider`) for the live-updating spot + `getCanonicalSpot` for static hero/ladder | realtime engine + `_refreshTimer`/`_freshnessTimer`            | ✅ engine `setVisibility`             |
-| Calculator                                 | `pages/calculator.js`                                           | canonical                                                                                                                       | interval                                                       | ✅ inline guard                       |
-| Compare                                    | `pages/compare.js`                                              | canonical                                                                                                                       | interval                                                       | ✅ inline guard                       |
-| Portfolio                                  | `pages/portfolio.js`                                            | canonical                                                                                                                       | interval                                                       | ✅ inline guard                       |
-| Heatmap / world map                        | `pages/heatmap.js`                                              | canonical                                                                                                                       | interval                                                       | ✅ inline guard                       |
-| Dubai country landing                      | `pages/dubai-gold-price.js`                                     | canonical                                                                                                                       | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
-| Shops directory                            | `pages/shops.js`                                                | canonical (`refreshLiveReference`) feeds spot bar + ticker + hero chip                                                          | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
-| Market explainer                           | `pages/market.js`                                               | canonical (worked example)                                                                                                      | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
-| Learn / invest planner                     | `pages/invest.js`                                               | canonical                                                                                                                       | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
-| Content pages (learn/methodology/glossary) | `site-shell.js` baseline only                                   | canonical baseline via ticker                                                                                                   | none (static)                                                  | n/a                                   |
+| Surface                                    | Controller                                                      | Price path                                                                                                                     | Refresh (every `GOLD_REFRESH_MS`=90s)                          | Visibility-aware?                     |
+| ------------------------------------------ | --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | ------------------------------------- |
+| Global bottom ticker                       | `components/ticker.js` + `site-shell.js` `feedTickerBaseline()` | canonical baseline, **guarded** — only writes while `data-freshness==='unavailable'` so any page that fed real data first wins | fed once at mount; tool controllers re-feed via `updateTicker` | n/a (event-driven)                    |
+| Homepage                                   | `pages/home.js`                                                 | shared `getLivePriceManager()` feeds the same canonical snapshot as `getCanonicalSpot`                                         | manager polling + `_refreshTimer`/`_freshnessTimer`            | ✅ manager leader/visibility          |
+| Calculator                                 | `pages/calculator.js`                                           | canonical                                                                                                                      | interval                                                       | ✅ inline guard                       |
+| Compare                                    | `pages/compare.js`                                              | canonical                                                                                                                      | interval                                                       | ✅ inline guard                       |
+| Portfolio                                  | `pages/portfolio.js`                                            | canonical                                                                                                                      | interval                                                       | ✅ inline guard                       |
+| Heatmap / world map                        | `pages/heatmap.js`                                              | canonical                                                                                                                      | interval                                                       | ✅ inline guard                       |
+| Dubai country landing                      | `pages/dubai-gold-price.js`                                     | canonical                                                                                                                      | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
+| Shops directory                            | `pages/shops.js`                                                | canonical (`refreshLiveReference`) feeds spot bar + ticker + hero chip                                                         | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
+| Market explainer                           | `pages/market.js`                                               | canonical (worked example)                                                                                                     | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
+| Learn / invest planner                     | `pages/invest.js`                                               | canonical                                                                                                                      | interval                                                       | ✅ shared helper _(added 2026-07-11)_ |
+| Content pages (learn/methodology/glossary) | `site-shell.js` baseline only                                   | canonical baseline via ticker                                                                                                  | none (static)                                                  | n/a                                   |
 
 `market.js` also uses `showDataStatusBanner`/`hideDataStatusBanner` (invest too) for a page-level
 offline/degraded banner.
@@ -102,14 +102,10 @@ handle, so it could never be cleared).
 
 ## 4. The Tracker exception (do not migrate)
 
-`tracker.html` (`pages/tracker-pro.js`) runs a **separate, deliberately superior multi-tier live
-pricing engine** (`createRealtimePricingEngine` + `createPrimaryQuoteProvider`: gold-api.com →
-minted-metal → committed `gold_price.json` → `last_gold_price.json`). It does NOT read
-`getCanonicalSpot()` (which is committed-JSON-only); migrating it would be a regression (live
-polling → committed-only). Consistency holds anyway because every tier traces to the same
-gold-api.com / committed snapshot. The Tracker uses the realtime engine's own `setVisibility()` for
-background throttling and its own inline freshness overlay (`src/tracker/freshness.js`). Leave it
-untouched.
+`tracker.html` (`pages/tracker-pro.js`) subscribes to the same `getLivePriceManager()` instance as
+the homepage. The manager owns the one browser-live poller and uses static JSON, last-gold-price,
+and local LKG values only as explicit fallback paths. The Tracker keeps its own chart/rendering
+layer but does not create a second provider loop.
 
 ## 5. Trust/provenance layer ("About this price")
 

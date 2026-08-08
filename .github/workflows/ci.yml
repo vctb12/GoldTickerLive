@@ -73,6 +73,9 @@ jobs:
       - name: Production build
         run: NODE_ENV=production npm run build
 
+      - name: Scan production artifacts for private credentials
+        run: node scripts/node/check-production-secrets.js dist
+
       - name: Verify dist output
         run: |
           if [ ! -f dist/index.html ]; then
@@ -132,6 +135,9 @@ jobs:
 
       - name: Run ruff
         run: ruff check scripts/python
+
+      - name: Run consensus unit tests
+        run: python -m unittest discover -s tests -p 'test_gold_consensus.py'
 
   e2e:
     name: Playwright smoke

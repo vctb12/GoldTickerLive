@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------
 # Gold Price Fetch — pulls live gold/AED rates from the provider-adapter
-# every 10 minutes while global gold markets are open and commits
+# every 5 minutes while global gold markets are open and commits
 # data/gold_price.json if it changed. This is the single production
 # provider-call path; post_gold.yml reads the cached result and does not
 # fetch again.
@@ -14,9 +14,9 @@ on:
     # Market hours: Sunday 21:00 UTC (Monday 01:00 UAE/GMT+4) through Friday 20:59 UTC.
     # Runs throughout the open market window so the committed snapshot is not
     # allowed to age for an hour between provider attempts.
-    - cron: '*/10 21-23 * * 0'  # Sunday 21:00–23:50 UTC (market open window)
-    - cron: '*/10 * * * 1-4'    # Monday–Thursday all hours (24/5 market open)
-    - cron: '*/10 0-20 * * 5'   # Friday 00:00–20:50 UTC (until market close)
+    - cron: '*/5 21-23 * * 0'  # Sunday 21:00–23:55 UTC (market open window)
+    - cron: '*/5 * * * 1-4'    # Monday–Thursday all hours (24/5 market open)
+    - cron: '*/5 0-20 * * 5'   # Friday 00:00–20:55 UTC (until market close)
   workflow_dispatch:
 
 permissions:
@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   fetch:
-    name: Fetch provider-adapter → data/gold_price.json
+    name: Fetch provider consensus → data/gold_price.json
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -50,16 +50,35 @@ jobs:
         id: fetch_gold
         env:
           GOLD_API_COM_ENABLED: 'true'
-          GOLD_PROVIDER_ORDER: gold_api_com,goldapi_io,twelvedata_xauusd,fmp_gcusd
+          GOLD_PROVIDER_ORDER: gold_api_com,goldapi_io,twelvedata_xauusd,fmp_gcusd,goldpricez,finnhub_oanda,metal_sentinel,metals_dev,metalpriceapi_xau,metals_api_xau,alpha_vantage_gold
           GOLD_API_COM_KEY: ${{ secrets.GOLD_API_COM_KEY }}
           GOLDAPI_IO_ENABLED: 'true'
           GOLDAPI_IO_KEY: ${{ secrets.GOLDAPI_IO_KEY }}
+          GOLDPRICEZ_ENABLED: 'true'
+          GOLDPRICEZ_API_KEY: ${{ secrets.GOLDPRICEZ_API_KEY }}
+          FINNHUB_ENABLED: 'true'
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          FINNHUB_SYMBOL: OANDA:XAU_USD
+          METAL_SENTINEL_ENABLED: 'true'
+          METAL_SENTINEL_API_KEY: ${{ secrets.METAL_SENTINEL_API_KEY }}
+          METAL_SENTINEL_API_HOST: ${{ secrets.METAL_SENTINEL_API_HOST }}
+          METAL_SENTINEL_ENDPOINT: ${{ secrets.METAL_SENTINEL_ENDPOINT }}
+          METALS_DEV_ENABLED: 'true'
+          METALS_DEV_API_KEY: ${{ secrets.METALS_DEV_API_KEY }}
+          METALPRICEAPI_ENABLED: 'true'
+          METALPRICEAPI_API_KEY: ${{ secrets.METALPRICEAPI_API_KEY }}
+          METALS_API_ENABLED: 'true'
+          METALS_API_ACCESS_KEY: ${{ secrets.METALS_API_ACCESS_KEY }}
+          ALPHA_VANTAGE_ENABLED: 'true'
+          ALPHA_VANTAGE_API_KEY: ${{ secrets.ALPHA_VANTAGE_API_KEY }}
           TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
           TWELVEDATA_SYMBOL: ${{ secrets.TWELVEDATA_SYMBOL }}
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
           FMP_SYMBOL: ${{ secrets.FMP_SYMBOL }}
-          GOLDPRICEZ_API_KEY: ${{ secrets.GOLDPRICEZ_API_KEY }}
-        run: python scripts/python/fetch_gold_price.py
+          MAX_GOLD_FRESHNESS_SECONDS: '900'
+          CONSENSUS_MAX_DEVIATION_PCT: '3'
+          MAX_PRICE_JUMP_PCT: '12'
+        run: python scripts/python/fetch_gold_consensus.py
 
       - name: Sync latest snapshot to Supabase (optional)
         id: snapshot_sync

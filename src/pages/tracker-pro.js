@@ -3,14 +3,10 @@ import { CONSTANTS, KARATS, COUNTRIES, TRANSLATIONS, ensureLocale } from '../con
 import * as api from '../lib/api.js';
 import * as cache from '../lib/cache.js';
 import '../lib/reveal.js';
-import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
-import { REALTIME_POLLING_DEFAULTS, WIRE_HISTORY_REFRESH_MS } from '../lib/realtime-config.js';
+import { getLivePriceManager } from '../lib/live-price-manager.js';
+import { WIRE_HISTORY_REFRESH_MS } from '../lib/realtime-config.js';
 import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
 import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
-import {
-  createPrimaryQuoteProvider,
-  createSecondaryQuoteProvider,
-} from '../lib/quote-providers/create-providers.js';
 import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { createInitialState, persistState } from '../tracker/state.js';
@@ -724,23 +720,9 @@ function updateServerAlertUiState() {
 }
 
 async function probeServerAlertsAvailability() {
-  // Static GitHub Pages has no `/api/v1/*` backend, so this capability probe
-  // would 404 on every tracker load. Skip it unless a backend is actually
-  // deployed (CONSTANTS.API_BACKEND_ENABLED). All server-alert UI and POSTs are
-  // gated on the returned value, so returning false here cleanly keeps the
-  // tracker on the local-alert path with no failed request.
-  if (!CONSTANTS.API_BACKEND_ENABLED) return false;
-  try {
-    const res = await fetch('/api/v1/config/public', {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
-    });
-    if (!res.ok) return false;
-    const payload = await res.json();
-    return payload?.ok === true && payload?.data?.features?.alerts === true;
-  } catch {
-    return false;
-  }
+  // GitHub Pages production is static. Server alerts remain an optional
+  // local/self-hosted Express capability and are never probed by production.
+  return false;
 }
 
 async function createServerAlert({ condition, target }) {
@@ -1434,35 +1416,13 @@ function applyRealtimeSnapshot(snapshot) {
 function initRealtimeEngine() {
   if (realtimeEngine) return;
 
-  realtimeEngine = createRealtimePricingEngine({
-    primaryProvider: createPrimaryQuoteProvider(),
-    secondaryProvider: createSecondaryQuoteProvider(),
-    config: {
-      ...REALTIME_POLLING_DEFAULTS,
-      streamUrl: CONSTANTS.API_STREAM_URL,
-    },
-    debug: isRealtimeDebugEnabled(),
-  });
-
-  const cacheBoot = cache.getFreshBootGoldPrice();
-  if (cacheBoot) {
-    realtimeEngine.seedFromCache({
-      price: cacheBoot.price,
-      updatedAt: cacheBoot.updatedAt,
-      fetchedAt: cacheBoot.fetchedAt,
-      providerId: 'cache',
-      source: 'cache',
-    });
-  }
+  realtimeEngine = getLivePriceManager();
 
   realtimeEngine.subscribe((snapshot) => {
     applyRealtimeSnapshot(snapshot);
   });
 
   if (state.autoRefresh) realtimeEngine.start();
-  document.addEventListener('visibilitychange', () => {
-    realtimeEngine?.setVisibility(!document.hidden);
-  });
 }
 
 async function refreshData(forceLive = true, includeWire = true) {

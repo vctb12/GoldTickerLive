@@ -1,5 +1,5 @@
 /** Provider IDs that return seconds-level spot from a live HTTP API. */
-const LIVE_PROVIDER_IDS = new Set(['gold_api_com', 'live-race']);
+const LIVE_PROVIDER_IDS = new Set(['gold_api_com', 'live-race', 'browser-live-pool']);
 
 /** Provider IDs backed by hourly cron / twice-daily LBMA / committed JSON. */
 const STATIC_PROVIDER_IDS = new Set(['minted_metal', 'primary-provider', 'last-gold-price']);

@@ -1,12 +1,14 @@
 # API Backend Foundation (Phase 1)
 
-This document describes the production API foundation for Gold Ticker Live and how it coexists with
-the static multi-page website.
+This document describes the optional Express API foundation for local development, testing, and
+owner-managed self-hosting. It is not part of the GitHub Pages production pricing path.
 
 ## Architecture
 
 - Frontend remains static and deployable to GitHub Pages.
-- Express backend provides operational API endpoints and protected/admin-compatible APIs.
+- Express backend provides optional operational API endpoints and protected/admin-compatible APIs.
+- GitHub Pages production retrieves the near-realtime reference quote directly from the browser-safe
+  provider manager; Actions writes a validated static emergency snapshot.
 - Versioned API namespace is now available at:
   - `/api/v1/...`
 - Existing `/api/...` routes remain in place for backward compatibility.
@@ -103,27 +105,13 @@ Startup performs non-fatal feature-aware env validation:
 - CORS behavior stays explicit and production-safe.
 - No secrets are exposed in API responses.
 
-## Deployment Options
+## Deployment boundary
 
-### Option A (selected for realtime recovery): Render split deployment
-
-- Keep static site on GitHub Pages.
-- Deploy the existing Express API as a long-lived Render Web Service using the committed
-  [`render.yaml`](../render.yaml).
-- Use `api.goldtickerlive.com` as the API subdomain and set `CORS_ORIGINS` to the two production
-  site origins.
-- Set the GitHub repository variable `VITE_API_BASE_URL=https://api.goldtickerlive.com` and run the
-  Pages workflow once so the static bundle can use REST/SSE.
-- Railway is technically compatible, but Render is selected here because the repository now carries
-  the service build, start, health-check, shutdown, and polling configuration in one manifest.
-
-Plan selection, production secrets, and DNS remain owner-controlled external setup; they are not
-committed to the repository.
-
-### Option B (later): unified deployment
-
-- Move frontend and backend together to a single platform if desired.
-- Keep `/api/v1` stable so frontend integration and clients are unaffected.
+- Production website: GitHub Pages only.
+- Production price refresh: direct browser fetches from the no-secret provider manager.
+- Production emergency snapshot: GitHub Actions commits `data/gold_price.json` after validation.
+- Express, REST, and SSE: optional localhost/self-hosted tooling only. Pages must not assume that
+  `/api/v1/prices/live` or `/api/v1/prices/stream` exists on its hostname.
 
 ## Environment Variables by Feature
 
