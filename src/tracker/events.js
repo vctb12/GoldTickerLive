@@ -119,6 +119,7 @@ export function bindCoreEvents() {
     }
     // Per-locale dictionary split: the AR dictionary loads on demand.
     await ensureLocale(_state.lang);
+    _cb.localizeStaticTrackerCopy?.();
     _cb.populateSelects();
     _cb.renderAll();
   });

@@ -19,6 +19,73 @@
   gap: var(--gtl-8);
 }
 
+/* ── Market Desk shell ─────────────────────────────────────────────────────
+   Keep the reference readout, freshness context, and first tasks in one
+   opening-viewport composition. The shell is visual only: data semantics and
+   pricing behavior remain owned by the existing homepage components. */
+.home-market-desk {
+  background:
+    linear-gradient(115deg, color-mix(in srgb, var(--gtl-gold-soft) 28%, transparent), transparent 42%),
+    var(--gtl-paper);
+  border-block-end: 1px solid var(--gtl-line);
+}
+.home-market-desk .hero-inner--gtl {
+  position: relative;
+  isolation: isolate;
+}
+.home-market-desk .hero-inner--gtl::before {
+  content: '';
+  position: absolute;
+  inset: var(--gtl-4) var(--gtl-6);
+  border: 1px solid color-mix(in srgb, var(--gtl-gold) 34%, var(--gtl-line));
+  border-radius: var(--gtl-r-lg);
+  pointer-events: none;
+  z-index: 0;
+}
+.home-market-desk .hero-text,
+.hero--gtl.home-market-desk .hero-live-card {
+  padding: var(--gtl-6);
+}
+.home-market-desk .hero-text,
+.home-market-desk .hero-live-card {
+  position: relative;
+  z-index: 1;
+}
+.home-market-desk .hero-text {
+  padding-inline-start: var(--gtl-8);
+}
+.hero--gtl.home-market-desk .hero-live-card {
+  margin-block: var(--gtl-4);
+  margin-inline-end: var(--gtl-4);
+  border-inline-start: 1px solid var(--gtl-line);
+}
+.home-market-desk .hero-ctas--gtl .gtl-btn:focus-visible,
+.home-market-desk .hero-secondary-link:focus-visible,
+.home-market-desk .hlc-tracker-link:focus-visible {
+  outline: 2px solid var(--experience-focus, var(--gtl-gold));
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .home-market-desk .hero-inner--gtl::before {
+    inset: var(--gtl-3) var(--gtl-4);
+  }
+  .home-market-desk .hero-text,
+  .hero--gtl.home-market-desk .hero-live-card {
+    padding: var(--gtl-4);
+  }
+  .home-market-desk .hero-text {
+    padding-block-end: var(--gtl-5);
+    padding-inline-start: var(--gtl-4);
+  }
+  .hero--gtl.home-market-desk .hero-live-card {
+    margin: var(--gtl-3) var(--gtl-4) 0;
+    border-inline-start: 0;
+    border-block-end: 1px solid var(--gtl-line);
+    padding-block-end: var(--gtl-5);
+  }
+}
+
 /* Editorial left column */
 .hero--gtl .hero-text {
   display: flex;
@@ -359,6 +426,29 @@
   background: var(--color-surface-2);
   border-top: 1px solid var(--gtl-line);
   padding-block: var(--gtl-8);
+}
+.home-routing--market-desk .home-routing-inner {
+  max-width: var(--experience-content-width, var(--gtl-maxw));
+}
+.home-routing--market-desk .home-routing-lead {
+  max-width: var(--experience-reading-width, 68ch);
+  line-height: var(--experience-display-leading, 1.1);
+}
+.home-routing--market-desk .route-card {
+  border-radius: var(--experience-panel-radius, var(--gtl-r-lg));
+  transition:
+    border-color var(--gtl-t-base) var(--experience-motion-ease, var(--gtl-ease)),
+    transform var(--gtl-t-base) var(--experience-motion-ease, var(--gtl-ease)),
+    box-shadow var(--gtl-t-base) var(--experience-motion-ease, var(--gtl-ease));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-market-desk .hero-ctas--gtl .gtl-btn,
+  .home-market-desk .hero-secondary-link,
+  .home-market-desk .hlc-tracker-link,
+  .home-routing--market-desk .route-card {
+    transition: none;
+  }
 }
 .home-routing-inner {
   max-width: var(--gtl-maxw);

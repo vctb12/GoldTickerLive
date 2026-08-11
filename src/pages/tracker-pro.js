@@ -1618,6 +1618,7 @@ async function init() {
     priceFor,
     startAutoRefresh,
     stopAutoRefresh,
+    localizeStaticTrackerCopy,
     populateSelects,
     refreshWire,
     exportArchiveData,
