@@ -205,3 +205,115 @@
     radial-gradient(90% 120% at 0% 0%, var(--color-gold-tint) 0%, transparent 55%),
     var(--color-surface-2);
 }
+
+/* EXP-03 — Market Desk composition: the calculator keeps its reference state
+   visible while giving the first task and result a clear, touch-safe rhythm. */
+.calc-hero-inner {
+  max-inline-size: 760px;
+}
+
+.calc-hero-badges {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.calc-trust-note,
+.calc-disclaimer {
+  max-inline-size: 62ch;
+  line-height: var(--leading-relaxed, 1.6);
+}
+
+.calc-nav-tabs {
+  position: sticky;
+  inset-block-start: var(--nav-height, 0px);
+  z-index: 5;
+}
+
+.calc-panel {
+  min-inline-size: 0;
+}
+
+.calc-card,
+.calc-result {
+  transition:
+    border-color var(--duration-fast, 160ms) var(--ease-out, ease-out),
+    box-shadow var(--duration-fast, 160ms) var(--ease-out, ease-out);
+}
+
+.calc-card:focus-within,
+.calc-result:focus-within {
+  border-color: color-mix(in srgb, var(--color-gold) 42%, var(--border-default));
+}
+
+[data-theme='dark'] .calc-hero {
+  background:
+    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--color-gold) 14%, transparent) 0%, transparent 62%),
+    var(--surface-canvas);
+  border-block-end-color: color-mix(in srgb, var(--color-gold) 28%, var(--border-default));
+}
+
+[data-theme='dark'] .calc-hero-title,
+[data-theme='dark'] .calc-card-title {
+  color: var(--text-primary);
+}
+
+[data-theme='dark'] .calc-hero-sub,
+[data-theme='dark'] .calc-disclaimer,
+[data-theme='dark'] .calc-card-desc,
+[data-theme='dark'] .calc-field-hint {
+  color: var(--text-secondary);
+}
+
+@media (width <= 640px) {
+  .calc-hero {
+    padding-inline: var(--page-gutter, 1rem);
+  }
+
+  .calc-hero-badges {
+    inline-size: 100%;
+  }
+
+  .calc-hero-badges .calc-live-badge {
+    justify-content: center;
+    max-inline-size: 100%;
+  }
+
+  .calc-nav-tabs {
+    inset-block-start: 0;
+  }
+
+  .calc-panel,
+  .calc-tab-panels > .calc-panel {
+    padding-inline: var(--page-gutter, 1rem);
+  }
+
+  .calc-card {
+    padding: var(--space-4);
+  }
+
+  /* Match the intended mobile stack in RTL: the legacy row-reverse selector
+     is more specific than its generic mobile column rule. */
+  [dir='rtl'] #panel-value .calc-input-row {
+    flex-direction: column;
+    inline-size: 100%;
+  }
+
+  [dir='rtl'] #panel-value #val-weight,
+  [dir='rtl'] #panel-value #val-unit {
+    inline-size: 100%;
+    min-inline-size: 120px;
+  }
+}
+
+[dir='rtl'] .calc-nav-tabs {
+  direction: rtl;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calc-card,
+  .calc-result {
+    transition: none;
+  }
+}

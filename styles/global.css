@@ -8,3 +8,27 @@
 @import url('./partials/components.css');
 @import url('./partials/utilities.css');
 @import url('./partials/motion-advanced.css');
+
+/* Experience contract: composition aliases only; pricing and data behavior stay elsewhere. */
+:root {
+  --experience-content-width: var(--content-max-width);
+  --experience-gutter: var(--page-gutter);
+  --experience-reading-width: 68ch;
+  --experience-section-gap: var(--space-8);
+  --experience-panel-radius: var(--radius-panel);
+  --experience-control-radius: var(--radius-control);
+  --experience-focus: var(--focus-ring-color);
+  --experience-display-leading: var(--leading-tight);
+  --experience-body-leading: var(--leading-relaxed);
+  --experience-motion-ease: var(--ease-premium);
+}
+
+[dir='rtl'] {
+  --experience-reading-width: 62ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --experience-motion-ease: linear;
+  }
+}

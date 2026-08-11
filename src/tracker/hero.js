@@ -236,6 +236,15 @@ export function renderHero() {
     } else {
       applyStatusBadge(_el.refreshBadge, freshness, refreshText);
     }
+
+    const liveText = String(_el.liveBadgeText?.textContent || '').trim();
+    const freshnessText = String(_el.refreshBadge.textContent || '').trim();
+    const isDuplicate = Boolean(liveText && freshnessText && liveText === freshnessText);
+    if (isDuplicate) setText(_el.refreshBadge, '');
+    _el.refreshBadge.hidden = isDuplicate;
+
+    const separator = liveBadge?.querySelector('.tracker-badge-separator');
+    if (separator) separator.hidden = isDuplicate;
   }
 
   const dayOpenSpot = getDayOpenPrice();

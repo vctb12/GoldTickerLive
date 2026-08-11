@@ -5294,3 +5294,60 @@ td.tracker-chg-flat {
   outline: 2px solid color-mix(in srgb, var(--color-gold) 75%, transparent);
   outline-offset: 2px;
 }
+
+/* EXP-03 — Market Desk composition: keep state, task, and explanation in one
+   readable sequence while preserving the existing tracker DOM and trust copy. */
+.tracker-hero-inner {
+  align-items: start;
+}
+
+.tracker-hero-main {
+  min-inline-size: 0;
+}
+
+.tracker-hero-aside {
+  align-self: start;
+}
+
+.tracker-hero-controls {
+  border-block-start: 1px solid color-mix(in srgb, var(--color-gold) 22%, var(--tp-hero-border));
+  padding-block-start: var(--space-4);
+}
+
+.tracker-hero-actions .btn,
+.tracker-hero-field select,
+.tracker-unit-segmented {
+  min-block-size: 44px;
+}
+
+.tracker-panel,
+.tracker-side-card,
+.tracker-command-meta-card {
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.tracker-panel:hover,
+.tracker-side-card:hover {
+  border-color: color-mix(in srgb, var(--color-gold) 24%, var(--tp-border));
+}
+
+[dir='rtl'] .tracker-hero-main,
+[dir='rtl'] .tracker-hero-aside {
+  text-align: start;
+}
+
+@media (width <= 768px) {
+  .tracker-hero-controls {
+    padding-block-start: var(--space-3);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tracker-panel,
+  .tracker-side-card,
+  .tracker-command-meta-card {
+    transition: none;
+  }
+}
