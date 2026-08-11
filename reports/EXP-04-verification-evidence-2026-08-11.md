@@ -1,14 +1,14 @@
 # EXP-04 — Visual and integrated verification evidence
 
 **Date:** 2026-08-11  
-**Status:** PR_READY  
+**Status:** PR_READY — VISUAL_CAPTURE_LIMIT RECORDED
 **Branch:** `ai/goal-gt-40b90823`  
 **Scope:** flagship home, tracker, calculator, shared design tokens, and verification evidence
 
 ## Outcome
 
 The selected **Market Desk** direction is implemented and passes repository verification. Fresh
-in-app browser QA covered the flagship pages in EN/LTR and AR/RTL, responsive widths from 390px to
+in-app browser DOM QA covered the flagship pages in EN/LTR and AR/RTL, responsive widths from 390px to
 1440px, and light/dark states. One evidence-backed defect was found and repaired: the tracker
 Language selector translated its content but did not update the root `lang` and `dir` attributes.
 
@@ -19,9 +19,9 @@ package-manifest, lockfile, or generated price-data change is included.
 
 | Surface | EN / LTR | AR / RTL | Widths | Theme evidence | Result |
 | --- | --- | --- | --- | --- | --- |
-| Home | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 768, 1024, 1440 | light + dark | Pass |
-| Tracker | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 1440 | light; shared dark shell verified | Pass after locale repair |
-| Calculator | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 1440 | light + dark | Pass |
+| Home | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 768, 1024, 1440 | light + dark | DOM pass; capture limit |
+| Tracker | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 1440 | light; shared dark shell verified | DOM pass after locale repair; capture limit |
+| Calculator | `lang=en`, `dir=ltr` | `lang=ar`, `dir=rtl` | 390, 1440 | light + dark | DOM pass; capture limit |
 
 At every measured width, `document.documentElement.scrollWidth === window.innerWidth`; no
 document-level horizontal overflow was present. Mobile navigation, language switching, primary
@@ -29,12 +29,15 @@ price/status readouts, tracker controls, and calculator controls were present in
 tree. The repaired tracker switch was exercised live from AR/RTL to EN/LTR and returned
 `{ lang: "en", dir: "ltr", width: 390, scrollWidth: 390 }`.
 
-Fresh captures are stored in:
+Diagnostic captures are stored in:
 
 `/Users/abdulkarim/Documents/Codex/2026-08-10/build-a-feature-for/outputs/GT-40B90823-current-audit/`
 
-The numbered evidence set contains home EN/AR at 390/768/1024/1440, tracker EN/AR at 390/1440,
-calculator EN/AR at 390/1440, and light/dark states.
+The in-app browser returned Retina-scaled images clipped to half of the requested CSS viewport.
+Those files were rejected as pixel-level acceptance evidence under the Product Design audit rules.
+They remain useful diagnostics only. Responsive geometry, semantics, locale state, controls, and
+overflow checks are valid browser evidence; a complete pixel-by-pixel screenshot audit remains a
+named handoff limitation rather than an implied pass.
 
 ## Accessibility and semantics
 
@@ -85,6 +88,7 @@ hierarchy, source/freshness labels, market-state language, GCC context, price ty
 spot-versus-retail trust contract. It avoids a generic SaaS dashboard composition while reusing the
 existing visual system and self-hosted assets.
 
-No critical or high-severity visual issue remains in the tested states. The worktree is ready for
-local commit and PR handoff; no remote push, PR creation, merge, deploy, or external write was
-performed.
+No critical or high-severity issue was found in the valid DOM/semantic evidence or the inspected
+parts of the rendered states. A complete uncropped screenshot set is still required for strict
+pixel-level visual-audit sign-off. The worktree is ready for local PR handoff with that limitation
+recorded; no remote push, PR creation, merge, deploy, or external write was performed.
