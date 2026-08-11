@@ -292,6 +292,19 @@
   .calc-card {
     padding: var(--space-4);
   }
+
+  /* Match the intended mobile stack in RTL: the legacy row-reverse selector
+     is more specific than its generic mobile column rule. */
+  [dir='rtl'] #panel-value .calc-input-row {
+    flex-direction: column;
+    inline-size: 100%;
+  }
+
+  [dir='rtl'] #panel-value #val-weight,
+  [dir='rtl'] #panel-value #val-unit {
+    inline-size: 100%;
+    min-inline-size: 120px;
+  }
 }
 
 [dir='rtl'] .calc-nav-tabs {

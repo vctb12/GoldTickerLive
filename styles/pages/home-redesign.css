@@ -204,6 +204,28 @@
   font-variant-numeric: tabular-nums lining-nums;
   letter-spacing: -0.03em;
 }
+
+/* Keep the two-column composition at the narrow tablet breakpoint without
+   letting the full desktop numeral scale escape the live-card boundary. */
+@media (min-width: 761px) and (max-width: 900px) {
+  .hero--gtl .hero-inner--gtl {
+    padding-inline: var(--gtl-4);
+    gap: var(--gtl-4);
+  }
+
+  .home-market-desk .hero-text {
+    padding-inline-start: var(--gtl-5);
+  }
+
+  .hero--gtl.home-market-desk .hero-live-card {
+    padding: var(--gtl-5);
+    margin-inline-end: var(--gtl-3);
+  }
+
+  .hero--gtl .gtl-price__int {
+    font-size: clamp(3.25rem, 7.5vw, 3.75rem);
+  }
+}
 .hero--gtl .gtl-price__cur {
   font-size: 0.4em;
   color: var(--gtl-gold);
