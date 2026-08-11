@@ -14,7 +14,7 @@ const assert = require('node:assert/strict');
 // requiring a transpile step or --experimental-vm-modules flag, the pure mathematical
 // functions are inlined here so the test suite runs with plain `node --test`. If the
 // project ever adds a build step for tests, switch these to dynamic import() calls.
-const TROY_OZ_GRAMS = 31.1035;
+const TROY_OZ_GRAMS = 31.1034768;
 const AED_PEG = 3.6725;
 
 function usdPerGram(spotUsdPerOz, purity) {

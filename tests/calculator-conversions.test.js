@@ -4,7 +4,7 @@
  * Extended calculator conversion tests — all karats × multiple weight units × currencies.
  *
  * Validates the core pricing formula:
- *   price_per_gram_AED = (XAU/USD ÷ 31.1035) × 3.6725 × karat_purity
+ *   price_per_gram_AED = (XAU/USD ÷ 31.1034768) × 3.6725 × karat_purity
  *
  * Uses the same inline approach as price-calculator.test.js to avoid ESM
  * import complexity in the node:test runner.
@@ -14,7 +14,7 @@ const { test, describe } = require('node:test');
 const assert = require('node:assert/strict');
 
 // ── Constants (must match src/config/constants.js) ───────────────────────────
-const TROY_OZ_GRAMS = 31.1035;
+const TROY_OZ_GRAMS = 31.1034768;
 const AED_PEG = 3.6725;
 const TOLA_GRAMS = 11.6638;
 
@@ -108,7 +108,7 @@ describe('Calculator — AED conversion', () => {
 
   test('24K AED/g for $2500/oz ≈ 295.36', () => {
     const aed = aedPerGram(SPOT, KARATS[24]);
-    // Expected: 2500 / 31.1035 * 3.6725 ≈ 295.36
+    // Expected: 2500 / 31.1034768 * 3.6725 ≈ 295.36
     assert.ok(aed > 295 && aed < 296, `Got ${aed}`);
   });
 
@@ -137,19 +137,19 @@ describe('Calculator — weight unit conversions', () => {
     assert.ok(Math.abs(toGrams(1, 'tola') - TOLA_GRAMS) < 0.0001);
   });
 
-  test('1 troy oz = 31.1035 grams', () => {
+  test('1 troy oz = 31.1034768 grams', () => {
     assert.ok(Math.abs(toGrams(1, 'oz') - TROY_OZ_GRAMS) < 0.0001);
   });
 
   test('50 grams of 22K at $2500 ≈ USD 3684', () => {
     const val = totalValue(50, 'gram', 22, SPOT, 1);
-    // 50 × (2500 / 31.1035) × (22/24) ≈ 3683.94
+    // 50 × (2500 / 31.1034768) × (22/24) ≈ 3683.94
     assert.ok(val > 3683 && val < 3685, `Got ${val}`);
   });
 
   test('1 tola of 21K at $2500 in AED ≈ AED 3013.16', () => {
     const val = totalValue(1, 'tola', 21, SPOT, AED_PEG);
-    // 11.6638 × (2500 / 31.1035) × (21/24) × 3.6725 ≈ 3013.16
+    // 11.6638 × (2500 / 31.1034768) × (21/24) × 3.6725 ≈ 3013.16
     assert.ok(val > 3010 && val < 3020, `Got ${val}`);
   });
 
@@ -177,7 +177,7 @@ describe('Calculator — edge cases', () => {
 
   test('very large spot ($10000/oz) computes correctly', () => {
     const price = aedPerGram(10000, KARATS[24]);
-    // 10000 / 31.1035 * 3.6725 ≈ 1181.44
+    // 10000 / 31.1034768 * 3.6725 ≈ 1181.44
     assert.ok(price > 1180 && price < 1183, `Got ${price}`);
   });
 
@@ -210,7 +210,7 @@ describe('Calculator — Zakat threshold', () => {
 
   test('Nisab value in AED is calculable', () => {
     const nisabAed = totalValue(NISAB_GRAMS, 'gram', 24, SPOT, AED_PEG);
-    // 85 × (2500/31.1035) × 3.6725 ≈ 25,105
+    // 85 × (2500/31.1034768) × 3.6725 ≈ 25,105
     assert.ok(nisabAed > 25000 && nisabAed < 25200, `Nisab AED: ${nisabAed}`);
   });
 

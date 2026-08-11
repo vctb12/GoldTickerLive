@@ -356,8 +356,8 @@ HARD RULES
 - Never touch `CNAME` (`goldtickerlive.com`), `manifest.json` `start_url`/`scope`,
   `vite.config.js` `base`, `.github/workflows/post_gold.yml`, `_headers`, `_redirects`,
   service-worker scope, or canonical URLs without an explicit owner instruction.
-- Never change pricing math (`price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`), the AED
-  peg constant `3.6725`, the troy-ounce constant `31.1035`, karat purity values, the FX
+- Never change pricing math (`price_per_gram = (XAU/USD ÷ 31.1034768) × purity × FX`), the AED
+  peg constant `3.6725`, the troy-ounce constant `31.1034768`, karat purity values, the FX
   source, the `STALE_AFTER_MS = 75 minutes` threshold (`DELAYED_AFTER_MS = 30 minutes`), or the
   `FX_STALE_AFTER_MS = 26 hours` threshold without an explicit owner instruction.
 - Every user-visible string change ships in EN + AR via `src/config/translations.js`.
@@ -1285,7 +1285,7 @@ CONSTRAINTS
 - No new dependencies, no framework migration, no new build system, no CSS framework.
 - Don't change `CNAME`, `vite.config.js` `base` (currently `'/'`), service-worker scope,
   canonical URLs, or the `countries/**/gold-prices/` URL paths.
-- Don't touch the AED peg constant (`3.6725`), the troy-ounce constant (`31.1035`),
+- Don't touch the AED peg constant (`3.6725`), the troy-ounce constant (`31.1034768`),
   karat purity values, freshness thresholds (`STALE_AFTER_MS = 75*60*1000`,
   `FX_STALE_AFTER_MS = 26*60*60*1000`), or pricing math.
 - Every user-visible string change ships in EN + AR via `src/config/translations.js`.
@@ -1403,7 +1403,7 @@ INSPECT FIRST
 3. Read `src/lib/api.js`, `src/lib/cache.js`, `src/lib/live-status.js`,
    `src/lib/price-calculator.js`, `src/lib/formatter.js`, `src/lib/freshness-pulse.js`,
    `src/lib/historical-data.js`.
-4. Read `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
+4. Read `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1034768`,
    `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`) and `src/lib/live-status.js` for the freshness
    thresholds (`GOLD_MARKET.DELAYED_AFTER_MS = 30*60*1000`, `GOLD_MARKET.STALE_AFTER_MS = 75*60*1000`,
    `FX_MARKET.FX_STALE_AFTER_MS = 26*60*60*1000`).
@@ -1458,9 +1458,9 @@ WORK — TITLE
   is a lightweight live-status signal in the browser tab.
 
 CONSTRAINTS — DO NOT TOUCH
-- Pricing formula: `price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`. Locked.
+- Pricing formula: `price_per_gram = (XAU/USD ÷ 31.1034768) × purity × FX`. Locked.
 - AED peg `3.6725`. Locked.
-- Troy ounce `31.1035`. Locked.
+- Troy ounce `31.1034768`. Locked.
 - Karat purity table. Locked.
 - FX source `open.er-api.com/v6/latest/USD`. Locked.
 - `STALE_AFTER_MS = 75 minutes` (`DELAYED_AFTER_MS = 30 minutes`) and `FX_STALE_AFTER_MS = 26 hours`. Locked.
@@ -2262,7 +2262,7 @@ WORK — OTHER TOOLS (if scope includes them)
 CONSTRAINTS — DO NOT TOUCH
 - Pricing formula in `src/lib/price-calculator.js`.
 - AED peg `3.6725`.
-- Troy ounce `31.1035`.
+- Troy ounce `31.1034768`.
 - Karat purity values.
 - FX source.
 - Currency code list (without owner approval).
@@ -2364,7 +2364,7 @@ INSPECT FIRST
 4. Read `src/lib/price-calculator.js` and `src/lib/formatter.js`.
 5. Read `src/config/constants.js` (`API_GOLD_URL = '/data/gold_price.json'`,
    `API_FX_URL = 'https://open.er-api.com/v6/latest/USD'`, `AED_PEG = 3.6725`,
-   `TROY_OZ_GRAMS = 31.1035`, `GOLD_REFRESH_MS = 90000`,
+   `TROY_OZ_GRAMS = 31.1034768`, `GOLD_REFRESH_MS = 90000`,
    `GOLD_FETCH_TIMEOUT = 8000`, `FX_FETCH_TIMEOUT = 8000`, `HISTORY_DAYS = 90`).
 6. Read `tests/live-status.test.js`, `tests/circuit-breaker.test.js`,
    `tests/historical.test.js`, `tests/price-calculator.test.js`.
@@ -2403,9 +2403,9 @@ WORK — CIRCUIT BREAKER
 
 WORK — METHODOLOGY PAGE
 - `methodology.html` must clearly explain:
-  * Formula: `price_per_gram = (XAU/USD ÷ 31.1035) × purity × FX`.
+  * Formula: `price_per_gram = (XAU/USD ÷ 31.1034768) × purity × FX`.
   * AED peg: `3.6725` (link to authoritative source if owner wants).
-  * Troy ounce: `31.1035` grams.
+  * Troy ounce: `31.1034768` grams.
   * Karat purities: 24K=99.9%, 22K=91.6%, 21K=87.5%, 18K=75% (verify against
     `src/config/karats.js`).
   * Sources for spot and FX, with cadence.
@@ -2421,7 +2421,7 @@ WORK — DOCS
 CONSTRAINTS — DO NOT TOUCH (without owner instruction)
 - Pricing formula.
 - `AED_PEG = 3.6725`.
-- `TROY_OZ_GRAMS = 31.1035`.
+- `TROY_OZ_GRAMS = 31.1034768`.
 - Karat purity values.
 - FX source.
 - `STALE_AFTER_MS`, `FX_STALE_AFTER_MS`, `GOLD_REFRESH_MS`.
@@ -3217,7 +3217,7 @@ For each of these, confirm no unintended change:
 - `robots.txt` (`Disallow: /admin/`, `Disallow: /api/` intact)
 
 WORK — DATA-SAFETY SPOT CHECKS
-- `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1035`,
+- `src/config/constants.js` (`AED_PEG = 3.6725`, `TROY_OZ_GRAMS = 31.1034768`,
   `STALE_AFTER_MS`, `FX_STALE_AFTER_MS`, `GOLD_REFRESH_MS = 90000`, `CACHE_KEYS`)
   unchanged.
 - `src/config/karats.js` purity values unchanged.
@@ -4199,7 +4199,7 @@ INSPECT FIRST
 WORK — pricing
 - Explain spot vs retail vs jeweler vs making charge in plain language with an example.
 - Show the AED peg and the troy-ounce constant with the formula:
-  `price_per_gram = (XAU/USD ÷ 31.1035) × purity × 3.6725`.
+  `price_per_gram = (XAU/USD ÷ 31.1034768) × purity × 3.6725`.
 - Link to the calculator and methodology.
 
 WORK — invest
@@ -6161,10 +6161,10 @@ When the agent reports preserved carve-outs in
   do not change without a migration plan.
 - Service-worker cache name — bump version (e.g. `goldtickerlive-v16` → `v17`), do NOT rename the
   prefix; coordinate with `tests/sw-exclusions.test.js`.
-- Gold pricing formula `price_per_gram = (XAU/USD ÷ 31.1035) × purity × 3.6725` — do not change
+- Gold pricing formula `price_per_gram = (XAU/USD ÷ 31.1034768) × purity × 3.6725` — do not change
   unless explicitly asked.
 - AED peg `3.6725` — do not change unless explicitly asked.
-- `TROY_OZ_GRAMS = 31.1035` — do not change.
+- `TROY_OZ_GRAMS = 31.1034768` — do not change.
 - Karat purity table (24K=0.999, 22K=0.916, 21K=0.875, 18K=0.750) — do not change.
 - FX logic — do not change unless explicitly asked.
 - `STALE_AFTER_MS = 75 * 60 * 1000` and `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` — do not change
@@ -6321,7 +6321,7 @@ change.
 ### Constants (`src/config/constants.js`)
 
 - `AED_PEG = 3.6725`.
-- `TROY_OZ_GRAMS = 31.1035`.
+- `TROY_OZ_GRAMS = 31.1034768`.
 - `GOLD_REFRESH_MS = 90 * 1000` (90 s).
 - `STALE_AFTER_MS = 75 * 60 * 1000` (75 min; `DELAYED_AFTER_MS = 30 * 60 * 1000`).
 - `FX_STALE_AFTER_MS = 26 * 60 * 60 * 1000` (26 h).
@@ -6338,7 +6338,7 @@ change.
 ### Pricing formula
 
 ```
-price_per_gram_AED = (XAU_USD ÷ 31.1035) × purity × 3.6725
+price_per_gram_AED = (XAU_USD ÷ 31.1034768) × purity × 3.6725
 ```
 
 ### Manifest (`manifest.json`)

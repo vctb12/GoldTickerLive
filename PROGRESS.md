@@ -44,7 +44,7 @@ Resuming **Tracks B–G** of
 [`docs/plans/2026-06-26_tracker-html-50-phase-revamp.md`](docs/plans/2026-06-26_tracker-html-50-phase-revamp.md).
 One green PR per phase-cluster, baseline **1240 → 1246 tests / 0 fail**; lint + style + validate +
 build green on every commit. LOCKED pricing intact (verified
-`usdPerGram(4048.60, 24K)=130.1654 → ×3.6725 = 478.03 AED/g`; peg 3.6725; troy-oz 31.1035; 7
+`usdPerGram(4048.60, 24K)=130.1655 → ×3.6725 = 478.03 AED/g`; peg 3.6725; troy-oz 31.1034768; 7
 karats). Freshness honesty respected (`getFreshnessModel().effectiveKey`).
 
 - **S1 visual harness** — `scripts/node/tracker-shots.mjs` captures the tracker across EN+AR ×

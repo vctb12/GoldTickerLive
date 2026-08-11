@@ -27,7 +27,7 @@ Every non-Tracker surface reads the same value through one memoized read point:
     surfaces cannot diverge within a render.
   - `_snapshot` has **no TTL** — it is cached until `getCanonicalSpot({ force: true })` is called.
     Periodic refreshers therefore pass `force: true`; the initial paint uses the memoized read.
-  - `deriveFromSpot(spot)` applies the immutable invariants (troy-oz 31.1035, AED peg 3.6725, karat
+  - `deriveFromSpot(spot)` applies the immutable invariants (troy-oz 31.1034768, AED peg 3.6725, karat
     purity = code/24) — never re-derived anywhere else.
   - `buildSnapshot()` returns
     `{ ok, spotUsdPerOz, usdPerGram24k, aedPerGram24k, karats[], freshness }`.
@@ -117,7 +117,7 @@ untouched.
 `renderPriceProvenance({ lang, depth, updatedAt, hasLiveFailure, isFallback, isFresh, open })` is
 the shared Stage-2C control: a compact `<details>` whose summary is a freshness chip + "About this
 price", expanding to disclose **source** (Gold-API.com + cadence), **updated** (UTC timestamp +
-relative age), **basis** (troy-oz 31.1035, USD→AED peg 3.6725, karat purity = code/24), **spot ≠
+relative age), **basis** (troy-oz 31.1034768, USD→AED peg 3.6725, karat purity = code/24), **spot ≠
 retail**, and a **methodology** link. It resolves state through `getLiveFreshness` +
 `applyMarketClosedOverlay` (honest, never "Live" while closed) and is built entirely from
 `data-attribution.js` + constitutional constants — no new data path. Bilingual EN/AR (RTL),

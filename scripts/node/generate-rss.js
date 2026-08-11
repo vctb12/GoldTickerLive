@@ -19,13 +19,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const { TROY_OZ_GRAMS } = require('../../server/lib/troy-ounce');
 
 const ROOT = path.resolve(__dirname, '../..');
 const OUT_FILE = path.join(ROOT, 'feed.xml');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const SITE_URL = 'https://goldtickerlive.com';
 const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -74,8 +74,8 @@ async function buildItems() {
   const liveSpot = readLocalGoldPrice();
 
   if (liveSpot) {
-    const k24 = (liveSpot / TROY_OZ) * AED_PEG;
-    const k22 = (liveSpot / TROY_OZ) * (22 / 24) * AED_PEG;
+    const k24 = (liveSpot / TROY_OZ_GRAMS) * AED_PEG;
+    const k22 = (liveSpot / TROY_OZ_GRAMS) * (22 / 24) * AED_PEG;
     const dateStr = now.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',

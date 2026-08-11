@@ -174,7 +174,7 @@ test('view: DORMANT while pilot OFF — html === "", gold still priced, non-gold
 test('view: Arabic seam (RTL + Arabic caption) and immutable constants', async () => {
   const { buildMetalComparisonView } = await import(VIEW);
   const { CONSTANTS } = await import(CFG);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
   const view = buildMetalComparisonView(feeds(), {
     observedAtMs: OBSERVED,

@@ -16,7 +16,7 @@ import { CONSTANTS } from '../config/index.js';
 /** Grams per weight unit. `oz` is the troy ounce from the shared constant (never a duplicate). */
 export const UNIT_TO_GRAMS = Object.freeze({
   gram: 1,
-  oz: CONSTANTS.TROY_OZ_GRAMS, // 31.1035
+  oz: CONSTANTS.TROY_OZ_GRAMS, // 31.1034768
   kg: 1000,
   tola: 11.6638,
   masha: 0.972,

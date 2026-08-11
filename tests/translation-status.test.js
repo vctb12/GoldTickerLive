@@ -58,12 +58,12 @@ test('fr-content-batch-1: every key exists in TRANSLATIONS.en (no orphan strings
 test('fr-content-batch-1: immutable invariants preserved verbatim in French', async () => {
   const { FR_CONTENT_BATCH_1 } = await import(BATCH);
   // Troy-ounce constant and AED peg carried through exactly.
-  assert.match(FR_CONTENT_BATCH_1['methodology.stepGram'], /31\.1035/);
+  assert.match(FR_CONTENT_BATCH_1['methodology.stepGram'], /31\.1034768/);
   assert.match(FR_CONTENT_BATCH_1['methodology.stepLocal'], /3\.6725/);
   // The formula is preserved character-for-character.
   assert.equal(
     FR_CONTENT_BATCH_1['methodology.formula'],
-    'price_per_gram_local = (XAU/USD ÷ 31.1035) × karat_factor × local_fx'
+    'price_per_gram_local = (XAU/USD ÷ 31.1034768) × karat_factor × local_fx'
   );
   // Reference-estimate framing survives translation (not retail).
   assert.match(FR_CONTENT_BATCH_1['methodology.referenceDisclaimer'], /Estimation de référence/i);

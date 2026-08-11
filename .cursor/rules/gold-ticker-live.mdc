@@ -6,7 +6,7 @@ Vanilla ES6, zero external JS dependencies, GitHub Pages hosted.
 
 ## Sacred Invariants (NEVER change these values)
 - AED peg: 3.6725
-- Troy ounce: 31.1035g
+- Troy ounce: 31.1034768g
 - Karat purity values in src/config/karats.js
 - Pricing formula in src/lib/price-calculator.js
 
@@ -108,7 +108,7 @@ Stack: Vanilla ES6 modules, zero external JS deps, CSS custom properties, biling
 
 ## Sacred invariants — NEVER change these values
 - AED peg: 3.6725 (in src/config/constants.js)
-- Troy ounce: 31.1035g (in src/config/constants.js)
+- Troy ounce: 31.1034768g (in src/config/constants.js)
 - Karat purity values (in src/config/karats.js)
 - Pricing formula (in src/lib/price-calculator.js)
 

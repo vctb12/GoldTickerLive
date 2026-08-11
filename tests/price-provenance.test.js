@@ -94,7 +94,7 @@ test('provenance: EN render exposes summary, source, basis, spot-vs-retail, meth
     assert.match(text, /About this price/);
     assert.match(text, /Gold-API\.com/);
     assert.match(text, /3\.6725/, 'AED peg basis stated');
-    assert.match(text, /31\.1035/, 'troy-oz basis stated');
+    assert.match(text, /31\.1034768/, 'troy-oz basis stated');
     assert.match(text, /not a shop retail quote/i, 'spot-vs-retail disclosed');
     assert.match(text, /Full methodology/);
     // methodology link is depth-0 relative

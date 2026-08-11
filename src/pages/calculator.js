@@ -1289,7 +1289,7 @@ function updateSpotBadge() {
   const aedBadge = document.getElementById('calc-aed-badge');
   const aedPrice = document.getElementById('calc-aed-price');
   if (aedBadge && aedPrice && STATE.spotUsdPerOz) {
-    const aed24 = (STATE.spotUsdPerOz / CONSTANTS.TROY_OZ_GRAMS) * CONSTANTS.AED_PEG;
+    const aed24 = (STATE.spotUsdPerOz / UNIT_TO_GRAMS.oz) * CONSTANTS.AED_PEG;
     aedPrice.textContent = `AED ${aed24.toFixed(2)}`;
     aedBadge.hidden = false;
   }
@@ -1535,7 +1535,7 @@ async function fetchLiveData() {
     updateSpotBadge();
     calcZakat(); // Re-render nisab display
     if (STATE.spotUsdPerOz) {
-      const TROY = CONSTANTS.TROY_OZ_GRAMS;
+      const TROY = UNIT_TO_GRAMS.oz;
       const AED = CONSTANTS.AED_PEG;
       const aed24 = ((STATE.spotUsdPerOz * 1) / TROY) * AED;
       updateTicker({

@@ -83,7 +83,7 @@ test('metals: gold 24K via the registry equals the direct gold gram value', asyn
 test('metals: immutable constants are untouched', async () => {
   const { CONSTANTS } = await import(CONST_MOD);
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
 });
 
 test('metals: usdToAedPerGram applies the fixed peg', async () => {

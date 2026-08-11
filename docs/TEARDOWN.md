@@ -214,7 +214,7 @@ These are the heart of the application — shared modules imported by every page
 | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `src/lib/api.js`                   | ~136    | Fetches gold spot price (XAU/USD) and FX rates with timeout, retry, and simulation hooks. Prefers `/api/v1/prices/latest`, then falls back to the committed `/data/gold_price.json` snapshot. | `fetchGold()`, `fetchFX()`, `setSimulateGoldFail()`, `setSimulateFxFail()`                   |
 | `src/lib/cache.js`                 | ~193    | Dual-layer localStorage cache with TTL (time-to-live). Primary + fallback keys prevent data loss on storage errors. Stale recovery returns expired data when API fails.                       | `get(key)`, `set(key, value, ttl)`, `clear()`, `showStorageQuotaWarning()`                   |
-| `src/lib/price-calculator.js`      | ~63     | Core pricing formulas. `usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity`. Local price = USD × FX rate.                                                                                  | `usdPerGram(spot, karat)`, `localPerGram(spot, karat, fxRate)`                               |
+| `src/lib/price-calculator.js`      | ~63     | Core pricing formulas. `usdPerGram(karat) = (spotUsdPerOz / 31.1034768) × purity`. Local price = USD × FX rate.                                                                                  | `usdPerGram(spot, karat)`, `localPerGram(spot, karat, fxRate)`                               |
 | `src/lib/formatter.js`             | ~142    | Formats prices with currency symbols, decimal places, and locale. Also formats dates, times, and karat labels for both EN and AR.                                                             | `formatPrice(value, currency, lang)`, `formatDate()`, `formatKarat()`, `formatCountryName()` |
 | `src/lib/historical-data.js`       | ~286    | Merges session price history with a baseline DataHub dataset. Provides historical ranges for charting.                                                                                        | `fetchGoldHistory()`, `getHistoricalRange(period)`                                           |
 | `src/lib/export.js`                | ~393    | Generates downloadable CSV and JSON files from current price data. Supports brief (summary) and full (all karats × countries) exports.                                                        | `exportToCSV(data)`, `exportToJSON(data)`                                                    |
@@ -250,7 +250,7 @@ Shared UI components injected into pages at runtime via JavaScript.
 
 | File                         | What It Defines                                                                                                  |
 | ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `src/config/constants.js`    | `TROY_OZ_GRAMS = 31.1035`, `AED_PEG = 3.6725`, API URLs, cache TTLs, refresh interval (90s), all cache key names |
+| `src/config/constants.js`    | `TROY_OZ_GRAMS = 31.1034768`, `AED_PEG = 3.6725`, API URLs, cache TTLs, refresh interval (90s), all cache key names |
 | `src/config/countries.js`    | Array of 15+ country objects: `{ code, name: {en, ar}, currency, flag, group, decimals, isPegged }`              |
 | `src/config/karats.js`       | Array of 7 karat objects: `{ code: '24K', purity: 1.0, label: {en, ar} }` down to 14K                            |
 | `src/config/translations.js` | All UI strings in EN/AR: button labels, status messages, error messages, section headings                        |
@@ -616,7 +616,7 @@ server adds admin API capabilities and server-side data persistence.
        │  └── Fallback key: gp_gold_price_fallback
        │
 5. lib/price-calculator.js
-       │  ├── usdPerGram = (spotUsdPerOz / 31.1035) × karatPurity
+       │  ├── usdPerGram = (spotUsdPerOz / 31.1034768) × karatPurity
        │  └── localPrice = usdPerGram × fxRate[currency]
        │
 6. lib/formatter.js → formatPrice(localPrice, currency, lang)

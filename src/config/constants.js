@@ -20,7 +20,7 @@ export const CONSTANTS = {
   API_STREAM_URL: apiEndpoint('/api/v1/prices/stream'),
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
   AED_PEG: 3.6725,
-  TROY_OZ_GRAMS: 31.1035,
+  TROY_OZ_GRAMS: 31.1034768,
   GOLD_REFRESH_MS: 90000,
   GOLD_FETCH_TIMEOUT: 8000,
   FX_FETCH_TIMEOUT: 8000,

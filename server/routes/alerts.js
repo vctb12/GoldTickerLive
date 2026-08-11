@@ -9,6 +9,7 @@ const { atomicWriteJSON } = require('../lib/fs-atomic');
 const { successResponse, errorResponse } = require('../lib/api-response');
 const { getSupabaseClient } = require('../lib/supabase-client');
 const { buildUrl } = require('../lib/site-url');
+const { TROY_OZ_GRAMS } = require('../lib/troy-ounce');
 
 const router = express.Router();
 
@@ -40,7 +41,6 @@ const SYMBOL_XAU_USD = 'XAUUSD';
 const DEFAULT_COOLDOWN_MINUTES = 60;
 const MAX_COOLDOWN_MINUTES = 7 * 24 * 60;
 const MIN_TOKEN_LENGTH = 20;
-const TROY_OZ_GRAMS = 31.1035;
 const AED_PEG = 3.6725;
 
 const KARAT_PURITY = Object.freeze({

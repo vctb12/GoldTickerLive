@@ -217,7 +217,7 @@ with a section above.
 - **Data attribution + freshness**: Displays price source URL (gold-api.com), FX source
   (open.er-api.com), gold data freshness timestamp (read from `localStorage.goldprices_gold_ts`),
   data sync timestamp (from `localStorage.goldUpdatedAt`).
-- **Fixed 3.6725 AED/USD peg link** + Troy oz definition (31.1035g) + disclaimer (spot-linked
+- **Fixed 3.6725 AED/USD peg link** + Troy oz definition (31.1034768g) + disclaimer (spot-linked
   reference only, not financial advice).
 - **Admin access Easter eggs** (3 methods): triple-click ⚡ footer symbol, Ctrl+Shift+A keyboard
   shortcut, or Konami code (↑↑↓↓←→←→BA). Shows a styled popup with admin link + 8-second
@@ -332,7 +332,7 @@ with a section above.
 **Price formula (XAU/USD → local per gram):**
 
 - Core math lives in `server/services/pricingEngine.js` (lines 4–87):
-  `usdPerGram = (spotUsdPerOz / 31.1035) * purity` → `localPerGram = usdPerGram * fxRate`. Karat
+  `usdPerGram = (spotUsdPerOz / 31.1034768) * purity` → `localPerGram = usdPerGram * fxRate`. Karat
   purity fractions: 24k=1.0, 22k≈0.917, 21k=0.875, 18k=0.75. Tola unit also supported (11.6638
   grams).
 - AED peg **always** 3.6725 — hardcoded in `src/config/constants.js:9` (`CONSTANTS.AED_PEG`). Never
@@ -414,10 +414,8 @@ with a section above.
 - Base adapter → `scripts/python/gold_providers/base.py` — HTTP client, error categorization
   (rate-limit, quota-exhausted, network, parse), circuit-breaker utilities. Constants:
   `DEFAULT_AED_PEG = 3.6725`, `TROY_OUNCE_GRAMS = 31.1034768`, `DEFAULT_MAX_FRESHNESS_SECONDS = 900`
-  (15 min). NB: the Python ingest uses the exact troy ounce `31.1034768`; the browser/runtime
-  canonical used for **displayed** prices is `src/config/constants.js` `TROY_OZ_GRAMS = 31.1035`.
-  The two are intentionally not yet single-sourced — see the constants-drift follow-up before
-  targeting either value.
+  (15 min). Python ingest and browser/runtime both use `31.1034768`; runtime-specific modules keep
+  their native ESM/CJS boundaries, and parity tests lock the authoritative value across them.
 - Normalizer → `scripts/python/gold_providers/normalize.py` (lines 1–113): Converts raw provider
   quotes to canonical schema. Computes `aed_per_gram_24k = usd_per_gram_24k * aed_peg` (line 38).
   Freshness: `is_fresh = freshness_seconds <= max_fresh` (line 51). Outputs all six top-level keys:

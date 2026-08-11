@@ -12,8 +12,6 @@ from .base import (
     SOURCE_TYPES,
     make_error,
 )
-from .registry import PROVIDERS, fetch_provider, list_known_providers
-
 __all__ = [
     "ERROR_CATEGORIES",
     "PROVIDERS",
@@ -22,3 +20,21 @@ __all__ = [
     "list_known_providers",
     "make_error",
 ]
+
+
+def __getattr__(name):
+    """Load provider adapters only when registry access is requested.
+
+    Formula and normalization helpers are useful without the optional HTTP
+    adapter dependencies. Keeping registry imports lazy makes those helpers
+    safe to use in lightweight checks and avoids import-time side effects.
+    """
+    if name in {"PROVIDERS", "fetch_provider", "list_known_providers"}:
+        from .registry import PROVIDERS, fetch_provider, list_known_providers
+
+        return {
+            "PROVIDERS": PROVIDERS,
+            "fetch_provider": fetch_provider,
+            "list_known_providers": list_known_providers,
+        }[name]
+    raise AttributeError(name)

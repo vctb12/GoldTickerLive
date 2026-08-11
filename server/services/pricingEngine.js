@@ -1,7 +1,7 @@
 /**
  * services/pricingEngine.js
  * Single source of truth for all price calculations.
- * Formula: usdPerGram = (spotUsdPerOz / 31.1035) * purity
+ * Formula: usdPerGram = (spotUsdPerOz / 31.1034768) * purity
  *          localPerGram = usdPerGram * fxRate
  *
  * Dependencies: config/countries.js, config/karats.js, config/constants.js
@@ -10,7 +10,9 @@ import { CONSTANTS } from '../config/index.js';
 import { COUNTRIES } from '../config/countries.js';
 import { KARATS } from '../config/karats.js';
 
-const TROY_OZ_GRAMS = CONSTANTS.TROY_OZ_GRAMS; // 31.1035
+// This service is an ESM consumer already sharing browser configuration. CJS server
+// routes use server/lib/troy-ounce.js; parity tests lock both runtime constants.
+const TROY_OZ_GRAMS = CONSTANTS.TROY_OZ_GRAMS;
 const TOLA_GRAMS = 11.6638;
 const AED_PEG = CONSTANTS.AED_PEG; // 3.6725
 

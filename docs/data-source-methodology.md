@@ -24,12 +24,22 @@ Overridable via env vars `AED_PEG`, `MAX_GOLD_FRESHNESS_SECONDS`, `MIN_VALID_XAU
 The AED peg is fixed by the UAE Central Bank — we do not derive it from a forex feed. If the peg
 ever changes, update the env var; the math reflects it immediately.
 
+`TROY_OUNCE_GRAMS` is the authoritative conversion constant for all browser, Node, and Python
+pricing paths. Keep full precision during calculation and round only when formatting a displayed
+or exported value. The reference conversion examples are `1 oz = 31.1034768 g`, `0.5 oz =
+15.5517384 g`, and `10 oz = 311.034768 g`. The inverse conversion is `grams / 31.1034768 = oz`.
+Displayed prices are rounded to two decimal places only at the final formatting boundary.
+
 ## 2. AED math
 
 ```
 usd_per_gram_24k = xau_usd_per_oz / TROY_OUNCE_GRAMS
 aed_per_gram_24k = usd_per_gram_24k * AED_PEG
 ```
+
+For a karat-specific reference price, multiply the full-precision 24K result by the purity ratio:
+`24K = 24/24`, `22K = 22/24`, `21K = 21/24`, and `18K = 18/24`. This applies equally after
+converting USD/oz to USD/g or AED/g; rounding belongs only to the final display boundary.
 
 Lower karats are derived by purity ratio (in tracker code, not in the fetcher) —
 `22K = 24K × 22/24`, `21K = 24K × 21/24`, `18K = 24K × 18/24`. The site is honest that retail

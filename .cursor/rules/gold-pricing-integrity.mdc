@@ -28,7 +28,7 @@ Compact form from project rules:
 | AED peg | `3.6725` | `1 USD = 3.6725 AED` — **fixed**; never dynamic; do not change without explicit owner approval |
 | Karat factors (24K baseline) | 24K=`1.000`, 22K=`0.9167`, 21K=`0.875`, 18K=`0.750`, 14K=`0.5833`, 9K=`0.375` | Must align with `src/config/karats.js` — single source of truth; do not inline new factors elsewhere |
 
-> **Note:** Some scripts/tests use `31.1035` as a rounded constant; new pricing logic should follow `31.1034768` / `src/config/constants.js`.
+> **Note:** Active pricing logic and its regression tests use `31.1034768`; archived materials may retain earlier rounded values as historical context.
 
 ## Local currency
 

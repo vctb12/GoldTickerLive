@@ -22,11 +22,11 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { TROY_OZ_GRAMS } = require('../../server/lib/troy-ounce');
 
 const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
 
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL || '';
 
@@ -58,7 +58,7 @@ function fmt(n, decimals = 2) {
 }
 
 function calcAedPerGram(spotUsdPerOz, purity) {
-  return (spotUsdPerOz / TROY_OZ) * purity * AED_PEG;
+  return (spotUsdPerOz / TROY_OZ_GRAMS) * purity * AED_PEG;
 }
 
 function httpsPost(url, payload) {

@@ -45,7 +45,7 @@ const DIMENSIONS = [
   {
     key: 'trust-integrity',
     focus:
-      'Price/trust integrity: spot vs retail separation; AED peg 3.6725 untouched; freshness labelling (live/delayed/cached/stale/fallback/unavailable) preserved; no unlabelled stale/estimated value presented as live; karat math (XAU/USD ÷ 31.1035 × karat/24 × FX) intact.',
+      'Price/trust integrity: spot vs retail separation; AED peg 3.6725 untouched; freshness labelling (live/delayed/cached/stale/fallback/unavailable) preserved; no unlabelled stale/estimated value presented as live; karat math (XAU/USD ÷ 31.1034768 × karat/24 × FX) intact.',
   },
   {
     key: 'seo',

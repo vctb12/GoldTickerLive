@@ -9,7 +9,7 @@
  * whole chain across EVERY karat, so a change to the real formula, the troy-oz divisor, the AED peg,
  * a karat purity, or the coupling between the two purity sources fails a test.
  *
- *   usdPerGram = (spot ÷ 31.1035) × purity      purity = karat / 24
+ *   usdPerGram = (spot ÷ 31.1034768) × purity      purity = karat / 24
  *   usdPerOz   = spot × purity
  *   AED        = usd × 3.6725 (fixed peg)
  */
@@ -27,7 +27,7 @@ const near = (a, b, eps = 1e-9) => Math.abs(a - b) <= eps;
 
 test('formula: the immutable constants are unchanged (real source)', async () => {
   const { CONSTANTS } = await import(CFG);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
 });
 

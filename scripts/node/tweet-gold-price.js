@@ -28,6 +28,7 @@
 const https = require('https');
 const crypto = require('crypto');
 const url = require('url');
+const { TROY_OZ_GRAMS } = require('../../server/lib/troy-ounce');
 
 // ---------------------------------------------------------------------------
 // Config
@@ -36,7 +37,6 @@ const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_PRICE_FILE = require('path').resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
 
 // Credentials from environment
 const TWITTER_API_KEY = process.env.TWITTER_API_KEY || '';
@@ -87,7 +87,7 @@ function trendEmoji(pct) {
 }
 
 function calcKarat(spotUsdPerOz, purity) {
-  const usdPerGram = (spotUsdPerOz / TROY_OZ) * purity;
+  const usdPerGram = (spotUsdPerOz / TROY_OZ_GRAMS) * purity;
   const aedPerGram = usdPerGram * AED_PEG;
   return { usdPerGram, aedPerGram };
 }
@@ -417,7 +417,7 @@ function buildTweetText(templateId, data) {
     }
 
     case 'comparison': {
-      const usdPerGram24 = spotUsdPerOz / TROY_OZ;
+      const usdPerGram24 = spotUsdPerOz / TROY_OZ_GRAMS;
       return [
         '📊 Gold Karat Comparison Right Now',
         '',
@@ -451,8 +451,8 @@ function buildTweetText(templateId, data) {
       ];
       const dayOfMonth = new Date(generatedAt).getUTCDate();
       const c = countries[dayOfMonth % countries.length];
-      const localPerGram24 = (spotUsdPerOz / TROY_OZ) * c.rate;
-      const localPerGram22 = (spotUsdPerOz / TROY_OZ) * (22 / 24) * c.rate;
+      const localPerGram24 = (spotUsdPerOz / TROY_OZ_GRAMS) * c.rate;
+      const localPerGram22 = (spotUsdPerOz / TROY_OZ_GRAMS) * (22 / 24) * c.rate;
       return [
         `${c.flag} Gold in ${c.name} Today ${trendEmoji(changePct)}`,
         '',
@@ -471,7 +471,7 @@ function buildTweetText(templateId, data) {
     case 'educational': {
       const facts = [
         '💡 Did you know? 24K gold is 99.9% pure, while 22K is 91.7% pure. The difference affects both price and durability.',
-        '💡 Gold Fact: 1 troy ounce = 31.1035 grams. This is heavier than a standard ounce (28.35g).',
+        '💡 Gold Fact: 1 troy ounce = 31.1034768 grams. This is heavier than a standard ounce (28.35g).',
         '💡 The AED is pegged to USD at 3.6725 — so UAE gold prices move exactly with the global spot.',
         "💡 Gold has been money for 5,000+ years. It's the only metal that doesn't corrode or tarnish.",
         '💡 Zakat on gold: If you own 85g+ of pure gold for one lunar year, 2.5% is due as zakat.',

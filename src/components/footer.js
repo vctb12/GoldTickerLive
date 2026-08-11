@@ -76,7 +76,7 @@ export function injectFooter(lang = 'en', depth = 0) {
         <span class="footer-sep" aria-hidden="true">·</span>
         <span>${isAr ? 'الدرهم الإماراتي:' : 'AED peg:'} <a href="${r('../methodology.html')}">${isAr ? '3.6725 ثابت' : '3.6725 fixed'}</a></span>
         <span class="footer-sep" aria-hidden="true">·</span>
-        <span>${isAr ? 'الأونصة التروية:' : 'Troy oz:'} 31.1035 g</span>
+        <span>${isAr ? 'الأونصة التروية:' : 'Troy oz:'} 31.1034768 g</span>
         <span class="footer-sep" aria-hidden="true">·</span>
         <span class="footer-freshness"></span>
         <span class="footer-data-updated"></span>

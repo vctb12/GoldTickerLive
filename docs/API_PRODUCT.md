@@ -332,7 +332,7 @@ curl "https://goldtickerlive.com/api/v1/public/karats"
 {
   "ok": true,
   "data": {
-    "troyOzGrams": 31.1035,
+    "troyOzGrams": 31.1034768,
     "karats": [
       {
         "code": "24",

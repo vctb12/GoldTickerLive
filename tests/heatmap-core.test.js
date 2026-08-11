@@ -76,8 +76,8 @@ test('buildHeatmapRows reuses the compare retail-estimate math and annotates pct
   const m = await load();
   const rows = rowsFixture(m);
 
-  // LOCKED reference math (24K): usd/gram = 4000 / 31.1035 = 128.60356...
-  const usdPerGram = SPOT / 31.1035;
+  // LOCKED reference math (24K): usd/gram = 4000 / 31.1034768 = 128.60365...
+  const usdPerGram = SPOT / 31.1034768;
   const ae = rows.find((r) => r.code === 'AE');
   const expectedAe = usdPerGram * (1 + (0.08 + 0.3) / 2) * 1.05;
   assert.ok(Math.abs(ae.retailUsdPerGram - expectedAe) < 1e-9);

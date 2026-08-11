@@ -17,7 +17,7 @@ test('units: UNIT_TO_GRAMS uses the shared troy-oz constant and known factors', 
   const { UNIT_TO_GRAMS } = await import(MOD);
   const { CONSTANTS } = await import(CFG);
   assert.equal(UNIT_TO_GRAMS.gram, 1);
-  assert.equal(UNIT_TO_GRAMS.oz, CONSTANTS.TROY_OZ_GRAMS); // 31.1035, not a duplicate literal
+  assert.equal(UNIT_TO_GRAMS.oz, CONSTANTS.TROY_OZ_GRAMS); // 31.1034768, not a duplicate literal
   assert.equal(UNIT_TO_GRAMS.kg, 1000);
   assert.equal(UNIT_TO_GRAMS.tola, 11.6638);
   assert.equal(UNIT_TO_GRAMS.masha, 0.972);

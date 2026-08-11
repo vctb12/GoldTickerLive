@@ -24,7 +24,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Constants ──────────────────────────────────────────────────────────────
-TROY_OZ_GRAMS = 31.1035
 AED_PEG = 3.6725
 
 KARATS = {
@@ -39,6 +38,7 @@ KARATS = {
 _REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(_REPO_ROOT / "scripts" / "python"))
 
+from gold_providers.base import TROY_OUNCE_GRAMS  # noqa: E402
 from utils.logger import get_logger  # noqa: E402
 
 log = get_logger("record_price_history")
@@ -122,7 +122,7 @@ def compute_karat_prices(spot_usd_per_oz: float) -> list[dict]:
     now = datetime.now(timezone.utc).isoformat()
 
     for karat, purity in KARATS.items():
-        usd_per_gram = (spot_usd_per_oz / TROY_OZ_GRAMS) * purity
+        usd_per_gram = (spot_usd_per_oz / TROY_OUNCE_GRAMS) * purity
         aed_per_gram = usd_per_gram * AED_PEG
 
         rows.append({

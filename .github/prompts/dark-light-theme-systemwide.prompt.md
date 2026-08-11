@@ -112,7 +112,7 @@ semantic tokens (with light+dark values and a rationale comment); replace hardco
 tokens; retune token hex to pass contrast; extend `check-basic-a11y.js` pairs; bump the service
 worker cache version if cached CSS/HTML changes.
 
-You **may not**: change pricing formulas, AED peg (`3.6725`), troy-oz (`31.1035`), or karat factors;
+You **may not**: change pricing formulas, AED peg (`3.6725`), troy-oz (`31.1034768`), or karat factors;
 remove or weaken freshness pills, methodology links, source attribution, or reference-vs-retail
 disclaimers "to look cleaner"; ship a stronger claim in one language than the other; add a runtime
 framework or CSS-in-JS; hand-edit `sitemap.xml`; change canonical/OG/Twitter/CNAME; introduce

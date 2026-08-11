@@ -154,7 +154,7 @@ npm start                       # Express admin :3000
 - **No secrets in git** — GitHub Secrets only; never echo into logs.
 - **PR-only** — must not commit directly to `main` or force-push.
 - **Production-critical** — `post_gold.yml`, `gold-price-fetch.yml`, `data/gold_price.json`,
-  `sw.js`, `src/config/constants.js` (AED peg `3.6725`, troy oz `31.1035`) need owner approval
+  `sw.js`, `src/config/constants.js` (AED peg `3.6725`, troy oz `31.1034768`) need owner approval
   before change.
 - **Pricing constants** — karat factors from `src/config/karats.js` only; must not inline elsewhere.
 - **Dependencies** — must not add without explicit ask + advisory check.
