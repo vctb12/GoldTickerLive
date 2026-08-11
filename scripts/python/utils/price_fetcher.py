@@ -16,12 +16,12 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from utils.logger import get_logger
+from gold_providers.base import TROY_OUNCE_GRAMS
 
 log = get_logger("price_fetcher")
 
 # ── Constants ────────────────────────────────────────────────────────────────
 AED_PEG = 3.6725
-TROY_OZ_GRAMS = 31.1035
 
 # Repo root: scripts/python/utils/price_fetcher.py → go up 3 levels.
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
@@ -101,7 +101,7 @@ def fetch_gold_price() -> Dict[str, Any]:
     karats = _get_karats()
     karat_prices = []
     for k in karats:
-        usd_per_gram = (spot / TROY_OZ_GRAMS) * k["purity"]
+        usd_per_gram = (spot / TROY_OUNCE_GRAMS) * k["purity"]
         # Prefer the committed AED value (already rounded) when available,
         # otherwise fall back to the peg-based calculation.
         aed_per_gram = karats_aed.get(k["code"])

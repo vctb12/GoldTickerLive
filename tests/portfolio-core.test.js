@@ -11,7 +11,7 @@ async function load() {
 }
 
 const SPOT = 4000; // XAU/USD per troy oz
-const TROY = 31.1035; // src/config/constants.js TROY_OZ_GRAMS
+const TROY = 31.1034768; // src/config/constants.js TROY_OZ_GRAMS
 const AED_PEG = 3.6725;
 const RATES = { SAR: 3.75, KWD: 0.31 };
 
@@ -128,7 +128,7 @@ test('valueHolding computes the reference valuation from purity and the peg', as
   const holding = m.sanitizeHolding(holdingFixture());
   const value = m.valueHolding(holding, SPOT, RATES, 'AED');
 
-  // LOCKED: 10g × (22/24) × (4000 / 31.1035) = 1178.865...
+  // LOCKED: 10g × (22/24) × (4000 / 31.1034768) = 1178.866...
   const expectedUsd = 10 * (22 / 24) * (SPOT / TROY);
   assert.ok(Math.abs(value.currentUsd - expectedUsd) < 1e-9);
   assert.ok(Math.abs(value.currentDisplay - expectedUsd * AED_PEG) < 1e-9);

@@ -17,7 +17,7 @@
  * dormant behind `METALS_PILOT_ENABLED` (default OFF): with the pilot off, `renderMetalComparisonTableHtml`
  * returns '' so `html` is empty and nothing renders. It never fabricates a non-gold price — a missing
  * or malformed feed degrades to `pending-data`, never a number. Gold flows through the same
- * `resolveMetalGramPrice` path as the live site; peg (3.6725), troy-oz (31.1035), and the
+ * `resolveMetalGramPrice` path as the live site; peg (3.6725), troy-oz (31.1034768), and the
  * reference-estimate framing are untouched.
  */
 

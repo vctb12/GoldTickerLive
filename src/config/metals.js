@@ -11,7 +11,7 @@
  *      so nothing about gold can drift.
  *   2. Every metal prices with the **same** formula the gold code already uses:
  *      `(spot per troy ounce × purity) ÷ grams per troy ounce`, using the shared
- *      `CONSTANTS.TROY_OZ_GRAMS` (31.1035) and, for AED, the fixed peg 3.6725 — both immutable.
+ *      `CONSTANTS.TROY_OZ_GRAMS` (31.1034768) and, for AED, the fixed peg 3.6725 — both immutable.
  *   3. Non-gold metals use fineness grades (fine / sterling / coin), not karats.
  */
 

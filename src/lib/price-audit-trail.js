@@ -2,7 +2,7 @@
  * lib/price-audit-trail.js — a transparent, reproducible derivation of a reference price (Phase 49).
  *
  * Records every step from live spot to the displayed per-gram reference estimate, so any shown price
- * is auditable: `spot XAU/USD ÷ 31.1035 (troy oz → gram) × karat purity × FX`. AED uses the fixed
+ * is auditable: `spot XAU/USD ÷ 31.1034768 (troy oz → gram) × karat purity × FX`. AED uses the fixed
  * 3.6725 peg. Pure and side-effect-free — it re-derives the exact same result the pricing layer uses
  * (`(spot × purity) / TROY_OZ_GRAMS × fx`), it does not introduce a second formula.
  *
@@ -10,14 +10,14 @@
  * `input` of the previous step, so a reader who multiplies the shown figures by hand reproduces every
  * shown output exactly — the audit trail cannot silently disagree with its own arithmetic.
  *
- * The immutable constants (troy-oz 31.1035, AED peg 3.6725) come from `CONSTANTS` and are NEVER
+ * The immutable constants (troy-oz 31.1034768, AED peg 3.6725) come from `CONSTANTS` and are NEVER
  * altered here. Every trail carries the spot-linked, bullion-equivalent reference-estimate framing —
  * it is not retail pricing and not financial advice.
  */
 
 import { CONSTANTS } from '../config/index.js';
 
-const TROY = CONSTANTS.TROY_OZ_GRAMS; // 31.1035
+const TROY = CONSTANTS.TROY_OZ_GRAMS; // 31.1034768
 const AED_PEG = CONSTANTS.AED_PEG; // 3.6725
 
 const DISCLAIMER = {

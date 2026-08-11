@@ -34,7 +34,7 @@ If a visual fix requires a forbidden file or logic change, **STOP** and add a pr
 ## Immutable guardrails
 
 1. **No SPA / framework migration.** Static multi-page + `tokens.css` only.
-2. **Frozen domain constants:** AED/USD peg **3.6725**, troy ounce **31.1035 g** — never change.
+2. **Frozen domain constants:** AED/USD peg **3.6725**, troy ounce **31.1034768 g** — never change.
 3. **Reference vs retail prices stay visually distinct** — never merge styling.
 4. **Trust markers are features.** Freshness labels, disclaimers, methodology links must stay visible and become *more* legible — never hidden to “clean up.”
 5. **EN/AR parity mandatory.** User-visible strings via `src/config/translations.js`. RTL: logical CSS (`margin-inline`, `padding-inline`), mirrored directional icons.

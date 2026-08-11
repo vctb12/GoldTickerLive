@@ -32,6 +32,7 @@ const { resolveUserEntitlements } = require('../lib/entitlements');
 const { successResponse, errorResponse } = require('../lib/api-response');
 const { getSupabaseClient } = require('../lib/supabase-client');
 const { normalizeHistoryRange, getHistoryWindowStart } = require('../lib/price-snapshots');
+const { TROY_OZ_GRAMS } = require('../lib/troy-ounce');
 
 const router = express.Router();
 const ROOT = path.resolve(__dirname, '../..');
@@ -43,7 +44,6 @@ const PRICE_HISTORY_FILE = path.join(ROOT, 'src', 'data', 'historical-baseline.j
 // ---------------------------------------------------------------------------
 
 const AED_PEG = 3.6725;
-const TROY_OZ_GRAMS = 31.1035;
 const MAX_KEY_LABEL_LENGTH = 60;
 const MAX_KEYS_PER_USER = 10;
 

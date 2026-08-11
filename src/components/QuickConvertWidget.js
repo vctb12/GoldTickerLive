@@ -6,13 +6,8 @@ import { usdPerGram } from '../lib/price-calculator.js';
 import { formatPrice } from '../lib/formatter.js';
 import { countUp } from '../lib/count-up.js';
 import { el, clear } from '../lib/safe-dom.js';
+import { UNIT_TO_GRAMS } from '../lib/weight-units.js';
 import { serializeCalculatorUrlState } from '../pages/calculator/url-state.js';
-
-const UNIT_TO_GRAMS = {
-  gram: 1,
-  tola: 11.6638,
-  oz: CONSTANTS.TROY_OZ_GRAMS,
-};
 
 /**
  * @param {{

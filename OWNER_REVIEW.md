@@ -266,7 +266,7 @@ retail). Reuse `src/lib/price-calculator.js` with per-metal purity factors; exte
 (`fetch_gold_price.py` → multi-metal source fields, new JSON shape) with the same freshness/failover
 contract; add a metal switch in the tracker/home UI; per-metal purity tables; EN/AR strings via
 `translations.js`; per-metal SEO pages. **Scope:** large (data + pricing + UI + SEO + automation).
-Keep AED peg 3.6725 / troy oz 31.1035 frozen. **No code this run.**
+Keep AED peg 3.6725 / troy oz 31.1034768 frozen. **No code this run.**
 
 ---
 

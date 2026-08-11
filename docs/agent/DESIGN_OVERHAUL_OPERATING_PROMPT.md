@@ -67,7 +67,7 @@ If only 🔒 remains, prepare the decision package, mark `GATED_PENDING_OWNER`, 
 - Never edit a `<head>` in a style PR (title/meta/canonical/hreflang/JSON-LD are out of scope).
 - Denied surfaces (from `.claude/settings.json` / AGENTS.md): `.env`/secrets, `sw.js`,
   `src/config/constants.js` (the 3.6725 peg), `gold-price-fetch.yml`, `post_gold.yml`, merge/deploy.
-- Financial invariants untouched: peg 3.6725 · troy oz 31.1035 · karat ÷24 · real data only.
+- Financial invariants untouched: peg 3.6725 · troy oz 31.1034768 · karat ÷24 · real data only.
 - **`--gtl-*` is deprecated, but ~19 of its tokens still hold values that DIFFER from `tokens.css`
   (spacing 96/128, radii 10/14/18, maxw 1180, `--gtl-ease`, `--gtl-serif`, `--gtl-meta`). Do NOT
   blind-rename them — that silently reskins live pages. Their convergence is phase P04,

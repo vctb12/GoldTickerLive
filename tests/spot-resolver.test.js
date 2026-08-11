@@ -3,7 +3,7 @@
 /**
  * Canonical spot-resolver regression lock (F-1). Proves the single-source
  * derivation is deterministic and invariant-correct: every karat value flows
- * from ONE spot via peg 3.6725, troy 31.1035 g, purity = code/24 — so every
+ * from ONE spot via peg 3.6725, troy 31.1034768 g, purity = code/24 — so every
  * homepage surface that reads the resolver shows the same number.
  *
  * ESM module under test is loaded via dynamic import (package is CommonJS).
@@ -17,15 +17,15 @@ before(async () => {
 });
 
 const SPOT = 4107.2002; // matches data/gold_price.json sample
-const TROY = 31.1035;
+const TROY = 31.1034768;
 const PEG = 3.6725;
 
-test('deriveFromSpot: 24K derivation uses troy 31.1035 and peg 3.6725 exactly', () => {
+test('deriveFromSpot: 24K derivation uses troy 31.1034768 and peg 3.6725 exactly', () => {
   const d = R.deriveFromSpot(SPOT);
   assert.ok(d, 'derivation should succeed for a valid spot');
   const expectedUsd = SPOT / TROY;
   const expectedAed = expectedUsd * PEG;
-  assert.ok(Math.abs(d.usdPerGram24k - expectedUsd) < 1e-9, 'usd/g 24k = spot / 31.1035');
+  assert.ok(Math.abs(d.usdPerGram24k - expectedUsd) < 1e-9, 'usd/g 24k = spot / 31.1034768');
   assert.ok(Math.abs(d.aedPerGram24k - expectedAed) < 1e-9, 'aed/g 24k = usd/g * 3.6725');
   // sanity against the committed data file value (484.952)
   assert.ok(Math.abs(d.aedPerGram24k - 484.952) < 0.01, 'matches committed aed_per_gram_24k');

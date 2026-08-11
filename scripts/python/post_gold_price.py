@@ -34,7 +34,6 @@ from typing import Optional
 AED_RATE = 3.6725  # UAE Dirham is pegged to USD
 SITE_URL  = "https://goldtickerlive.com/"
 UAE_TZ    = timezone(timedelta(hours=4))
-TROY_OZ_GRAMS = 31.1034768
 MARKET_OPEN_EVENT_CRON = '3 21 * * 0'
 MARKET_CLOSE_EVENT_CRON = '3 21 * * 5'
 DEFAULT_CLOSED_MARKET_MAX_STALE_HOURS = 48
@@ -59,6 +58,8 @@ try:
     import tweet_guard  # type: ignore  # noqa: E402
 except Exception:  # pragma: no cover — guard is optional
     tweet_guard = None  # type: ignore
+
+from gold_providers.base import TROY_OUNCE_GRAMS  # noqa: E402
 
 TWITTER_API_KEY = os.environ.get('TWITTER_API_KEY', '')
 TWITTER_API_SECRET = os.environ.get('TWITTER_API_SECRET', '')
@@ -485,7 +486,7 @@ def get_gold_price(previous_post=None):
     if isinstance(g24_aed, (int, float)) and g24_aed > 0:
         g24 = float(g24_aed) / AED_RATE  # USD/g to keep downstream _aed() happy
     else:
-        g24 = price / TROY_OZ_GRAMS
+        g24 = price / TROY_OUNCE_GRAMS
     g22 = g24 * (22 / 24)
     g21 = g24 * (21 / 24)
     g18 = g24 * (18 / 24)
@@ -1217,7 +1218,7 @@ def format_micro_tweet(data):
     current UAE run-window time for uniqueness.
     """
     price = data.get('price') or 0
-    g24   = data.get('price_gram_24k') or (price / TROY_OZ_GRAMS)
+    g24   = data.get('price_gram_24k') or (price / TROY_OUNCE_GRAMS)
     chp   = data.get('chp')
     date_str, time_str = _uae_datetime()
     if chp is None or abs(chp) < 0.03:

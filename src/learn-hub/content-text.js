@@ -37,7 +37,7 @@ const LEGACY_LEARN_COPY = Object.freeze({
       'Higher karat gold is softer and more vibrant yellow in color, but scratches more easily. Lower karat alloys are harder, more durable, and can be tinted white, rose, or green depending on the metals added.',
     'callout-formula-title': 'Price Formula',
     'callout-formula-body':
-      'Gold price per gram = (XAU/USD spot ÷ 31.1035) × (karat ÷ 24) × FX rate',
+      'Gold price per gram = (XAU/USD spot ÷ 31.1034768) × (karat ÷ 24) × FX rate',
     'pricing-h2': 'How Gold Prices Work',
     'pricing-intro':
       'The gold price you see quoted globally is the spot price — the current market price for immediate delivery of one troy ounce of 99.9% pure gold, in US Dollars (XAU/USD).',
@@ -103,7 +103,7 @@ const LEGACY_LEARN_COPY = Object.freeze({
     'karats-why':
       'الذهب عالي القيراط أكثر ليونة وأكثر حيوية في اللون الأصفر، لكنه يخدش بسهولة. السبائك منخفضة القيراط أصلب وأكثر متانة، ويمكن تلوينها باللون الأبيض أو الوردي أو الأخضر.',
     'callout-formula-title': 'صيغة الحساب',
-    'callout-formula-body': 'سعر الغرام = (سعر XAU/USD ÷ 31.1035) × (العيار ÷ 24) × سعر الصرف',
+    'callout-formula-body': 'سعر الغرام = (سعر XAU/USD ÷ 31.1034768) × (العيار ÷ 24) × سعر الصرف',
     'pricing-h2': 'كيف تعمل أسعار الذهب',
     'pricing-intro':
       'سعر الذهب العالمي هو السعر الفوري — السعر الحالي لتسليم أوقية تروي واحدة من الذهب الخالص (99.9%) بالدولار الأمريكي (XAU/USD).',
@@ -232,7 +232,7 @@ export const LEARN_HUB_TRANSLATIONS = Object.freeze({
     'learnHub.articles.learn.sections.faq.a5':
       'We refresh gold prices during market hours and label freshness clearly. Surfaces on Gold Ticker Live tell you when data is live, cached, delayed, or fallback so stale reference data is never presented as a fresh shop quote.',
     'learnHub.articles.learn.sections.faq.a6':
-      'A troy ounce (ozt) is the standard precious-metals unit. It equals 31.1035 grams, which is heavier than a regular avoirdupois ounce. International gold prices quoted per ounce always refer to troy ounces.',
+      'A troy ounce (ozt) is the standard precious-metals unit. It equals 31.1034768 grams, which is heavier than a regular avoirdupois ounce. International gold prices quoted per ounce always refer to troy ounces.',
     'method-h1': 'Data Sources & Methodology',
     'method-sub':
       'How we calculate every price you see — step by step, with full source attribution.',
@@ -327,7 +327,7 @@ export const LEARN_HUB_TRANSLATIONS = Object.freeze({
     'learnHub.articles.learn.sections.faq.a5':
       'نقوم بتحديث أسعار الذهب المرجعية خلال ساعات السوق، ونوضح حالة الحداثة بوضوح على كل سطح. لذلك ستعرف إن كانت البيانات مباشرة أو مخزنة مؤقتاً أو متأخرة أو احتياطية، ولن نعرض بيانات قديمة وكأنها تسعير محل حديث.',
     'learnHub.articles.learn.sections.faq.a6':
-      'الأوقية التروية هي وحدة القياس القياسية للمعادن الثمينة، وتساوي 31.1035 غراماً، أي أكثر من الأوقية العادية. وكل تسعير عالمي للذهب \"للأوقية\" يقصد به الأوقية التروية.',
+      'الأوقية التروية هي وحدة القياس القياسية للمعادن الثمينة، وتساوي 31.1034768 غراماً، أي أكثر من الأوقية العادية. وكل تسعير عالمي للذهب \"للأوقية\" يقصد به الأوقية التروية.',
     'method-h1': 'مصادر البيانات والمنهجية',
     'method-sub': 'كيف نحسب كل سعر تراه — خطوة بخطوة، مع الإسناد الكامل للمصادر.',
     'insights-h1': 'رؤى سوق الذهب',

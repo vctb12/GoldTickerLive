@@ -17,7 +17,7 @@ const assert = require('node:assert/strict');
 // Constants (from config)
 // ---------------------------------------------------------------------------
 
-const TROY_OZ_GRAMS = 31.1035;
+const TROY_OZ_GRAMS = 31.1034768;
 const TOLA_GRAMS = 11.6638;
 const AED_PEG = 3.6725;
 

@@ -5,12 +5,12 @@
 //
 //     aed = (xau_usd_per_oz / TROY_OZ_GRAMS) * purity * AED_PEG * grams
 //
-// with the immutable constants TROY_OZ_GRAMS = 31.1035 and AED_PEG = 3.6725. Verified for 24K
+// with the immutable constants TROY_OZ_GRAMS = 31.1034768 and AED_PEG = 3.6725. Verified for 24K
 // (purity 1.0) and 22K (purity 22/24). A regression in the karat math, the peg, or the troy
 // conversion would fail here. (2026-07-10: 10 g / 24K / AED → 4,867.82 د.إ, exact.)
 const { test, expect } = require('@playwright/test');
 
-const TROY_OZ_GRAMS = 31.1035;
+const TROY_OZ_GRAMS = 31.1034768;
 const AED_PEG = 3.6725;
 
 function parseAmount(text) {
@@ -32,7 +32,7 @@ async function computeAed(page, baseURL, { grams, purity }) {
   return (xau / TROY_OZ_GRAMS) * purity * AED_PEG * grams;
 }
 
-test.describe('Calculator numeric accuracy (AED = spot/31.1035 * purity * 3.6725 * grams)', () => {
+test.describe('Calculator numeric accuracy (AED = spot/31.1034768 * purity * 3.6725 * grams)', () => {
   for (const { karat, purity } of [
     { karat: '24', purity: 1.0 },
     { karat: '22', purity: 22 / 24 },

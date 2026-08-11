@@ -9,7 +9,7 @@
  * surface still reads one value and applies the same derivation.
  *
  * Immutable invariants (never re-derived here): AED peg 3.6725, troy ounce
- * 31.1035 g, karat purity = code/24, spot ≠ retail.
+ * 31.1034768 g, karat purity = code/24, spot ≠ retail.
  */
 import { CONSTANTS } from '../config/constants.js';
 import { KARATS } from '../config/karats.js';

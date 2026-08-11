@@ -366,13 +366,21 @@ template ships in repo root.
 ### Price formulas
 
 ```text
-1 troy ounce = 31.1035 grams
+1 troy ounce = 31.1034768 grams (authoritative conversion constant)
 
-usdPerGram(karat) = (spotUsdPerOz / 31.1035) × purity
+usdPerGram(karat) = (spotUsdPerOz / 31.1034768) × purity
 usdPerOz(karat)   = spotUsdPerOz × purity
+ozToGram(oz)      = oz × 31.1034768
+gramToOz(grams)    = grams / 31.1034768
 localPrice        = usdPrice × fxRate
 AED price         = usdPrice × 3.6725 (fixed peg)
 ```
+
+Calculation paths retain the full conversion precision; UI and exported prices round only at the
+display boundary (two decimal places for displayed prices). For example, `1 oz = 31.1034768 g`,
+`0.5 oz = 15.5517384 g`, and `10 oz = 311.034768 g`. The same constant is used when converting
+USD/oz to USD/g and AED/g, then karat purity is applied as `24K = 24/24`, `22K = 22/24`, `21K =
+21/24`, or `18K = 18/24`.
 
 > ⚠️ Prices are **spot-linked bullion-equivalent estimates**, not final retail prices. Real store
 > prices may differ due to making charges, dealer premiums, VAT, and shop markup.
@@ -608,7 +616,7 @@ GoldTickerLive/
 │   └── invest.css             # Invest page styling
 │
 ├── src/config/                 # Configuration modules
-│   ├── constants.js           # API URLs, timing, AED peg (3.6725), troy oz (31.1035)
+│   ├── constants.js           # API URLs, timing, AED peg (3.6725), troy oz (31.1034768)
 │   ├── countries.js           # 24+ countries with codes, names (EN/AR), currencies, flags
 │   ├── karats.js              # 7 karat definitions with purity fractions
 │   ├── translations.js        # All UI strings in English and Arabic

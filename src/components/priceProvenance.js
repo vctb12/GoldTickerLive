@@ -7,7 +7,7 @@
  *   - Source      — where the spot price comes from (Gold-API.com) + cadence
  *   - Updated     — the data-source UTC timestamp + relative age (honest state)
  *   - Basis       — the fixed conversions every surface derives from
- *                   (troy-oz 31.1035 g, USD→AED peg 3.6725, karat purity = code/24)
+ *                   (troy-oz 31.1034768 g, USD→AED peg 3.6725, karat purity = code/24)
  *   - Spot ≠ retail — the number is a spot-linked reference, not a shop quote
  *   - Methodology — link to the full write-up
  *
@@ -33,7 +33,7 @@ import {
 } from '../lib/live-status.js';
 import { formatTimestampShort } from '../lib/formatter.js';
 
-// The immutable invariants (troy-oz 31.1035, peg 3.6725, karat÷24) are stated as
+// The immutable invariants (troy-oz 31.1034768, peg 3.6725, karat÷24) are stated as
 // prose in COPY below — they are constitutional constants, not runtime values.
 
 const FRESHNESS_LABEL = {
@@ -53,7 +53,7 @@ const COPY = {
     sourceRole: 'Gold spot price (XAU/USD)',
     updatedLabel: 'Updated',
     basisLabel: 'How it is derived',
-    basisTroy: '1 troy ounce = 31.1035 g',
+    basisTroy: '1 troy ounce = 31.1034768 g',
     basisPeg: 'USD → AED at the fixed peg 1 USD = 3.6725 AED',
     basisKarat: 'Karat purity = karat ÷ 24 (24K = pure)',
     spotVsRetail:
@@ -66,7 +66,7 @@ const COPY = {
     sourceRole: 'سعر الذهب الفوري (XAU/USD)',
     updatedLabel: 'آخر تحديث',
     basisLabel: 'كيف يُحتسب',
-    basisTroy: 'الأونصة التروية = 31.1035 غرام',
+    basisTroy: 'الأونصة التروية = 31.1034768 غرام',
     basisPeg: 'تحويل الدولار إلى الدرهم بالربط الثابت: 1 دولار = 3.6725 درهم',
     basisKarat: 'نقاء العيار = العيار ÷ 24 (عيار 24 = خالص)',
     spotVsRetail:

@@ -8,7 +8,7 @@
  * still see it; search engines do not until it is reviewed.
  *
  * The immutable invariants are preserved verbatim in the French copy: the troy-ounce constant
- * `31.1035`, the AED peg `3.6725`, the pricing formula, and the reference-estimate framing (these are
+ * `31.1034768`, the AED peg `3.6725`, the pricing formula, and the reference-estimate framing (these are
  * asserted by tests). Every key exists in `TRANSLATIONS.en`.
  */
 
@@ -22,11 +22,11 @@ export const FR_CONTENT_BATCH_1 = {
   'methodology.title': 'Méthodologie de référence',
   'methodology.sub': 'Comment nous établissons chaque estimation de référence publiée.',
   'methodology.stepSpot': 'Partez du cours spot XAU/USD en direct par once troy.',
-  'methodology.stepGram': "Convertissez l'once en gramme à l'aide de 31.1035.",
+  'methodology.stepGram': "Convertissez l'once en gramme à l'aide de 31.1034768.",
   'methodology.stepKarat': 'Appliquez le facteur de pureté du carat pour le titre sélectionné.',
   'methodology.stepLocal':
     "Convertissez l'USD/gramme en devise locale (l'AED utilise une parité fixe de 3.6725).",
-  'methodology.formula': 'price_per_gram_local = (XAU/USD ÷ 31.1035) × karat_factor × local_fx',
+  'methodology.formula': 'price_per_gram_local = (XAU/USD ÷ 31.1034768) × karat_factor × local_fx',
   'methodology.karatTableCaption': 'Facteurs de pureté du carat pour les calculs de référence',
   'methodology.karatHeader': 'Carat',
   'methodology.purityHeader': 'Pureté',

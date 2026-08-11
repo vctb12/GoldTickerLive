@@ -89,7 +89,7 @@ test('buildComparisonRows computes spot + all-in retail estimate', async () => {
     getIntel,
   });
   const ae = rows.find((r) => r.code === 'AE');
-  const expectedUsdPerGram = (SPOT / 31.1035) * (22 / 24);
+  const expectedUsdPerGram = (SPOT / 31.1034768) * (22 / 24);
   assert.ok(Math.abs(ae.spotUsdPerGram - expectedUsdPerGram) < 1e-6);
   // local = usd * peg
   assert.ok(Math.abs(ae.spotLocalPerGram - expectedUsdPerGram * 3.6725) < 1e-6);

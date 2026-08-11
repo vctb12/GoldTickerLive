@@ -774,7 +774,7 @@
       const GOLD_API_URL = '/data/gold_price.json';
       const FX_API_URL = 'https://open.er-api.com/v6/latest/USD';
       const AED_PEG = 3.6725;
-      const TROY_OZ = 31.1035;
+      const TROY_OZ = 31.1034768;
 
       const KARATS = [
         { code: '24', label: '24K', purity: 1.0 },
@@ -1125,10 +1125,10 @@
           KARATS.forEach((k) => {
             const canvas = document.getElementById(`spark-${k.code}`);
             if (canvas && priceHistory.length > 1) {
-              const values = priceHistory.map((h) => (h.price / 31.1035) * k.purity * AED_PEG);
+              const values = priceHistory.map((h) => (h.price / TROY_OZ) * k.purity * AED_PEG);
               drawSparkline(canvas, values, { color: '#c9a227' });
             } else if (canvas && liveState.spotUsd) {
-              const price = (liveState.spotUsd / 31.1035) * k.purity * AED_PEG;
+              const price = (liveState.spotUsd / TROY_OZ) * k.purity * AED_PEG;
               drawSparkline(canvas, [price], { color: '#c9a227' });
             }
           });

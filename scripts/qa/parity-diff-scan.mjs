@@ -76,7 +76,7 @@ const ALLOW_EXACT = new Set(
     'tola',
     'kg',
     '3.6725',
-    '31.1035',
+    '31.1034768',
   ].map((s) => s.toLowerCase())
 );
 // A candidate must contain a Latin letter and at least one "word" of length ≥ 3,
@@ -112,9 +112,9 @@ async function visibleStrings(page) {
   });
 }
 
-const browser = await chromium.launch({
-  executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome',
-});
+const browser = await chromium.launch(
+  process.env.PW_CHROMIUM ? { executablePath: process.env.PW_CHROMIUM } : {}
+);
 const report = [];
 for (const p of PAGES) {
   const sets = {};

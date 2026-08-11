@@ -346,7 +346,7 @@
               </li>
               <li class="method-dataflow-stage">
                 <span class="method-dataflow-label">Troy ounce</span>
-                <span class="method-dataflow-op">÷ 31.1035 · ounce → gram</span>
+                <span class="method-dataflow-op">÷ 31.1034768 · ounce → gram</span>
               </li>
               <li class="method-dataflow-stage">
                 <span class="method-dataflow-label">Karat</span>
@@ -372,7 +372,7 @@
               </li>
               <li class="method-dataflow-stage">
                 <span class="method-dataflow-label">الأوقية التروية</span>
-                <span class="method-dataflow-op">÷ 31.1035 · أوقية ← غرام</span>
+                <span class="method-dataflow-op">÷ 31.1034768 · أوقية ← غرام</span>
               </li>
               <li class="method-dataflow-stage">
                 <span class="method-dataflow-label">العيار</span>
@@ -489,12 +489,12 @@
                 </p>
                 <p data-lang-block="en">
                   From the one spot value it derives USD and AED per-gram prices for every karat,
-                  applying the immutable invariants: troy ounce 31.1035 g, purity = karat ÷ 24, and
+                  applying the immutable invariants: troy ounce 31.1034768 g, purity = karat ÷ 24, and
                   the AED peg of 3.6725. These constants are never recomputed here.
                 </p>
                 <p data-lang-block="ar" lang="ar" dir="rtl">
                   من قيمة الفوري الواحدة يشتقّ أسعار الغرام بالدولار والدرهم لكل عيار، مطبِّقاً
-                  الثوابت غير القابلة للتغيير: الأوقية التروية 31.1035 غرام، والنقاء = العيار ÷ 24،
+                  الثوابت غير القابلة للتغيير: الأوقية التروية 31.1034768 غرام، والنقاء = العيار ÷ 24،
                   وربط الدرهم 3.6725. هذه الثوابت لا يُعاد حسابها هنا أبداً.
                 </p>
               </div>
@@ -820,17 +820,17 @@
               المعادلة الأساسية للسعر
             </div>
             <code class="method-formula" data-lang-block="en"
-              >Price per gram = (XAU/USD spot ÷ 31.1035) × (karat ÷ 24) × FX rate</code
+              >Price per gram = (XAU/USD spot ÷ 31.1034768) × (karat ÷ 24) × FX rate</code
             >
             <code class="method-formula" data-lang-block="ar" lang="ar" dir="rtl"
-              >سعر الغرام = (سعر XAU/USD الفوري ÷ 31.1035) × (العيار ÷ 24) × سعر الصرف</code
+              >سعر الغرام = (سعر XAU/USD الفوري ÷ 31.1034768) × (العيار ÷ 24) × سعر الصرف</code
             >
           </div>
 
           <ul class="method-formula-breakdown" data-lang-block="en">
             <li><code>XAU/USD spot</code> — Current gold price in US Dollars per troy ounce</li>
             <li>
-              <code>÷ 31.1035</code> — Converts troy ounce to grams (1 troy oz = 31.1035 g, the
+              <code>÷ 31.1034768</code> — Converts troy ounce to grams (1 troy oz = 31.1034768 g, the
               international standard)
             </li>
             <li><code>× (karat ÷ 24)</code> — Adjusts for purity (e.g., 22/24 = 0.9167 for 22K)</li>
@@ -841,7 +841,7 @@
           <ul class="method-formula-breakdown" data-lang-block="ar" lang="ar" dir="rtl">
             <li><code>سعر XAU/USD الفوري</code> — سعر الذهب الحالي بالدولار للأوقية التروية</li>
             <li>
-              <code>÷ 31.1035</code> — يحوّل الأوقية التروية إلى غرامات (1 أوقية تروية = 31.1035
+              <code>÷ 31.1034768</code> — يحوّل الأوقية التروية إلى غرامات (1 أوقية تروية = 31.1034768
               غرام، المعيار الدولي)
             </li>
             <li><code>× (العيار ÷ 24)</code> — يعدّل حسب النقاء (مثلاً 22/24 = 0.9167 لعيار 22)</li>
@@ -851,12 +851,12 @@
           </ul>
 
           <p data-lang-block="en">
-            The troy ounce (31.1035 grams) is the universal standard unit for precious metals
+            The troy ounce (31.1034768 grams) is the universal standard unit for precious metals
             pricing worldwide. It is distinct from the avoirdupois ounce (28.35 grams) used for
             everyday weights.
           </p>
           <p data-lang-block="ar" lang="ar" dir="rtl">
-            الأوقية التروية (31.1035 غرام) هي الوحدة المعيارية العالمية لتسعير المعادن الثمينة في
+            الأوقية التروية (31.1034768 غرام) هي الوحدة المعيارية العالمية لتسعير المعادن الثمينة في
             العالم. وهي تختلف عن الأوقية الأفوردوبوا (28.35 غرام) المستخدمة للأوزان اليومية.
           </p>
         </section>

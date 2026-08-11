@@ -10,6 +10,7 @@
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { TROY_OZ_GRAMS } = require('../../server/lib/troy-ounce');
 
 // Configuration
 const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
@@ -69,7 +70,6 @@ async function fetchFXRates() {
 }
 
 function calculateKaratPrices(spotPrice, fxRate) {
-  const TROY_OZ_GRAMS = 31.1035;
   const usdPerGram = spotPrice / TROY_OZ_GRAMS;
 
   const karats = {

@@ -37,8 +37,8 @@ The Phase 39 (French) and Phase 40 (Urdu) pilots are **UI shell**. This phase in
 
 Translated content must preserve, verbatim:
 
-- The troy-ounce constant **31.1035** and the AED peg **3.6725**.
-- The pricing formula `price_per_gram_local = (XAU/USD ÷ 31.1035) × karat_factor × local_fx`.
+- The troy-ounce constant **31.1034768** and the AED peg **3.6725**.
+- The pricing formula `price_per_gram_local = (XAU/USD ÷ 31.1034768) × karat_factor × local_fx`.
 - The **reference-estimate** framing — every price surface is a spot-linked, bullion-equivalent
   reference estimate, **not** a retail quote — and "not financial advice".
 

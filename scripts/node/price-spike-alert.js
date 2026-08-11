@@ -27,11 +27,11 @@ const https = require('https');
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const { TROY_OZ_GRAMS } = require('../../server/lib/troy-ounce');
 
 const SITE_URL = 'https://goldtickerlive.com/';
 const GOLD_PRICE_FILE = path.resolve(__dirname, '..', '..', 'data', 'gold_price.json');
 const AED_PEG = 3.6725;
-const TROY_OZ = 31.1035;
 const TWEET_URL = 'https://api.twitter.com/2/tweets';
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
@@ -174,7 +174,7 @@ async function sendDiscord(spot, changePct, changeAbs, sign) {
   if (!DISCORD_WEBHOOK) return;
   const color = changeAbs >= 0 ? 0x10b981 : 0xef4444;
   const arrow = changeAbs >= 0 ? '⬆️' : '⬇️';
-  const k24aed = (spot / TROY_OZ) * AED_PEG;
+  const k24aed = (spot / TROY_OZ_GRAMS) * AED_PEG;
   await httpsPost(DISCORD_WEBHOOK, {
     username: 'Gold Ticker Live Alert',
     avatar_url: 'https://goldtickerlive.com/assets/favicon-192x192.png',
@@ -211,7 +211,7 @@ async function sendTweet(spot, changePct, changeAbs, sign) {
     return;
   const direction = changeAbs >= 0 ? '⬆️' : '⬇️';
   const absPct = Math.abs(changePct).toFixed(2);
-  const k24aed = (spot / TROY_OZ) * AED_PEG;
+  const k24aed = (spot / TROY_OZ_GRAMS) * AED_PEG;
   const text = [
     `🚨 Gold ${direction} ${absPct}% today!`,
     `Now: $${fmt(spot)}/oz`,

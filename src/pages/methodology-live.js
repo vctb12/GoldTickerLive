@@ -6,8 +6,9 @@ import * as api from '../lib/api.js';
 import { CONSTANTS, KARATS, formatPurityPercent, getMillesimalFineness } from '../config/index.js';
 import { getBaselineHistory, getHistoryStats } from '../lib/historical-data.js';
 import { el } from '../lib/safe-dom.js';
+import { UNIT_TO_GRAMS } from '../lib/weight-units.js';
 
-const TROY = CONSTANTS.TROY_OZ_GRAMS;
+const TROY = UNIT_TO_GRAMS.oz;
 const AED_PEG = CONSTANTS.AED_PEG;
 const K22 = 22 / 24;
 const TOLA_GRAMS = 11.6638;
@@ -86,13 +87,13 @@ function renderFormulaPipeline(spotUsd, lang) {
     lang === 'ar'
       ? [
           { label: 'XAU/USD (أونصة)', value: `$${formatUsd(spotUsd)}` },
-          { label: '÷ 31.1035 → USD/غ 24K', value: `$${formatUsd(usdPerGram24)}` },
+          { label: '÷ 31.1034768 → USD/غ 24K', value: `$${formatUsd(usdPerGram24)}` },
           { label: '× 22/24 → USD/غ 22K', value: `$${formatUsd(usdPerGram22)}` },
           { label: `× ${AED_PEG} (ربط AED)`, value: `${formatAed(aedPerGram22)} AED/غ` },
         ]
       : [
           { label: 'XAU/USD (troy oz)', value: `$${formatUsd(spotUsd)}` },
-          { label: '÷ 31.1035 → USD/gram 24K', value: `$${formatUsd(usdPerGram24)}` },
+          { label: '÷ 31.1034768 → USD/gram 24K', value: `$${formatUsd(usdPerGram24)}` },
           { label: '× 22/24 → USD/gram 22K', value: `$${formatUsd(usdPerGram22)}` },
           { label: `× ${AED_PEG} AED peg`, value: `${formatAed(aedPerGram22)} AED/g` },
         ];

@@ -60,7 +60,7 @@ test("comparison: gold row is byte-identical to resolveMetalGramPrice (gold's nu
 test('comparison: constants untouched; rows are gold-first', async () => {
   const { buildMetalComparison } = await import(MOD);
   const { CONSTANTS } = await import(CFG);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
   const model = buildMetalComparison({ gold: GOLD_SPOT }, { pilotEnabled: true });
   assert.equal(model.rows[0].key, 'gold');

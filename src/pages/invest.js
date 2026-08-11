@@ -8,6 +8,7 @@ import { mountSkeleton } from '../components/skeleton.js';
 import { showDataStatusBanner, hideDataStatusBanner } from '../lib/data-status-banner.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
+import { UNIT_TO_GRAMS } from '../lib/weight-units.js';
 import { updateTicker } from '../components/ticker.js';
 import { mountSharedShell } from '../components/site-shell.js';
 import { initSwUpdateToast } from '../lib/sw-update-toast.js';
@@ -112,7 +113,7 @@ const I18N = {
     finalBtn: 'Open Live Tracker →',
     planBudgetNote: 'using current local pricing',
     planGramsNote: 'spot-linked estimate',
-    planOuncesNote: '31.1035g per troy ounce',
+    planOuncesNote: '31.1034768g per troy ounce',
     planEtfNote: 'spot-equivalent exposure',
     metaLive: 'Spot-linked estimate',
     metaSpot: 'Spot-linked estimate',
@@ -204,7 +205,7 @@ const I18N = {
     finalBtn: 'افتح المتتبع المباشر ←',
     planBudgetNote: 'باستخدام التسعير المحلي الحالي',
     planGramsNote: 'تقدير مرتبط بالسعر الفوري',
-    planOuncesNote: '31.1035 غرام لكل أوقية تروي',
+    planOuncesNote: '31.1034768 غرام لكل أوقية تروي',
     planEtfNote: 'تعرض مكافئ للسعر الفوري',
     metaLive: 'تقدير مرتبط بالسعر الفوري',
     metaSpot: 'تقدير مرتبط بالسعر الفوري',
@@ -899,7 +900,7 @@ function renderPlanner() {
   const currency = MARKET_META[state.market].currency;
   const decimals = MARKET_META[state.market].decimals;
   const grams = pricePerGram ? state.budget / pricePerGram : null;
-  const ounces = grams ? grams / CONSTANTS.GRAMS_PER_TROY_OUNCE : null;
+  const ounces = grams ? grams / UNIT_TO_GRAMS.oz : null;
   const annual = grams ? (state.frequency === 'monthly' ? grams * 12 : grams) : null;
 
   document.getElementById('result-budget').textContent = formatCurrency(

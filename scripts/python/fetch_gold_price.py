@@ -37,6 +37,7 @@ sys.path.insert(0, str(_REPO_ROOT / "scripts" / "python"))
 
 from gold_providers import fetch_provider, list_known_providers  # noqa: E402
 from gold_providers.base import (  # noqa: E402
+    TROY_OUNCE_GRAMS,
     env_bool,
     env_float,
     env_int,
@@ -203,7 +204,7 @@ def _with_legacy_wrapper(normalized: Dict[str, Any]) -> Dict[str, Any]:
         return payload
 
     xau = float(xau)
-    usd_per_gram_24k = xau / 31.1034768
+    usd_per_gram_24k = xau / TROY_OUNCE_GRAMS
     aed_per_gram_24k = payload.get("aed_per_gram_24k")
     if not isinstance(aed_per_gram_24k, (int, float)) or aed_per_gram_24k <= 0:
         aed_per_gram_24k = usd_per_gram_24k * float(aed_peg)

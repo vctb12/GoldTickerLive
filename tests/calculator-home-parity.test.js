@@ -9,7 +9,7 @@
  * SAME committed spot via the SAME resolver at runtime, so for any given spot the
  * two derivations must be byte-identical — otherwise the two surfaces could show
  * different prices. This test fails if either derivation drifts, or if an
- * invariant (peg 3.6725, troy 31.1035 g, purity = code/24) changes.
+ * invariant (peg 3.6725, troy 31.1034768 g, purity = code/24) changes.
  *
  * ESM modules under test are loaded via dynamic import (package is CommonJS).
  */
@@ -40,7 +40,7 @@ test('AED/g parity: calculator (usdPerGram×peg) === homepage resolver for every
         Math.abs(calcAed - row.aedPerGram) < 1e-9,
         `karat ${k.code} @ spot ${spot}: calc ${calcAed} !== home ${row.aedPerGram}`
       );
-      // …and both equal the closed-form invariant spot/31.1035 × code/24 × 3.6725
+      // …and both equal the closed-form invariant spot/31.1034768 × code/24 × 3.6725
       const invariant =
         (spot / CONSTANTS.TROY_OZ_GRAMS) * (Number(k.code) / 24) * CONSTANTS.AED_PEG;
       assert.ok(
@@ -65,9 +65,9 @@ test('USD/g parity: calculator === homepage resolver for every karat/spot', () =
   }
 });
 
-test('invariants are exact: peg 3.6725, troy 31.1035, purity = code/24', () => {
+test('invariants are exact: peg 3.6725, troy 31.1034768, purity = code/24', () => {
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
   for (const k of KARATS) {
     const expected = Number(k.code) / 24; // 24 → 1.0
     assert.ok(Math.abs(k.purity - expected) < 1e-12, `karat ${k.code} purity must be code/24`);

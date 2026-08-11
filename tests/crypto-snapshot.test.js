@@ -79,5 +79,5 @@ test('crypto: isCryptoSnapshotEnabled reflects the pilot flag (default OFF)', as
 test('crypto: constants (peg) unchanged', async () => {
   const { CONSTANTS } = await import(CFG);
   assert.equal(CONSTANTS.AED_PEG, 3.6725);
-  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1035);
+  assert.equal(CONSTANTS.TROY_OZ_GRAMS, 31.1034768);
 });
