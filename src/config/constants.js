@@ -3,21 +3,10 @@
 // Must match vite.config.js `base` and the service worker scope.
 export const BASE_PATH = '/';
 
-// Vite replaces these at build time. Only the public API origin is embedded in
-// the browser bundle; provider credentials remain server-side. Leaving the
-// origin empty preserves the static GitHub Pages fallback.
-const API_BASE_URL = String(import.meta.env?.VITE_API_BASE_URL || '')
-  .trim()
-  .replace(/\/+$/, '');
-const API_BACKEND_ENABLED =
-  import.meta.env?.VITE_API_BACKEND_ENABLED === 'true' || Boolean(API_BASE_URL);
-const apiEndpoint = (path) => `${API_BASE_URL}${path}`;
-
+// Production is static GitHub Pages. Live browser providers are declared in
+// src/lib/live-price-manager.js; private provider credentials never enter this file.
 export const CONSTANTS = {
   API_GOLD_URL: '/data/gold_price.json',
-  API_BASE_URL,
-  API_LATEST_URL: apiEndpoint('/api/v1/prices/live'),
-  API_STREAM_URL: apiEndpoint('/api/v1/prices/stream'),
   API_FX_URL: 'https://open.er-api.com/v6/latest/USD',
   AED_PEG: 3.6725,
   TROY_OZ_GRAMS: 31.1034768,
@@ -27,13 +16,6 @@ export const CONSTANTS = {
   HISTORY_DAYS: 90,
 
   // ── Integration flags ───────────────────────────────────────────────────────
-  // Static GitHub Pages uses the committed JSON fallback. When a public runtime
-  // origin is supplied, REST/SSE requests use that origin and retain the static
-  // fallback if the runtime is unavailable.
-  // Gates the backend price probe and the server-alerts capability probe so
-  // neither makes a request unless the runtime path is configured.
-  API_BACKEND_ENABLED,
-
   // Client analytics are mirrored to the Supabase `analytics_events` table with
   // the public anon key. That write returns 401 until an RLS policy grants the
   // `anon` role INSERT (see PR notes and `docs/ANALYTICS_EVENTS.md`). Leave

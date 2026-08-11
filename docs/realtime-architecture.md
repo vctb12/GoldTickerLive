@@ -1,16 +1,24 @@
-# Realtime Architecture (Phase 1, design)
+# Realtime Architecture (GitHub-native production design)
 
 > Purpose: describe the **target** realtime architecture, the **path** from today's hourly-cron
 > pipeline to it, and — crucially — the reasons each piece is staged carefully on a
 > public-production site rather than landed in one giant PR. This document is normative for future
 > PRs.
 
-Status: **design**. Phase 2 (freshness truth engine) ships in the PR that introduces this doc;
-Phases 1, 3, and 6 are queued but not implemented.
+Status: **implemented** in the GitHub-native realtime correction. GitHub Pages is static; the
+browser live manager supplies near-realtime updates and GitHub Actions supplies validated recovery
+snapshots and diagnostics.
 
 ---
 
-## 1. Today (after this PR)
+## 1. Production path
+
+The current production flow is: GitHub Pages serves static assets; the shared browser manager
+fetches the documented no-secret Gold API directly every five seconds in a visible leader tab;
+BroadcastChannel shares accepted quotes with sibling tabs; and GitHub Actions fetches the
+secret-backed provider pool every five minutes to validate and commit the emergency snapshot. The
+diagram below is retained as historical lineage from the pre-correction static path; its Express
+node is optional local/self-hosted tooling, not a Pages dependency.
 
 ```
 ┌────────────────────────┐
@@ -51,7 +59,12 @@ Phases 1, 3, and 6 are queued but not implemented.
 > **and** `isFresh !== false`. Any single violation degrades the bucket. There is no other path to
 > "Live" anywhere in the UI.
 
-## 2. Target (push-capable)
+## 2. Historical hosted-SSE proposal (not production)
+
+The remainder of this section is retained as historical design context only. It is not a production
+dependency, is not deployed by GitHub Pages, and must not be revived as an assumption in frontend
+code. GitHub Actions schedules are not a second-level push transport; Express/SSE is optional
+local/self-hosted tooling only.
 
 ```
 ┌────────────────────────┐
@@ -87,7 +100,7 @@ Phases 1, 3, and 6 are queued but not implemented.
                               "Updated 2 min ago" → "Streaming live"
 ```
 
-## 3. Why SSE, not WebSocket
+## 3. Historical transport comparison (not a production decision)
 
 For one-way price push, SSE is materially simpler and equally fast:
 
@@ -101,7 +114,7 @@ For one-way price push, SSE is materially simpler and equally fast:
 WebSocket only wins for bidirectional channels (admin commands, chat, collaborative cursors), none
 of which apply here.
 
-## 4. Why this is **not** in the same PR as the freshness engine
+## 4. Why the historical transport was not enabled
 
 Three reasons aligned with `AGENTS.md` non-negotiable rules:
 
@@ -119,7 +132,7 @@ The freshness engine in this PR is **forward-compatible** with the SSE upgrade: 
 signature stays the same; events from SSE land in `state.live` exactly the way today's polled
 responses do.
 
-## 5. Event schema (target)
+## 5. Historical event schema (reference only)
 
 Each SSE event MUST carry:
 
@@ -139,7 +152,7 @@ Each SSE event MUST carry:
 Heartbeats are SSE comment lines (`: heartbeat\n\n`) every 15 s; they do not appear as events but
 reset the client's liveness watchdog.
 
-## 6. Failure modes & fallbacks (target)
+## 6. Historical failure modes & fallbacks (reference only)
 
 | Failure                         | Detection                          | Client behavior                                                                                                      |
 | ------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
@@ -150,7 +163,7 @@ reset the client's liveness watchdog.
 | Clock skew                      | `serverTimestamp` vs. `Date.now()` | Use server timestamp for age; never blend with `Date.now()` arithmetic on the wire.                                  |
 | Memory leak in subscription     | Page unload / `pagehide` event     | `eventSource.close()`; clear backoff timer; remove all listeners.                                                    |
 
-## 7. Phased rollout plan
+## 7. Superseded rollout plan
 
 | Phase                 | Deliverable                                                                | Status     |
 | --------------------- | -------------------------------------------------------------------------- | ---------- |
@@ -165,11 +178,12 @@ reset the client's liveness watchdog.
 Each future PR follows `AGENTS.md` non-negotiable rules: freshness labels stay truthful, AED peg
 stays at 3.6725, EN/AR parity is preserved, no "Live" without all preconditions met.
 
-## 8. Hard non-goals
+## 8. Hard production boundaries
 
-- **No SPA migration.** This stays a static multi-page site. SSE is added as a thin transport, not
-  as an excuse to introduce a frontend framework.
-- **No paid provider switch in this design.** That is a `docs/plans/` topic.
-- **No removal of the polling fallback.** Forever supported as the safety net when SSE fails for any
-  reason.
+- **No SPA migration.** This stays a static multi-page site.
+- **No paid hosting or paid provider is required for production.** Provider credentials stay in
+  Actions secrets; no key is exposed to Pages.
+- **No Pages SSE assumption.** The browser uses direct no-secret provider polling plus static
+  fallback; `/api/v1/prices/stream` is not a Pages endpoint.
+- **No removal of the polling fallback.** The static snapshot and local cache remain safety nets.
 - **No "Live" pill without truth preconditions.** Ever.

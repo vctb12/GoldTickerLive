@@ -11,13 +11,13 @@
 
 ## 1. Health signals
 
-| Where to look                                  | What "healthy" looks like                                                                                                  |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `data/gold_price.json`                         | `is_fresh: true`, `is_fallback: false`, `freshness_seconds < max_freshness_seconds`, `fetched_at_utc` within the last hour |
-| GitHub Actions → `Gold Price Fetch`            | Last run within the cron window (`'2 21-23 * * 0'`, `'2 * * * 1-4'`, `'2 0-20 * * 5'`), status green                       |
-| `GET /api/v1/prices/latest` (backend mode)     | HTTP 200, envelope `freshness: 'fresh'`, `meta.source` matches the active provider                                         |
-| Tracker badge in the UI                        | "Live" within ~30 min of cron tick; "Delayed" 30–75 min; "Stale" only beyond 75 min; "Fallback" when upstream reports it   |
-| `getLiveFreshness()` `reason` codes (devtools) | `fresh` while live; `age-exceeds-delayed`, `age-exceeds-stale`, `upstream-fallback`, `upstream-stale` as appropriate       |
+| Where to look                                  | What "healthy" looks like                                                                                                |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `data/gold_price.json`                         | Validated emergency snapshot with a current provider timestamp and explicit freshness flags                              |
+| GitHub Actions → `Gold Price Fetch`            | Last run within the cron window (`'2 21-23 * * 0'`, `'2 * * * 1-4'`, `'2 0-20 * * 5'`), status green                     |
+| Optional Express API (local/self-hosted only)  | HTTP 200 when explicitly run; it is not part of the Pages production price path                                          |
+| Tracker badge in the UI                        | "Live" within ~30 min of cron tick; "Delayed" 30–75 min; "Stale" only beyond 75 min; "Fallback" when upstream reports it |
+| `getLiveFreshness()` `reason` codes (devtools) | `fresh` while live; `age-exceeds-delayed`, `age-exceeds-stale`, `upstream-fallback`, `upstream-stale` as appropriate     |
 
 The `reason` field on `getLiveFreshness()` is the fastest way to diagnose a mislabel claim — it
 tells you which precondition triggered the bucket.
@@ -58,14 +58,16 @@ if it happens, treat as a P1 trust bug.
 3. Hot-fix: revert the change that broke either invariant; tests in `tests/live-status.test.js`
    should catch the regression in CI.
 
-### 2.4 SSE clients reconnect-storm (future, when streaming ships)
+### 2.4 Browser leader or provider failover issue
 
-1. Check backend logs for the ingest worker; correlation IDs should match client reconnect attempts.
-2. Verify rate limiter is excluding `/api/v1/prices/stream` from per-IP counts (long-lived
-   connections must not consume short-request budget).
-3. Toggle feature flag `REALTIME_STREAM_ENABLED=false` (when implemented) to force clients into
-   short-poll fallback while you investigate.
-4. After mitigation: re-enable the flag and confirm clients recover.
+1. Inspect `getLivePriceManager().getSnapshot()` for `leader`, `online`, `transport`, and
+   `providerHealth`.
+2. Confirm only one tab owns the local-storage lease and that sibling tabs receive
+   `BroadcastChannel` updates.
+3. Check Gold API response age, CORS, HTTP status, and rate-limit behavior. Three consecutive
+   failures intentionally open that provider circuit for 30 seconds.
+4. If the provider remains unavailable, verify the UI says `fallback`, `cached`, or `unavailable`
+   and that the Actions snapshot remains available. Do not relabel the recovery value as live.
 
 ### 2.5 Time drift / wrong "age" displayed
 
@@ -73,8 +75,8 @@ if it happens, treat as a P1 trust bug.
    There is no client-server time sync.
 2. If a client's clock is wildly wrong, age will be wrong everywhere on the page. This is rare;
    documented for completeness.
-3. Mitigation if a backend SSE transport is shipped: include `serverTimestamp` in every event and
-   prefer that over `Date.now()` for age computation.
+3. The browser manager recalculates provider age from the provider timestamp on every accepted
+   quote, restore, and cross-tab broadcast.
 
 ## 3. Rollback toggles & degraded modes
 
@@ -82,11 +84,16 @@ if it happens, treat as a P1 trust bug.
 | ----------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Revert the realtime truthfulness PR                               | Returns to the pre-PR freshness engine (four buckets, no `isFallback` guard). **Re-introduces the trust bug** where a fallback snapshot can be labelled "Live"; only use as last resort. |
 | Increase `CONSTANTS.GOLD_REFRESH_MS` in `src/config/constants.js` | Reduces client-side poll pressure if a downstream cache layer (CDN, GitHub Pages) is rate-limiting.                                                                                      |
-| Set `GOLD_BACKEND_URL` to fail (block on edge)                    | Forces client into the static JSON path. Healthy fallback; expected when the backend is offline.                                                                                         |
+| Stop the optional Express service                                 | Has no effect on GitHub Pages production; the browser manager and Actions snapshot are independent.                                                                                      |
 | Disable `Gold Price Fetch` cron                                   | Freezes the data file. UI will progress through "Delayed" → "Stale" honestly; do **not** disable as a "fix" — it just hides the problem.                                                 |
-| `REALTIME_STREAM_ENABLED=false` (future)                          | Streaming clients drop to short-poll fallback.                                                                                                                                           |
+| Browser provider circuit opens                                    | The manager stops retrying that provider briefly, uses the static/cache recovery path, and probes again automatically.                                                                   |
 
-## 4. Safe degraded modes (in order of preference)
+## 4. Safe degraded modes (GitHub-native)
+
+Current production order: direct browser provider; static Pages snapshot; local last-known cache;
+unavailable. Every fallback remains visibly labelled and the browser manager never calls a
+Pages-hosted REST or SSE endpoint. The legacy list below is retained for incident-history context;
+use the current order above when triaging production.
 
 1. **Backend healthy + static file fresh** — normal operation.
 2. **Backend down, static file fresh** — clients use static JSON; UI shows "Live"/"Delayed" honestly
@@ -106,11 +113,11 @@ if it happens, treat as a P1 trust bug.
 - [ ] What freshness key is currently shown? (live / delayed / cached / stale / fallback / unavailable)
 - [ ] What does `data/gold_price.json` say? (is_fresh, is_fallback, fetched_at_utc)
 - [ ] Last successful `Gold Price Fetch` workflow run?
-- [ ] Backend `/api/v1/prices/latest` response (envelope.freshness, meta.source)?
+- [ ] Browser manager snapshot: leader, online, transport, active provider, and circuit states?
 - [ ] Has anything in `src/lib/live-status.js` or `src/lib/api.js#normalizeGoldResponse` changed recently?
 - [ ] Have anti-mislabel tests in `tests/live-status.test.js` been touched?
 - [ ] Is the failure reproducible in a fresh incognito window? (rules out client-cache anomalies)
-- [ ] Did `Gold Price Fetch` exit non-zero in CI? (provider 5xx, network, commit failure)
+- [ ] Did `Gold Price Fetch` exit non-zero in CI? (provider 5xx, network, consensus, commit failure)
 ```
 
 ## 6. Related references

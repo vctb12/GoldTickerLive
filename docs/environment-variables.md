@@ -5,9 +5,9 @@ pipeline, build/QA scripts, and GitHub Actions. The committed template is
 [`.env.example`](../.env.example); copy it to `.env` (gitignored) for local work. Production values
 live in GitHub Secrets only.
 
-> **Client-side code reads only public Vite configuration.** The deployed site is static (GitHub
-> Pages); Public Vite configuration is limited to the runtime origin; provider credentials and
-> server secrets are never embedded in the browser bundle.
+> **Client-side code has no provider credential configuration.** The deployed site is static GitHub
+> Pages; browser-safe live provider URLs are fixed in the public source and private Actions/server
+> credentials are never embedded in the browser bundle.
 
 ## Express server / self-hosted
 
@@ -27,16 +27,12 @@ live in GitHub Secrets only.
 | `NODE_ENV`                     | No          | Environment mode                                                         | `production`                  |
 | `PORT`                         | No          | Server port (default: 3000)                                              | `3000`                        |
 | `HOST`                         | No          | Bind address (default: `0.0.0.0` for hosted services)                    | `0.0.0.0`                     |
-| `REALTIME_PROVIDER_ORDER`      | No          | Ordered server-side runtime quote providers                              | `gold_api_com,...`            |
-| `REALTIME_POLL_MS`             | No          | Runtime provider polling interval                                        | `5000`                        |
-| `REALTIME_PROVIDER_TIMEOUT_MS` | No          | Per-provider runtime timeout                                             | `1800`                        |
+| `REALTIME_PROVIDER_ORDER`      | No          | Optional provider order for a local/self-hosted runtime                  | `gold_api_com,...`            |
+| `REALTIME_POLL_MS`             | No          | Optional local/self-hosted runtime polling interval                      | `5000`                        |
+| `REALTIME_PROVIDER_TIMEOUT_MS` | No          | Optional local/self-hosted provider timeout                              | `1800`                        |
 
-### Public Vite build configuration
-
-| Variable                   | Required | Description                                                                  | Example                          |
-| -------------------------- | -------- | ---------------------------------------------------------------------------- | -------------------------------- |
-| `VITE_API_BASE_URL`        | No       | Public runtime API origin; enables REST/SSE while preserving static fallback | `https://api.goldtickerlive.com` |
-| `VITE_API_BACKEND_ENABLED` | No       | Explicitly enables the runtime path; the base URL also enables it            | `true`                           |
+There are intentionally no `VITE_API_BASE_URL` or `VITE_API_BACKEND_ENABLED` production variables.
+GitHub Pages does not proxy or host the Express runtime.
 
 > **Note.** `JWT_SECRET`, `ADMIN_PASSWORD`, and `ADMIN_ACCESS_PIN` are **required at module load**
 > by `server/lib/auth.js` — without them the server throws at startup and `npm test` fails
@@ -124,13 +120,13 @@ Each adapter has an `…_ENABLED` toggle plus its key/host settings:
 ### Reverse-proxy / `trust proxy`
 
 When `NODE_ENV=production`, `server.js` sets `app.set('trust proxy', 1)` so Express reads the client
-IP from the first `X-Forwarded-For` hop (Vercel, Cloudflare, Nginx, etc). Without this,
+IP from the first `X-Forwarded-For` hop (Nginx or another owner-managed proxy, etc). Without this,
 `express-rate-limit` keys every request on the proxy IP and the whole internet shares one bucket.
 
-- **Single proxy in front of the app (default)** — keep `1`. This is correct for Vercel, Render,
-  Fly.io single-region, and a typical Nginx reverse proxy.
-- **Multiple proxies** (e.g., Cloudflare → Render) — set the trust hop count to match the number of
-  proxies in the chain. Edit `server.js` if your deployment has more than one trusted hop.
+- **Single proxy in front of an optional self-hosted app (default)** — keep `1` for a typical Nginx
+  reverse proxy.
+- **Multiple proxies** — set the trust hop count to match the number of proxies in the chain. Edit
+  `server.js` if your deployment has more than one trusted hop.
 - **Direct exposure (no proxy)** — leave `NODE_ENV` unset or non-`production`; the `trust proxy`
   line is skipped and `req.ip` is the socket peer address. Misconfiguring this in a proxied
   environment causes per-IP rate limits to misfire.

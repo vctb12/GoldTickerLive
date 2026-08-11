@@ -109,8 +109,6 @@ async function retryWithBackoff(fn, maxRetries = 2) {
 }
 
 const GOLD_DATA_URL = '/data/gold_price.json';
-const GOLD_BACKEND_URL = CONSTANTS.API_LATEST_URL;
-
 function unwrapApiEnvelope(data) {
   return data?.ok === true && data?.data && typeof data.data === 'object' ? data.data : data;
 }
@@ -146,8 +144,7 @@ function normalizeGoldResponse(data) {
 
   // Pipe upstream truth metadata through so the client freshness engine can
   // honor anti-mislabel guards (isFallback, isFresh) instead of relying on
-  // age alone. The provider-adapter writes these into data/gold_price.json
-  // and the backend forwards them via /api/v1/prices/latest.
+  // age alone. The provider-adapter writes these into data/gold_price.json.
   const isFresh =
     payload?.isFresh === true || payload?.is_fresh === true
       ? true
@@ -181,41 +178,18 @@ function normalizeGoldResponse(data) {
 }
 
 /**
- * Fetch the current gold spot price (XAU/USD) from the hosted runtime when its
- * public origin is configured, then fall back to the committed static data
- * file and finally the most-recent `localStorage` cache entry.
+ * Fetch the committed GitHub Pages gold snapshot and finally the most-recent
+ * localStorage cache entry. Near-realtime browser pricing is owned by
+ * `live-price-manager.js`; this static reader is intentionally an emergency
+ * and non-secret fallback path.
  *
  * @returns {Promise<{ price: number, updatedAt: string, source: string, raw?: object }>}
  * @throws {NetworkError} When both the data file fetch and the local cache fail.
  */
-export async function fetchGold({ signal, timeoutMs, backendOnly = false } = {}) {
+export async function fetchGold({ signal, timeoutMs } = {}) {
   if (_simulateGoldFail) throw new NetworkError('Simulated gold API failure');
   const effectiveTimeoutMs =
     Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : CONSTANTS.GOLD_FETCH_TIMEOUT;
-
-  // Prefer the hosted runtime API when configured, then fall back to static JSON.
-  // Static GitHub Pages leaves the public origin empty, so no guaranteed-404
-  // same-origin probe is made and the committed JSON remains available.
-  if (CONSTANTS.API_BACKEND_ENABLED) {
-    try {
-      const backendRes = await fetchWithTimeout(
-        GOLD_BACKEND_URL,
-        Math.min(effectiveTimeoutMs, 4000),
-        { signal }
-      );
-      const backendData = await backendRes.json();
-      const normalized = normalizeGoldResponse(backendData);
-      if (normalized) return normalized;
-      if (backendOnly) throw new DataError('Runtime backend returned an invalid price payload');
-    } catch (error) {
-      // Backend unavailable or invalid; continue to static fallback.
-      if (backendOnly) throw error;
-    }
-  }
-
-  if (backendOnly) {
-    throw new NetworkError('Realtime backend is not configured or unavailable');
-  }
 
   try {
     return await retryWithBackoff(async () => {

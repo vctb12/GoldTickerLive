@@ -1,6 +1,4 @@
 import { ChainedQuoteProvider } from './chained-provider.js';
-import { CONSTANTS } from '../../config/constants.js';
-import { BackendQuoteProvider } from './backend-provider.js';
 import { GoldApiComQuoteProvider } from './gold-api-com-provider.js';
 import { MintedMetalQuoteProvider } from './minted-metal-provider.js';
 import { LastGoldPriceQuoteProvider } from './last-gold-price-provider.js';
@@ -37,12 +35,12 @@ export function withTimeoutCap(provider, capMs) {
 /**
  * Primary chain — live source first, then sequential failovers:
  *  1. gold-api.com live spot (2 s cap)
- *  2. mintedmetal.com LBMA reference — failover only, reached when gold-api.com
+ *  2. mintedmetal.com LBMA reference — optional legacy self-hosted/test failover
  *     fails. Its data is twice-daily, so it is a backstop rather than a live
  *     racer; fetching it lazily (only on primary failure) keeps it off the
  *     network path on every page load while preserving it as the documented
  *     Tier-2 source in `methodology.html`.
- *  3. backend API / committed gold_price.json (1.5 s cap)
+ *  3. committed gold_price.json (1.5 s cap)
  *  4. last_gold_price.json
  *
  * The live providers are wrapped with `withTimeoutCap` so the engine's inbound
@@ -56,14 +54,6 @@ export function withTimeoutCap(provider, capMs) {
  */
 export function createPrimaryQuoteProvider() {
   const providers = [
-    ...(CONSTANTS.API_BACKEND_ENABLED
-      ? [
-          withTimeoutCap(
-            new BackendQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
-            LIVE_PRIMARY_TIMEOUT_MS
-          ),
-        ]
-      : []),
     withTimeoutCap(
       new GoldApiComQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
       LIVE_PRIMARY_TIMEOUT_MS
@@ -80,6 +70,24 @@ export function createPrimaryQuoteProvider() {
     providerId: 'live-primary',
     providers,
   });
+}
+
+/**
+ * Production browser pool. Only the documented no-secret Gold-API.com source
+ * is live; the remaining paths are static or local recovery values and are
+ * always labelled as fallback by the live manager. MintedMetal remains
+ * available through createPrimaryQuoteProvider for local/self-hosted tests,
+ * but is deliberately not a production browser dependency.
+ */
+export function createBrowserQuoteProviders() {
+  return [
+    withTimeoutCap(
+      new GoldApiComQuoteProvider({ timeoutMs: LIVE_PRIMARY_TIMEOUT_MS }),
+      LIVE_PRIMARY_TIMEOUT_MS
+    ),
+    new PrimaryQuoteProvider({ timeoutMs: FALLBACK_JSON_TIMEOUT_MS }),
+    new LastGoldPriceQuoteProvider(),
+  ];
 }
 
 /** Recent localStorage snapshot — always labelled fallback in UI. */

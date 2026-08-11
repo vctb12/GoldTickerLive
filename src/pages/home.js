@@ -21,14 +21,9 @@ import * as cache from '../lib/cache.js';
 import * as calc from '../lib/price-calculator.js';
 import * as fmt from '../lib/formatter.js';
 import { getMarketStatus, getLiveFreshness, applyMarketClosedOverlay } from '../lib/live-status.js';
-import { createRealtimePricingEngine } from '../lib/realtime-pricing-engine.js';
-import { REALTIME_POLLING_DEFAULTS } from '../lib/realtime-config.js';
+import { getLivePriceManager } from '../lib/live-price-manager.js';
 import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
 import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
-import {
-  createPrimaryQuoteProvider,
-  createSecondaryQuoteProvider,
-} from '../lib/quote-providers/create-providers.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -1711,32 +1706,25 @@ function applyRealtimeSnapshot(snapshot) {
 
   const quote = snapshot?.quote;
   if (quote?.price) {
-    if (
-      CONSTANTS.API_BACKEND_ENABLED &&
-      ['realtime-stream', 'runtime-api'].includes(quote.providerId)
-    ) {
-      const raw = quote.providerRaw || {};
-      applyCanonicalSnapshot(
-        buildSnapshot({
-          price: quote.price,
-          updatedAt: quote.providerTimestamp || quote.fetchedAt,
-          source: quote.source || raw.provider || quote.providerId,
-          sourceTimestamp: quote.providerTimestamp || raw.timestampUtc || null,
-          isFresh: quote.isFresh ?? raw.isFresh ?? null,
-          isFallback: quote.isFallback ?? raw.isFallback ?? false,
-          freshnessSeconds: quote.freshnessSeconds ?? raw.freshnessSeconds ?? null,
-          maxFreshnessSeconds: quote.maxFreshnessSeconds ?? raw.maxFreshnessSeconds ?? null,
-          raw,
-        }),
-        { persist: false }
-      );
-    }
-    // Runtime quotes feed the same canonical snapshot used by every homepage
-    // surface. When the runtime is unavailable, the static resolver remains the
-    // source of truth and this branch only updates provider/liveness metadata.
-    if (!['realtime-stream', 'runtime-api'].includes(quote.providerId)) {
-      goldProviderId = quote.providerId || goldProviderId;
-    }
+    const raw = quote.providerRaw || {};
+    const providerTimestamp = quote.providerTimestamp || quote.fetchedAt;
+    const ageMs = Number.isFinite(quote.providerAgeMs)
+      ? quote.providerAgeMs
+      : Math.max(0, Date.now() - new Date(providerTimestamp || 0).getTime());
+    applyCanonicalSnapshot(
+      buildSnapshot({
+        price: quote.price,
+        updatedAt: providerTimestamp,
+        source: quote.source || raw.provider || quote.providerId,
+        sourceTimestamp: providerTimestamp,
+        isFresh: quote.providerPathSuccessful === true && ageMs <= 10_000,
+        isFallback: quote.isFallback === true || quote.providerPathSuccessful === false,
+        freshnessSeconds: Math.floor(ageMs / 1000),
+        maxFreshnessSeconds: 10,
+        raw: quote,
+      }),
+      { persist: quote.providerPathSuccessful === true }
+    );
     hideDataStatusBanner();
     if (!goldPrice) renderHeroCard();
   } else if (!goldPrice) {
@@ -1754,35 +1742,13 @@ function applyRealtimeSnapshot(snapshot) {
 function initRealtimeEngine() {
   if (_realtimeEngine) return;
 
-  _realtimeEngine = createRealtimePricingEngine({
-    primaryProvider: createPrimaryQuoteProvider(),
-    secondaryProvider: createSecondaryQuoteProvider(),
-    config: {
-      ...REALTIME_POLLING_DEFAULTS,
-      streamUrl: CONSTANTS.API_BACKEND_ENABLED ? '/api/v1/prices/stream' : null,
-    },
-    debug: isRealtimeDebugEnabled(),
-  });
-
-  const cacheBoot = cache.getFreshBootGoldPrice();
-  if (cacheBoot) {
-    _realtimeEngine.seedFromCache({
-      price: cacheBoot.price,
-      updatedAt: cacheBoot.updatedAt,
-      fetchedAt: cacheBoot.fetchedAt,
-      providerId: 'cache',
-      source: 'cache',
-    });
-  }
+  _realtimeEngine = getLivePriceManager();
 
   _realtimeEngine.subscribe((snapshot) => {
     applyRealtimeSnapshot(snapshot);
   });
 
   _realtimeEngine.start();
-  document.addEventListener('visibilitychange', () => {
-    _realtimeEngine?.setVisibility(!document.hidden);
-  });
 }
 
 function initLazyBelowFoldFeatures() {

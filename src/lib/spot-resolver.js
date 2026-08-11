@@ -2,11 +2,12 @@
  * Canonical spot resolver — the SINGLE read point for the gold spot price and
  * every value derived from it. The homepage's redesigned surfaces (nav price
  * pill, hero, karat ladder/dial, inline calculator, market read) all call
- * {@link getCanonicalSpot} so they render ONE value at any instant — from the
- * hosted runtime when configured, or the static emergency path otherwise.
+ * {@link getCanonicalSpot} so they render ONE value at any instant from the
+ * static emergency path. Homepage and Tracker near-realtime updates are owned
+ * by the shared browser live-price manager.
  *
- * Runtime REST/SSE quotes and the committed data file converge here, so every
- * surface still reads one value and applies the same derivation.
+ * Committed snapshot data converges here, so every static surface still reads
+ * one value and applies the same derivation.
  *
  * Immutable invariants (never re-derived here): AED peg 3.6725, troy ounce
  * 31.1034768 g, karat purity = code/24, spot ≠ retail.
@@ -15,8 +16,8 @@ import { CONSTANTS } from '../config/constants.js';
 import { KARATS } from '../config/karats.js';
 import { fetchGold } from './api.js';
 
-// Runtime REST/SSE quotes and the static emergency path converge here so every
-// homepage surface continues to derive from one snapshot.
+// The shared live manager updates its subscribed homepage surfaces; this
+// resolver remains the canonical static snapshot reader for other pages.
 
 const { AED_PEG, TROY_OZ_GRAMS } = CONSTANTS;
 

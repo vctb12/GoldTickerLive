@@ -1,15 +1,15 @@
-// 1 s polling when a live-lane provider is active (real-time hero updates).
-// Static JSON / LBMA / cache fallbacks use slower cadences via resolveProviderPollMs().
-// Failure backoff caps at 5 s while the tab is visible (PR-B Phase 4).
+// Gold-API.com terms prohibit abusive request rates. A single visible tab uses
+// a responsible 5-second live cadence; hidden tabs slow down substantially and
+// cross-tab leadership prevents N tabs from multiplying request volume.
 export const REALTIME_POLLING_DEFAULTS = {
-  activePollMs: 1000,
-  livePollMs: 1000,
+  activePollMs: 5000,
+  livePollMs: 5000,
   staticPollMs: 30_000,
   fallbackPollMs: 60_000,
-  hiddenPollMs: 5000,
-  fetchTimeoutMs: 4000,
+  hiddenPollMs: 60_000,
+  fetchTimeoutMs: 2500,
   jitterMs: 250,
-  backoffMs: [1000, 2000, 3000, 5000],
+  backoffMs: [2500, 5000, 5000],
   streamUrl: null,
 };
 
