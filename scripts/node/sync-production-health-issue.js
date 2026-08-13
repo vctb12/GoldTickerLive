@@ -80,6 +80,9 @@ async function main() {
   }
 
   if (current) {
+    const warningSummary = report.warnings?.length
+      ? ` Non-P0 warnings remain: ${report.warnings.join(', ')}.`
+      : '';
     await githubRequest(`/repos/${repository}/issues/${current.number}`, {
       method: 'PATCH',
       body: JSON.stringify({ state: 'closed' }),
@@ -87,7 +90,7 @@ async function main() {
     await githubRequest(`/repos/${repository}/issues/${current.number}/comments`, {
       method: 'POST',
       body: JSON.stringify({
-        body: `Recovery verified at ${report.checkedAtUtc}. The P0 pricing health issue is closed.`,
+        body: `P0 recovery verified at ${report.checkedAtUtc}. The P0 pricing health issue is closed.${warningSummary}`,
       }),
     });
     console.log(`closed recovered P0 issue #${current.number}`);
