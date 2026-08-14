@@ -8,13 +8,13 @@
   "currency": "USD",
   "groupBy": "day",
   "aggregation": "daily-average",
-  "retrievedAt": "2026-08-13T04:30:21.395Z",
-  "generatedAt": "2026-08-13T04:30:21.395Z",
+  "retrievedAt": "2026-08-14T04:28:38.990Z",
+  "generatedAt": "2026-08-14T04:28:38.990Z",
   "request": {
-    "startTimestamp": 1752105600,
-    "endTimestamp": 1786665599,
-    "startDate": "2025-07-10",
-    "endDate": "2026-08-13",
+    "startTimestamp": 1752192000,
+    "endTimestamp": 1786751999,
+    "startDate": "2025-07-11",
+    "endDate": "2026-08-14",
     "timestampUnit": "seconds"
   },
   "providerResponseRecordCount": 400,
@@ -31,13 +31,13 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "daf13d58120eb6283f996083b4986de34db79c6d90ec19d7cc4f86253eca4a2e",
-  "normalizedRecordsSha256": "8309a4e0623967cf167240054fba79c72316de0841c828aacee071fbae891bff",
+  "rawResponseSha256": "d088fd0bc071de70e68c602ef8415049a4c8bd18dc04b2927446324b78df640f",
+  "normalizedRecordsSha256": "33be5225aa7a72e04871059318643c15bb57ae45de25f9e0f51f953ff229dc3d",
   "workflow": {
     "repository": "vctb12/GoldTickerLive",
-    "runId": "31667187350",
+    "runId": "31769948184",
     "runAttempt": "1",
-    "commitSha": "b5d1b34fecb7a091e597d08b5b474837b2cce39c",
+    "commitSha": "9c201d4c48809452a314aeb3aa3ecef229fbe135",
     "ref": "refs/heads/main"
   },
   "normalizerVersion": "1.1.0",
@@ -47,7 +47,7 @@
     "maxMonotonicUp": 13,
     "maxMonotonicDown": 9,
     "maxRepeatedDelta": 1,
-    "dailyReturnStdDev": 52.7199,
+    "dailyReturnStdDev": 52.8034,
     "uniqueValueRatio": 0.9975,
     "weekendRecordCount": 114,
     "maxAbsoluteDailyReturn": 386.7211,
@@ -58,16 +58,12 @@
     }
   },
   "coverage": {
-    "start": "2025-07-10",
-    "end": "2026-08-13",
+    "start": "2025-07-11",
+    "end": "2026-08-14",
     "recordCount": 400,
     "calendarAgeDays": 0
   },
   "records": [
-    {
-      "date": "2025-07-10",
-      "avgUsdOz": 3322.7899
-    },
     {
       "date": "2025-07-11",
       "avgUsdOz": 3346.6918
@@ -1662,7 +1658,11 @@
     },
     {
       "date": "2026-08-13",
-      "avgUsdOz": 4415.8359
+      "avgUsdOz": 4380.8602
+    },
+    {
+      "date": "2026-08-14",
+      "avgUsdOz": 4327.9069
     }
   ]
 }
