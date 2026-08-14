@@ -24,3 +24,15 @@ test('learn static fallback markers are present for build regeneration', () => {
   assert.match(learnHtml, /<!-- LEARN_STATIC_FALLBACK:START -->/);
   assert.match(learnHtml, /<!-- LEARN_STATIC_FALLBACK:END -->/);
 });
+
+test('learn static fallback does not contain a disabled filter input', () => {
+  const fallbackMatch = learnHtml.match(
+    /<!-- LEARN_STATIC_FALLBACK:START -->[\s\S]*?<!-- LEARN_STATIC_FALLBACK:END -->/
+  );
+  assert.ok(fallbackMatch, 'static fallback markers should be present');
+  const fallbackBlock = fallbackMatch[0];
+  assert.ok(
+    !fallbackBlock.includes('learn-hub-filter'),
+    'static fallback must not contain a disabled filter input'
+  );
+});
