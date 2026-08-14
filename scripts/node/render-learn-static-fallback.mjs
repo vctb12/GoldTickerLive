@@ -224,7 +224,6 @@ function renderCatalog() {
   <p class="learn-hub-eyebrow">${esc(tx('learn.hubEyebrow'))}</p>
   <p class="learn-hub-intro">${esc(tx('learn.hubIntro'))}</p>
   <p class="learn-hub-progress learn-hub-progress--loading" data-progress-loading="true">${esc(tx('learn.progressLoading'))}</p>
-  <input type="search" class="learn-hub-filter" placeholder="${esc(tx('learn.filterPlaceholder'))}" aria-label="${esc(tx('learn.filterPlaceholder'))}" disabled aria-disabled="true" />
   <div class="learn-hub-sections">${sections}</div>
   <div class="learn-hub-related-row">
     <span class="learn-hub-related-label">${esc(tx('learn.relatedLabel'))}</span>
