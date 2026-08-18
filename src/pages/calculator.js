@@ -28,7 +28,7 @@ import { renderMarketStatusPanel } from '../components/MarketStatusPanel.js';
 import { el, clear } from '../lib/safe-dom.js';
 import { iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
-import { getLiveFreshness, getMarketStatus } from '../lib/live-status.js';
+import { getCalculatorFreshness } from './calculator/freshness.js';
 import {
   createSavedCalculation,
   isAuthenticated as isAccountAuthenticated,
@@ -72,11 +72,15 @@ function renderBreakdownRows(container, rows) {
 const STATE = {
   lang: 'en',
   spotUsdPerOz: 0,
-  spotSource: 'cached/fallback',
   rates: {},
   fxMeta: { nextUpdateUtc: 0 },
   status: { goldStale: false, fxStale: false },
-  freshness: { goldUpdatedAt: null },
+  freshness: {
+    goldUpdatedAt: null,
+    goldIsFresh: null,
+    goldIsFallback: false,
+    goldHasLiveFailure: true,
+  },
   countrySlug: null,
   favorites: [],
   history: [],
@@ -1307,20 +1311,14 @@ function updateSpotBadge() {
         hour: '2-digit',
         minute: '2-digit',
       });
-      // Honor the market-closed overlay here too — the parallel FreshnessBadge
-      // already does, so without this the note could read "Live" while the badge
-      // beside it reads "Closed" (freshness contract).
-      const sourceLabel = !getMarketStatus().isOpen
-        ? STATE.lang === 'ar'
-          ? 'مغلق'
-          : 'Closed'
-        : STATE.spotSource === 'live'
-          ? STATE.lang === 'ar'
-            ? 'مباشر'
-            : 'Live'
-          : STATE.lang === 'ar'
-            ? 'مخزن/احتياطي'
-            : 'Cached/Fallback';
+      const freshness = getCalculatorFreshness({
+        updatedAt: STATE.freshness.goldUpdatedAt,
+        lang: STATE.lang,
+        isFresh: STATE.freshness.goldIsFresh,
+        isFallback: STATE.freshness.goldIsFallback,
+        hasLiveFailure: STATE.freshness.goldHasLiveFailure,
+      });
+      const sourceLabel = tGlobal(`freshness.badge.${freshness.state}`);
       freshnessEl.textContent =
         STATE.lang === 'ar'
           ? `حداثة البيانات: ${sourceLabel} · ${stamp} · المصدر: ${DATA_ATTRIBUTION.gold.domain}`
@@ -1334,18 +1332,20 @@ function updateSpotBadge() {
 function renderCalculatorTrustAddons() {
   const freshnessSlot = document.getElementById('calc-freshness-badge-slot');
   if (freshnessSlot) {
-    const freshness = getLiveFreshness({
+    const freshness = getCalculatorFreshness({
       updatedAt: STATE.freshness.goldUpdatedAt,
       lang: STATE.lang,
-      hasLiveFailure: STATE.spotSource !== 'live',
+      isFresh: STATE.freshness.goldIsFresh,
+      isFallback: STATE.freshness.goldIsFallback,
+      hasLiveFailure: STATE.freshness.goldHasLiveFailure,
     });
     freshnessSlot.replaceChildren(
       renderFreshnessBadge({
         lang: STATE.lang,
-        state: freshness.key,
+        state: freshness.state,
         source: DATA_ATTRIBUTION.gold.domain,
         updatedAt: STATE.freshness.goldUpdatedAt,
-        marketOpen: getMarketStatus().isOpen,
+        marketOpen: true,
         className: 'calc-freshness-badge',
         t: tGlobal,
       })
@@ -1520,10 +1520,12 @@ async function fetchLiveData() {
       const snap = snapRes.value;
       STATE.spotUsdPerOz = snap.spotUsdPerOz;
       STATE.freshness.goldUpdatedAt = snap.freshness.updatedAt || new Date().toISOString();
-      STATE.spotSource = snap.freshness.state === 'live' ? 'live' : 'cached/fallback';
+      STATE.freshness.goldIsFresh = snap.freshness.isFresh;
+      STATE.freshness.goldIsFallback = snap.freshness.providerFallback;
+      STATE.freshness.goldHasLiveFailure = snap.freshness.hasLiveFailure;
       cache.saveGoldPrice(snap.spotUsdPerOz, snap.freshness.updatedAt);
     } else if (STATE.spotUsdPerOz) {
-      STATE.spotSource = 'cached/fallback';
+      STATE.freshness.goldHasLiveFailure = true;
     }
     if (fxRes.status === 'fulfilled') {
       STATE.rates = fxRes.value.rates;
@@ -1538,6 +1540,13 @@ async function fetchLiveData() {
       const TROY = UNIT_TO_GRAMS.oz;
       const AED = CONSTANTS.AED_PEG;
       const aed24 = ((STATE.spotUsdPerOz * 1) / TROY) * AED;
+      const freshness = getCalculatorFreshness({
+        updatedAt: STATE.freshness.goldUpdatedAt,
+        lang: STATE.lang,
+        isFresh: STATE.freshness.goldIsFresh,
+        isFallback: STATE.freshness.goldIsFallback,
+        hasLiveFailure: STATE.freshness.goldHasLiveFailure,
+      });
       updateTicker({
         xauUsd: STATE.spotUsdPerOz,
         uae24k: aed24,
@@ -1545,13 +1554,17 @@ async function fetchLiveData() {
         uae21k: ((STATE.spotUsdPerOz * (21 / 24)) / TROY) * AED,
         uae18k: ((STATE.spotUsdPerOz * (18 / 24)) / TROY) * AED,
         updatedAt: STATE.freshness.goldUpdatedAt,
-        hasLiveFailure: STATE.spotSource !== 'live',
+        isFresh: STATE.freshness.goldIsFresh,
+        isFallback: STATE.freshness.goldIsFallback,
+        hasLiveFailure: freshness.key !== 'live',
       });
       updateSpotBar({
         xauUsd: STATE.spotUsdPerOz,
         aed24kGram: aed24,
         updatedAt: STATE.freshness.goldUpdatedAt,
-        hasLiveFailure: STATE.spotSource !== 'live',
+        isFresh: STATE.freshness.goldIsFresh,
+        isFallback: STATE.freshness.goldIsFallback,
+        hasLiveFailure: freshness.key !== 'live',
       });
     }
   } catch (e) {
