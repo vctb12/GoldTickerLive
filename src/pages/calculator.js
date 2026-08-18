@@ -1540,13 +1540,6 @@ async function fetchLiveData() {
       const TROY = UNIT_TO_GRAMS.oz;
       const AED = CONSTANTS.AED_PEG;
       const aed24 = ((STATE.spotUsdPerOz * 1) / TROY) * AED;
-      const freshness = getCalculatorFreshness({
-        updatedAt: STATE.freshness.goldUpdatedAt,
-        lang: STATE.lang,
-        isFresh: STATE.freshness.goldIsFresh,
-        isFallback: STATE.freshness.goldIsFallback,
-        hasLiveFailure: STATE.freshness.goldHasLiveFailure,
-      });
       updateTicker({
         xauUsd: STATE.spotUsdPerOz,
         uae24k: aed24,
@@ -1556,7 +1549,7 @@ async function fetchLiveData() {
         updatedAt: STATE.freshness.goldUpdatedAt,
         isFresh: STATE.freshness.goldIsFresh,
         isFallback: STATE.freshness.goldIsFallback,
-        hasLiveFailure: freshness.key !== 'live',
+        hasLiveFailure: STATE.freshness.goldHasLiveFailure,
       });
       updateSpotBar({
         xauUsd: STATE.spotUsdPerOz,
@@ -1564,7 +1557,7 @@ async function fetchLiveData() {
         updatedAt: STATE.freshness.goldUpdatedAt,
         isFresh: STATE.freshness.goldIsFresh,
         isFallback: STATE.freshness.goldIsFallback,
-        hasLiveFailure: freshness.key !== 'live',
+        hasLiveFailure: STATE.freshness.goldHasLiveFailure,
       });
     }
   } catch (e) {
