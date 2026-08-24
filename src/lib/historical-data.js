@@ -227,6 +227,7 @@ const RANGE_WINDOWS = {
   '7D': 7,
   '30D': 30,
   '90D': 90,
+  '6M': 183,
   '1Y': 365,
   '3Y': 365 * 3,
   '5Y': 365 * 5,
@@ -235,7 +236,7 @@ const RANGE_WINDOWS = {
 /**
  * Filter records by a date range.
  * @param {HistoryRecord[]} records
- * @param {'1Y'|'3Y'|'5Y'|'ALL'|'90D'|'30D'} range
+ * @param {'1Y'|'3Y'|'5Y'|'ALL'|'6M'|'90D'|'30D'} range
  */
 export function filterByRange(records, range) {
   if (!range || range === 'ALL') return records;

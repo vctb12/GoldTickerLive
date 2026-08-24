@@ -13,7 +13,7 @@ state be deep-linked, bookmarked, and shared. The contract is implemented in
 ## Canonical form
 
 ```
-tracker.html#mode=<mode>&cur=<CUR>&k=<K>&u=<unit>&r=<range>&cmp=<CUR>&lang=<en|ar>[&panel=<panel>]
+tracker.html#mode=<mode>&cur=<CUR>&k=<K>&u=<unit>&r=<range>&cmp=<CUR>&lang=<en|ar>[&panel=<panel>][&metal=<metal>&grade=<grade>]
 ```
 
 Example:
@@ -21,20 +21,27 @@ Example:
 ```
 tracker.html#mode=live&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=en
 tracker.html#mode=live&panel=alerts&cur=AED&k=24&u=gram&r=30D&cmp=USD&lang=en
+tracker.html?metals=preview#mode=live&cur=AED&k=24&u=gram&r=6M&cmp=USD&lang=ar&metal=silver&grade=925
 ```
 
 ## Parameter schema
 
-| Key     | Required | Values                                                | Source of truth                                                                       |
-| ------- | -------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `mode`  | yes      | `live` · `compare` · `archive` · `exports` · `method` | [`VALID_MODES`](../src/tracker/state.js) (`Set`)                                      |
-| `cur`   | yes      | 3-letter currency (e.g. `AED`, `USD`, `SAR`)          | [`src/config/countries.js`](../src/config/countries.js) `currency` values             |
-| `k`     | yes      | `24` · `22` · `21` · `20` · `18` · `16` · `14`        | [`src/config/karats.js`](../src/config/karats.js)                                     |
-| `u`     | yes      | `gram` · `oz` · `tola`                                | Tracker unit selector (`#tp-unit`)                                                    |
-| `r`     | yes      | `7D` · `30D` · `90D` · `1Y` · `5Y`                    | Range selector in `src/tracker/ui-shell.js`                                           |
-| `cmp`   | yes      | 3-letter currency (independent of `cur`)              | Compare-mode secondary currency                                                       |
-| `lang`  | yes      | `en` · `ar`                                           | Mirrors the sitewide language toggle                                                  |
-| `panel` | no       | `alerts` · `planner`                                  | [`VALID_PANELS`](../src/tracker/state.js) (`Set`); surfaces a modal panel on any mode |
+| Key     | Required     | Values                                                           | Source of truth                                                                                    |
+| ------- | ------------ | ---------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `mode`  | yes          | `live` · `compare` · `archive` · `exports` · `method`            | [`VALID_MODES`](../src/tracker/state.js) (`Set`)                                                   |
+| `cur`   | yes          | 3-letter currency (e.g. `AED`, `USD`, `SAR`)                     | [`src/config/countries.js`](../src/config/countries.js) `currency` values                          |
+| `k`     | yes          | `24` · `22` · `21` · `20` · `18` · `16` · `14`                   | [`src/config/karats.js`](../src/config/karats.js)                                                  |
+| `u`     | yes          | `gram` · `oz` · `tola`                                           | Tracker unit selector (`#tp-unit`)                                                                 |
+| `r`     | yes          | `24H` · `7D` · `30D` · `90D` · `6M` · `1Y` · `3Y` · `5Y` · `ALL` | Tracker range selector                                                                             |
+| `cmp`   | yes          | 3-letter currency (independent of `cur`)                         | Compare-mode secondary currency                                                                    |
+| `lang`  | yes          | `en` · `ar`                                                      | Mirrors the sitewide language toggle                                                               |
+| `panel` | no           | `alerts` · `planner`                                             | [`VALID_PANELS`](../src/tracker/state.js) (`Set`); surfaces a modal panel on any mode              |
+| `metal` | preview only | `silver` · `platinum` · `palladium`                              | Serialized only when the localhost metals preview is enabled; gold remains the default             |
+| `grade` | with `metal` | a valid purity/fineness code for that metal                      | [`src/config/metals.js`](../src/config/metals.js); invalid pairs reconcile to that metal's default |
+
+`metal` and `grade` are additive preview parameters, not part of the production-default URL. They
+are ignored when the metals gate is off, and the next canonical state write removes them. This
+preserves existing gold deep links and prevents a crafted production URL from enabling the pilot.
 
 ## Legacy one-token hashes
 

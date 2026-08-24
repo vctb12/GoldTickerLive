@@ -3,6 +3,9 @@ import { CONSTANTS } from '../config/index.js';
 import { COUNTRIES } from '../config/index.js';
 import * as cache from '../lib/cache.js';
 import { showStorageQuotaWarning } from '../lib/cache.js';
+import { getMetal, PRIMARY_METAL } from '../config/metals.js';
+import { normalizeMetalSelection } from '../lib/metal-selector-state.js';
+import { isMetalsPilotEnabled } from '../config/metals-flags.js';
 
 export const STORAGE_KEYS = {
   core: 'tracker_pro_state_v5',
@@ -20,6 +23,8 @@ export const DEFAULT_STATE = {
   workspaceLevel: 'basic',
   selectedCurrency: 'AED',
   selectedKarat: '24',
+  selectedMetal: PRIMARY_METAL,
+  selectedMetalPurity: getMetal(PRIMARY_METAL).defaultPurity,
   selectedUnit: 'gram',
   compareCurrency: 'USD',
   compareCountries: ['AE', 'SA', 'KW'],
@@ -38,6 +43,8 @@ export const DEFAULT_STATE = {
   rates: {},
   fxMeta: {},
   history: [], // unified history rows
+  metalQuotes: {},
+  metalHistory: {},
   snapshots: [],
   // User artefacts
   alerts: [],
@@ -114,6 +121,12 @@ export function createInitialState() {
   base.workspaceLevel = saved.workspaceLevel === 'advanced' ? 'advanced' : base.workspaceLevel;
   base.selectedCurrency = saved.selectedCurrency || base.selectedCurrency;
   base.selectedKarat = saved.selectedKarat || base.selectedKarat;
+  if (isMetalsPilotEnabled()) {
+    ({ metal: base.selectedMetal, grade: base.selectedMetalPurity } = normalizeMetalSelection({
+      metal: saved.selectedMetal,
+      grade: saved.selectedMetalPurity,
+    }));
+  }
   base.selectedUnit = saved.selectedUnit || base.selectedUnit;
   base.compareCurrency = saved.compareCurrency || base.compareCurrency;
   base.compareCountries =
@@ -153,6 +166,8 @@ export function persistState(state) {
     workspaceLevel: state.workspaceLevel === 'advanced' ? 'advanced' : 'basic',
     selectedCurrency: state.selectedCurrency,
     selectedKarat: state.selectedKarat,
+    selectedMetal: state.selectedMetal,
+    selectedMetalPurity: state.selectedMetalPurity,
     selectedUnit: state.selectedUnit,
     compareCurrency: state.compareCurrency,
     compareCountries: state.compareCountries,
@@ -183,6 +198,10 @@ export function syncUrlFromState(state, _panel = null) {
   params.set('r', state.range);
   params.set('cmp', state.compareCurrency);
   params.set('lang', state.lang);
+  if (isMetalsPilotEnabled() && state.selectedMetal !== PRIMARY_METAL) {
+    params.set('metal', state.selectedMetal);
+    params.set('grade', state.selectedMetalPurity);
+  }
   if (state.historyMonth) params.set('month', state.historyMonth);
   if (state.panel && VALID_PANELS.has(state.panel)) params.set('panel', state.panel);
   url.hash = params.toString();
@@ -204,6 +223,14 @@ export function applyUrlState(state) {
   state.range = params.get('r') || state.range;
   state.compareCurrency = params.get('cmp') || state.compareCurrency;
   state.historyMonth = params.get('month') || state.historyMonth;
+  if (isMetalsPilotEnabled()) {
+    const selection = normalizeMetalSelection({
+      metal: params.get('metal') || state.selectedMetal,
+      grade: params.get('grade') || state.selectedMetalPurity,
+    });
+    state.selectedMetal = selection.metal;
+    state.selectedMetalPurity = selection.grade;
+  }
   const urlLang = params.get('lang');
   if (urlLang === 'en' || urlLang === 'ar') state.lang = urlLang;
   return parsed;

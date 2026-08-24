@@ -36,6 +36,16 @@ test('parseHash: valid full hash preserves every param', async () => {
   assert.equal(out.params.get('lang'), 'en');
 });
 
+test('parseHash: pilot metal and fineness parameters survive generic parsing', async () => {
+  const { parseHash } = await load();
+  const out = parseHash(
+    'mode=live&cur=AED&k=24&u=gram&r=6M&cmp=USD&lang=en&metal=silver&grade=925'
+  );
+  assert.equal(out.params.get('metal'), 'silver');
+  assert.equal(out.params.get('grade'), '925');
+  assert.equal(out.params.get('r'), '6M');
+});
+
 test('parseHash: every VALID_MODES value round-trips without canonicalization', async () => {
   const { parseHash, VALID_MODES } = await load();
   for (const mode of VALID_MODES) {

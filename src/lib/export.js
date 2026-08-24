@@ -306,39 +306,60 @@ export function exportHistoricalCSV(records, karatCode = '24') {
 // CHART CSV — currently visible chart slice
 // ─────────────────────────────────────────────────────────────────────────────
 
-export function exportChartCSV(rows, range, karatCode = '24') {
+export function buildChartCSVContent(rows, range, gradeOrOptions = '24') {
   if (!rows?.length) return;
   const TROY = CONSTANTS.TROY_OZ_GRAMS;
   const AED = CONSTANTS.AED_PEG;
-  const purity = parseInt(karatCode, 10) / 24;
+  const options =
+    gradeOrOptions && typeof gradeOrOptions === 'object'
+      ? gradeOrOptions
+      : {
+          metalKey: 'gold',
+          symbol: 'XAU',
+          gradeCode: String(gradeOrOptions || '24'),
+          purity: parseInt(gradeOrOptions || '24', 10) / 24,
+        };
+  const symbol = String(options.symbol || 'XAU').toUpperCase();
+  const gradeCode = String(options.gradeCode || (symbol === 'XAU' ? '24' : '999'));
+  const purity = Number(options.purity);
+  if (!Number.isFinite(purity) || purity <= 0 || purity > 1) return;
+  const gradeLabel = symbol === 'XAU' ? `${gradeCode}K` : `fineness ${gradeCode}`;
+  const metadata = options.metadata || {};
 
   const startDate = historyDateLabel(rows[0]?.date);
   const endDate = historyDateLabel(rows[rows.length - 1]?.date);
-  const hasMonthly = rows.some(
-    (row) => row.granularity === 'monthly' || String(row.date).length === 7
-  );
-  const hasLive = rows.some((row) => row.source === 'live' || row.granularity === 'live');
-  const resolution = hasMonthly
-    ? 'mixed: monthly LBMA baseline + recent snapshots'
-    : 'daily cached snapshots';
-  const freshnessState = hasLive ? 'live+cached' : hasMonthly ? 'historical+cached' : 'cached';
+  const sourceIds = metadata.sourceIds || [
+    ...new Set(rows.map((row) => row.source).filter(Boolean)),
+  ];
+  const resolution = metadata.effectiveResolution || 'mixed';
+  const freshnessStates = [...new Set(rows.map(rowFreshnessState))].join('+') || 'unavailable';
   const lines = [
-    `# Gold Ticker Live — Visible Chart Range (${karatCode}K, ${range || 'ALL'})`,
+    `# Gold Ticker Live — Visible ${symbol} Chart Range (${gradeLabel}, ${range || 'ALL'})`,
     `# Exported: ${new Date().toISOString()}`,
     `# Range filter: ${range || 'ALL'} · ${startDate} → ${endDate} · points: ${rows.length}`,
     `# Data resolution: ${resolution}`,
-    `# Freshness state: ${freshnessState}`,
+    `# Freshness state(s): ${freshnessStates}`,
+    `# Source ID(s): ${sourceIds.join(' + ') || 'unavailable'}`,
+    `# Partial coverage: ${metadata.partiallyCovered === true ? 'yes' : 'no'}`,
+    `# Derived values present: ${metadata.derived === true ? 'yes' : 'no'}`,
+    `# Quality warnings: ${(metadata.warnings || []).join(' + ') || 'none'}`,
     `# AED peg: ${AED} fixed (UAE Central Bank)`,
     '# Disclaimer: Reference / spot-linked estimates only. Not retail or shop pricing.',
     '# Note: Actual retail prices include making charges, VAT, and dealer premiums.',
     '',
     csvRow([
-      'Date',
-      'XAU/USD (spot)',
-      `${karatCode}K USD/gram`,
-      `${karatCode}K AED/gram`,
-      'Source',
+      'Timestamp UTC',
+      `${symbol}/USD per troy ounce`,
+      `${gradeLabel} USD/gram`,
+      `${gradeLabel} AED/gram`,
+      'Source ID',
+      'Resolution',
+      'Provider timestamp UTC',
       'Freshness state',
+      'Derived',
+      'Verified',
+      'Current anchor',
+      'Quality flags',
     ]),
   ];
 
@@ -351,7 +372,10 @@ export function exportChartCSV(rows, range, karatCode = '24') {
   for (const r of sorted) {
     const spot = r.spot ?? r.price;
     if (!spot) continue;
-    const dateStr = r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date);
+    const parsedDate = r.date instanceof Date ? r.date : new Date(r.date);
+    const dateStr = Number.isFinite(parsedDate.getTime())
+      ? parsedDate.toISOString()
+      : String(r.date);
     const usdGram = (spot * purity) / TROY;
     const aedGram = usdGram * AED;
     const rowState = rowFreshnessState(r);
@@ -362,14 +386,31 @@ export function exportChartCSV(rows, range, karatCode = '24') {
         usdGram.toFixed(3),
         aedGram.toFixed(3),
         r.source || 'baseline',
+        r.resolution || r.granularity || 'unavailable',
+        r.providerTimestamp || '',
         rowState,
+        r.derived === true ? 'yes' : 'no',
+        r.verified === true ? 'yes' : 'no',
+        r.isCurrentAnchor === true ? 'yes' : 'no',
+        Array.isArray(r.qualityFlags) ? r.qualityFlags.join('|') : '',
       ])
     );
   }
 
+  return lines.join('\n');
+}
+
+export function exportChartCSV(rows, range, gradeOrOptions = '24') {
+  const content = buildChartCSVContent(rows, range, gradeOrOptions);
+  if (!content) return;
+  const options = gradeOrOptions && typeof gradeOrOptions === 'object' ? gradeOrOptions : {};
+  const symbol = String(options.symbol || 'XAU').toLowerCase();
+  const startDate = historyDateLabel(rows[0]?.date);
+  const endDate = historyDateLabel(rows[rows.length - 1]?.date);
+
   downloadFile(
-    lines.join('\n'),
-    `goldtickerlive-range-${startDate}-to-${endDate}.csv`,
+    content,
+    `goldtickerlive-${symbol}-range-${startDate}-to-${endDate}.csv`,
     'text/csv;charset=utf-8;'
   );
 }

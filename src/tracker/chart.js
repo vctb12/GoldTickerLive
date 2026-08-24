@@ -12,6 +12,9 @@ import { pulseFreshness } from '../lib/freshness-pulse.js';
 import { getFreshnessModel } from './freshness.js';
 import { bidiIsolate } from '../lib/formatter.js';
 import { readChartTheme } from '../lib/chart-theme.js';
+import { getMetal } from '../config/metals.js';
+import { appendCurrentAnchor, buildMetalSeries } from '../lib/metal-series.js';
+import { getActiveTrackerMetal, getTrackerMetalQuote } from './metal-chart-state.js';
 
 /**
  * Derive the provenance + freshness label for the synthetic "current price" row
@@ -64,35 +67,103 @@ function getHistorySourceLabel(rows = []) {
   return tx('historySource.unavailable');
 }
 
+export function toAdvancedChartData(rows = []) {
+  return rows
+    .map((row) => {
+      const date = row.date instanceof Date ? row.date : new Date(row.date);
+      const value = Number(row.spot ?? row.price);
+      if (!Number.isFinite(date.getTime()) || !Number.isFinite(value) || value <= 0) return null;
+      return { time: Math.floor(date.getTime() / 1000), value };
+    })
+    .filter(Boolean);
+}
+
 export function getVisibleHistoryRows() {
-  const flatHistory = (_state.history || []).map((r) => ({
+  const selectedMetal = getActiveTrackerMetal(_state);
+  const metal = getMetal(selectedMetal);
+  const selectedHistory =
+    selectedMetal === 'gold' ? _state.history || [] : _state.metalHistory?.[selectedMetal] || [];
+  const flatHistory = selectedHistory.map((r) => ({
     date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
-    price: r.spot,
-    spot: r.spot,
-    source: r.source,
-    granularity: r.granularity,
+    price: Number(r.valueUsdPerOz ?? r.price ?? r.spot),
+    spot: Number(r.valueUsdPerOz ?? r.price ?? r.spot),
+    source: r.sourceId || r.source,
+    granularity: r.resolution || r.granularity,
+    freshnessState: r.freshnessState,
+    providerTimestamp: r.providerTimestamp,
+    ingestedAt: r.ingestedAt,
+    derived: r.derived,
+    verified: r.verified,
+    qualityFlags: r.qualityFlags,
   }));
   const monthFiltered = _state.historyMonth
     ? filterByMonth(flatHistory, _state.historyMonth)
     : flatHistory;
   const filtered = _state.historyMonth ? monthFiltered : filterByRange(flatHistory, _state.range);
-  const rows = filtered
-    .map((r) => ({ ...r, date: new Date(r.date) }))
-    .filter((row) => Number.isFinite(row.date.getTime()) && Number.isFinite(row.spot));
-  const liveSpot = _currentSpot();
-  const liveRecord =
-    liveSpot && !_state.historyMonth
-      ? {
-          date: new Date(),
-          price: liveSpot,
-          spot: liveSpot,
-          ...deriveLiveRowFreshness(getFreshnessModel().effectiveKey),
-          granularity: 'live',
-        }
-      : null;
-  if (liveRecord) rows.push(liveRecord);
-  rows.sort((a, b) => a.date - b.date);
-  return rows;
+  const generatedAt = new Date().toISOString();
+  let series = buildMetalSeries(
+    filtered.map((row) => ({
+      timestamp: row.date,
+      valueUsdPerOz: row.spot,
+      metal: metal.symbol,
+      resolution:
+        row.granularity === 'monthly'
+          ? '1mo'
+          : row.granularity === 'daily'
+            ? '1d'
+            : row.granularity || '1d',
+      sourceId: row.source,
+      providerTimestamp: row.providerTimestamp,
+      ingestedAt: row.ingestedAt || generatedAt,
+      freshnessState: row.freshnessState || 'historical',
+      derived: row.derived === true,
+      verified: row.verified === true,
+      qualityFlags: row.qualityFlags,
+    })),
+    {
+      metal: selectedMetal,
+      requestedRange: _state.historyMonth ? 'ALL' : _state.range,
+      purityCode: _state.selectedMetalPurity,
+      generatedAt,
+    }
+  );
+
+  if (!_state.historyMonth) {
+    const quote = getTrackerMetalQuote(_state, _currentSpot);
+    if (quote) {
+      const freshnessState =
+        selectedMetal === 'gold'
+          ? deriveLiveRowFreshness(getFreshnessModel().effectiveKey).freshnessState
+          : quote.freshnessState;
+      series = appendCurrentAnchor(
+        series,
+        { ...quote, metal: metal.symbol, freshnessState },
+        { metal: selectedMetal, generatedAt }
+      );
+    }
+  }
+  _state.chartSeriesMetadata = series.metadata;
+  return series.points.map((point) => ({
+    date: new Date(point.timestamp),
+    price: point.valueUsdPerOz,
+    spot: point.valueUsdPerOz,
+    metal: point.metal,
+    source: point.sourceId,
+    granularity:
+      point.resolution === '1mo'
+        ? 'monthly'
+        : point.resolution === '1d'
+          ? 'daily'
+          : point.resolution,
+    resolution: point.resolution,
+    providerTimestamp: point.providerTimestamp,
+    ingestedAt: point.ingestedAt,
+    freshnessState: point.freshnessState,
+    derived: point.derived,
+    verified: point.verified,
+    isCurrentAnchor: point.isCurrentAnchor,
+    qualityFlags: point.qualityFlags,
+  }));
 }
 
 export function getSelectedRangeLabel() {
@@ -154,8 +225,15 @@ export function renderChart() {
     window.setTimeout(() => _el.chartWrap?.classList.remove('is-loading'), 250);
   }
   const rows = getVisibleHistoryRows();
-  const historyOnly = rows.filter((row) => row.granularity !== 'live');
-  const livePoint = rows.find((row) => row.granularity === 'live') || null;
+  if (
+    getActiveTrackerMetal(_state) === 'gold' &&
+    window.__GOLD_CHART &&
+    typeof window.__GOLD_CHART.setCustomData === 'function'
+  ) {
+    window.__GOLD_CHART.setCustomData(toAdvancedChartData(rows));
+  }
+  const historyOnly = rows.filter((row) => !row.isCurrentAnchor);
+  const livePoint = rows.find((row) => row.isCurrentAnchor) || null;
   const rangeLabel = getSelectedRangeLabel();
   const resolution = describeHistoryResolution(historyOnly, { hasLive: Boolean(livePoint) });
   const summary = buildHistorySummary(historyOnly, {
@@ -197,16 +275,25 @@ export function renderChart() {
   }
   if (_el.chartEmpty) _el.chartEmpty.hidden = true;
   if (rows.length < 2) {
-    const msg = _state.lang === 'ar' ? 'جمع البيانات…' : 'Collecting data…';
     const svgNs = 'http://www.w3.org/2000/svg';
+    const W = _el.chartWrap?.clientWidth || 1200;
+    const H = Math.max(200, (_el.chartWrap?.clientHeight || 430) - 30);
+    _el.chart.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    const circle = document.createElementNS(svgNs, 'circle');
+    circle.setAttribute('cx', String(W / 2));
+    circle.setAttribute('cy', String(H / 2 - 12));
+    circle.setAttribute('r', '6');
+    circle.setAttribute('fill', chartTheme.line);
     const t = document.createElementNS(svgNs, 'text');
     t.setAttribute('x', '50%');
-    t.setAttribute('y', '50%');
+    t.setAttribute('y', String(H / 2 + 22));
     t.setAttribute('text-anchor', 'middle');
     t.setAttribute('fill', chartTheme.text);
     t.setAttribute('font-size', '14');
-    t.textContent = msg;
-    _el.chart.replaceChildren(t);
+    t.textContent = `${rows[0].metal || 'XAU'}/USD · $${rows[0].spot.toFixed(2)} · ${tx(
+      'metalChart.currentOnlyShort'
+    )}`;
+    _el.chart.replaceChildren(circle, t);
   } else {
     const prices = rows.map((r) => r.spot);
     const min = Math.min(...prices) * 0.998;
@@ -384,10 +471,12 @@ export function renderChart() {
       const tooltip = _el.tooltip;
       // Use DOM construction instead of innerHTML to avoid any XSS risk.
       const strong = document.createElement('strong');
-      strong.textContent = `$${row.spot.toFixed(2)}`;
+      strong.textContent = `${row.metal || 'XAU'}/USD · $${row.spot.toFixed(2)}`;
       const div = document.createElement('div');
       // Show date, source, and granularity so users can tell live/cached/historical apart
-      div.textContent = `${row.date.toLocaleDateString()} · ${formatHistoricalContext(row)}`;
+      div.textContent = `${row.date.toLocaleDateString()} · ${formatHistoricalContext(row)} · ${
+        row.freshnessState || 'unavailable'
+      }`;
       tooltip.replaceChildren(strong, div);
       tooltip.style.left = x + 'px';
       tooltip.style.top = '0px';
