@@ -3,7 +3,7 @@
 **Date:** 2026-08-24
 **Branch:** `codex/seeio-multimetal-synthesis-2026-08-24`
 **Base:** `origin/main` at `db66de97b2`
-**PR:** pending
+**PR:** [#770](https://github.com/vctb12/GoldTickerLive/pull/770) (draft)
 **Status:** implementation complete; production non-gold activation remains off
 
 ## What shipped

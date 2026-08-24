@@ -999,7 +999,7 @@ update the "Last updated" banner at the top of the file and copy the merged comm
 
 | SHA       | Bucket  | Summary                                                                                                                        |
 | --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| _pending_ | tracker | Extend the frozen hash contract with gate-only `metal`/`grade`, add `6M`, normalized visible rows, and current-only pilot UI. |
+| `3764d56` | tracker | Extend the frozen hash contract with gate-only `metal`/`grade`, add `6M`, normalized visible rows, and current-only pilot UI. |
 
 ### Round 1 — Track A foundation + Track C/D reveal wiring (in-branch, pending merge)
 
