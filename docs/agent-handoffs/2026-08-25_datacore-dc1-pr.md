@@ -1,6 +1,6 @@
 # DataCore DC-1 — Historical Truth and Provider Control Plane
 
-**PR:** pending draft creation
+**PR:** [#772](https://github.com/vctb12/GoldTickerLive/pull/772) (draft)
 
 **Branch:** `codex/datacore-dc1-historical-truth-2026-08-25`
 

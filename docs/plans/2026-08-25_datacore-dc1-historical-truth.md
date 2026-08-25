@@ -6,7 +6,8 @@
 
 **Base:** `origin/main` at `6390719489`
 
-**Status:** implementation and local verification complete; draft PR pending
+**Status:** implementation and local verification complete; draft PR
+[#772](https://github.com/vctb12/GoldTickerLive/pull/772) open; owner rollout pending
 
 ## Outcome
 
