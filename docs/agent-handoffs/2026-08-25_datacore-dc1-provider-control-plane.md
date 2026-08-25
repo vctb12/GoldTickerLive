@@ -1,10 +1,11 @@
 # DataCore DC-1 — verified shared history and provider control plane
 
-**Date:** 2026-08-25
-**Branch:** `codex/datacore-dc1-historical-truth-2026-08-25`
-**Base:** `origin/main` at `6516084307`
-**PR:** [#772](https://github.com/vctb12/GoldTickerLive/pull/772) (draft)
-**Production state:** not merged, not deployed, migrations not applied
+- **Date:** 2026-08-25
+- **Branch:** `codex/datacore-dc1-historical-truth-2026-08-25`
+- **Original branch point:** `origin/main` at `6516084307`
+- **PR:** [#772](https://github.com/vctb12/GoldTickerLive/pull/772) (draft)
+- **Production state:** not merged, not deployed, migrations not applied
+- **Campaign state:** follows PR #770; not refreshed onto current `main` and not merge-ready
 
 ## 1. Executive result
 
@@ -15,8 +16,10 @@ optional API. The current quote provider priority, gold value, pricing formulas/
 `data/gold_price.json`, X posting, service worker, billing, dependencies, and non-gold production
 flags are unchanged.
 
-The implementation is code-complete and locally verified. Production readiness still requires the
-owner-controlled Supabase apply/RLS proof and an observation continuity window.
+The repaired source is locally verified at the JavaScript/test layer, but the PR is not ready to
+merge or roll out. It still requires the ordered refresh after PR #770, a current-head run of the
+canonical CI workflow, an owner-controlled staging Supabase apply with executable pgTAP/RLS proof,
+and an observation continuity window. The canonical CI workflow is currently manually disabled.
 
 ## 2. Verified live state
 
@@ -62,10 +65,10 @@ adds the neutral/correction/quality fields, creates metal/time/correction indexe
 health identity to metal + provider, and narrows grants. `supabase/schema.sql` contains the same
 final state.
 
-The local machine has no Supabase CLI, Docker, or psql, so no real SQL apply was claimed. A
-committed pgTAP suite and static migration tests cover clean-chain shape, legacy backfill,
-RLS/grants, private fields, and append-only triggers. Owner commands are documented in
-`docs/datacore-dc1-migration-rollback.md`.
+No staging or production database apply was performed, and the committed pgTAP suite was not run
+against PostgreSQL. Static migration tests inspect clean-chain shape, legacy backfill, RLS/grants,
+private fields, and append-only triggers, but they are not a substitute for executable database
+proof. Owner commands are documented in `docs/datacore-dc1-migration-rollback.md`.
 
 ## 6. Workflow and idempotency
 
@@ -76,8 +79,8 @@ maximum gap, and block decisions. Supported owner-controlled modes are:
 1. `observe-only` — report gate state without blocking;
 2. `warn` — retain writes/exports and surface warnings;
 3. `block-history-write` — reject failed input before raw/history mutation;
-4. `block-public-export` — retain accepted raw history but freeze public exports on a failed dataset
-   gate.
+4. `block-public-export` — evaluate a read-only dataset preview and, on failure, return before any
+   remote or filesystem mutation; neither raw/history writes nor public exports occur.
 
 The default is `observe-only`. Current quote publication is not coupled to stricter DataCore modes.
 
@@ -101,14 +104,17 @@ derivations are deterministic:
 - `data/history/manifest.json` — paths, bytes, and SHA-256 hashes.
 
 Rollups preserve providers/count/distribution, contributor observation IDs/hash, freshness/quality
-distribution, and incomplete/mixed-provider flags. Gaps are measured and never filled.
+distribution, and incomplete/mixed-provider flags. Corrections remain append-only while history
+consumers resolve the superseded row to the effective correction. Gaps are measured and never
+filled.
 
 ## 9. Static fallback and API
 
 The optional `GET /api/v1/prices/history` supports `1d`, `7d`, `30d`, `90d`, `1y`, and `all`;
-rejects invalid ranges and non-gold activation; prefers selected Supabase observations, then the
-matching DC-1 static grain, then the labelled legacy baseline/current snapshot; and returns an
-explicit empty response when no source exists. History has a dedicated IP limit and
+rejects invalid ranges and non-gold activation; resolves effective correction lineage; prefers
+selected Supabase observations, then the matching DC-1 static grain, then the labelled legacy
+baseline/current snapshot; and returns an explicit empty response when no source exists. The
+latest-price read also resolves effective corrections. History has a dedicated IP limit and
 `Cache-Control: public, max-age=60, stale-while-revalidate=300`. Manifest cache is five minutes.
 Public snapshots omit raw hashes and workflow IDs.
 
@@ -119,18 +125,21 @@ the frontend to this API.
 
 The committed bootstrap contains one verified XAU/USD observation from `gold_api_com`. The static
 gate is `warn`, not `pass`, because one point is insufficient continuity evidence. Current bootstrap
-metrics are one expected/observed open-market slot, zero missing slots, zero duplicates, zero
-invalid/future/late/out-of-order/correction/fallback/stale observations, zero maximum gap, and one
-provider. These values prove contract/reproducibility only; they do not establish production
-continuity.
+metrics are one expected/observed open-market slot, zero missing slots, zero current-run duplicates,
+zero remote rehydration overlaps, zero invalid, future, late, out-of-order, correction, fallback, or
+stale observations, zero maximum gap, and one provider. Duplicate evidence and remote rehydration
+overlap are tracked separately. These values prove contract/reproducibility only; they do not
+establish production continuity.
 
 The live workflow baseline separately shows the 87.39% missing-run-slot rate. Workflow starts and
 durable observations are deliberately not conflated.
 
 ## 11. Security and RLS
 
-- Raw observation and provider-run writes are service-role-only.
-- Update/delete triggers reject mutation of raw rows.
+- Raw observation and provider-run writes are service-role-only; their service-role grants are
+  limited to `SELECT` and `INSERT`.
+- Update/delete triggers reject mutation of raw rows, and no raw-table `TRUNCATE` grant is present.
+- Provider-health service-role grants are limited to `SELECT`, `INSERT`, and `UPDATE`.
 - Anonymous/authenticated observation reads are restricted by RLS to selected accepted/warning rows
   and by column-level grants to approved normalized fields.
 - Raw payload hashes, workflow IDs, and provider attempts/errors are not public Data API columns.
@@ -143,17 +152,18 @@ and that RLS plus least-privilege grants must be tested.
 
 ## 12. Verification
 
-| Check                                   | Result                                                                                                        |
-| --------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Focused DC-1/migration/API suite        | pass — 45/45                                                                                                  |
-| `npm.cmd run lint`                      | pass — no errors or warnings                                                                                  |
-| `npm.cmd run build`                     | pass — 310 modules                                                                                            |
-| Full test suite                         | 1,879 pass, 4 fail, 1 skip (1,884 total); failures match baseline                                             |
-| `npm.cmd run validate`                  | governed checks pass through analytics externalization, then pre-existing stale SEO inventory stops the chain |
-| Static artifact replay                  | pass — identical hashes on exact replay                                                                       |
-| JSON/JS/YAML/whitespace checks          | pass                                                                                                          |
-| Local migration apply / pgTAP execution | environment-blocked — Supabase CLI, Docker, and psql absent                                                   |
-| Production migration/workflow proof     | not run — owner-gated                                                                                         |
+| Check                               | Result                                                                                                         |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Focused DC-1/migration/API suite    | pass — 61/61                                                                                                   |
+| `npm.cmd run lint`                  | pass — no errors or warnings                                                                                   |
+| Full test suite                     | 1,899 pass, 4 fail, 1 skip (1,904 total); all four failures are known environment/baseline failures            |
+| Static integrity proof              | pass in focused suite — archive IDs, rollup contributor hashes, and manifest bytes/SHA-256 are recomputed      |
+| Exact replay semantics              | observation/rollup data stay stable; quality/manifest evidence may change to report current duplicates/overlap |
+| `npm.cmd run build`                 | pass — 310 modules; existing analytics/Vite warnings only                                                      |
+| `npm.cmd run validate`              | core/governance/DOM/shell/a11y/meta checks pass; pre-existing stale SEO inventory then stops the chain         |
+| Staging migration apply / pgTAP     | not performed; executable PostgreSQL/RLS proof remains required                                                |
+| Canonical GitHub CI                 | not run — repository workflow is manually disabled                                                             |
+| Production migration/workflow proof | not run — owner-gated                                                                                          |
 
 ## 13. Files changed
 
@@ -177,35 +187,42 @@ The four unchanged failures are:
 3. Python history-recorder precision test cannot spawn `python3`.
 4. UAE live-history audit cannot use outbound network inside the restricted sandbox.
 
-Validation's stale `reports/seo/inventory.json` is also pre-existing and outside DC-1. None of these
-failures touch the DC-1 implementation paths.
+None of these failures touch the DC-1 implementation paths. Validation also reaches the pre-existing
+stale `reports/seo/inventory.json` failure only after the core, governance, DOM, shell,
+accessibility, and metadata checks pass; that inventory drift is outside DC-1.
 
 ## 15. Owner decisions
 
-1. Approve backup, local/staging migration apply, pgTAP/RLS proof, and then production migration
-   006/007.
-2. Approve the initial `observe-only` workflow variable and any later enforcement progression.
-3. Decide whether an optional Express history API will ever be deployed; static JSON is sufficient
+1. Decide whether and when to restore the manually disabled canonical CI workflow; require a green
+   current-head run before merge consideration.
+2. Preserve campaign order: complete PR #770 first, then refresh and review PR #772 against the
+   resulting `main` before calling it merge-ready.
+3. Approve backup, staging migration apply, executable pgTAP/RLS proof, and only then any production
+   migration 006/007 decision.
+4. Approve the initial `observe-only` workflow variable and any later enforcement progression.
+5. Decide whether an optional Express history API will ever be deployed; static JSON is sufficient
    for GitHub Pages.
-4. Keep non-gold production disabled until provider licensing, retention, source, and UI review
+6. Keep non-gold production disabled until provider licensing, retention, source, and UI review
    gates are separately approved.
-5. Review and merge PR #772; no agent merge/deploy is authorized.
+7. Review PR #772 only after the preceding gates pass; no agent merge/deploy is authorized.
 
 ## 16. Risks and rollback
 
 Primary risks are legacy backfill/lock duration, incorrect public grants, schema-cache lag, sparse
 GitHub schedule delivery, and a gate mode advanced before enough observations exist. Rollback keeps
-or returns the workflow to `observe-only`, freezes public artifacts, preserves raw exports/rows,
-reverts application code through a PR, and changes database behavior only through an owner-reviewed
-migration. Table drops and data deletion are explicitly not incident-response defaults.
+or returns the workflow to `observe-only`, disables the DataCore sync/export path if necessary,
+preserves previously stored rows and artifacts, reverts application code through a PR, and changes
+database behavior only through an owner-reviewed migration. Table drops and data deletion are
+explicitly not incident-response defaults.
 
 ## 17. Git and PR
 
 One isolated branch and one draft PR are used. The PR title is
 `feat(data): harden shared gold history and provider control plane`. The PR body records What, Why,
 How, Data contract, Migration, Workflow behavior, Proof, Production evidence, Security and RLS,
-Risks, Rollback, Owner decisions, and Next phase. The branch was rebased onto current `main`; push
-uses force-with-lease. No merge or deployment was performed.
+Risks, Rollback, Owner decisions, and Next phase. The branch follows PR #770 in the intended merge
+order and has not been refreshed onto current `main`; no push or merge-readiness claim should imply
+otherwise. No merge or deployment was performed.
 
 ## 18. DC-2 handoff
 
