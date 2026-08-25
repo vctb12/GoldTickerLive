@@ -10,10 +10,15 @@ const {
   buildProviderRunRows,
   computeProviderHealthRows,
 } = require('../../server/lib/price-snapshots');
-const { buildStaticArtifacts } = require('./build-datacore-history');
+const {
+  buildStaticArtifacts,
+  loadObservationArchivesForRoot,
+} = require('./build-datacore-history');
 
 const ROOT = path.resolve(__dirname, '../..');
 const REMOTE_HISTORY_DAYS = 90;
+const POSTGREST_PAGE_SIZE = 1000;
+const POSTGREST_MAX_PAGES = 100;
 const ENFORCEMENT_MODES = Object.freeze([
   'observe-only',
   'warn',
@@ -121,7 +126,90 @@ function isSchemaMissingError(error) {
   return ['PGRST204', 'PGRST205', '42P01', '42703'].includes(String(error?.code || ''));
 }
 
-async function syncRemoteControlPlane({ client, observations, providerRuns, nowIso }) {
+async function selectAllPages(
+  client,
+  table,
+  query,
+  { pageSize = POSTGREST_PAGE_SIZE, maxPages = POSTGREST_MAX_PAGES } = {}
+) {
+  const rows = [];
+  const boundedPageSize = Math.max(1, Math.trunc(Number(pageSize)) || POSTGREST_PAGE_SIZE);
+  const boundedMaxPages = Math.max(1, Math.trunc(Number(maxPages)) || POSTGREST_MAX_PAGES);
+  let offset = 0;
+  for (let page = 0; page < boundedMaxPages; page += 1) {
+    const response = await client.select(table, {
+      ...query,
+      limit: boundedPageSize,
+      offset,
+    });
+    const pageRows = Array.isArray(response.data) ? response.data : [];
+    rows.push(...pageRows);
+    if (!pageRows.length) return rows;
+    offset += pageRows.length;
+    const totalMatch = String(response.contentRange || '').match(/\/(\d+)$/);
+    if (totalMatch && offset >= Number(totalMatch[1])) return rows;
+    if (!response.contentRange && pageRows.length < boundedPageSize) return rows;
+  }
+  throw new Error(
+    `PostgREST ${table} pagination exceeded ${boundedMaxPages} pages of ${boundedPageSize} rows`
+  );
+}
+
+function deduplicateRows(rows, keyName) {
+  const byKey = new Map();
+  for (const row of Array.isArray(rows) ? rows : []) {
+    const key = row?.[keyName];
+    if (!key || byKey.has(key)) continue;
+    byKey.set(key, row);
+  }
+  return [...byKey.values()];
+}
+
+async function readRemoteControlPlane({ client, nowIso, pageSize = POSTGREST_PAGE_SIZE }) {
+  const since24h = new Date(new Date(nowIso).getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const sinceHistory = new Date(
+    new Date(nowIso).getTime() - REMOTE_HISTORY_DAYS * 24 * 60 * 60 * 1000
+  ).toISOString();
+  const [remoteProviderRuns, remoteObservations] = await Promise.all([
+    selectAllPages(
+      client,
+      'provider_runs',
+      {
+        select:
+          'run_key,metal_symbol,provider_name,status,latency_ms,freshness_seconds,circuit_state,deviation_bps,attempted_at_utc,created_at',
+        attempted_at_utc: `gte.${since24h}`,
+        order: 'attempted_at_utc.desc,run_key.desc',
+      },
+      { pageSize }
+    ),
+    selectAllPages(
+      client,
+      'price_snapshots',
+      {
+        select:
+          'observation_id,metal_symbol,quote_currency,price_usd_per_oz,price_aed_per_gram,source_provider,provider_chain,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,slot_start_utc,slot_resolution_seconds,market_state,freshness_state,freshness_seconds,is_selected,selection_method,deviation_bps,provider_response_time_ms,quality_state,quality_flags,correction_of_observation_id,is_correction,raw_payload_hash,workflow_run_id,schema_version,symbol,currency,timestamp_utc,slot_5m_utc,xau_usd_per_oz,xau_aed_per_gram,is_fresh,is_fallback,is_market_open',
+        metal_symbol: 'eq.XAU',
+        provider_timestamp_utc: `gte.${sinceHistory}`,
+        order: 'provider_timestamp_utc.asc,observation_id.asc',
+      },
+      { pageSize }
+    ),
+  ]);
+  return { remoteObservations, remoteProviderRuns };
+}
+
+async function syncRemoteControlPlane({
+  client,
+  observations,
+  providerRuns,
+  nowIso,
+  remoteObservations = null,
+  remoteProviderRuns = null,
+}) {
+  const preloaded =
+    Array.isArray(remoteObservations) && Array.isArray(remoteProviderRuns)
+      ? { remoteObservations, remoteProviderRuns }
+      : await readRemoteControlPlane({ client, nowIso });
   const observationInsert = observations.length
     ? await client.insert('price_snapshots', observations, {
         onConflict: 'observation_id',
@@ -140,37 +228,21 @@ async function syncRemoteControlPlane({ client, observations, providerRuns, nowI
   const insertedProviderRuns = Array.isArray(providerRunInsert.data)
     ? providerRunInsert.data.length
     : 0;
-  const since24h = new Date(new Date(nowIso).getTime() - 24 * 60 * 60 * 1000).toISOString();
-  const providerRunQuery = await client.select('provider_runs', {
-    select:
-      'metal_symbol,provider_name,status,latency_ms,freshness_seconds,circuit_state,deviation_bps,attempted_at_utc,created_at',
-    attempted_at_utc: `gte.${since24h}`,
-    order: 'attempted_at_utc.desc',
-    limit: 5000,
-  });
-  const remoteProviderRuns = Array.isArray(providerRunQuery.data) ? providerRunQuery.data : [];
-  const providerHealthRows = computeProviderHealthRows(remoteProviderRuns, { nowIso });
+  const allProviderRuns = deduplicateRows(
+    [...preloaded.remoteProviderRuns, ...providerRuns],
+    'run_key'
+  );
+  const providerHealthRows = computeProviderHealthRows(allProviderRuns, { nowIso });
   if (providerHealthRows.length) {
     await client.upsert('provider_health', providerHealthRows, 'metal_symbol,provider_name');
   }
-  const sinceHistory = new Date(
-    new Date(nowIso).getTime() - REMOTE_HISTORY_DAYS * 24 * 60 * 60 * 1000
-  ).toISOString();
-  const observationQuery = await client.select('price_snapshots', {
-    select:
-      'observation_id,metal_symbol,quote_currency,price_usd_per_oz,price_aed_per_gram,source_provider,provider_chain,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,slot_start_utc,slot_resolution_seconds,market_state,freshness_state,freshness_seconds,is_selected,selection_method,deviation_bps,provider_response_time_ms,quality_state,quality_flags,correction_of_observation_id,is_correction,raw_payload_hash,workflow_run_id,schema_version,symbol,currency,timestamp_utc,slot_5m_utc,xau_usd_per_oz,xau_aed_per_gram,is_fresh,is_fallback,is_market_open',
-    metal_symbol: 'eq.XAU',
-    provider_timestamp_utc: `gte.${sinceHistory}`,
-    order: 'provider_timestamp_utc.asc',
-    limit: 30000,
-  });
   return {
     insertedObservations,
     duplicateObservations: Math.max(0, observations.length - insertedObservations),
     insertedProviderRuns,
     duplicateProviderRuns: Math.max(0, providerRuns.length - insertedProviderRuns),
-    remoteObservations: Array.isArray(observationQuery.data) ? observationQuery.data : [],
-    remoteProviderRuns,
+    remoteObservations: preloaded.remoteObservations,
+    remoteProviderRuns: allProviderRuns,
     providerHealthRows,
   };
 }
@@ -261,22 +333,49 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
   const providerChain = env.PRICE_PROVIDER_CHAIN || '';
   const circuitState = env.PRICE_CIRCUIT_STATE || null;
   const workflowRunId = env.GITHUB_RUN_ID || `local-${Date.now()}`;
-  const observations = buildObservationRows(payload, {
-    providerChain,
-    circuitState,
-    workflowRunId,
-  });
   const providerRuns = buildProviderRunRows(payload, validated.normalized, {
     circuitState,
     workflowRunId,
   });
   const nowIso = validated.normalized.ingestedAtUtc;
+  const client = createPostgrestClient({
+    url: env.SUPABASE_URL,
+    key: env.SUPABASE_SERVICE_ROLE_KEY,
+    fetchImpl,
+  });
+  const localObservations = loadObservationArchivesForRoot(root);
+  let remoteRead = { remoteObservations: [], remoteProviderRuns: [] };
+  let reason = client ? 'sync_failed' : 'supabase_not_configured';
+  let schemaState = client ? 'unknown' : 'not_configured';
+  let remoteError = null;
+  if (client) {
+    try {
+      remoteRead = await readRemoteControlPlane({ client, nowIso });
+      schemaState = 'ready';
+      reason = 'ready_for_sync';
+    } catch (error) {
+      remoteError = error;
+      schemaState = isSchemaMissingError(error) ? 'migration_required' : 'error';
+      reason = isSchemaMissingError(error) ? 'schema_missing' : 'sync_failed';
+    }
+  }
+  const observations = buildObservationRows(payload, {
+    providerChain,
+    circuitState,
+    workflowRunId,
+    existingObservations: [...localObservations, ...remoteRead.remoteObservations],
+  });
+  const staticInputs = [...remoteRead.remoteObservations, ...observations];
+  const telemetryInputs = deduplicateRows(
+    [...remoteRead.remoteProviderRuns, ...providerRuns],
+    'run_key'
+  );
 
-  // Preview the gate before any history mutation when block-history-write is active.
+  // Blocking modes evaluate a read-only view before any remote or filesystem mutation.
   const preview = buildStaticArtifacts({
     root,
-    observations,
-    providerRuns,
+    observations: staticInputs,
+    providerRuns: telemetryInputs,
     syncState: 'quality-preview',
     writeHistory: false,
     publishPublic: false,
@@ -284,6 +383,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
   if (enforcementMode === 'block-history-write' && preview.quality.gateStatus === 'fail') {
     const result = emptyResult({
       reason: 'quality_gate_blocked_history_write',
+      schemaState,
       enforcementMode,
       gateStatus: preview.quality.gateStatus,
       gateFailures: preview.quality.failures,
@@ -292,18 +392,36 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
       providerRunRows: providerRuns.length,
       historyWriteBlocked: true,
       publicExportBlocked: true,
+      staticObservationCount: preview.observationCount,
+      staticMissingSlotRate: preview.quality.coverage.missingOpenMarketSlotRate,
+      staticMaxGapSeconds: preview.quality.coverage.maxGapSeconds,
     });
     recordOutputs(result, env);
     throw new Error(
       `DataCore quality gate blocked history write: ${result.gateFailures.join(',')}`
     );
   }
+  if (enforcementMode === 'block-public-export' && preview.quality.gateStatus === 'fail') {
+    const result = emptyResult({
+      reason: 'quality_gate_blocked_public_export',
+      schemaState,
+      enforcementMode,
+      gateStatus: preview.quality.gateStatus,
+      gateFailures: preview.quality.failures,
+      gateWarnings: preview.quality.warnings,
+      observationRows: observations.length,
+      providerRunRows: providerRuns.length,
+      publicExportBlocked: true,
+      staticObservationCount: preview.observationCount,
+      staticMissingSlotRate: preview.quality.coverage.missingOpenMarketSlotRate,
+      staticMaxGapSeconds: preview.quality.coverage.maxGapSeconds,
+    });
+    recordOutputs(result, env);
+    if (remoteError)
+      appendGithubOutput('snapshot_sync_error', remoteError.message || 'unknown', env);
+    return result;
+  }
 
-  const client = createPostgrestClient({
-    url: env.SUPABASE_URL,
-    key: env.SUPABASE_SERVICE_ROLE_KEY,
-    fetchImpl,
-  });
   let remote = {
     insertedObservations: 0,
     duplicateObservations: 0,
@@ -313,13 +431,15 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
     remoteProviderRuns: [],
     providerHealthRows: [],
   };
-  let reason = client ? 'sync_failed' : 'supabase_not_configured';
-  let schemaState = client ? 'unknown' : 'not_configured';
-  let remoteError = null;
-  if (client) {
+  if (client && schemaState === 'ready') {
     try {
-      remote = await syncRemoteControlPlane({ client, observations, providerRuns, nowIso });
-      schemaState = 'ready';
+      remote = await syncRemoteControlPlane({
+        client,
+        observations,
+        providerRuns,
+        nowIso,
+        ...remoteRead,
+      });
       reason = remote.insertedObservations > 0 ? 'inserted' : 'duplicate_observations';
     } catch (error) {
       remoteError = error;
@@ -328,36 +448,15 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
     }
   }
 
-  const staticInputs = [...remote.remoteObservations, ...observations];
-  const telemetryInputs = remote.remoteProviderRuns.length
-    ? remote.remoteProviderRuns
-    : providerRuns;
-  const firstPass = buildStaticArtifacts({
+  const staticResult = buildStaticArtifacts({
     root,
     observations: staticInputs,
     providerRuns: telemetryInputs,
     providerHealthRows: remote.providerHealthRows,
     syncState: schemaState === 'ready' ? 'synced' : reason,
     writeHistory: true,
-    publishPublic: enforcementMode !== 'block-public-export',
+    publishPublic: true,
   });
-  let staticResult = firstPass;
-  let publicExportBlocked = false;
-  if (enforcementMode === 'block-public-export') {
-    if (firstPass.quality.gateStatus === 'fail') {
-      publicExportBlocked = true;
-    } else {
-      staticResult = buildStaticArtifacts({
-        root,
-        observations: [],
-        providerRuns: telemetryInputs,
-        providerHealthRows: remote.providerHealthRows,
-        syncState: schemaState === 'ready' ? 'synced' : reason,
-        writeHistory: false,
-        publishPublic: true,
-      });
-    }
-  }
 
   const result = emptyResult({
     reason,
@@ -372,7 +471,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
     providerRunRows: providerRuns.length,
     insertedProviderRuns: remote.insertedProviderRuns,
     providerHealthRows: remote.providerHealthRows.length,
-    publicExportBlocked,
+    publicExportBlocked: false,
     staticExportUpdated: staticResult.publicExportUpdated,
     staticObservationCount: staticResult.observationCount,
     staticMissingSlotRate: staticResult.quality.coverage.missingOpenMarketSlotRate,
@@ -395,7 +494,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
       `- Provider runs inserted: \`${remote.insertedProviderRuns}\``,
       `- Static observation count: \`${staticResult.observationCount}\``,
       `- Static missing open-market slot rate: \`${result.staticMissingSlotRate ?? 'n/a'}\``,
-      `- Public export blocked: \`${publicExportBlocked}\``,
+      '- Public export blocked: `false`',
       '- Missing observations are reported, never synthesized. Static history is not a live retail quote.',
     ],
     env
@@ -420,6 +519,8 @@ module.exports = {
   createPostgrestClient,
   isSchemaMissingError,
   recordOutputs,
+  selectAllPages,
+  readRemoteControlPlane,
   syncRemoteControlPlane,
   run,
 };

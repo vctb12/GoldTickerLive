@@ -338,9 +338,8 @@ function buildQualityProfile(
   const missingSlots = Math.max(0, expectedSlots - openObservedSlots);
   const missingRate = expectedSlots > 0 ? Number((missingSlots / expectedSlots).toFixed(6)) : null;
   const qualityFlags = selected.flatMap((row) => row.quality_flags || []);
-  const rejectedFlags = (Array.isArray(rejectedObservations) ? rejectedObservations : []).flatMap(
-    (row) => row.quality_flags || row.errors || []
-  );
+  const rejectedRows = Array.isArray(rejectedObservations) ? rejectedObservations : [];
+  const rejectedFlags = rejectedRows.flatMap((row) => row.quality_flags || row.errors || []);
   const gaps = maximumOpenMarketGap(selected);
   const warnings = [];
   const failures = [];
@@ -352,7 +351,7 @@ function buildQualityProfile(
   if (gaps.maxGapSeconds > MAX_ACCEPTABLE_GAP_SECONDS) warnings.push('max_gap_exceeds_threshold');
   if (rejectedFlags.includes('future_provider_timestamp'))
     failures.push('future_observation_rejected');
-  if (rejectedFlags.length > 0) failures.push('invalid_observation_rejected');
+  if (rejectedRows.length > 0) failures.push('invalid_observation_rejected');
   if (qualityFlags.includes('fallback')) warnings.push('fallback_observations_present');
   if (qualityFlags.includes('stale')) warnings.push('stale_observations_present');
   const runs = Array.isArray(providerRuns) ? providerRuns : [];
@@ -389,7 +388,7 @@ function buildQualityProfile(
       selected.length + duplicateCount > 0
         ? Number((duplicateCount / (selected.length + duplicateCount)).toFixed(6))
         : 0,
-    invalidObservationCount: rejectedFlags.length ? rejectedObservations.length : 0,
+    invalidObservationCount: rejectedRows.length,
     futureObservationCount: rejectedFlags.filter((flag) => flag === 'future_provider_timestamp')
       .length,
     lateArrivalCount: qualityFlags.filter((flag) => flag === 'late_arrival').length,
@@ -428,6 +427,10 @@ function loadObservationArchives(historyDir) {
     });
 }
 
+function loadObservationArchivesForRoot(root = DEFAULT_ROOT, metal = DEFAULT_METAL) {
+  return loadObservationArchives(historyDirectory(root, metal));
+}
+
 function updateObservationArchives(historyDir, incomingRows) {
   const archiveDir = path.join(historyDir, 'observations');
   const grouped = new Map();
@@ -461,7 +464,7 @@ function updateObservationArchives(historyDir, incomingRows) {
         period,
         source: 'DataCore canonical provider observations',
         immutableIdentity:
-          'schema + metal + quote + provider + provider timestamp + raw payload hash',
+          'schema + metal + quote + provider + provider timestamp + normalized price',
         correctionPolicy: 'corrections append a new linked row; prior rows are never mutated',
         observations: merged.rows,
       });
@@ -505,15 +508,27 @@ function buildStaticArtifacts({
 } = {}) {
   const historyDir = historyDirectory(root, metal);
   const providerHealthDir = path.join(root, 'data', 'provider-health');
-  fs.mkdirSync(historyDir, { recursive: true });
-  fs.mkdirSync(providerHealthDir, { recursive: true });
+  const suppliedObservations = Array.isArray(observations) ? observations : [];
+  const rejectedById = new Map();
+  for (const row of [
+    ...(Array.isArray(rejectedObservations) ? rejectedObservations : []),
+    ...suppliedObservations.filter((row) => row?.quality_state === 'rejected'),
+  ]) {
+    const key = row?.observation_id || stableJsonStringify(row);
+    if (!rejectedById.has(key)) rejectedById.set(key, row);
+  }
+  const rejectedRows = [...rejectedById.values()];
+  const acceptedObservations = suppliedObservations.filter(
+    (row) => row?.quality_state !== 'rejected'
+  );
+  const archivedObservations = loadObservationArchives(historyDir);
   const mergeResult = writeHistory
-    ? updateObservationArchives(historyDir, observations)
-    : { duplicateCount: 0, insertedCount: 0, changedFiles: [] };
-  const allObservations = mergeObservationRows(
-    loadObservationArchives(historyDir),
-    writeHistory ? [] : observations
-  ).rows;
+    ? updateObservationArchives(historyDir, acceptedObservations)
+    : {
+        ...mergeObservationRows(archivedObservations, acceptedObservations),
+        changedFiles: [],
+      };
+  const allObservations = writeHistory ? loadObservationArchives(historyDir) : mergeResult.rows;
   const selected = effectiveObservations(allObservations).filter(
     (row) => row.is_selected !== false
   );
@@ -521,8 +536,8 @@ function buildStaticArtifacts({
   const generatedAtUtc =
     selected.at(-1)?.ingested_at_utc || selected.at(-1)?.fetched_at_utc || latestTimestampUtc;
   const quality = buildQualityProfile(allObservations, providerRuns, {
-    duplicateCount: 0,
-    rejectedObservations,
+    duplicateCount: mergeResult.duplicateCount,
+    rejectedObservations: rejectedRows,
   });
   const intraday = buildIntradayPoints(allObservations, latestTimestampUtc);
   const hourly = boundRows(
@@ -540,17 +555,6 @@ function buildStaticArtifacts({
     ? providerHealthRows
     : computeProviderHealthRows(providerRuns, { nowIso: generatedAtUtc });
   const providerSummaryPath = path.join(providerHealthDir, 'summary.json');
-  atomicWriteJson(providerSummaryPath, {
-    schemaVersion: OBSERVATION_SCHEMA_VERSION,
-    metalSymbol: metal,
-    sourceMode: syncState === 'synced' ? 'supabase-and-workflow' : 'workflow-static',
-    freshnessState: 'historical',
-    generatedAtUtc,
-    syncState,
-    qualityGateStatus: quality.gateStatus,
-    quality,
-    providers: healthRows,
-  });
 
   const output = {
     insertedCount: mergeResult.insertedCount,
@@ -564,6 +568,18 @@ function buildStaticArtifacts({
     quality,
   };
   if (!publishPublic) return output;
+
+  atomicWriteJson(providerSummaryPath, {
+    schemaVersion: OBSERVATION_SCHEMA_VERSION,
+    metalSymbol: metal,
+    sourceMode: syncState === 'synced' ? 'supabase-and-workflow' : 'workflow-static',
+    freshnessState: 'historical',
+    generatedAtUtc,
+    syncState,
+    qualityGateStatus: quality.gateStatus,
+    quality,
+    providers: healthRows,
+  });
 
   const intradayPath = path.join(historyDir, 'intraday-7d.json');
   const hourlyPath = path.join(historyDir, 'hourly-90d.json');
@@ -687,6 +703,7 @@ module.exports = {
   buildIntradayPoints,
   buildRollups,
   buildQualityProfile,
+  loadObservationArchivesForRoot,
   buildStaticArtifacts,
   runCli,
 };

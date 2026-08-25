@@ -28,6 +28,8 @@ const {
   createPostgrestClient,
   isSchemaMissingError,
   recordOutputs,
+  selectAllPages,
+  readRemoteControlPlane,
   resolveEnforcementMode,
   run: runDataCoreSync,
 } = require('../scripts/node/sync-price-snapshot');
@@ -102,6 +104,30 @@ test('canonical observations keep provider identity, selection, slot, and stable
   assert.equal(rowsA[0].slot_resolution_seconds, 300);
   assert.equal(rowsA[0].freshness_state, 'updated');
   assert.equal(floorTimestampToSlot('2026-08-24T21:09:59Z'), '2026-08-24T21:05:00.000Z');
+});
+
+test('observation identity is stable across retry telemetry and remains provider-specific', () => {
+  const original = payload();
+  const retried = payload();
+  retried.fetched_at_utc = '2026-08-24T21:04:18.000Z';
+  retried.freshness_seconds = 18;
+  retried.provider_response_time_ms = 999;
+  retried.provider_diagnostics = retried.provider_diagnostics.map((diagnostic) => ({
+    ...diagnostic,
+    requested_at_utc: '2026-08-24T21:04:18.000Z',
+    response_time_ms: Number(diagnostic.response_time_ms || 0) + 50,
+  }));
+  const originalRows = buildObservationRows(original, { workflowRunId: 'run-a' });
+  const retriedRows = buildObservationRows(retried, { workflowRunId: 'run-b' });
+  for (const originalRow of originalRows) {
+    const retriedRow = retriedRows.find(
+      (row) => row.source_provider === originalRow.source_provider
+    );
+    assert.ok(retriedRow);
+    assert.equal(retriedRow.observation_id, originalRow.observation_id);
+    assert.notEqual(retriedRow.raw_payload_hash, originalRow.raw_payload_hash);
+  }
+  assert.notEqual(originalRows[0].observation_id, originalRows[1].observation_id);
 });
 
 test('provider runs preserve failures, latency, selection, and divergence inputs', () => {
@@ -224,7 +250,7 @@ test('open-market slot counting follows Sunday 21:00 through Friday 20:59 UTC', 
   assert.equal(expectedOpenMarketSlots('2026-08-21T20:55:00Z', '2026-08-23T21:00:00Z'), 2);
 });
 
-test('static fallback is byte-reproducible when the same workflow run is replayed', () => {
+test('static rollups replay identically while duplicate quality metrics remain truthful', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'gtl-datacore-'));
   try {
     const validated = validatePricePayload(payload());
@@ -232,7 +258,12 @@ test('static fallback is byte-reproducible when the same workflow run is replaye
     const providerRuns = buildProviderRunRows(payload(), validated.normalized, {
       workflowRunId: 'run-1',
     });
-    buildStaticArtifacts({ root, observations, providerRuns, syncState: 'schema_missing' });
+    const first = buildStaticArtifacts({
+      root,
+      observations,
+      providerRuns,
+      syncState: 'schema_missing',
+    });
     const files = [
       path.join(root, 'data', 'history', 'XAU', 'intraday-7d.json'),
       path.join(root, 'data', 'history', 'XAU', 'hourly-90d.json'),
@@ -242,11 +273,70 @@ test('static fallback is byte-reproducible when the same workflow run is replaye
       path.join(root, 'data', 'provider-health', 'summary.json'),
     ];
     const firstHashes = files.map(hashFile);
-    buildStaticArtifacts({ root, observations, providerRuns, syncState: 'schema_missing' });
-    assert.deepEqual(files.map(hashFile), firstHashes);
+    const replay = buildStaticArtifacts({
+      root,
+      observations,
+      providerRuns,
+      syncState: 'schema_missing',
+    });
+    const replayHashes = files.map(hashFile);
+    assert.deepEqual(replayHashes.slice(0, 3), firstHashes.slice(0, 3));
+    assert.equal(first.duplicateCount, 0);
+    assert.equal(replay.duplicateCount, observations.length);
+    assert.equal(replay.quality.duplicateCount, observations.length);
+    assert.equal(
+      JSON.parse(fs.readFileSync(path.join(root, 'data', 'history', 'XAU', 'quality.json'), 'utf8'))
+        .duplicateCount,
+      observations.length
+    );
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+test('PostgREST reads paginate with stable tie-break ordering and bounded time windows', async () => {
+  const calls = [];
+  const data = {
+    provider_runs: Array.from({ length: 4 }, (_, index) => ({ run_key: `run-${index}` })),
+    price_snapshots: Array.from({ length: 5 }, (_, index) => ({
+      observation_id: `observation-${index}`,
+    })),
+  };
+  const client = {
+    async select(table, query) {
+      calls.push({ table, query });
+      return {
+        data: data[table].slice(Number(query.offset), Number(query.offset) + Number(query.limit)),
+      };
+    },
+  };
+  const oneTable = await selectAllPages(
+    client,
+    'provider_runs',
+    { order: 'run_key.asc' },
+    {
+      pageSize: 2,
+    }
+  );
+  assert.equal(oneTable.length, 4);
+  assert.deepEqual(
+    calls.filter((call) => call.table === 'provider_runs').map((call) => call.query.offset),
+    [0, 2, 4]
+  );
+  calls.length = 0;
+  const remote = await readRemoteControlPlane({
+    client,
+    nowIso: '2026-08-24T21:04:08.000Z',
+    pageSize: 2,
+  });
+  assert.equal(remote.remoteProviderRuns.length, 4);
+  assert.equal(remote.remoteObservations.length, 5);
+  const providerQuery = calls.find((call) => call.table === 'provider_runs').query;
+  const observationQuery = calls.find((call) => call.table === 'price_snapshots').query;
+  assert.equal(providerQuery.order, 'attempted_at_utc.desc,run_key.desc');
+  assert.match(providerQuery.attempted_at_utc, /^gte\./);
+  assert.equal(observationQuery.order, 'provider_timestamp_utc.asc,observation_id.asc');
+  assert.match(observationQuery.provider_timestamp_utc, /^gte\./);
 });
 
 test('PostgREST client sends conflict-safe inserts without exposing the key in the URL', async () => {
@@ -416,6 +506,80 @@ test('corrections are additive and link to the immutable predecessor', () => {
   assert.equal(merged.rows.length, 2);
 });
 
+test('sync links a correction to the prior archived observation across workflow runs', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'datacore-correction-'));
+  const inputPath = path.join(root, 'gold-price.json');
+  try {
+    fs.writeFileSync(inputPath, JSON.stringify(payload()));
+    await runDataCoreSync({
+      root,
+      env: {
+        PRICE_JSON_PATH: inputPath,
+        DATACORE_ENFORCEMENT_MODE: 'observe-only',
+        GITHUB_RUN_ID: 'correction-run-a',
+      },
+    });
+    const correctedPayload = payload();
+    correctedPayload.xau_usd_per_oz = 4701;
+    correctedPayload.provider_diagnostics[0].normalized_price = 4701;
+    fs.writeFileSync(inputPath, JSON.stringify(correctedPayload));
+    await runDataCoreSync({
+      root,
+      env: {
+        PRICE_JSON_PATH: inputPath,
+        DATACORE_ENFORCEMENT_MODE: 'observe-only',
+        GITHUB_RUN_ID: 'correction-run-b',
+      },
+    });
+    const archive = JSON.parse(
+      fs.readFileSync(
+        path.join(root, 'data', 'history', 'XAU', 'observations', '2026-08.json'),
+        'utf8'
+      )
+    ).observations;
+    const providerRows = archive.filter((row) => row.source_provider === 'gold_api_com');
+    const original = providerRows.find((row) => row.price_usd_per_oz === 4700);
+    const correction = providerRows.find((row) => row.price_usd_per_oz === 4701);
+    assert.ok(original);
+    assert.ok(correction);
+    assert.equal(correction.is_correction, true);
+    assert.equal(correction.correction_of_observation_id, original.observation_id);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('rejected observation rows propagate into the quality gate during a read-only preview', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'datacore-rejected-preview-'));
+  try {
+    const accepted = buildObservationRows(payload(), { workflowRunId: 'accepted' }).find(
+      (row) => row.is_selected
+    );
+    const rejected = {
+      ...accepted,
+      observation_id: 'future-rejected-observation',
+      quality_state: 'rejected',
+      quality_flags: ['future_provider_timestamp'],
+    };
+    const result = buildStaticArtifacts({
+      root,
+      observations: [accepted, rejected],
+      writeHistory: false,
+      publishPublic: false,
+    });
+    assert.equal(result.quality.gateStatus, 'fail');
+    assert.deepEqual(result.quality.failures, [
+      'future_observation_rejected',
+      'invalid_observation_rejected',
+    ]);
+    assert.equal(result.quality.invalidObservationCount, 1);
+    assert.equal(result.quality.futureObservationCount, 1);
+    assert.equal(fs.existsSync(path.join(root, 'data')), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test('quality profile reports maximum gaps and does not fill missing slots', () => {
   const first = buildObservationRows(payload(), { workflowRunId: 'gap-a' }).find(
     (row) => row.is_selected
@@ -466,6 +630,57 @@ test('block-history-write rejects invalid input while observe-only reports it', 
       /quality|validation/i
     );
     assert.equal(fs.existsSync(path.join(root, 'data', 'history', 'XAU')), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('block-public-export rejects a future provider row before any remote or artifact write', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'datacore-public-gate-'));
+  const inputPath = path.join(root, 'gold-price.json');
+  const requests = [];
+  const gatePayload = payload();
+  gatePayload.provider_diagnostics.push({
+    provider: 'future_provider',
+    requested_at_utc: '2026-08-24T21:04:08.000Z',
+    status: 'success',
+    valid: true,
+    response_time_ms: 20,
+    provider_timestamp: '2026-08-24T21:10:00.000Z',
+    normalized_price: 4699,
+    reason: 'fresh',
+  });
+  fs.writeFileSync(inputPath, JSON.stringify(gatePayload));
+  try {
+    const result = await runDataCoreSync({
+      root,
+      env: {
+        PRICE_JSON_PATH: inputPath,
+        DATACORE_ENFORCEMENT_MODE: 'block-public-export',
+        SUPABASE_URL: 'https://example.supabase.co',
+        SUPABASE_SERVICE_ROLE_KEY: 'service-role-test-key',
+        GITHUB_RUN_ID: 'blocked-public-export',
+      },
+      fetchImpl: async (url, options = {}) => {
+        requests.push({ url: String(url), method: options.method || 'GET' });
+        return new Response('[]', { status: 200 });
+      },
+    });
+    assert.equal(result.reason, 'quality_gate_blocked_public_export');
+    assert.equal(result.gateStatus, 'fail');
+    assert.deepEqual(result.gateFailures, [
+      'future_observation_rejected',
+      'invalid_observation_rejected',
+    ]);
+    assert.equal(result.publicExportBlocked, true);
+    assert.equal(result.staticExportUpdated, false);
+    assert.ok(requests.length >= 2);
+    assert.equal(
+      requests.every((request) => request.method === 'GET'),
+      true
+    );
+    assert.equal(fs.existsSync(path.join(root, 'data', 'history')), false);
+    assert.equal(fs.existsSync(path.join(root, 'data', 'provider-health')), false);
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }

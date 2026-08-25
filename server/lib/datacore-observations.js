@@ -102,18 +102,21 @@ function normalizeQualityFlags(flags) {
   return [...new Set((Array.isArray(flags) ? flags : []).map(String).filter(Boolean))].sort();
 }
 
+function normalizeProviderName(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase();
+}
+
 function computeObservationId(input) {
   const metalSymbol = normalizeMetalSymbol(input.metalSymbol || input.metal_symbol || input.symbol);
   const quoteCurrency = normalizeQuoteCurrency(
     input.quoteCurrency || input.quote_currency || input.currency || 'USD'
   );
-  const provider = String(input.sourceProvider || input.source_provider || '')
-    .trim()
-    .toLowerCase();
+  const provider = normalizeProviderName(input.sourceProvider || input.source_provider);
   const providerTimestampUtc = parseIsoTimestamp(
     input.providerTimestampUtc || input.provider_timestamp_utc || input.timestampUtc
   );
-  const rawPayloadHash = String(input.rawPayloadHash || input.raw_payload_hash || '').trim();
   const price = toFiniteNumber(
     input.priceUsdPerOz ?? input.price_usd_per_oz ?? input.xauUsdPerOz ?? input.xau_usd_per_oz
   );
@@ -123,7 +126,7 @@ function computeObservationId(input) {
     quoteCurrency || '',
     provider,
     providerTimestampUtc || '',
-    rawPayloadHash || (price === null ? '' : price.toFixed(8)),
+    price === null ? '' : price.toFixed(8),
   ].join('|');
   return crypto.createHash('sha256').update(identity).digest('hex');
 }
@@ -301,19 +304,24 @@ function buildCanonicalObservation(
 }
 
 function findCorrectionPredecessor(row, existingObservations) {
+  const provider = normalizeProviderName(row.source_provider);
+  const providerTimestampUtc = parseIsoTimestamp(row.provider_timestamp_utc || row.timestamp_utc);
   return (Array.isArray(existingObservations) ? existingObservations : [])
     .filter(
       (candidate) =>
+        candidate.observation_id &&
         candidate.observation_id !== row.observation_id &&
         candidate.metal_symbol === row.metal_symbol &&
         candidate.quote_currency === row.quote_currency &&
-        candidate.source_provider === row.source_provider &&
-        (candidate.provider_timestamp_utc || candidate.timestamp_utc) === row.provider_timestamp_utc
+        normalizeProviderName(candidate.source_provider) === provider &&
+        parseIsoTimestamp(candidate.provider_timestamp_utc || candidate.timestamp_utc) ===
+          providerTimestampUtc
     )
-    .sort((left, right) =>
-      String(right.ingested_at_utc || right.created_at || '').localeCompare(
-        String(left.ingested_at_utc || left.created_at || '')
-      )
+    .sort(
+      (left, right) =>
+        String(right.ingested_at_utc || right.created_at || '').localeCompare(
+          String(left.ingested_at_utc || left.created_at || '')
+        ) || String(right.observation_id).localeCompare(String(left.observation_id))
     )[0];
 }
 
