@@ -6,6 +6,8 @@ const { test, expect } = require('@playwright/test');
 
 test.use({ serviceWorkers: 'block' });
 
+const FIXED_MARKET_OPEN_NOW = Date.parse('2026-08-25T12:00:00.000Z');
+
 function marketIsOpen(now = new Date()) {
   const day = now.getUTCDay();
   const minutes = now.getUTCHours() * 60 + now.getUTCMinutes();
@@ -43,7 +45,38 @@ function oldSnapshot() {
   };
 }
 
-async function installOldSnapshot(page) {
+function delayedSnapshot() {
+  const timestamp = new Date(FIXED_MARKET_OPEN_NOW - 45 * 60 * 1000).toISOString();
+  return {
+    xau_usd_per_oz: 3000,
+    provider: 'gold-api.com',
+    timestamp_utc: timestamp,
+    fetched_at_utc: timestamp,
+    // No producer freshness verdict: a 45-minute-old value is age-delayed,
+    // not a live-fetch failure and therefore not a cached fallback.
+    is_fresh: null,
+    is_fallback: false,
+  };
+}
+
+async function installFixedClock(page, nowMs) {
+  await page.addInitScript((fixedNow) => {
+    const RealDate = Date;
+    class FixedDate extends RealDate {
+      constructor(...args) {
+        super(...(args.length ? args : [fixedNow]));
+      }
+
+      static now() {
+        return fixedNow;
+      }
+    }
+    Object.setPrototypeOf(FixedDate, RealDate);
+    window.Date = FixedDate;
+  }, nowMs);
+}
+
+async function installSnapshot(page, snapshot) {
   await page.route(/^https?:\/\/(?!localhost|127\.0\.0\.1)/, (route) => route.abort());
   await page.route('**/open.er-api.com/**', (route) =>
     route.fulfill({
@@ -56,8 +89,12 @@ async function installOldSnapshot(page) {
     })
   );
   await page.route('**/data/gold_price.json*', (route) =>
-    route.fulfill({ contentType: 'application/json', body: JSON.stringify(oldSnapshot()) })
+    route.fulfill({ contentType: 'application/json', body: JSON.stringify(snapshot) })
   );
+}
+
+async function installOldSnapshot(page) {
+  await installSnapshot(page, oldSnapshot());
 }
 
 async function expectCalculatorNeverLive(page, { lang }) {
@@ -100,6 +137,25 @@ test('calculator AR/RTL at 360px: old snapshot never claims مباشر', async (
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
     true
   );
+});
+
+test('calculator forwards an age-delayed snapshot unchanged to ticker and spot bar', async ({
+  page,
+  baseURL,
+}) => {
+  await installFixedClock(page, FIXED_MARKET_OPEN_NOW);
+  await installSnapshot(page, delayedSnapshot());
+  await page.goto((baseURL || '') + '/calculator.html', { waitUntil: 'domcontentloaded' });
+
+  await expect(page.locator('#calc-freshness-badge-slot [data-freshness-state]')).toHaveAttribute(
+    'data-freshness-state',
+    'delayed',
+    { timeout: 10_000 }
+  );
+  await expect(page.locator('#gold-ticker')).toHaveAttribute('data-freshness', 'delayed');
+  await expect(page.locator('#spot-price-bar')).toHaveAttribute('data-freshness', 'delayed');
+  await expect(page.locator('#gold-ticker [data-ticker-status-label]')).toHaveText('Delayed');
+  await expect(page.locator('#spot-price-bar [data-spot-ts]')).toHaveAttribute('title', 'Delayed');
 });
 
 test('shops EN desktop: old reference snapshot never receives the live class', async ({
