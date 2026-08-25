@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "symbol": "XAUUSD",
+  "interval": "1h",
+  "sourceMode": "static-rollup",
+  "freshnessState": "historical",
+  "generatedAtUtc": "2026-08-25T06:30:20.000Z",
+  "coverage": {
+    "startTimestampUtc": "2026-08-25T06:00:00.000Z",
+    "endTimestampUtc": "2026-08-25T07:00:00.000Z",
+    "pointCount": 1
+  },
+  "points": [
+    {
+      "bucketStartUtc": "2026-08-25T06:00:00.000Z",
+      "bucketEndUtc": "2026-08-25T07:00:00.000Z",
+      "open": 4651,
+      "high": 4651,
+      "low": 4651,
+      "close": 4651,
+      "observationCount": 1,
+      "freshCount": 1,
+      "fallbackCount": 0,
+      "providerDistribution": {
+        "gold_api_com": 1
+      }
+    }
+  ]
+}

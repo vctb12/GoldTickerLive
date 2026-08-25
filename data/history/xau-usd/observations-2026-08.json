@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "symbol": "XAUUSD",
+  "period": "2026-08",
+  "source": "DataCore canonical provider observations",
+  "immutableIdentity": "symbol + provider + provider timestamp + normalized USD/oz price",
+  "observations": [
+    {
+      "symbol": "XAUUSD",
+      "xau_usd_per_oz": 4651,
+      "xau_aed_per_gram": 549.1604,
+      "currency": "USD",
+      "source_provider": "gold_api_com",
+      "provider_chain": "",
+      "timestamp_utc": "2026-08-25T06:30:17.000Z",
+      "fetched_at_utc": "2026-08-25T06:30:20.000Z",
+      "slot_5m_utc": "2026-08-25T06:30:00.000Z",
+      "freshness_seconds": 3,
+      "is_fresh": true,
+      "is_fallback": false,
+      "is_market_open": null,
+      "is_selected": true,
+      "selection_method": null,
+      "deviation_bps": 0,
+      "provider_response_time_ms": 163,
+      "quality_state": "fresh",
+      "raw_payload_hash": "d71678ad0749fcfe1158f853f67a0209939d263fe0e028ec9b14844ecb82b58d",
+      "workflow_run_id": "local-bootstrap",
+      "schema_version": 1,
+      "observation_id": "b641f8a85e73f736876d1b9322d37701b5e0592adc741920dda079504b7bd454"
+    }
+  ]
+}

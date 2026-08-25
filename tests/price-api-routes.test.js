@@ -49,7 +49,8 @@ test('GET /api/v1/prices/history returns range-aware response', async () => {
   assert.equal(parsed.ok, true);
   assert.equal(parsed.data.range, '7d');
   assert.equal(Array.isArray(parsed.data.points), true);
-  assert.equal(parsed.meta.source, 'static-baseline');
+  assert.equal(parsed.meta.source, 'datacore-static-rollup');
+  assert.equal(parsed.meta.freshness, 'historical');
 });
 
 test('GET /api/v1/prices/history applies range window in file fallback mode', async () => {
@@ -58,8 +59,9 @@ test('GET /api/v1/prices/history applies range window in file fallback mode', as
   const parsed = JSON.parse(res.body);
   assert.equal(parsed.ok, true);
   assert.equal(parsed.data.range, '30d');
-  assert.equal(parsed.data.historySource, 'static-baseline');
+  assert.equal(parsed.data.historySource, 'datacore-static-rollup');
   assert.equal(parsed.data.fallback, true);
+  assert.equal(parsed.data.coverage.staticFallback, true);
   assert.equal(parsed.meta.coveragePoints, parsed.data.points.length);
   if (parsed.data.points.length > 0) {
     assert.equal(typeof parsed.meta.coverageStartUtc, 'string');
@@ -101,6 +103,36 @@ test('buildHistoryResponse prefers Supabase rows and labels source explicitly', 
   assert.equal(body.data.coverage.providerBacked, true);
 });
 
+test('buildHistoryResponse restores chronological order after a newest-first Supabase query', () => {
+  const { body, status } = __testables.buildHistoryResponse({
+    range: '7d',
+    limit: 2,
+    supabaseRows: [
+      {
+        timestamp_utc: '2026-05-15T00:05:00.000Z',
+        fetched_at_utc: '2026-05-15T00:05:05.000Z',
+        xau_usd_per_oz: 3201,
+        source_provider: 'supabase-feed',
+      },
+      {
+        timestamp_utc: '2026-05-15T00:00:00.000Z',
+        fetched_at_utc: '2026-05-15T00:00:05.000Z',
+        xau_usd_per_oz: 3200,
+        source_provider: 'supabase-feed',
+      },
+    ],
+    staticRollup: null,
+    baselineHistory: null,
+    latestPricePayload: null,
+  });
+  assert.equal(status, 200);
+  assert.deepEqual(
+    body.data.points.map((point) => point.timestampUtc),
+    ['2026-05-15T00:00:00.000Z', '2026-05-15T00:05:00.000Z']
+  );
+  assert.equal(body.data.latestTimestampUtc, '2026-05-15T00:05:00.000Z');
+});
+
 test('buildHistoryResponse falls back to JSON snapshot when baseline is unavailable', () => {
   const { body, status } = __testables.buildHistoryResponse({
     range: '7d',
@@ -125,6 +157,30 @@ test('buildHistoryResponse falls back to JSON snapshot when baseline is unavaila
   assert.equal(body.data.points.length, 1);
 });
 
+test('buildHistoryResponse prefers bounded DataCore rollups over the legacy baseline', () => {
+  const { body, status } = __testables.buildHistoryResponse({
+    range: '7d',
+    limit: 120,
+    supabaseRows: null,
+    staticRollup: {
+      payload: { interval: '1h', generatedAtUtc: '2026-08-25T06:00:00.000Z' },
+      points: [
+        {
+          timestampUtc: '2026-08-25T06:00:00.000Z',
+          xauUsdPerOz: 4700,
+          granularity: 'hourly',
+        },
+      ],
+    },
+    baselineHistory: [{ date: '2026-08', price: 4600 }],
+    latestPricePayload: null,
+  });
+  assert.equal(status, 200);
+  assert.equal(body.meta.source, 'datacore-static-rollup');
+  assert.equal(body.meta.freshness, 'historical');
+  assert.equal(body.data.coverage.staticFallback, true);
+});
+
 test('buildHistoryResponse returns an explicit empty source when no history data exists', () => {
   const { body, status } = __testables.buildHistoryResponse({
     range: '7d',
@@ -144,7 +200,19 @@ test('GET /api/v1/providers/status returns provider status envelope', async () =
   assert.equal(res.status, 200);
   const parsed = JSON.parse(res.body);
   assert.equal(parsed.ok, true);
-  assert.equal(parsed.data.sourceMode, 'file');
+  assert.equal(parsed.data.sourceMode, 'datacore-static');
+  assert.equal(parsed.meta.freshness, 'historical');
+});
+
+test('GET /api/v1/prices/history/manifest exposes static provenance without live labeling', async () => {
+  const res = await get('/api/v1/prices/history/manifest');
+  assert.equal(res.status, 200);
+  const parsed = JSON.parse(res.body);
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.data.sourceMode, 'static-fallback');
+  assert.equal(parsed.data.freshnessState, 'historical');
+  assert.equal(parsed.meta.freshness, 'historical');
+  assert.equal(Array.isArray(parsed.data.files), true);
 });
 
 test('GET /api/v1/providers/runs requires admin auth', async () => {

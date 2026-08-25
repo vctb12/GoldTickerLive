@@ -14,6 +14,7 @@ const {
   normalizeHistoryRange,
   getHistoryWindowStart,
   validatePricePayload,
+  createPostgrestQueryClient,
 } = require('../lib/price-snapshots');
 
 const router = express.Router();
@@ -22,6 +23,11 @@ const PACKAGE_JSON_PATH = path.join(ROOT, 'package.json');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const PROVIDER_STATE_FILE = path.join(ROOT, 'data', 'provider_state.json');
 const PRICE_HISTORY_FILE = path.join(ROOT, 'src', 'data', 'historical-baseline.json');
+const DATACORE_HISTORY_DIR = path.join(ROOT, 'data', 'history', 'xau-usd');
+const DATACORE_HOURLY_FILE = path.join(DATACORE_HISTORY_DIR, 'hourly-latest.json');
+const DATACORE_DAILY_FILE = path.join(DATACORE_HISTORY_DIR, 'daily-latest.json');
+const DATACORE_MANIFEST_FILE = path.join(ROOT, 'data', 'history', 'manifest.json');
+const DATACORE_PROVIDER_HEALTH_FILE = path.join(ROOT, 'data', 'provider-health', 'summary.json');
 const PRICE_SNAPSHOT_SYNC_SCRIPT_FILE = path.join(
   ROOT,
   'scripts',
@@ -84,7 +90,11 @@ function buildSystemStatus() {
   const envSnapshot = getRuntimeEnvSnapshot(process.env);
   const goldPrice = readJsonFile(GOLD_PRICE_FILE);
   const providerState = readJsonFile(PROVIDER_STATE_FILE);
-  const supabaseWriteAvailable = Boolean(getSupabaseClient(false));
+  const supabaseWriteAvailable = Boolean(
+    process.env.SUPABASE_URL &&
+    process.env.SUPABASE_SERVICE_ROLE_KEY &&
+    typeof globalThis.fetch === 'function'
+  );
   const providerStateAvailable = fileExists(PROVIDER_STATE_FILE);
   const priceSnapshotSyncScriptAvailable = fileExists(PRICE_SNAPSHOT_SYNC_SCRIPT_FILE);
   const readiness = {
@@ -176,8 +186,40 @@ function inferHistoryGranularity(dateValue) {
   return String(dateValue).length === ISO_YEAR_MONTH_STRING_LENGTH ? 'monthly' : 'daily';
 }
 
+function readDataCoreRollup(range) {
+  const filePath = range === '1y' ? DATACORE_DAILY_FILE : DATACORE_HOURLY_FILE;
+  const payload = readJsonFile(filePath);
+  if (!payload || !Array.isArray(payload.points)) return null;
+  const rangeStartTime = new Date(getHistoryWindowStart(range)).getTime();
+  const points = payload.points
+    .filter((point) => {
+      const timestampUtc = toHistoryTimestampUtc(point?.bucketStartUtc);
+      return timestampUtc && new Date(timestampUtc).getTime() >= rangeStartTime;
+    })
+    .map((point) => ({
+      timestampUtc: toHistoryTimestampUtc(point.bucketStartUtc),
+      xauUsdPerOz: coerceToNumber(point.close, { positive: true }),
+      open: coerceToNumber(point.open, { positive: true }),
+      high: coerceToNumber(point.high, { positive: true }),
+      low: coerceToNumber(point.low, { positive: true }),
+      close: coerceToNumber(point.close, { positive: true }),
+      observationCount: coerceToNumber(point.observationCount, { integer: true }),
+      providerDistribution: point.providerDistribution || {},
+      granularity: payload.interval === '1d' ? 'daily' : 'hourly',
+    }))
+    .filter((point) => point.timestampUtc && point.xauUsdPerOz);
+  return {
+    payload,
+    points,
+  };
+}
+
 async function querySupabase(table, queryBuilder) {
-  const sb = getSupabaseClient(false);
+  const sb =
+    createPostgrestQueryClient({
+      url: process.env.SUPABASE_URL,
+      key: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    }) || getSupabaseClient(false);
   if (!sb) return null;
   try {
     const query = sb.from(table);
@@ -297,9 +339,19 @@ function buildHistorySuccessPayload({
   );
 }
 
-function buildHistoryResponse({ range, limit, supabaseRows, baselineHistory, latestPricePayload }) {
+function buildHistoryResponse({
+  range,
+  limit,
+  supabaseRows,
+  staticRollup,
+  baselineHistory,
+  latestPricePayload,
+}) {
   if (Array.isArray(supabaseRows) && supabaseRows.length > 0) {
-    const points = supabaseRows.slice(-limit).map((row) => ({
+    const orderedRows = [...supabaseRows].sort((left, right) =>
+      String(left.timestamp_utc).localeCompare(String(right.timestamp_utc))
+    );
+    const points = orderedRows.slice(-limit).map((row) => ({
       timestampUtc: row.timestamp_utc,
       fetchedAtUtc: row.fetched_at_utc,
       xauUsdPerOz: coerceToNumber(row.xau_usd_per_oz, { positive: true }),
@@ -324,6 +376,30 @@ function buildHistoryResponse({ range, limit, supabaseRows, baselineHistory, lat
         }),
         latestTimestampUtc: points[points.length - 1]?.timestampUtc || null,
         latestFetchedAtUtc: points[points.length - 1]?.fetchedAtUtc || null,
+      }),
+    };
+  }
+
+  if (staticRollup && Array.isArray(staticRollup.points) && staticRollup.points.length > 0) {
+    const points = staticRollup.points.slice(-limit);
+    return {
+      status: 200,
+      body: buildHistorySuccessPayload({
+        range,
+        total: staticRollup.points.length,
+        points,
+        source: 'datacore-static-rollup',
+        sourceMode: 'file',
+        freshness: 'historical',
+        coverage: buildHistoryCoverage(points, {
+          providerBacked: true,
+          staticFallback: true,
+          granularity: staticRollup.payload.interval,
+        }),
+        latestTimestampUtc: points[points.length - 1]?.timestampUtc || null,
+        latestFetchedAtUtc: staticRollup.payload.generatedAtUtc || null,
+        note: 'Bounded DataCore rollup derived from verified observations. Historical reference data, not a live retail quote.',
+        fallback: true,
       }),
     };
   }
@@ -477,7 +553,12 @@ router.get('/config/public', (_req, res) => {
 
 router.get('/prices/latest', async (_req, res) => {
   const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
-    table.select('*').order('timestamp_utc', { ascending: false }).limit(1)
+    table
+      .select('*')
+      .eq('symbol', 'XAUUSD')
+      .eq('is_selected', true)
+      .order('timestamp_utc', { ascending: false })
+      .limit(1)
   );
 
   if (Array.isArray(latestSnapshotRows) && latestSnapshotRows.length > 0) {
@@ -521,22 +602,47 @@ router.get('/prices/history', async (req, res) => {
   const supabaseRows = await querySupabase('price_snapshots', (table) =>
     table
       .select(
-        'timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,freshness_seconds,is_fresh,is_fallback'
+        'observation_id,symbol,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state'
       )
+      .eq('symbol', 'XAUUSD')
+      .eq('is_selected', true)
       .gte('timestamp_utc', supabaseStart)
-      .order('timestamp_utc', { ascending: true })
-      .limit(5000)
+      .order('timestamp_utc', { ascending: false })
+      .limit(10000)
   );
+  const staticRollup = readDataCoreRollup(range);
   const history = readJsonFile(PRICE_HISTORY_FILE);
   const latestPricePayload = readJsonFile(GOLD_PRICE_FILE);
   const response = buildHistoryResponse({
     range,
     limit,
     supabaseRows,
+    staticRollup,
     baselineHistory: Array.isArray(history) ? history : null,
     latestPricePayload,
   });
   return res.status(response.status).json(response.body);
+});
+
+router.get('/prices/history/manifest', (_req, res) => {
+  const manifest = readJsonFile(DATACORE_MANIFEST_FILE);
+  if (!manifest) {
+    return res
+      .status(503)
+      .json(
+        errorResponse(
+          'HISTORY_MANIFEST_UNAVAILABLE',
+          'The DataCore static history manifest is unavailable.'
+        )
+      );
+  }
+  return res.json(
+    successResponse(manifest, {
+      source: 'datacore-static-manifest',
+      freshness: 'historical',
+      extra: { mode: 'file', fallback: true },
+    })
+  );
 });
 
 router.get('/prices/snapshots', async (req, res) => {
@@ -546,8 +652,10 @@ router.get('/prices/snapshots', async (req, res) => {
   const supabaseRows = await querySupabase('price_snapshots', (table) => {
     let query = table
       .select(
-        'id,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,provider_chain,freshness_seconds,is_fresh,is_fallback,raw_payload_hash,created_at'
+        'id,observation_id,symbol,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,provider_chain,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,raw_payload_hash,created_at'
       )
+      .eq('symbol', 'XAUUSD')
+      .eq('is_selected', true)
       .order('timestamp_utc', { ascending: false })
       .limit(limit);
     if (provider) query = query.eq('source_provider', provider);
@@ -626,6 +734,8 @@ router.get('/providers/status', async (_req, res) => {
     const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
       table
         .select('source_provider,timestamp_utc')
+        .eq('symbol', 'XAUUSD')
+        .eq('is_selected', true)
         .order('timestamp_utc', { ascending: false })
         .limit(1)
     );
@@ -647,6 +757,7 @@ router.get('/providers/status', async (_req, res) => {
   }
 
   const state = readJsonFile(PROVIDER_STATE_FILE);
+  const staticHealth = readJsonFile(DATACORE_PROVIDER_HEALTH_FILE);
   const latest = readJsonFile(GOLD_PRICE_FILE);
   return res.json(
     successResponse(
@@ -655,12 +766,13 @@ router.get('/providers/status', async (_req, res) => {
         providerState: state || {},
         latestProvider: latest?.provider || latest?.source || null,
         latestTimestampUtc: latest?.timestamp_utc || latest?.fetched_at_utc || null,
-        providers: [],
-        sourceMode: 'file',
+        providers: Array.isArray(staticHealth?.providers) ? staticHealth.providers : [],
+        quality: staticHealth?.quality || null,
+        sourceMode: staticHealth ? 'datacore-static' : 'file',
       },
       {
-        source: 'provider-state',
-        freshness: state ? 'current' : 'unknown',
+        source: staticHealth ? 'datacore-provider-health' : 'provider-state',
+        freshness: staticHealth ? 'historical' : state ? 'current' : 'unknown',
         extra: { mode: 'file' },
       }
     )

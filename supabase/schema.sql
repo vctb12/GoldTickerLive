@@ -769,6 +769,8 @@ alter table public.fetch_logs enable row level security;
 -- ============================================================
 create table if not exists public.price_snapshots (
     id                  uuid primary key default uuid_generate_v4(),
+    observation_id      text not null,
+    symbol              text not null default 'XAUUSD',
     xau_usd_per_oz      numeric not null,
     xau_aed_per_gram    numeric,
     currency            text not null default 'USD',
@@ -776,11 +778,19 @@ create table if not exists public.price_snapshots (
     provider_chain      text,
     timestamp_utc       timestamptz not null,
     fetched_at_utc      timestamptz not null,
+    slot_5m_utc         timestamptz not null,
     freshness_seconds   int,
     is_fresh            boolean not null default false,
     is_fallback         boolean not null default false,
     is_market_open      boolean,
+    is_selected         boolean not null default true,
+    selection_method    text,
+    deviation_bps       numeric,
+    provider_response_time_ms int,
+    quality_state       text not null check (quality_state in ('fresh', 'stale', 'fallback')),
     raw_payload_hash    text not null,
+    workflow_run_id     text,
+    schema_version      smallint not null default 1 check (schema_version >= 1),
     created_at          timestamptz not null default now()
 );
 
@@ -788,33 +798,45 @@ alter table public.price_snapshots enable row level security;
 
 create unique index if not exists idx_price_snapshots_unique_payload
     on public.price_snapshots(timestamp_utc, source_provider, raw_payload_hash);
+create unique index if not exists idx_price_snapshots_observation_id
+    on public.price_snapshots(observation_id);
 create index if not exists idx_price_snapshots_timestamp_desc
     on public.price_snapshots(timestamp_utc desc);
 create index if not exists idx_price_snapshots_provider_timestamp
     on public.price_snapshots(source_provider, timestamp_utc desc);
+create index if not exists idx_price_snapshots_symbol_selected_timestamp
+    on public.price_snapshots(symbol, is_selected, timestamp_utc desc);
+create index if not exists idx_price_snapshots_symbol_slot
+    on public.price_snapshots(symbol, slot_5m_utc desc);
+
+create or replace function public.reject_datacore_raw_mutation()
+returns trigger
+language plpgsql
+security invoker
+set search_path = public, pg_temp
+as $$
+begin
+    raise exception '% is append-only; update/delete is not allowed', tg_table_name;
+end;
+$$;
+
+drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+create trigger price_snapshots_reject_mutation
+    before update or delete on public.price_snapshots
+    for each row execute function public.reject_datacore_raw_mutation();
 
 drop policy if exists "Public read price snapshots" on public.price_snapshots;
 create policy "Public read price snapshots"
     on public.price_snapshots for select
+    to anon, authenticated
     using (true);
 
 drop policy if exists "Admin insert price snapshots" on public.price_snapshots;
-create policy "Admin insert price snapshots"
-    on public.price_snapshots for insert
-    to authenticated
-    with check (true);
-
 drop policy if exists "Admin update price snapshots" on public.price_snapshots;
-create policy "Admin update price snapshots"
-    on public.price_snapshots for update
-    to authenticated
-    using (true);
-
 drop policy if exists "Admin delete price snapshots" on public.price_snapshots;
-create policy "Admin delete price snapshots"
-    on public.price_snapshots for delete
-    to authenticated
-    using (true);
+revoke all on table public.price_snapshots from anon, authenticated;
+grant select on table public.price_snapshots to anon, authenticated;
+grant all on table public.price_snapshots to service_role;
 
 -- ============================================================
 -- ALERTS + NOTIFICATIONS (phase 3 server-backed retention)
@@ -1056,8 +1078,15 @@ create trigger notification_subscriptions_set_updated_at
 -- ============================================================
 create table if not exists public.provider_runs (
     id                  uuid primary key default uuid_generate_v4(),
+    run_key             text not null,
+    workflow_run_id     text,
     provider_name       text not null,
-    status              text not null,
+    status              text not null check (status in ('success', 'error', 'stale', 'fallback', 'circuit_open')),
+    selected            boolean not null default false,
+    attempted_at_utc    timestamptz not null default now(),
+    provider_timestamp_utc timestamptz,
+    normalized_price_usd_per_oz numeric,
+    deviation_bps       numeric,
     latency_ms          int,
     http_status         int,
     error_code          text,
@@ -1075,30 +1104,24 @@ create index if not exists idx_provider_runs_provider_created
     on public.provider_runs(provider_name, created_at desc);
 create index if not exists idx_provider_runs_status_created
     on public.provider_runs(status, created_at desc);
+create unique index if not exists idx_provider_runs_run_key
+    on public.provider_runs(run_key);
+create index if not exists idx_provider_runs_attempted_desc
+    on public.provider_runs(attempted_at_utc desc);
+create index if not exists idx_provider_runs_provider_attempted
+    on public.provider_runs(provider_name, attempted_at_utc desc);
+
+drop trigger if exists provider_runs_reject_mutation on public.provider_runs;
+create trigger provider_runs_reject_mutation
+    before update or delete on public.provider_runs
+    for each row execute function public.reject_datacore_raw_mutation();
 
 drop policy if exists "Admin read provider runs" on public.provider_runs;
-create policy "Admin read provider runs"
-    on public.provider_runs for select
-    to authenticated
-    using (true);
-
 drop policy if exists "Admin insert provider runs" on public.provider_runs;
-create policy "Admin insert provider runs"
-    on public.provider_runs for insert
-    to authenticated
-    with check (true);
-
 drop policy if exists "Admin update provider runs" on public.provider_runs;
-create policy "Admin update provider runs"
-    on public.provider_runs for update
-    to authenticated
-    using (true);
-
 drop policy if exists "Admin delete provider runs" on public.provider_runs;
-create policy "Admin delete provider runs"
-    on public.provider_runs for delete
-    to authenticated
-    using (true);
+revoke all on table public.provider_runs from anon, authenticated;
+grant all on table public.provider_runs to service_role;
 
 -- ============================================================
 -- PROVIDER HEALTH (phase 2 provider transparency)
@@ -1109,6 +1132,14 @@ create table if not exists public.provider_health (
     last_failure_at     timestamptz,
     success_rate_24h    numeric,
     avg_latency_24h     numeric,
+    p95_latency_24h     numeric,
+    p95_freshness_seconds_24h numeric,
+    attempt_count_24h   int not null default 0,
+    success_count_24h   int not null default 0,
+    stale_count_24h     int not null default 0,
+    fallback_count_24h  int not null default 0,
+    divergence_count_24h int not null default 0,
+    circuit_transition_count_24h int not null default 0,
     current_status      text,
     circuit_state       text,
     updated_at          timestamptz not null default now()
@@ -1122,25 +1153,15 @@ create index if not exists idx_provider_health_status_updated
 drop policy if exists "Public read provider health" on public.provider_health;
 create policy "Public read provider health"
     on public.provider_health for select
+    to anon, authenticated
     using (true);
 
 drop policy if exists "Admin insert provider health" on public.provider_health;
-create policy "Admin insert provider health"
-    on public.provider_health for insert
-    to authenticated
-    with check (true);
-
 drop policy if exists "Admin update provider health" on public.provider_health;
-create policy "Admin update provider health"
-    on public.provider_health for update
-    to authenticated
-    using (true);
-
 drop policy if exists "Admin delete provider health" on public.provider_health;
-create policy "Admin delete provider health"
-    on public.provider_health for delete
-    to authenticated
-    using (true);
+revoke all on table public.provider_health from anon, authenticated;
+grant select on table public.provider_health to anon, authenticated;
+grant all on table public.provider_health to service_role;
 
 -- ============================================================
 -- PRICING OVERRIDES (admin manual price adjustments)

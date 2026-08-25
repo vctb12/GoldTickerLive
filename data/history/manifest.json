@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "symbol": "XAUUSD",
+  "generatedAtUtc": "2026-08-25T06:30:20.000Z",
+  "sourceMode": "static-fallback",
+  "freshnessState": "historical",
+  "note": "Bounded reference history derived from verified observations; never a live retail quote.",
+  "quality": {
+    "observationCount": 1,
+    "firstObservationUtc": "2026-08-25T06:30:17.000Z",
+    "lastObservationUtc": "2026-08-25T06:30:17.000Z",
+    "duplicateCount": 0,
+    "duplicateRate": 0,
+    "expectedOpenMarket5mSlots": 1,
+    "observedOpenMarket5mSlots": 1,
+    "missingOpenMarket5mSlots": 0,
+    "missingOpenMarketSlotRate": 0,
+    "fallbackObservationCount": 0,
+    "staleObservationCount": 0,
+    "providerDistribution": {
+      "gold_api_com": 1
+    },
+    "sourceTransitionCount": 0,
+    "providerAttemptCount": 1,
+    "providerSuccessCount": 1,
+    "providerDivergenceEventCount": 0,
+    "providerFallbackCount": 0
+  },
+  "files": [
+    {
+      "path": "data/history/xau-usd/observations-2026-08.json",
+      "sha256": "cacb2913807486b6004d11fc3cdaecf7866d2a751f08cdcb568ba614c7757bab",
+      "bytes": 1117
+    },
+    {
+      "path": "data/history/xau-usd/hourly-latest.json",
+      "sha256": "0d9d12a4c79be6b4ff360cdd9bf44f166df2cb2ee3f6bef5120f076559138f41",
+      "bytes": 684
+    },
+    {
+      "path": "data/history/xau-usd/daily-latest.json",
+      "sha256": "e40470b992fee9b66db0617d79c89898daf65b2fdac06d2f2e5d6c52bd1f2aac",
+      "bytes": 684
+    },
+    {
+      "path": "data/provider-health/summary.json",
+      "sha256": "9a654538d1414e350e7e32e97d1692518a29b922a2d431a838a21363c5a9ca44",
+      "bytes": 1427
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "symbol": "XAUUSD",
+  "sourceMode": "workflow-static",
+  "freshnessState": "historical",
+  "generatedAtUtc": "2026-08-25T06:30:20.000Z",
+  "syncState": "local_only",
+  "quality": {
+    "observationCount": 1,
+    "firstObservationUtc": "2026-08-25T06:30:17.000Z",
+    "lastObservationUtc": "2026-08-25T06:30:17.000Z",
+    "duplicateCount": 0,
+    "duplicateRate": 0,
+    "expectedOpenMarket5mSlots": 1,
+    "observedOpenMarket5mSlots": 1,
+    "missingOpenMarket5mSlots": 0,
+    "missingOpenMarketSlotRate": 0,
+    "fallbackObservationCount": 0,
+    "staleObservationCount": 0,
+    "providerDistribution": {
+      "gold_api_com": 1
+    },
+    "sourceTransitionCount": 0,
+    "providerAttemptCount": 1,
+    "providerSuccessCount": 1,
+    "providerDivergenceEventCount": 0,
+    "providerFallbackCount": 0
+  },
+  "providers": [
+    {
+      "provider_name": "gold_api_com",
+      "last_success_at": "2026-08-25T06:30:20.000Z",
+      "last_failure_at": null,
+      "success_rate_24h": 100,
+      "avg_latency_24h": 163,
+      "p95_latency_24h": 163,
+      "p95_freshness_seconds_24h": 3,
+      "attempt_count_24h": 1,
+      "success_count_24h": 1,
+      "stale_count_24h": 0,
+      "fallback_count_24h": 0,
+      "divergence_count_24h": 0,
+      "circuit_transition_count_24h": 0,
+      "current_status": "success",
+      "circuit_state": "closed",
+      "updated_at": "2026-08-25T06:30:20.000Z"
+    }
+  ]
+}
