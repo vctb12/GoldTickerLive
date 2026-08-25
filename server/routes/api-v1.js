@@ -51,6 +51,10 @@ const EVENTS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const LEADS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const HISTORY_RATE_LIMIT_WINDOW_MINUTES = 15;
 const HISTORY_RATE_LIMIT_MAX = 30;
+const HISTORY_SUPABASE_PAGE_SIZE = 1000;
+const HISTORY_SUPABASE_MAX_ROWS = 10000;
+const HISTORY_SUPABASE_COLUMNS =
+  'observation_id,metal_symbol,quote_currency,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,price_usd_per_oz,price_aed_per_gram,source_provider,freshness_state,market_state,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,quality_flags,correction_of_observation_id,is_correction';
 const DEFAULT_LIMIT_PROVIDER_RUNS = 100;
 
 const PACKAGE_VERSION = (() => {
@@ -253,6 +257,85 @@ async function querySupabase(table, queryBuilder) {
   }
 }
 
+async function fetchSupabaseHistoryRows(
+  startTimestampUtc,
+  {
+    url = process.env.SUPABASE_URL,
+    key = process.env.SUPABASE_SERVICE_ROLE_KEY,
+    fetchImpl = globalThis.fetch,
+    pageSize = HISTORY_SUPABASE_PAGE_SIZE,
+    maxRows = HISTORY_SUPABASE_MAX_ROWS,
+  } = {}
+) {
+  if (!url || !key || typeof fetchImpl !== 'function') return null;
+  const boundedPageSize = Math.max(1, Math.min(Number(pageSize) || 1, HISTORY_SUPABASE_PAGE_SIZE));
+  const boundedMaxRows = Math.max(1, Math.min(Number(maxRows) || 1, HISTORY_SUPABASE_MAX_ROWS));
+  const rows = [];
+  const baseUrl = String(url).replace(/\/$/, '');
+
+  for (let offset = 0; offset < boundedMaxRows; offset += boundedPageSize) {
+    const requestSize = Math.min(boundedPageSize, boundedMaxRows - offset);
+    const endpoint = new URL(`${baseUrl}/rest/v1/price_snapshots`);
+    endpoint.searchParams.set('select', HISTORY_SUPABASE_COLUMNS);
+    endpoint.searchParams.set('metal_symbol', 'eq.XAU');
+    endpoint.searchParams.set('provider_timestamp_utc', `gte.${startTimestampUtc}`);
+    endpoint.searchParams.set(
+      'order',
+      'provider_timestamp_utc.desc,ingested_at_utc.desc,observation_id.desc'
+    );
+    endpoint.searchParams.set('limit', String(requestSize));
+    endpoint.searchParams.set('offset', String(offset));
+
+    try {
+      const response = await fetchImpl(endpoint, {
+        headers: { apikey: key, Authorization: `Bearer ${key}` },
+      });
+      const text = await response.text();
+      let data = null;
+      if (text) {
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = null;
+        }
+      }
+      if (!response.ok || !Array.isArray(data)) {
+        const message = data?.message || response.statusText || 'invalid response';
+        console.warn(`[api-v1] Supabase history query failed: ${message}`);
+        return null;
+      }
+      rows.push(...data);
+      if (data.length < requestSize) break;
+    } catch (error) {
+      console.warn(`[api-v1] Supabase history query exception: ${error.message}`);
+      return null;
+    }
+  }
+
+  return rows;
+}
+
+function resolveEffectiveHistoryRows(rows) {
+  const orderedRows = (Array.isArray(rows) ? rows : [])
+    .filter(
+      (row) =>
+        row?.quality_state !== 'rejected' &&
+        coerceToNumber(row?.price_usd_per_oz ?? row?.xau_usd_per_oz, { positive: true }) !== null
+    )
+    .sort(
+      (left, right) =>
+        String(left.provider_timestamp_utc || left.timestamp_utc).localeCompare(
+          String(right.provider_timestamp_utc || right.timestamp_utc)
+        ) ||
+        String(left.ingested_at_utc || '').localeCompare(String(right.ingested_at_utc || '')) ||
+        String(left.observation_id || '').localeCompare(String(right.observation_id || ''))
+    );
+  const correctedObservationIds = new Set(
+    orderedRows.map((row) => row.correction_of_observation_id).filter(Boolean)
+  );
+  return orderedRows.filter((row) => !correctedObservationIds.has(row.observation_id));
+}
+
 function mapPricePayloadToApiData(pricePayload) {
   const freshnessSeconds = coerceToNumber(pricePayload?.freshness_seconds, { integer: true });
   return {
@@ -369,13 +452,11 @@ function buildHistoryResponse({
   baselineHistory,
   latestPricePayload,
 }) {
-  if (Array.isArray(supabaseRows) && supabaseRows.length > 0) {
-    const orderedRows = [...supabaseRows].sort((left, right) =>
-      String(left.provider_timestamp_utc || left.timestamp_utc).localeCompare(
-        String(right.provider_timestamp_utc || right.timestamp_utc)
-      )
-    );
-    const points = orderedRows.slice(-limit).map((row) => ({
+  const effectiveRows = resolveEffectiveHistoryRows(supabaseRows).filter(
+    (row) => row.is_selected !== false
+  );
+  if (effectiveRows.length > 0) {
+    const points = effectiveRows.slice(-limit).map((row) => ({
       timestampUtc: row.provider_timestamp_utc || row.timestamp_utc,
       fetchedAtUtc: row.fetched_at_utc,
       ingestedAtUtc: row.ingested_at_utc,
@@ -400,14 +481,14 @@ function buildHistoryResponse({
       status: 200,
       body: buildHistorySuccessPayload({
         range,
-        total: supabaseRows.length,
+        total: effectiveRows.length,
         points,
         source: 'supabase',
         sourceMode: 'supabase',
         freshness: 'historical',
         coverage: buildHistoryCoverage(points, {
           providerBacked: true,
-          partial: points.length < supabaseRows.length,
+          partial: points.length < effectiveRows.length,
         }),
         latestTimestampUtc: points[points.length - 1]?.timestampUtc || null,
         latestFetchedAtUtc: points[points.length - 1]?.fetchedAtUtc || null,
@@ -658,17 +739,7 @@ router.get('/prices/history', historyRateLimiter, async (req, res) => {
   const range = normalizeHistoryRange(requestedRange);
   const limit = parseLimit(req.query.limit, 120, 5000);
   const supabaseStart = getHistoryWindowStart(range);
-  const supabaseRows = await querySupabase('price_snapshots', (table) =>
-    table
-      .select(
-        'observation_id,metal_symbol,quote_currency,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,price_usd_per_oz,price_aed_per_gram,source_provider,freshness_state,market_state,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,quality_flags,correction_of_observation_id,is_correction'
-      )
-      .eq('metal_symbol', 'XAU')
-      .eq('is_selected', true)
-      .gte('provider_timestamp_utc', supabaseStart)
-      .order('provider_timestamp_utc', { ascending: false })
-      .limit(10000)
-  );
+  const supabaseRows = await fetchSupabaseHistoryRows(supabaseStart);
   const staticRollup = readDataCoreRollup(range);
   const history = readJsonFile(PRICE_HISTORY_FILE);
   const latestPricePayload = readJsonFile(GOLD_PRICE_FILE);
@@ -954,4 +1025,6 @@ module.exports.__testables = {
   buildHistoryResponse,
   buildHistorySuccessPayload,
   buildSystemStatus,
+  fetchSupabaseHistoryRows,
+  resolveEffectiveHistoryRows,
 };

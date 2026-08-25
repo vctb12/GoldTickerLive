@@ -135,6 +135,166 @@ test('buildHistoryResponse restores chronological order after a newest-first Sup
   assert.equal(body.data.latestTimestampUtc, '2026-05-15T00:05:00.000Z');
 });
 
+test('buildHistoryResponse resolves Supabase corrections before limit and coverage like static history', () => {
+  const predecessor = {
+    observation_id: 'obs-predecessor',
+    provider_timestamp_utc: '2026-05-15T00:05:00.000Z',
+    fetched_at_utc: '2026-05-15T00:05:05.000Z',
+    ingested_at_utc: '2026-05-15T00:05:06.000Z',
+    price_usd_per_oz: 3200,
+    source_provider: 'supabase-feed',
+    is_selected: true,
+    quality_state: 'accepted',
+    is_correction: false,
+    correction_of_observation_id: null,
+  };
+  const correction = {
+    ...predecessor,
+    observation_id: 'obs-correction',
+    ingested_at_utc: '2026-05-15T00:06:06.000Z',
+    price_usd_per_oz: 3205,
+    is_correction: true,
+    correction_of_observation_id: predecessor.observation_id,
+  };
+  const rawRows = [correction, predecessor];
+  const rawRowsBefore = structuredClone(rawRows);
+
+  const supabase = __testables.buildHistoryResponse({
+    range: '7d',
+    limit: 1,
+    supabaseRows: rawRows,
+    staticRollup: null,
+    baselineHistory: null,
+    latestPricePayload: null,
+  });
+  const staticFallback = __testables.buildHistoryResponse({
+    range: '7d',
+    limit: 1,
+    supabaseRows: null,
+    staticRollup: {
+      payload: { interval: '5m', generatedAtUtc: '2026-05-15T00:07:00.000Z' },
+      points: [
+        {
+          timestampUtc: correction.provider_timestamp_utc,
+          xauUsdPerOz: correction.price_usd_per_oz,
+          sourceObservationId: correction.observation_id,
+        },
+      ],
+    },
+    baselineHistory: null,
+    latestPricePayload: null,
+  });
+
+  assert.equal(supabase.body.data.total, 1);
+  assert.equal(supabase.body.data.returned, 1);
+  assert.equal(supabase.body.data.coverage.pointsAvailable, 1);
+  assert.equal(supabase.body.data.coverage.partial, false);
+  assert.equal(supabase.body.data.points[0].sourceObservationId, correction.observation_id);
+  assert.equal(supabase.body.data.points[0].correctionOfObservationId, predecessor.observation_id);
+  assert.equal(supabase.body.data.points[0].isCorrection, true);
+  assert.equal(
+    supabase.body.data.points[0].timestampUtc,
+    staticFallback.body.data.points[0].timestampUtc
+  );
+  assert.equal(
+    supabase.body.data.points[0].xauUsdPerOz,
+    staticFallback.body.data.points[0].xauUsdPerOz
+  );
+  assert.deepEqual(rawRows, rawRowsBefore, 'raw snapshot lineage must remain unchanged');
+});
+
+test('buildHistoryResponse resolves corrections before filtering selected observations', () => {
+  const timestampUtc = '2026-05-15T00:05:00.000Z';
+  const predecessor = {
+    observation_id: 'obs-selected-predecessor',
+    provider_timestamp_utc: timestampUtc,
+    ingested_at_utc: '2026-05-15T00:05:05.000Z',
+    price_usd_per_oz: 3200,
+    source_provider: 'provider-a',
+    is_selected: true,
+    quality_state: 'accepted',
+  };
+  const unselectedCorrection = {
+    ...predecessor,
+    observation_id: 'obs-unselected-correction',
+    ingested_at_utc: '2026-05-15T00:06:05.000Z',
+    price_usd_per_oz: 3201,
+    is_selected: false,
+    is_correction: true,
+    correction_of_observation_id: predecessor.observation_id,
+  };
+  const replacementSelection = {
+    ...predecessor,
+    observation_id: 'obs-selected-provider-b',
+    ingested_at_utc: '2026-05-15T00:06:06.000Z',
+    price_usd_per_oz: 3202,
+    source_provider: 'provider-b',
+  };
+
+  const { body } = __testables.buildHistoryResponse({
+    range: '7d',
+    limit: 10,
+    supabaseRows: [replacementSelection, unselectedCorrection, predecessor],
+    staticRollup: null,
+    baselineHistory: null,
+    latestPricePayload: null,
+  });
+
+  assert.equal(body.data.total, 1);
+  assert.deepEqual(
+    body.data.points.map((point) => point.sourceObservationId),
+    [replacementSelection.observation_id]
+  );
+});
+
+test('fetchSupabaseHistoryRows uses deterministic bounded pagination', async () => {
+  const requests = [];
+  const rowsByOffset = new Map([
+    [0, [{ observation_id: 'obs-5' }, { observation_id: 'obs-4' }]],
+    [2, [{ observation_id: 'obs-3' }, { observation_id: 'obs-2' }]],
+    [4, [{ observation_id: 'obs-1' }]],
+  ]);
+  const rows = await __testables.fetchSupabaseHistoryRows('2026-05-01T00:00:00.000Z', {
+    url: 'https://project.supabase.co',
+    key: 'test-service-key',
+    pageSize: 2,
+    maxRows: 5,
+    fetchImpl: async (input, init) => {
+      const url = new URL(input);
+      requests.push({ url, headers: init.headers });
+      const offset = Number(url.searchParams.get('offset'));
+      return {
+        ok: true,
+        statusText: 'OK',
+        text: async () => JSON.stringify(rowsByOffset.get(offset) || []),
+      };
+    },
+  });
+
+  assert.deepEqual(
+    rows.map((row) => row.observation_id),
+    ['obs-5', 'obs-4', 'obs-3', 'obs-2', 'obs-1']
+  );
+  assert.deepEqual(
+    requests.map(({ url }) => url.searchParams.get('offset')),
+    ['0', '2', '4']
+  );
+  assert.deepEqual(
+    requests.map(({ url }) => url.searchParams.get('limit')),
+    ['2', '2', '1']
+  );
+  for (const { url, headers } of requests) {
+    assert.equal(
+      url.searchParams.get('order'),
+      'provider_timestamp_utc.desc,ingested_at_utc.desc,observation_id.desc'
+    );
+    assert.equal(url.searchParams.get('metal_symbol'), 'eq.XAU');
+    assert.equal(url.searchParams.has('is_selected'), false);
+    assert.equal(url.searchParams.get('provider_timestamp_utc'), 'gte.2026-05-01T00:00:00.000Z');
+    assert.equal(headers.Authorization, 'Bearer test-service-key');
+  }
+});
+
 test('buildHistoryResponse falls back to JSON snapshot when baseline is unavailable', () => {
   const { body, status } = __testables.buildHistoryResponse({
     range: '7d',
