@@ -821,7 +821,10 @@
                   <select id="tp-metal-purity" class="tracker-select"></select>
                 </label>
               </div>
-              <div class="tracker-metal-tabs" id="tp-metal-tabs" role="tablist" aria-label="Precious metal" data-i18n-aria-label="metalChart.tablistLabel"></div>
+              <div class="tracker-metal-tabs-shell">
+                <div class="tracker-metal-tabs" id="tp-metal-tabs" role="tablist" aria-label="Precious metal" aria-describedby="tp-metal-tabs-hint" data-i18n-aria-label="metalChart.tablistLabel"></div>
+                <p class="tracker-metal-tabs-hint" id="tp-metal-tabs-hint" data-i18n="metalChart.tabsHint">Swipe horizontally to view all four metals.</p>
+              </div>
               <div class="tracker-metal-readout" aria-live="polite">
                 <div>
                   <span class="tracker-metal-readout__label" id="tp-metal-value-label">XAU/USD</span>

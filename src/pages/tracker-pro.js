@@ -161,6 +161,13 @@ function localizeStaticTrackerCopy() {
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
   hydrateStaticI18n();
 
+  if (el.workspaceToggle) {
+    el.workspaceToggle.textContent = trackerTx(
+      state.workspaceLevel === 'advanced' ? 'workspace.toggleBasic' : 'workspace.toggleAdvanced'
+    );
+  }
+  metalChartWorkspace?.sync();
+
   const trustContent = document.querySelector('.tracker-trust-content');
   if (trustContent) {
     const strong = document.createElement('strong');

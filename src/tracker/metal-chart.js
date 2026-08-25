@@ -21,6 +21,16 @@ function setStatus(root, key, text) {
   root.textContent = text;
 }
 
+function revealMetalTab(button) {
+  if (!button || typeof button.scrollIntoView !== 'function') return;
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches === true;
+  button.scrollIntoView({
+    behavior: reduceMotion ? 'auto' : 'smooth',
+    block: 'nearest',
+    inline: 'nearest',
+  });
+}
+
 export function initMetalChartWorkspace({
   state,
   renderChart,
@@ -45,6 +55,7 @@ export function initMetalChartWorkspace({
   const source = root.querySelector('#tp-metal-source');
   const freshness = root.querySelector('#tp-metal-freshness');
   const timestamp = root.querySelector('#tp-metal-timestamp');
+  const miniStrip = document.getElementById('tp-mini-strip');
   let requestId = 0;
 
   function selection() {
@@ -158,11 +169,15 @@ export function initMetalChartWorkspace({
     }
   }
 
-  function sync({ redrawChart = false } = {}) {
+  function sync({ redrawChart = false, revealSelected = false } = {}) {
     renderTabs();
     renderPurities();
     renderReadout();
     syncChartSurface();
+    if (miniStrip) miniStrip.hidden = selection().metal !== PRIMARY_METAL;
+    if (revealSelected) {
+      revealMetalTab(tabs?.querySelector('[aria-selected="true"]'));
+    }
     if (redrawChart) renderChart?.();
   }
 
@@ -210,9 +225,15 @@ export function initMetalChartWorkspace({
     state.historyMonth = '';
     persistState?.();
     syncUrlFromState?.();
-    sync({ redrawChart: true });
+    sync({ redrawChart: true, revealSelected: true });
     fetchSelectedMetal();
     if (metal === PRIMARY_METAL) window.__installGoldChartNow?.();
+  });
+
+  tabs?.addEventListener('focusin', (event) => {
+    const button = event.target.closest('[data-metal]');
+    if (!button || !tabs.contains(button)) return;
+    revealMetalTab(button);
   });
 
   tabs?.addEventListener('keydown', (event) => {
@@ -241,7 +262,7 @@ export function initMetalChartWorkspace({
     sync({ redrawChart: true });
   });
 
-  sync();
+  sync({ revealSelected: selection().metal !== PRIMARY_METAL });
   if (selection().metal !== PRIMARY_METAL && !state.metalQuotes[selection().metal]) {
     fetchSelectedMetal();
   }

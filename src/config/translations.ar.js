@@ -191,6 +191,7 @@ export const AR = {
   'tracker.metalChart.title': 'معاينة مخطط المعادن الثمينة',
   'tracker.metalChart.gradeLabel': 'النقاوة / العيار',
   'tracker.metalChart.tablistLabel': 'المعدن الثمين',
+  'tracker.metalChart.tabsHint': 'مرّر أفقياً لعرض المعادن الأربعة كلها.',
   'tracker.metalChart.karatLabel': 'عيار الذهب',
   'tracker.metalChart.finenessLabel': 'درجة نقاوة المعدن',
   'tracker.metalChart.goldCoverage': 'يستخدم سجل الذهب مصادر المتتبع الحالية التي تم التحقق منها.',

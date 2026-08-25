@@ -192,6 +192,7 @@ export const EN = {
   'tracker.metalChart.title': 'Precious-metal chart preview',
   'tracker.metalChart.gradeLabel': 'Purity / fineness',
   'tracker.metalChart.tablistLabel': 'Precious metal',
+  'tracker.metalChart.tabsHint': 'Swipe horizontally to view all four metals.',
   'tracker.metalChart.karatLabel': 'Gold karat',
   'tracker.metalChart.finenessLabel': 'Metal fineness',
   'tracker.metalChart.goldCoverage': 'Gold history uses the existing verified tracker sources.',

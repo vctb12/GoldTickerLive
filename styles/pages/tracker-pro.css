@@ -1855,6 +1855,10 @@ body.tracker-workspace-basic .tracker-advanced-only {
   font-size: var(--text-sm);
 }
 
+.tracker-metal-tabs-shell {
+  min-width: 0;
+}
+
 .tracker-metal-tabs {
   display: flex;
   gap: var(--space-1);
@@ -1864,6 +1868,13 @@ body.tracker-workspace-basic .tracker-advanced-only {
   border-radius: var(--radius-md);
   background: var(--surface-tertiary);
   scrollbar-width: thin;
+}
+
+.tracker-metal-tabs-hint {
+  display: none;
+  margin: var(--space-1) var(--space-1) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-xs);
 }
 
 .tracker-metal-tab {
@@ -1919,6 +1930,10 @@ body.tracker-workspace-basic .tracker-advanced-only {
 
   .tracker-metal-readout__meta {
     text-align: start;
+  }
+
+  .tracker-metal-tabs-hint {
+    display: block;
   }
 }
 
