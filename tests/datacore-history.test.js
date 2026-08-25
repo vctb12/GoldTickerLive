@@ -431,7 +431,9 @@ test('DataCore migration keeps raw writes service-role-only and append-only', ()
   assert.match(sql, /correction_of_observation_id/);
   assert.match(sql, /quality_flags text\[\]/);
   assert.match(sql, /metal_symbol/);
-  assert.match(sql, /grant all on table public\.price_snapshots to service_role/i);
+  assert.match(sql, /revoke all on table public\.price_snapshots from service_role/i);
+  assert.match(sql, /grant select, insert on table public\.price_snapshots to service_role/i);
+  assert.doesNotMatch(sql, /grant all on table public\.price_snapshots to service_role/i);
   assert.doesNotMatch(sql, /for (?:insert|update|delete)\s+to authenticated/i);
 });
 

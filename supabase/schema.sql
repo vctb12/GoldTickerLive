@@ -832,12 +832,13 @@ drop policy if exists "Public read price snapshots" on public.price_snapshots;
 create policy "Public read price snapshots"
     on public.price_snapshots for select
     to anon, authenticated
-    using (true);
+    using (is_selected);
 
 drop policy if exists "Admin insert price snapshots" on public.price_snapshots;
 drop policy if exists "Admin update price snapshots" on public.price_snapshots;
 drop policy if exists "Admin delete price snapshots" on public.price_snapshots;
 revoke all on table public.price_snapshots from anon, authenticated;
+revoke all on table public.price_snapshots from service_role;
 grant select (
     observation_id,
     symbol,
@@ -858,7 +859,7 @@ grant select (
     quality_state,
     schema_version
 ) on public.price_snapshots to anon, authenticated;
-grant all on table public.price_snapshots to service_role;
+grant select, insert on table public.price_snapshots to service_role;
 
 -- ============================================================
 -- ALERTS + NOTIFICATIONS (phase 3 server-backed retention)
@@ -1143,7 +1144,8 @@ drop policy if exists "Admin insert provider runs" on public.provider_runs;
 drop policy if exists "Admin update provider runs" on public.provider_runs;
 drop policy if exists "Admin delete provider runs" on public.provider_runs;
 revoke all on table public.provider_runs from anon, authenticated;
-grant all on table public.provider_runs to service_role;
+revoke all on table public.provider_runs from service_role;
+grant select, insert on table public.provider_runs to service_role;
 
 -- ============================================================
 -- PROVIDER HEALTH (phase 2 provider transparency)
@@ -1183,7 +1185,8 @@ drop policy if exists "Admin update provider health" on public.provider_health;
 drop policy if exists "Admin delete provider health" on public.provider_health;
 revoke all on table public.provider_health from anon, authenticated;
 grant select on table public.provider_health to anon, authenticated;
-grant all on table public.provider_health to service_role;
+revoke all on table public.provider_health from service_role;
+grant select, insert, update on table public.provider_health to service_role;
 
 -- ============================================================
 -- PRICING OVERRIDES (admin manual price adjustments)
@@ -2539,6 +2542,7 @@ create policy "Public read selected price snapshots"
     using (is_selected and quality_state in ('accepted', 'warning'));
 
 revoke all on table public.price_snapshots from anon, authenticated;
+revoke all on table public.price_snapshots from service_role;
 grant select (
     observation_id,
     metal_symbol,
@@ -2563,10 +2567,11 @@ grant select (
     is_correction,
     schema_version
 ) on public.price_snapshots to anon, authenticated;
-grant all on table public.price_snapshots to service_role;
+grant select, insert on table public.price_snapshots to service_role;
 
 revoke all on table public.provider_runs from anon, authenticated;
-grant all on table public.provider_runs to service_role;
+revoke all on table public.provider_runs from service_role;
+grant select, insert on table public.provider_runs to service_role;
 
 drop policy if exists "Public read provider health" on public.provider_health;
 create policy "Public read provider health"
@@ -2574,6 +2579,7 @@ create policy "Public read provider health"
     to anon, authenticated
     using (true);
 revoke all on table public.provider_health from anon, authenticated;
+revoke all on table public.provider_health from service_role;
 grant select (
     metal_symbol,
     provider_name,
@@ -2593,7 +2599,7 @@ grant select (
     circuit_state,
     updated_at
 ) on public.provider_health to anon, authenticated;
-grant all on table public.provider_health to service_role;
+grant select, insert, update on table public.provider_health to service_role;
 
 comment on table public.price_snapshots is
     'Append-only metal-neutral provider observations. DC-1 production writer is XAU only.';

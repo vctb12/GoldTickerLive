@@ -115,8 +115,9 @@ drop policy if exists "Admin delete price snapshots" on public.price_snapshots;
 create policy "Public read price snapshots"
     on public.price_snapshots for select
     to anon, authenticated
-    using (true);
+    using (is_selected);
 revoke all on table public.price_snapshots from anon, authenticated;
+revoke all on table public.price_snapshots from service_role;
 grant select (
     observation_id,
     symbol,
@@ -137,7 +138,7 @@ grant select (
     quality_state,
     schema_version
 ) on public.price_snapshots to anon, authenticated;
-grant all on table public.price_snapshots to service_role;
+grant select, insert on table public.price_snapshots to service_role;
 
 create table if not exists public.provider_runs (
     id                          uuid primary key default gen_random_uuid(),
@@ -199,7 +200,8 @@ drop policy if exists "Admin insert provider runs" on public.provider_runs;
 drop policy if exists "Admin update provider runs" on public.provider_runs;
 drop policy if exists "Admin delete provider runs" on public.provider_runs;
 revoke all on table public.provider_runs from anon, authenticated;
-grant all on table public.provider_runs to service_role;
+revoke all on table public.provider_runs from service_role;
+grant select, insert on table public.provider_runs to service_role;
 
 create table if not exists public.provider_health (
     provider_name                   text primary key,
@@ -241,7 +243,8 @@ create policy "Public read provider health"
     using (true);
 revoke all on table public.provider_health from anon, authenticated;
 grant select on table public.provider_health to anon, authenticated;
-grant all on table public.provider_health to service_role;
+revoke all on table public.provider_health from service_role;
+grant select, insert, update on table public.provider_health to service_role;
 
 comment on table public.price_snapshots is
     'Append-only DataCore observations. XAU/USD is the only production writer enabled in DC-1.';

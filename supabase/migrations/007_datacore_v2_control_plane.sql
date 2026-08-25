@@ -214,10 +214,12 @@ grant select (
     is_correction,
     schema_version
 ) on public.price_snapshots to anon, authenticated;
-grant all on table public.price_snapshots to service_role;
+revoke all on table public.price_snapshots from service_role;
+grant select, insert on table public.price_snapshots to service_role;
 
 revoke all on table public.provider_runs from anon, authenticated;
-grant all on table public.provider_runs to service_role;
+revoke all on table public.provider_runs from service_role;
+grant select, insert on table public.provider_runs to service_role;
 
 drop policy if exists "Public read provider health" on public.provider_health;
 create policy "Public read provider health"
@@ -244,7 +246,8 @@ grant select (
     circuit_state,
     updated_at
 ) on public.provider_health to anon, authenticated;
-grant all on table public.provider_health to service_role;
+revoke all on table public.provider_health from service_role;
+grant select, insert, update on table public.provider_health to service_role;
 
 comment on table public.price_snapshots is
     'Append-only metal-neutral provider observations. DC-1 production writer is XAU only.';

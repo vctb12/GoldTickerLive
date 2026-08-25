@@ -1,6 +1,6 @@
 begin;
 
-select plan(33);
+select plan(54);
 
 select has_table('public', 'price_snapshots', 'price_snapshots exists');
 select has_table('public', 'provider_runs', 'provider_runs exists');
@@ -40,6 +40,18 @@ select ok(
 select ok(
     (select relrowsecurity from pg_class where oid = 'public.provider_health'::regclass),
     'provider_health has RLS enabled'
+);
+select ok(
+    exists (
+        select 1
+        from pg_policies
+        where schemaname = 'public'
+          and tablename = 'price_snapshots'
+          and policyname = 'Public read selected price snapshots'
+          and qual ilike '%is_selected%'
+          and qual ilike '%quality_state%'
+    ),
+    'final public observation policy filters selected accepted/warning rows'
 );
 select ok(
     has_column_privilege('anon', 'public.price_snapshots', 'price_usd_per_oz', 'select'),
@@ -123,6 +135,66 @@ select ok(
     ),
     'provider_runs append-only trigger is installed'
 );
+select ok(
+    has_table_privilege('service_role', 'public.price_snapshots', 'select'),
+    'service_role can select observations'
+);
+select ok(
+    has_table_privilege('service_role', 'public.price_snapshots', 'insert'),
+    'service_role can append observations'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.price_snapshots', 'update'),
+    'service_role cannot update observations'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.price_snapshots', 'delete'),
+    'service_role cannot delete observations'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.price_snapshots', 'truncate'),
+    'service_role cannot truncate observations'
+);
+select ok(
+    has_table_privilege('service_role', 'public.provider_runs', 'select'),
+    'service_role can select provider runs'
+);
+select ok(
+    has_table_privilege('service_role', 'public.provider_runs', 'insert'),
+    'service_role can append provider runs'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.provider_runs', 'update'),
+    'service_role cannot update provider runs'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.provider_runs', 'delete'),
+    'service_role cannot delete provider runs'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.provider_runs', 'truncate'),
+    'service_role cannot truncate provider runs'
+);
+select ok(
+    has_table_privilege('service_role', 'public.provider_health', 'select'),
+    'service_role can select provider health'
+);
+select ok(
+    has_table_privilege('service_role', 'public.provider_health', 'insert'),
+    'service_role can insert provider health'
+);
+select ok(
+    has_table_privilege('service_role', 'public.provider_health', 'update'),
+    'service_role can update provider health for upserts'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.provider_health', 'delete'),
+    'service_role cannot delete provider health'
+);
+select ok(
+    not has_table_privilege('service_role', 'public.provider_health', 'truncate'),
+    'service_role cannot truncate provider health'
+);
 
 set local role service_role;
 select lives_ok(
@@ -202,6 +274,21 @@ select lives_ok(
     $sql$,
     'service_role can write provider health'
 );
+select results_eq(
+    $sql$
+        insert into public.provider_health (
+            metal_symbol,
+            provider_name,
+            success_rate_24h,
+            current_status
+        ) values ('XAU', 'pgtap', 100, 'healthy')
+        on conflict (metal_symbol, provider_name) do update
+        set success_rate_24h = excluded.success_rate_24h
+        returning success_rate_24h
+    $sql$,
+    array[100::numeric],
+    'service_role can upsert provider health without delete or truncate'
+);
 reset role;
 
 set local role anon;
@@ -237,7 +324,7 @@ select results_eq(
         from public.provider_health
         where metal_symbol = 'XAU' and provider_name = 'pgtap'
     $sql$,
-    array[99::numeric],
+    array[100::numeric],
     'anon can read an approved provider-health column through RLS'
 );
 select throws_ok(
@@ -274,17 +361,46 @@ select throws_ok(
         set quality_state = 'warning'
         where observation_id = 'pgtap:visible'
     $sql$,
+    '42501',
+    null,
+    'service_role cannot update observations'
+);
+select throws_ok(
+    $sql$delete from public.provider_runs where run_key = 'pgtap:run'$sql$,
+    '42501',
+    null,
+    'service_role cannot delete provider runs'
+);
+select throws_ok(
+    $sql$truncate table public.price_snapshots$sql$,
+    '42501',
+    null,
+    'service_role cannot truncate observations'
+);
+select throws_ok(
+    $sql$truncate table public.provider_runs$sql$,
+    '42501',
+    null,
+    'service_role cannot truncate provider runs'
+);
+reset role;
+
+select throws_ok(
+    $sql$
+        update public.price_snapshots
+        set quality_state = 'warning'
+        where observation_id = 'pgtap:visible'
+    $sql$,
     'P0001',
     'price_snapshots is append-only; update/delete is not allowed',
-    'append-only trigger rejects service-role observation updates'
+    'append-only trigger rejects owner observation updates'
 );
 select throws_ok(
     $sql$delete from public.provider_runs where run_key = 'pgtap:run'$sql$,
     'P0001',
     'provider_runs is append-only; update/delete is not allowed',
-    'append-only trigger rejects service-role provider-run deletes'
+    'append-only trigger rejects owner provider-run deletes'
 );
-reset role;
 
 select * from finish();
 rollback;

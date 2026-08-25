@@ -15,6 +15,10 @@ const migration007 = fs.readFileSync(
   'utf8'
 );
 const schema = fs.readFileSync(path.join(root, 'supabase', 'schema.sql'), 'utf8');
+const schemaV1 = schema.slice(
+  schema.indexOf('-- PRICE SNAPSHOTS'),
+  schema.indexOf('-- DATACORE V2 CONTROL PLANE')
+);
 const schemaV2 = schema.slice(schema.indexOf('-- DATACORE V2 CONTROL PLANE'));
 const rlsTest = fs.readFileSync(
   path.join(root, 'supabase', 'tests', 'datacore_rls.test.sql'),
@@ -33,6 +37,12 @@ function selectedColumns(sql, table) {
   );
   assert.ok(grant, `${table} uses an explicit public column grant`);
   return grant[1];
+}
+
+function policyDefinition(sql, name) {
+  const policy = sql.match(new RegExp(`create policy "${name}"[\\s\\S]*?;`, 'i'));
+  assert.ok(policy, `${name} policy is present`);
+  return policy[0];
 }
 
 test('clean migration chain creates all DataCore relations before v2 alters them', () => {
@@ -115,6 +125,16 @@ test('v2 SQL preserves XAU aliases without permitting future non-gold values in 
   assert.match(migration007, /deferrable initially deferred/i);
 });
 
+test('every public observation policy hides unselected provider rows', () => {
+  for (const stage of [migration006, schemaV1]) {
+    const v1Policy = policyDefinition(stage, 'Public read price snapshots');
+    assert.match(v1Policy, /using \(is_selected\)/i);
+    assert.doesNotMatch(v1Policy, /using \(true\)/i);
+  }
+  const v2Policy = policyDefinition(migration007, 'Public read selected price snapshots');
+  assert.match(v2Policy, /using \(is_selected and quality_state in \('accepted', 'warning'\)\)/i);
+});
+
 test('every migration stage grants approved columns only and keeps raw attempts private', () => {
   for (const migration of [migration006, migration007]) {
     assert.match(
@@ -147,6 +167,40 @@ test('every migration stage grants approved columns only and keeps raw attempts 
   assert.doesNotMatch(migration007, /grant select on table public\.provider_runs to anon/i);
 });
 
+test('service_role can append raw history but cannot rewrite or truncate it', () => {
+  const stages = [migration006, migration007, schemaV1, schemaV2];
+  for (const sql of stages) {
+    for (const table of ['price_snapshots', 'provider_runs']) {
+      const revoke = statementOffset(
+        sql,
+        new RegExp(`revoke all on table public\\.${table} from service_role`, 'i'),
+        `${table} service-role revoke`
+      );
+      const grant = statementOffset(
+        sql,
+        new RegExp(`grant select,\\s*insert on table public\\.${table} to service_role`, 'i'),
+        `${table} append-only service-role grant`
+      );
+      assert.ok(revoke < grant, `${table} broad privileges are revoked before append access`);
+    }
+    const healthRevoke = statementOffset(
+      sql,
+      /revoke all on table public\.provider_health from service_role/i,
+      'provider_health service-role revoke'
+    );
+    const healthGrant = statementOffset(
+      sql,
+      /grant select,\s*insert,\s*update on table public\.provider_health to service_role/i,
+      'provider_health upsert grant'
+    );
+    assert.ok(healthRevoke < healthGrant, 'provider_health grants only upsert privileges');
+  }
+  assert.doesNotMatch(
+    [migration006, migration007, schema].join('\n'),
+    /grant all on table public\.(?:price_snapshots|provider_runs|provider_health) to service_role/i
+  );
+});
+
 test('the internal append-only function is not exposed as a Data API RPC', () => {
   for (const migration of [migration006, migration007, schemaV2]) {
     assert.match(
@@ -166,7 +220,7 @@ test('the internal append-only function is not exposed as a Data API RPC', () =>
 });
 
 test('pgTAP proof exercises role visibility, write denial, and both append-only triggers', () => {
-  assert.match(rlsTest, /select plan\(33\)/i);
+  assert.match(rlsTest, /select plan\(54\)/i);
   assert.match(rlsTest, /raw_payload_hash/i);
   assert.match(rlsTest, /workflow_run_id/i);
   assert.match(rlsTest, /provider_runs/i);
@@ -177,8 +231,14 @@ test('pgTAP proof exercises role visibility, write denial, and both append-only 
   assert.match(rlsTest, /set local role authenticated/i);
   assert.match(rlsTest, /pgtap:unselected/i);
   assert.match(rlsTest, /pgtap:rejected/i);
+  assert.match(rlsTest, /final public observation policy filters selected accepted\/warning rows/i);
   assert.match(rlsTest, /anon cannot insert observations/i);
   assert.match(rlsTest, /authenticated clients cannot insert provider runs/i);
   assert.match(rlsTest, /authenticated clients cannot update provider health/i);
+  assert.match(rlsTest, /service_role can upsert provider health without delete or truncate/i);
+  assert.match(rlsTest, /service_role cannot truncate observations/i);
+  assert.match(rlsTest, /service_role cannot truncate provider runs/i);
+  assert.match(rlsTest, /append-only trigger rejects owner observation updates/i);
+  assert.match(rlsTest, /append-only trigger rejects owner provider-run deletes/i);
   assert.match(rlsTest, /select \* from finish\(\)/i);
 });
