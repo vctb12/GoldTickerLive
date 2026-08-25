@@ -11,6 +11,7 @@ const { successResponse, errorResponse } = require('../lib/api-response');
 const { authMiddleware } = require('../lib/auth');
 const { getSupabaseClient } = require('../lib/supabase-client');
 const {
+  HISTORY_RANGE_DAYS,
   normalizeHistoryRange,
   getHistoryWindowStart,
   validatePricePayload,
@@ -23,9 +24,10 @@ const PACKAGE_JSON_PATH = path.join(ROOT, 'package.json');
 const GOLD_PRICE_FILE = path.join(ROOT, 'data', 'gold_price.json');
 const PROVIDER_STATE_FILE = path.join(ROOT, 'data', 'provider_state.json');
 const PRICE_HISTORY_FILE = path.join(ROOT, 'src', 'data', 'historical-baseline.json');
-const DATACORE_HISTORY_DIR = path.join(ROOT, 'data', 'history', 'xau-usd');
-const DATACORE_HOURLY_FILE = path.join(DATACORE_HISTORY_DIR, 'hourly-latest.json');
-const DATACORE_DAILY_FILE = path.join(DATACORE_HISTORY_DIR, 'daily-latest.json');
+const DATACORE_HISTORY_DIR = path.join(ROOT, 'data', 'history', 'XAU');
+const DATACORE_INTRADAY_FILE = path.join(DATACORE_HISTORY_DIR, 'intraday-7d.json');
+const DATACORE_HOURLY_FILE = path.join(DATACORE_HISTORY_DIR, 'hourly-90d.json');
+const DATACORE_DAILY_FILE = path.join(DATACORE_HISTORY_DIR, 'daily.json');
 const DATACORE_MANIFEST_FILE = path.join(ROOT, 'data', 'history', 'manifest.json');
 const DATACORE_PROVIDER_HEALTH_FILE = path.join(ROOT, 'data', 'provider-health', 'summary.json');
 const PRICE_SNAPSHOT_SYNC_SCRIPT_FILE = path.join(
@@ -47,6 +49,8 @@ const ISO_YEAR_MONTH_STRING_LENGTH = 7;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const EVENTS_RATE_LIMIT_WINDOW_MINUTES = 15;
 const LEADS_RATE_LIMIT_WINDOW_MINUTES = 15;
+const HISTORY_RATE_LIMIT_WINDOW_MINUTES = 15;
+const HISTORY_RATE_LIMIT_MAX = 30;
 const DEFAULT_LIMIT_PROVIDER_RUNS = 100;
 
 const PACKAGE_VERSION = (() => {
@@ -187,25 +191,39 @@ function inferHistoryGranularity(dateValue) {
 }
 
 function readDataCoreRollup(range) {
-  const filePath = range === '1y' ? DATACORE_DAILY_FILE : DATACORE_HOURLY_FILE;
+  const filePath =
+    range === '1d' || range === '7d'
+      ? DATACORE_INTRADAY_FILE
+      : range === '30d' || range === '90d'
+        ? DATACORE_HOURLY_FILE
+        : DATACORE_DAILY_FILE;
   const payload = readJsonFile(filePath);
   if (!payload || !Array.isArray(payload.points)) return null;
   const rangeStartTime = new Date(getHistoryWindowStart(range)).getTime();
   const points = payload.points
     .filter((point) => {
-      const timestampUtc = toHistoryTimestampUtc(point?.bucketStartUtc);
+      const timestampUtc = toHistoryTimestampUtc(point?.timestampUtc || point?.bucketStartUtc);
       return timestampUtc && new Date(timestampUtc).getTime() >= rangeStartTime;
     })
     .map((point) => ({
-      timestampUtc: toHistoryTimestampUtc(point.bucketStartUtc),
-      xauUsdPerOz: coerceToNumber(point.close, { positive: true }),
+      timestampUtc: toHistoryTimestampUtc(point.timestampUtc || point.bucketStartUtc),
+      xauUsdPerOz: coerceToNumber(point.priceUsdPerOz ?? point.close, { positive: true }),
       open: coerceToNumber(point.open, { positive: true }),
       high: coerceToNumber(point.high, { positive: true }),
       low: coerceToNumber(point.low, { positive: true }),
       close: coerceToNumber(point.close, { positive: true }),
       observationCount: coerceToNumber(point.observationCount, { integer: true }),
       providerDistribution: point.providerDistribution || {},
-      granularity: payload.interval === '1d' ? 'daily' : 'hourly',
+      providers: point.providers || (point.provider ? [point.provider] : []),
+      providerCount: coerceToNumber(point.providerCount, { integer: true }),
+      sourceObservationIds:
+        point.sourceObservationIds ||
+        (point.sourceObservationId ? [point.sourceObservationId] : []),
+      sourceObservationHash: point.sourceObservationHash || null,
+      incomplete: toBooleanOrNull(point.incomplete),
+      mixedProviders: toBooleanOrNull(point.mixedProviders),
+      granularity:
+        payload.interval === '1d' ? 'daily' : payload.interval === '1h' ? 'hourly' : 'intraday',
     }))
     .filter((point) => point.timestampUtc && point.xauUsdPerOz);
   return {
@@ -261,11 +279,15 @@ function mapPricePayloadToApiData(pricePayload) {
 function mapSnapshotRowToLatestApiData(row) {
   const freshnessSeconds = coerceToNumber(row?.freshness_seconds, { integer: true });
   return {
-    xauUsdPerOz: coerceToNumber(row?.xau_usd_per_oz, { positive: true }),
+    xauUsdPerOz: coerceToNumber(row?.price_usd_per_oz ?? row?.xau_usd_per_oz, {
+      positive: true,
+    }),
     usdPerGram24k: null,
-    aedPerGram24k: coerceToNumber(row?.xau_aed_per_gram, { positive: true }),
+    aedPerGram24k: coerceToNumber(row?.price_aed_per_gram ?? row?.xau_aed_per_gram, {
+      positive: true,
+    }),
     karatsAedPerGram: null,
-    timestampUtc: row?.timestamp_utc || null,
+    timestampUtc: row?.provider_timestamp_utc || row?.timestamp_utc || null,
     fetchedAtUtc: row?.fetched_at_utc || null,
     provider: row?.source_provider || null,
     providerChain: row?.provider_chain || null,
@@ -349,14 +371,27 @@ function buildHistoryResponse({
 }) {
   if (Array.isArray(supabaseRows) && supabaseRows.length > 0) {
     const orderedRows = [...supabaseRows].sort((left, right) =>
-      String(left.timestamp_utc).localeCompare(String(right.timestamp_utc))
+      String(left.provider_timestamp_utc || left.timestamp_utc).localeCompare(
+        String(right.provider_timestamp_utc || right.timestamp_utc)
+      )
     );
     const points = orderedRows.slice(-limit).map((row) => ({
-      timestampUtc: row.timestamp_utc,
+      timestampUtc: row.provider_timestamp_utc || row.timestamp_utc,
       fetchedAtUtc: row.fetched_at_utc,
-      xauUsdPerOz: coerceToNumber(row.xau_usd_per_oz, { positive: true }),
-      xauAedPerGram: coerceToNumber(row.xau_aed_per_gram, { positive: true }),
+      ingestedAtUtc: row.ingested_at_utc,
+      xauUsdPerOz: coerceToNumber(row.price_usd_per_oz ?? row.xau_usd_per_oz, {
+        positive: true,
+      }),
+      xauAedPerGram: coerceToNumber(row.price_aed_per_gram ?? row.xau_aed_per_gram, {
+        positive: true,
+      }),
       provider: row.source_provider,
+      freshnessState: row.freshness_state,
+      marketState: row.market_state,
+      qualityFlags: row.quality_flags || [],
+      isCorrection: toBooleanOrNull(row.is_correction),
+      correctionOfObservationId: row.correction_of_observation_id || null,
+      sourceObservationId: row.observation_id,
       freshnessSeconds: coerceToNumber(row.freshness_seconds, { integer: true }),
       isFresh: toBooleanOrNull(row.is_fresh),
       isFallback: toBooleanOrNull(row.is_fallback),
@@ -502,6 +537,17 @@ const eventsRateLimiter = rateLimit({
   ),
 });
 
+const historyRateLimiter = rateLimit({
+  windowMs: HISTORY_RATE_LIMIT_WINDOW_MINUTES * 60 * 1000,
+  max: HISTORY_RATE_LIMIT_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: errorResponse(
+    'RATE_LIMITED',
+    'Too many history requests from this address. Please try again later.'
+  ),
+});
+
 const leadsRateLimiter = rateLimit({
   windowMs: LEADS_RATE_LIMIT_WINDOW_MINUTES * 60 * 1000,
   max: 10,
@@ -555,7 +601,7 @@ router.get('/prices/latest', async (_req, res) => {
   const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
     table
       .select('*')
-      .eq('symbol', 'XAUUSD')
+      .eq('metal_symbol', 'XAU')
       .eq('is_selected', true)
       .order('timestamp_utc', { ascending: false })
       .limit(1)
@@ -595,19 +641,32 @@ router.get('/prices/latest', async (_req, res) => {
   );
 });
 
-router.get('/prices/history', async (req, res) => {
-  const range = normalizeHistoryRange(req.query.range);
+router.get('/prices/history', historyRateLimiter, async (req, res) => {
+  const requestedRange =
+    req.query.range === undefined ? '30d' : String(req.query.range).toLowerCase();
+  if (!Object.prototype.hasOwnProperty.call(HISTORY_RANGE_DAYS, requestedRange)) {
+    return res
+      .status(400)
+      .json(errorResponse('INVALID_HISTORY_RANGE', 'range must be 1d, 7d, 30d, 90d, 1y, or all.'));
+  }
+  const requestedMetal = String(req.query.metal || 'XAU').toUpperCase();
+  if (requestedMetal !== 'XAU') {
+    return res
+      .status(400)
+      .json(errorResponse('METAL_NOT_ENABLED', 'Only XAU history is enabled in DataCore DC-1.'));
+  }
+  const range = normalizeHistoryRange(requestedRange);
   const limit = parseLimit(req.query.limit, 120, 5000);
   const supabaseStart = getHistoryWindowStart(range);
   const supabaseRows = await querySupabase('price_snapshots', (table) =>
     table
       .select(
-        'observation_id,symbol,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state'
+        'observation_id,metal_symbol,quote_currency,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,price_usd_per_oz,price_aed_per_gram,source_provider,freshness_state,market_state,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,quality_flags,correction_of_observation_id,is_correction'
       )
-      .eq('symbol', 'XAUUSD')
+      .eq('metal_symbol', 'XAU')
       .eq('is_selected', true)
-      .gte('timestamp_utc', supabaseStart)
-      .order('timestamp_utc', { ascending: false })
+      .gte('provider_timestamp_utc', supabaseStart)
+      .order('provider_timestamp_utc', { ascending: false })
       .limit(10000)
   );
   const staticRollup = readDataCoreRollup(range);
@@ -621,6 +680,8 @@ router.get('/prices/history', async (req, res) => {
     baselineHistory: Array.isArray(history) ? history : null,
     latestPricePayload,
   });
+  res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+  res.set('Vary', 'Accept-Encoding');
   return res.status(response.status).json(response.body);
 });
 
@@ -636,6 +697,7 @@ router.get('/prices/history/manifest', (_req, res) => {
         )
       );
   }
+  res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=900');
   return res.json(
     successResponse(manifest, {
       source: 'datacore-static-manifest',
@@ -652,9 +714,9 @@ router.get('/prices/snapshots', async (req, res) => {
   const supabaseRows = await querySupabase('price_snapshots', (table) => {
     let query = table
       .select(
-        'id,observation_id,symbol,timestamp_utc,fetched_at_utc,xau_usd_per_oz,xau_aed_per_gram,source_provider,provider_chain,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,raw_payload_hash,created_at'
+        'observation_id,metal_symbol,quote_currency,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,price_usd_per_oz,price_aed_per_gram,source_provider,provider_chain,freshness_state,market_state,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,quality_flags,correction_of_observation_id,is_correction'
       )
-      .eq('symbol', 'XAUUSD')
+      .eq('metal_symbol', 'XAU')
       .eq('is_selected', true)
       .order('timestamp_utc', { ascending: false })
       .limit(limit);
@@ -670,8 +732,8 @@ router.get('/prices/snapshots', async (req, res) => {
           returned: supabaseRows.length,
           snapshots: supabaseRows.map((row) => ({
             ...row,
-            xau_usd_per_oz: coerceToNumber(row.xau_usd_per_oz, { positive: true }),
-            xau_aed_per_gram: coerceToNumber(row.xau_aed_per_gram, { positive: true }),
+            price_usd_per_oz: coerceToNumber(row.price_usd_per_oz, { positive: true }),
+            price_aed_per_gram: coerceToNumber(row.price_aed_per_gram, { positive: true }),
             freshness_seconds: coerceToNumber(row.freshness_seconds, { integer: true }),
             is_fresh: toBooleanOrNull(row.is_fresh),
             is_fallback: toBooleanOrNull(row.is_fallback),
@@ -702,7 +764,6 @@ router.get('/prices/snapshots', async (req, res) => {
           freshness_seconds: validated.normalized.freshnessSeconds,
           is_fresh: validated.normalized.isFresh,
           is_fallback: validated.normalized.isFallback,
-          raw_payload_hash: null,
           created_at: null,
         },
       ]
@@ -734,7 +795,7 @@ router.get('/providers/status', async (_req, res) => {
     const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
       table
         .select('source_provider,timestamp_utc')
-        .eq('symbol', 'XAUUSD')
+        .eq('metal_symbol', 'XAU')
         .eq('is_selected', true)
         .order('timestamp_utc', { ascending: false })
         .limit(1)

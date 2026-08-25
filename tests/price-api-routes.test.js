@@ -26,7 +26,7 @@ function get(p) {
     const req = http.request({ host: '127.0.0.1', port, path: p, method: 'GET' }, (res) => {
       let body = '';
       res.on('data', (d) => (body += d));
-      res.on('end', () => resolve({ status: res.statusCode, body }));
+      res.on('end', () => resolve({ status: res.statusCode, body, headers: res.headers }));
     });
     req.on('error', reject);
     req.end();
@@ -51,6 +51,8 @@ test('GET /api/v1/prices/history returns range-aware response', async () => {
   assert.equal(Array.isArray(parsed.data.points), true);
   assert.equal(parsed.meta.source, 'datacore-static-rollup');
   assert.equal(parsed.meta.freshness, 'historical');
+  assert.match(res.headers['cache-control'], /max-age=60/);
+  assert.match(res.headers['cache-control'], /stale-while-revalidate=300/);
 });
 
 test('GET /api/v1/prices/history applies range window in file fallback mode', async () => {
@@ -213,6 +215,7 @@ test('GET /api/v1/prices/history/manifest exposes static provenance without live
   assert.equal(parsed.data.freshnessState, 'historical');
   assert.equal(parsed.meta.freshness, 'historical');
   assert.equal(Array.isArray(parsed.data.files), true);
+  assert.match(res.headers['cache-control'], /max-age=300/);
 });
 
 test('GET /api/v1/providers/runs requires admin auth', async () => {
@@ -229,4 +232,39 @@ test('GET /api/v1/prices/snapshots returns fallback snapshot from local JSON', a
   assert.equal(parsed.ok, true);
   assert.equal(Array.isArray(parsed.data.snapshots), true);
   assert.equal(parsed.data.sourceMode, 'file');
+  assert.equal('raw_payload_hash' in (parsed.data.snapshots[0] || {}), false);
+  assert.equal('workflow_run_id' in (parsed.data.snapshots[0] || {}), false);
+});
+
+test('GET /api/v1/prices/history supports every bounded DC-1 range', async () => {
+  for (const range of ['1d', '7d', '30d', '90d', '1y', 'all']) {
+    const res = await get(`/api/v1/prices/history?range=${range}`);
+    assert.equal(res.status, 200, range);
+    const parsed = JSON.parse(res.body);
+    assert.equal(parsed.data.range, range);
+    assert.equal(Array.isArray(parsed.data.points), true);
+  }
+});
+
+test('GET /api/v1/prices/history rejects invalid ranges and non-gold activation', async () => {
+  const invalidRange = await get('/api/v1/prices/history?range=forever');
+  assert.equal(invalidRange.status, 400);
+  assert.equal(JSON.parse(invalidRange.body).error.code, 'INVALID_HISTORY_RANGE');
+  const nonGold = await get('/api/v1/prices/history?range=7d&metal=XAG');
+  assert.equal(nonGold.status, 400);
+  assert.equal(JSON.parse(nonGold.body).error.code, 'METAL_NOT_ENABLED');
+});
+
+test('GET /api/v1/prices/history enforces its dedicated IP rate limit', async () => {
+  let rateLimited = null;
+  for (let index = 0; index < 40; index += 1) {
+    const response = await get('/api/v1/prices/history?range=1d');
+    if (response.status === 429) {
+      rateLimited = response;
+      break;
+    }
+  }
+  assert.ok(rateLimited, 'expected history rate limiter to return 429');
+  assert.ok(rateLimited.headers['retry-after']);
+  assert.match(rateLimited.body, /RATE_LIMITED/);
 });

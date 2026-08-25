@@ -86,7 +86,10 @@ jobs:
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SNAPSHOT_SYNC_STRICT: ${{ vars.SNAPSHOT_SYNC_STRICT || 'false' }}
+          # Owner-controlled staged gate. Start observe-only; later modes are enabled only after
+          # migration/RLS proof and a measured continuity window. Supported values:
+          # observe-only, warn, block-history-write, block-public-export.
+          DATACORE_ENFORCEMENT_MODE: ${{ vars.DATACORE_ENFORCEMENT_MODE || 'observe-only' }}
           PRICE_PROVIDER_CHAIN: ${{ steps.fetch_gold.outputs.reason }}
           PRICE_CIRCUIT_STATE: ${{ steps.fetch_gold.outputs.fresh == 'true' && 'closed' || 'fallback' }}
         run: node scripts/node/sync-price-snapshot.js
@@ -104,6 +107,10 @@ jobs:
             echo "- Snapshot sync reason: \`${{ steps.snapshot_sync.outputs.snapshot_sync_reason || 'not_available' }}\`"
             echo "- Snapshot duplicate: \`${{ steps.snapshot_sync.outputs.snapshot_duplicate || 'false' }}\`"
             echo "- DataCore schema state: \`${{ steps.snapshot_sync.outputs.datacore_schema_state || 'not_checked' }}\`"
+            echo "- DataCore enforcement: \`${{ steps.snapshot_sync.outputs.datacore_enforcement_mode || 'observe-only' }}\`"
+            echo "- DataCore quality gate: \`${{ steps.snapshot_sync.outputs.datacore_gate_status || 'not_checked' }}\`"
+            echo "- Gate failures: \`${{ steps.snapshot_sync.outputs.datacore_gate_failures || 'none' }}\`"
+            echo "- Gate warnings: \`${{ steps.snapshot_sync.outputs.datacore_gate_warnings || 'none' }}\`"
             echo "- Observation rows: \`${{ steps.snapshot_sync.outputs.observation_rows || '0' }}\`"
             echo "- Observations inserted: \`${{ steps.snapshot_sync.outputs.observation_inserted || '0' }}\`"
             echo "- Observation duplicates: \`${{ steps.snapshot_sync.outputs.observation_duplicates || '0' }}\`"
@@ -112,6 +119,9 @@ jobs:
             echo "- Static export updated: \`${{ steps.snapshot_sync.outputs.static_export_updated || 'false' }}\`"
             echo "- Static observations: \`${{ steps.snapshot_sync.outputs.static_observation_count || '0' }}\`"
             echo "- Static missing-slot rate: \`${{ steps.snapshot_sync.outputs.static_missing_slot_rate || 'n/a' }}\`"
+            echo "- Static maximum gap seconds: \`${{ steps.snapshot_sync.outputs.static_max_gap_seconds || '0' }}\`"
+            echo "- History write blocked: \`${{ steps.snapshot_sync.outputs.history_write_blocked || 'false' }}\`"
+            echo "- Public export blocked: \`${{ steps.snapshot_sync.outputs.public_export_blocked || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Commit price and bounded DataCore fallback if changed

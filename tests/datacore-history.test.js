@@ -9,6 +9,8 @@ const path = require('node:path');
 
 const {
   validatePricePayload,
+  validateObservationCandidate,
+  buildCanonicalObservation,
   buildObservationRows,
   buildProviderRunRows,
   computeProviderHealthRows,
@@ -26,6 +28,8 @@ const {
   createPostgrestClient,
   isSchemaMissingError,
   recordOutputs,
+  resolveEnforcementMode,
+  run: runDataCoreSync,
 } = require('../scripts/node/sync-price-snapshot');
 
 function payload() {
@@ -90,7 +94,13 @@ test('canonical observations keep provider identity, selection, slot, and stable
     rowsB.map((row) => row.observation_id)
   );
   assert.equal(rowsA.filter((row) => row.is_selected).length, 1);
+  assert.deepEqual(rowsA.map((row) => row.source_provider).sort(), ['gold_api_com', 'goldapi_io']);
+  assert.equal(new Set(rowsA.map((row) => row.slot_start_utc)).size, 1);
   assert.equal(rowsA[0].slot_5m_utc, '2026-08-24T21:00:00.000Z');
+  assert.equal(rowsA[0].metal_symbol, 'XAU');
+  assert.equal(rowsA[0].quote_currency, 'USD');
+  assert.equal(rowsA[0].slot_resolution_seconds, 300);
+  assert.equal(rowsA[0].freshness_state, 'updated');
   assert.equal(floorTimestampToSlot('2026-08-24T21:09:59Z'), '2026-08-24T21:05:00.000Z');
 });
 
@@ -177,7 +187,9 @@ test('append-only archive replay deduplicates without rewriting an existing obse
   assert.equal(merged.rows.length, 1);
   assert.equal(merged.insertedCount, 0);
   assert.equal(merged.duplicateCount, 1);
-  assert.equal(merged.rows[0].workflow_run_id, 'first-run');
+  assert.equal(merged.rows[0].workflow_run_id, undefined);
+  assert.equal(merged.rows[0].raw_payload_hash, undefined);
+  assert.equal(merged.rows[0].source_provider, row.source_provider);
 });
 
 test('hourly rollups use deterministic OHLC ordering and provider counts', () => {
@@ -186,6 +198,9 @@ test('hourly rollups use deterministic OHLC ordering and provider counts', () =>
   const next = {
     ...selected,
     observation_id: `${selected.observation_id}-next`,
+    provider_timestamp_utc: '2026-08-24T21:14:00.000Z',
+    slot_start_utc: '2026-08-24T21:10:00.000Z',
+    price_usd_per_oz: 4710,
     timestamp_utc: '2026-08-24T21:14:00.000Z',
     slot_5m_utc: '2026-08-24T21:10:00.000Z',
     xau_usd_per_oz: 4710,
@@ -196,6 +211,12 @@ test('hourly rollups use deterministic OHLC ordering and provider counts', () =>
   assert.equal(rollups[0].close, 4710);
   assert.equal(rollups[0].high, 4710);
   assert.equal(rollups[0].observationCount, 2);
+  assert.equal(rollups[0].average, 4705);
+  assert.equal(rollups[0].median, 4705);
+  assert.equal(rollups[0].providerCount, 1);
+  assert.equal(rollups[0].sourceObservationIds.length, 2);
+  assert.equal(rollups[0].sourceObservationHash.length, 64);
+  assert.equal(rollups[0].incomplete, true);
 });
 
 test('open-market slot counting follows Sunday 21:00 through Friday 20:59 UTC', () => {
@@ -213,8 +234,10 @@ test('static fallback is byte-reproducible when the same workflow run is replaye
     });
     buildStaticArtifacts({ root, observations, providerRuns, syncState: 'schema_missing' });
     const files = [
-      path.join(root, 'data', 'history', 'xau-usd', 'hourly-latest.json'),
-      path.join(root, 'data', 'history', 'xau-usd', 'daily-latest.json'),
+      path.join(root, 'data', 'history', 'XAU', 'intraday-7d.json'),
+      path.join(root, 'data', 'history', 'XAU', 'hourly-90d.json'),
+      path.join(root, 'data', 'history', 'XAU', 'daily.json'),
+      path.join(root, 'data', 'history', 'XAU', 'quality.json'),
       path.join(root, 'data', 'history', 'manifest.json'),
       path.join(root, 'data', 'provider-health', 'summary.json'),
     ];
@@ -303,14 +326,21 @@ test('an idempotent remote replay remains truthfully reported as synchronized', 
 });
 
 test('DataCore migration keeps raw writes service-role-only and append-only', () => {
-  const sql = fs.readFileSync(
-    path.resolve(__dirname, '..', 'supabase', 'migrations', '006_datacore_observations.sql'),
-    'utf8'
-  );
+  const sql = ['006_datacore_observations.sql', '007_datacore_v2_control_plane.sql']
+    .map((file) =>
+      fs.readFileSync(path.resolve(__dirname, '..', 'supabase', 'migrations', file), 'utf8')
+    )
+    .join('\n');
   assert.match(sql, /price_snapshots_reject_mutation/);
   assert.match(sql, /provider_runs_reject_mutation/);
   assert.match(sql, /revoke all on table public\.price_snapshots from anon, authenticated/i);
-  assert.match(sql, /grant select on table public\.price_snapshots to anon, authenticated/i);
+  assert.match(
+    sql,
+    /grant select \([\s\S]*observation_id[\s\S]*\) on public\.price_snapshots to anon, authenticated/i
+  );
+  assert.match(sql, /correction_of_observation_id/);
+  assert.match(sql, /quality_flags text\[\]/);
+  assert.match(sql, /metal_symbol/);
   assert.match(sql, /grant all on table public\.price_snapshots to service_role/i);
   assert.doesNotMatch(sql, /for (?:insert|update|delete)\s+to authenticated/i);
 });
@@ -324,4 +354,119 @@ test('gold workflow commits bounded DataCore outputs and emits continuity truth'
   assert.match(workflow, /datacore_schema_state/);
   assert.match(workflow, /observation_duplicates/);
   assert.match(workflow, /static_missing_slot_rate/);
+  assert.match(workflow, /DATACORE_ENFORCEMENT_MODE/);
+  assert.match(workflow, /block-public-export/);
+});
+
+test('metal-neutral rows never place non-gold values in XAU compatibility columns', () => {
+  const normalized = validatePricePayload({
+    ...payload(),
+    metal_symbol: 'XAG',
+    price_usd_per_oz: 56,
+    xau_usd_per_oz: undefined,
+    aed_per_gram_24k: undefined,
+  }).normalized;
+  const row = buildCanonicalObservation(normalized);
+  assert.equal(row.metal_symbol, 'XAG');
+  assert.equal(row.price_usd_per_oz, 56);
+  assert.equal(row.xau_usd_per_oz, null);
+  assert.equal(row.xau_aed_per_gram, null);
+});
+
+test('quality validation rejects impossible future data and flags late/out-of-order arrivals', () => {
+  const future = validatePricePayload({
+    ...payload(),
+    timestamp_utc: '2026-08-24T21:10:00.000Z',
+    fetched_at_utc: '2026-08-24T21:04:00.000Z',
+  });
+  assert.equal(future.ok, false);
+  assert.ok(future.errors.includes('future_provider_timestamp'));
+  const invalidContract = validatePricePayload({
+    ...payload(),
+    metal_symbol: 'BTC',
+    quote_currency: 'EUR',
+  });
+  assert.equal(invalidContract.ok, false);
+  assert.ok(invalidContract.errors.includes('invalid_metal_symbol'));
+  assert.ok(invalidContract.errors.includes('invalid_quote_currency'));
+
+  const normalized = validatePricePayload(payload()).normalized;
+  const quality = validateObservationCandidate(
+    { ...normalized, ingestedAtUtc: '2026-08-24T22:00:00.000Z' },
+    { latestProviderTimestampUtc: '2026-08-24T21:09:00.000Z' }
+  );
+  assert.equal(quality.ok, true);
+  assert.ok(quality.warnings.includes('late_arrival'));
+  assert.ok(quality.warnings.includes('out_of_order'));
+});
+
+test('corrections are additive and link to the immutable predecessor', () => {
+  const first = buildObservationRows(payload(), { workflowRunId: 'run-a' }).find(
+    (row) => row.is_selected
+  );
+  const correctedPayload = { ...payload(), xau_usd_per_oz: 4701 };
+  const corrected = buildObservationRows(correctedPayload, {
+    workflowRunId: 'run-b',
+    existingObservations: [first],
+  }).find((row) => row.is_selected);
+  assert.notEqual(corrected.observation_id, first.observation_id);
+  assert.equal(corrected.is_correction, true);
+  assert.equal(corrected.correction_of_observation_id, first.observation_id);
+  const merged = mergeObservationRows([first], [corrected]);
+  assert.equal(merged.rows.length, 2);
+});
+
+test('quality profile reports maximum gaps and does not fill missing slots', () => {
+  const first = buildObservationRows(payload(), { workflowRunId: 'gap-a' }).find(
+    (row) => row.is_selected
+  );
+  const second = {
+    ...first,
+    observation_id: `${first.observation_id}-gap`,
+    provider_timestamp_utc: '2026-08-24T22:04:00.000Z',
+    timestamp_utc: '2026-08-24T22:04:00.000Z',
+    slot_start_utc: '2026-08-24T22:00:00.000Z',
+    slot_5m_utc: '2026-08-24T22:00:00.000Z',
+  };
+  const quality = buildQualityProfile([first, second], []);
+  assert.ok(quality.coverage.missingOpenMarketSlots > 0);
+  assert.ok(quality.coverage.maxGapSeconds > 0);
+  assert.equal(quality.gateStatus, 'warn');
+});
+
+test('enforcement modes are explicit and invalid values fail back to observe-only', () => {
+  assert.equal(resolveEnforcementMode('warn'), 'warn');
+  assert.equal(resolveEnforcementMode('block-history-write'), 'block-history-write');
+  assert.equal(resolveEnforcementMode('block-public-export'), 'block-public-export');
+  assert.equal(resolveEnforcementMode('invalid'), 'observe-only');
+});
+
+test('block-history-write rejects invalid input while observe-only reports it', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'datacore-gate-'));
+  const invalidPath = path.join(root, 'invalid.json');
+  fs.writeFileSync(invalidPath, JSON.stringify({ provider: 'bad' }));
+  try {
+    const observed = await runDataCoreSync({
+      root,
+      env: { PRICE_JSON_PATH: invalidPath, DATACORE_ENFORCEMENT_MODE: 'observe-only' },
+    });
+    assert.equal(observed.reason, 'validation_failed');
+    assert.equal(observed.historyWriteBlocked, false);
+    const exportBlocked = await runDataCoreSync({
+      root,
+      env: { PRICE_JSON_PATH: invalidPath, DATACORE_ENFORCEMENT_MODE: 'block-public-export' },
+    });
+    assert.equal(exportBlocked.publicExportBlocked, true);
+    assert.equal(exportBlocked.staticExportUpdated, false);
+    await assert.rejects(
+      runDataCoreSync({
+        root,
+        env: { PRICE_JSON_PATH: invalidPath, DATACORE_ENFORCEMENT_MODE: 'block-history-write' },
+      }),
+      /quality|validation/i
+    );
+    assert.equal(fs.existsSync(path.join(root, 'data', 'history', 'XAU')), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });

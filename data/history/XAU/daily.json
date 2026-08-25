@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "metalSymbol": "XAU",
+  "quoteCurrency": "USD",
+  "interval": "1d",
+  "sourceMode": "static-derived",
+  "freshnessState": "historical",
+  "generatedAtUtc": "2026-08-25T08:06:15.000Z",
+  "retention": {
+    "type": "rolling",
+    "days": 1825
+  },
+  "coverage": {
+    "startTimestampUtc": "2026-08-25T00:00:00.000Z",
+    "endTimestampUtc": "2026-08-26T00:00:00.000Z",
+    "pointCount": 1
+  },
+  "qualityGateStatus": "warn",
+  "note": "Spot-linked historical reference data; not a live feed or retail shop quote.",
+  "points": [
+    {
+      "bucketStartUtc": "2026-08-25T00:00:00.000Z",
+      "bucketEndUtc": "2026-08-26T00:00:00.000Z",
+      "interval": "1d",
+      "open": 4626.8999,
+      "high": 4626.8999,
+      "low": 4626.8999,
+      "close": 4626.8999,
+      "average": 4626.8999,
+      "median": 4626.8999,
+      "observationCount": 1,
+      "expectedSlotCount": 288,
+      "observedSlotCount": 1,
+      "incomplete": true,
+      "providerCount": 1,
+      "providers": [
+        "gold_api_com"
+      ],
+      "mixedProviders": false,
+      "providerDistribution": {
+        "gold_api_com": 1
+      },
+      "freshnessStates": {
+        "updated": 1
+      },
+      "qualityFlags": [],
+      "sourceObservationIds": [
+        "62c50066b3d5c9c653704fcdc60a04f58b366a5fb23061bc0b6a04a72107fc5b"
+      ],
+      "sourceObservationHash": "7d0ae89a3271738451113f6d26be2771abfdfbefc2d1fdf0ee99774f8af21b30"
+    }
+  ]
+}
