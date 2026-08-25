@@ -42,6 +42,10 @@ alter table public.price_snapshots
     add column if not exists workflow_run_id text,
     add column if not exists schema_version smallint not null default 1;
 
+-- An earlier schema bootstrap may already have installed the append-only trigger. Remove it
+-- inside this transaction before the legacy backfill; it is restored before commit below.
+drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+
 update public.price_snapshots
 set observation_id = coalesce(observation_id, 'legacy:' || id::text),
     slot_5m_utc = coalesce(
@@ -95,7 +99,10 @@ begin
 end;
 $$;
 
-drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+-- Trigger functions are internal implementation details, not Data API RPC endpoints.
+revoke execute on function public.reject_datacore_raw_mutation()
+    from public, anon, authenticated;
+
 create trigger price_snapshots_reject_mutation
     before update or delete on public.price_snapshots
     for each row execute function public.reject_datacore_raw_mutation();
@@ -110,7 +117,26 @@ create policy "Public read price snapshots"
     to anon, authenticated
     using (true);
 revoke all on table public.price_snapshots from anon, authenticated;
-grant select on table public.price_snapshots to anon, authenticated;
+grant select (
+    observation_id,
+    symbol,
+    xau_usd_per_oz,
+    xau_aed_per_gram,
+    currency,
+    source_provider,
+    timestamp_utc,
+    fetched_at_utc,
+    slot_5m_utc,
+    freshness_seconds,
+    is_fresh,
+    is_fallback,
+    is_market_open,
+    is_selected,
+    selection_method,
+    deviation_bps,
+    quality_state,
+    schema_version
+) on public.price_snapshots to anon, authenticated;
 grant all on table public.price_snapshots to service_role;
 
 create table if not exists public.provider_runs (
@@ -142,6 +168,9 @@ alter table public.provider_runs
     add column if not exists normalized_price_usd_per_oz numeric,
     add column if not exists deviation_bps numeric;
 
+-- Preserve idempotent upgrade behavior if an earlier bootstrap already installed this trigger.
+drop trigger if exists provider_runs_reject_mutation on public.provider_runs;
+
 update public.provider_runs
 set run_key = coalesce(run_key, 'legacy:' || id::text),
     attempted_at_utc = coalesce(attempted_at_utc, created_at)
@@ -160,7 +189,6 @@ alter table public.provider_runs
     add constraint provider_runs_status_check
         check (status in ('success', 'error', 'stale', 'fallback', 'circuit_open')) not valid;
 
-drop trigger if exists provider_runs_reject_mutation on public.provider_runs;
 create trigger provider_runs_reject_mutation
     before update or delete on public.provider_runs
     for each row execute function public.reject_datacore_raw_mutation();

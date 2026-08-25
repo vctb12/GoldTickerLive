@@ -15,10 +15,25 @@ const migration007 = fs.readFileSync(
   'utf8'
 );
 const schema = fs.readFileSync(path.join(root, 'supabase', 'schema.sql'), 'utf8');
+const schemaV2 = schema.slice(schema.indexOf('-- DATACORE V2 CONTROL PLANE'));
 const rlsTest = fs.readFileSync(
   path.join(root, 'supabase', 'tests', 'datacore_rls.test.sql'),
   'utf8'
 );
+
+function statementOffset(sql, pattern, label) {
+  const match = pattern.exec(sql);
+  assert.ok(match, `${label} statement is present`);
+  return match.index;
+}
+
+function selectedColumns(sql, table) {
+  const grant = sql.match(
+    new RegExp(`grant select \\(([\\s\\S]*?)\\) on public\\.${table} to anon, authenticated`, 'i')
+  );
+  assert.ok(grant, `${table} uses an explicit public column grant`);
+  return grant[1];
+}
 
 test('clean migration chain creates all DataCore relations before v2 alters them', () => {
   for (const relation of ['price_snapshots', 'provider_runs', 'provider_health']) {
@@ -27,6 +42,8 @@ test('clean migration chain creates all DataCore relations before v2 alters them
   }
   assert.match(migration007, /^begin;/m);
   assert.match(migration007, /^commit;/m);
+  assert.match(schemaV2, /^begin;/m);
+  assert.match(schemaV2, /^commit;/m);
 });
 
 test('legacy migration path is additive and backfills every required v2 field', () => {
@@ -54,6 +71,43 @@ test('legacy migration path is additive and backfills every required v2 field', 
   assert.match(migration007, /schema_version = greatest\(schema_version, 2\)/i);
 });
 
+test('append-only triggers are removed before each legacy backfill and restored afterward', () => {
+  for (const [sql, table, trigger] of [
+    [migration006, 'price_snapshots', 'price_snapshots_reject_mutation'],
+    [migration006, 'provider_runs', 'provider_runs_reject_mutation'],
+    [migration007, 'price_snapshots', 'price_snapshots_reject_mutation'],
+    [migration007, 'provider_runs', 'provider_runs_reject_mutation'],
+    [schemaV2, 'price_snapshots', 'price_snapshots_reject_mutation'],
+    [schemaV2, 'provider_runs', 'provider_runs_reject_mutation'],
+  ]) {
+    const drop = statementOffset(
+      sql,
+      new RegExp(`drop trigger if exists ${trigger} on public\\.${table}`, 'i'),
+      `${trigger} drop`
+    );
+    const backfill = statementOffset(
+      sql,
+      new RegExp(`update public\\.${table}\\b`, 'i'),
+      `${table} backfill`
+    );
+    const restore = statementOffset(
+      sql,
+      new RegExp(`create trigger ${trigger}\\b`, 'i'),
+      `${trigger} restore`
+    );
+    assert.ok(drop < backfill, `${trigger} is removed before the backfill`);
+    assert.ok(backfill < restore, `${trigger} is restored after the backfill`);
+  }
+  assert.match(
+    migration007,
+    /lock table public\.price_snapshots, public\.provider_runs in access exclusive mode/i
+  );
+  assert.match(
+    schemaV2,
+    /lock table public\.price_snapshots, public\.provider_runs in access exclusive mode/i
+  );
+});
+
 test('v2 SQL preserves XAU aliases without permitting future non-gold values in them', () => {
   assert.match(migration007, /metal_symbol = 'XAU'[\s\S]*xau_usd_per_oz is null/i);
   assert.match(migration007, /alter column xau_usd_per_oz drop not null/i);
@@ -61,29 +115,70 @@ test('v2 SQL preserves XAU aliases without permitting future non-gold values in 
   assert.match(migration007, /deferrable initially deferred/i);
 });
 
-test('RLS grants approved columns only and keeps raw attempts private', () => {
-  assert.match(
-    migration007,
-    /revoke all on table public\.price_snapshots from anon, authenticated/i
+test('every migration stage grants approved columns only and keeps raw attempts private', () => {
+  for (const migration of [migration006, migration007]) {
+    assert.match(
+      migration,
+      /revoke all on table public\.price_snapshots from anon, authenticated/i
+    );
+    assert.doesNotMatch(
+      migration,
+      /grant select on table public\.price_snapshots to anon, authenticated/i
+    );
+    const publicGrant = selectedColumns(migration, 'price_snapshots');
+    assert.doesNotMatch(publicGrant, /raw_payload_hash|workflow_run_id|provider_chain/);
+  }
+  assert.match(selectedColumns(migration006, 'price_snapshots'), /xau_usd_per_oz/i);
+  assert.match(selectedColumns(migration007, 'price_snapshots'), /price_usd_per_oz/i);
+  assert.doesNotMatch(
+    schema,
+    /grant select on table public\.price_snapshots to anon, authenticated/i
   );
-  assert.match(
-    migration007,
-    /grant select \([\s\S]*price_usd_per_oz[\s\S]*\) on public\.price_snapshots/i
-  );
-  const publicGrant = migration007.match(
-    /grant select \(([\s\S]*?)\) on public\.price_snapshots to anon, authenticated/i
-  )?.[1];
-  assert.ok(publicGrant);
-  assert.doesNotMatch(publicGrant, /raw_payload_hash|workflow_run_id/);
+  const schemaGrants = [
+    ...schema.matchAll(
+      /grant select \(([\s\S]*?)\) on public\.price_snapshots to anon, authenticated/gi
+    ),
+  ];
+  assert.equal(schemaGrants.length, 2, 'schema bootstrap has restricted v1 and v2 grants');
+  for (const grant of schemaGrants) {
+    assert.doesNotMatch(grant[1], /raw_payload_hash|workflow_run_id|provider_chain/);
+  }
   assert.match(migration007, /revoke all on table public\.provider_runs from anon, authenticated/i);
   assert.doesNotMatch(migration007, /grant select on table public\.provider_runs to anon/i);
 });
 
-test('pgTAP proof covers relation presence, approved columns, private fields, and append-only trigger', () => {
-  assert.match(rlsTest, /select plan\(14\)/i);
+test('the internal append-only function is not exposed as a Data API RPC', () => {
+  for (const migration of [migration006, migration007, schemaV2]) {
+    assert.match(
+      migration,
+      /revoke execute on function public\.reject_datacore_raw_mutation\(\)\s+from public, anon, authenticated/i
+    );
+  }
+  assert.equal(
+    [
+      ...schema.matchAll(
+        /revoke execute on function public\.reject_datacore_raw_mutation\(\)\s+from public, anon, authenticated/gi
+      ),
+    ].length,
+    2,
+    'schema bootstrap revokes function RPC access in both DataCore stages'
+  );
+});
+
+test('pgTAP proof exercises role visibility, write denial, and both append-only triggers', () => {
+  assert.match(rlsTest, /select plan\(33\)/i);
   assert.match(rlsTest, /raw_payload_hash/i);
   assert.match(rlsTest, /workflow_run_id/i);
   assert.match(rlsTest, /provider_runs/i);
   assert.match(rlsTest, /price_snapshots_reject_mutation/i);
+  assert.match(rlsTest, /provider_runs_reject_mutation/i);
+  assert.match(rlsTest, /set local role service_role/i);
+  assert.match(rlsTest, /set local role anon/i);
+  assert.match(rlsTest, /set local role authenticated/i);
+  assert.match(rlsTest, /pgtap:unselected/i);
+  assert.match(rlsTest, /pgtap:rejected/i);
+  assert.match(rlsTest, /anon cannot insert observations/i);
+  assert.match(rlsTest, /authenticated clients cannot insert provider runs/i);
+  assert.match(rlsTest, /authenticated clients cannot update provider health/i);
   assert.match(rlsTest, /select \* from finish\(\)/i);
 });

@@ -3,6 +3,13 @@
 
 begin;
 
+-- Migration 006 makes raw tables append-only. Hold an exclusive lock and temporarily remove both
+-- mutation triggers so the v2 legacy backfill can run. Transaction rollback restores the prior
+-- trigger state on any failure; both triggers are recreated before commit below.
+lock table public.price_snapshots, public.provider_runs in access exclusive mode;
+drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+drop trigger if exists provider_runs_reject_mutation on public.provider_runs;
+
 alter table public.price_snapshots
     add column if not exists metal_symbol text,
     add column if not exists quote_currency text,
@@ -162,6 +169,17 @@ alter table public.provider_health alter column metal_symbol set not null;
 alter table public.provider_health drop constraint if exists provider_health_pkey;
 alter table public.provider_health
     add constraint provider_health_pkey primary key (metal_symbol, provider_name);
+
+create trigger price_snapshots_reject_mutation
+    before update or delete on public.price_snapshots
+    for each row execute function public.reject_datacore_raw_mutation();
+create trigger provider_runs_reject_mutation
+    before update or delete on public.provider_runs
+    for each row execute function public.reject_datacore_raw_mutation();
+
+-- Harden projects where migration 006 was applied before the internal function privilege revoke.
+revoke execute on function public.reject_datacore_raw_mutation()
+    from public, anon, authenticated;
 
 -- Raw attempt data remains private. Selected accepted/warning observations and bounded health
 -- columns are the only anonymous/authenticated Data API surface.

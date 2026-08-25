@@ -821,6 +821,9 @@ end;
 $$;
 
 drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+-- Trigger functions are internal implementation details, not Data API RPC endpoints.
+revoke execute on function public.reject_datacore_raw_mutation()
+    from public, anon, authenticated;
 create trigger price_snapshots_reject_mutation
     before update or delete on public.price_snapshots
     for each row execute function public.reject_datacore_raw_mutation();
@@ -835,7 +838,26 @@ drop policy if exists "Admin insert price snapshots" on public.price_snapshots;
 drop policy if exists "Admin update price snapshots" on public.price_snapshots;
 drop policy if exists "Admin delete price snapshots" on public.price_snapshots;
 revoke all on table public.price_snapshots from anon, authenticated;
-grant select on table public.price_snapshots to anon, authenticated;
+grant select (
+    observation_id,
+    symbol,
+    xau_usd_per_oz,
+    xau_aed_per_gram,
+    currency,
+    source_provider,
+    timestamp_utc,
+    fetched_at_utc,
+    slot_5m_utc,
+    freshness_seconds,
+    is_fresh,
+    is_fallback,
+    is_market_open,
+    is_selected,
+    selection_method,
+    deviation_bps,
+    quality_state,
+    schema_version
+) on public.price_snapshots to anon, authenticated;
 grant all on table public.price_snapshots to service_role;
 
 -- ============================================================
@@ -2330,6 +2352,14 @@ create policy "Admin manage revenue_daily"
 -- ============================================================
 -- DATACORE V2 CONTROL PLANE (migration 007 final state)
 -- ============================================================
+begin;
+
+-- The v1 bootstrap makes raw tables append-only. Hold an exclusive lock and temporarily remove
+-- both mutation triggers so the v2 legacy backfill can run; rollback restores them on failure.
+lock table public.price_snapshots, public.provider_runs in access exclusive mode;
+drop trigger if exists price_snapshots_reject_mutation on public.price_snapshots;
+drop trigger if exists provider_runs_reject_mutation on public.provider_runs;
+
 alter table public.price_snapshots
     add column if not exists metal_symbol text,
     add column if not exists quote_currency text,
@@ -2490,6 +2520,16 @@ alter table public.provider_health drop constraint if exists provider_health_pke
 alter table public.provider_health
     add constraint provider_health_pkey primary key (metal_symbol, provider_name);
 
+create trigger price_snapshots_reject_mutation
+    before update or delete on public.price_snapshots
+    for each row execute function public.reject_datacore_raw_mutation();
+create trigger provider_runs_reject_mutation
+    before update or delete on public.provider_runs
+    for each row execute function public.reject_datacore_raw_mutation();
+
+revoke execute on function public.reject_datacore_raw_mutation()
+    from public, anon, authenticated;
+
 -- Raw attempt data remains private. Selected accepted/warning observations and bounded health
 -- columns are the only anonymous/authenticated Data API surface.
 drop policy if exists "Public read price snapshots" on public.price_snapshots;
@@ -2561,3 +2601,5 @@ comment on column public.price_snapshots.correction_of_observation_id is
     'Optional link to the immutable predecessor; corrections append and never overwrite.';
 comment on column public.price_snapshots.quality_flags is
     'Machine-readable validation warnings retained with the immutable observation.';
+
+commit;
