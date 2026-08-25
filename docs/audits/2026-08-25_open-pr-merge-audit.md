@@ -8,6 +8,7 @@
 - **Target branch:** `main`
 - **Frozen main SHA:** `4da24841878f10c7a0f59bc7e6ed3ab2c00a10ee`
 - **Campaign branch:** `codex/open-pr-merge-campaign-2026-08-25`
+- **Reconciliation PR:** [#775](https://github.com/vctb12/GoldTickerLive/pull/775) (draft/unmerged)
 - **Execution rule:** the seven PRs below are the immutable execution-time set. PRs opened after the
   freeze are outside this campaign unless they are the final reconciliation PR.
 
@@ -282,3 +283,4 @@ smoke, or rollback action was performed.
 | 2026-08-25 15:56 | Confirmed campaign-wide merge block                  | GitHub API reported canonical `CI` workflow ID `260164546` as `disabled_manually`; no frozen/repaired head has that required gate.                                                                                                                              |
 | 2026-08-25 16:16 | Deep DataCore repair/review                          | Correction, identity, migration, grants/RLS, pagination, no-write, duplicate-metric, and bootstrap-provenance defects assigned or repaired; production DB remained untouched.                                                                                   |
 | 2026-08-25 16:47 | Published repaired #772 draft                        | Pushed exact head `4801fd5383`; 61/61 focused tests, lint, and build passed; full suite 1,899/4/1; validation stopped only at the stale SEO inventory baseline. All five available GitHub checks later passed; canonical CI and staging DB proof remain absent. |
+| 2026-08-25 17:00 | Opened final reconciliation PR                       | Draft PR [#775](https://github.com/vctb12/GoldTickerLive/pull/775) records the blocked outcome, visual evidence, tracker status, owner gates, and resume order. It remains unmerged because canonical CI is absent.                                             |

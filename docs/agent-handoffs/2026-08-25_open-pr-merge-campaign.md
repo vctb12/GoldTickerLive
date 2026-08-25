@@ -2,6 +2,7 @@
 
 - **Date:** 2026-08-25
 - **Branch:** `codex/open-pr-merge-campaign-2026-08-25`
+- **Reconciliation PR:** [#775](https://github.com/vctb12/GoldTickerLive/pull/775) (draft/unmerged)
 - **Frozen set:** #754, #759, #767, #768, #770, #772, #774
 - **Outcome:** `gated-pending-owner-decision`; stopped before the first merge
 - **Canonical record:** `docs/audits/2026-08-25_open-pr-merge-audit.md`

@@ -3,6 +3,7 @@
 - **Date:** 2026-08-25
 - **Status:** `blocked-before-merge`
 - **Branch:** `codex/open-pr-merge-campaign-2026-08-25`
+- **Reconciliation PR:** [#775](https://github.com/vctb12/GoldTickerLive/pull/775) (draft/unmerged)
 - **Audit:** `docs/audits/2026-08-25_open-pr-merge-audit.md`
 - **Handoff:** `docs/agent-handoffs/2026-08-25_open-pr-merge-campaign.md`
 
