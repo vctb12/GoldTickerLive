@@ -247,14 +247,57 @@ test('buildHistoryResponse resolves corrections before filtering selected observ
   );
 });
 
-test('fetchSupabaseHistoryRows uses deterministic bounded pagination', async () => {
+test('buildHistoryResponse marks capped Supabase coverage as truncated and partial', () => {
+  const { body } = __testables.buildHistoryResponse({
+    range: '1y',
+    limit: 10,
+    supabaseRows: [
+      {
+        observation_id: 'obs-with-more-history',
+        provider_timestamp_utc: '2026-05-15T00:05:00.000Z',
+        ingested_at_utc: '2026-05-15T00:05:05.000Z',
+        price_usd_per_oz: 3200,
+        source_provider: 'supabase-feed',
+        is_selected: true,
+        quality_state: 'accepted',
+      },
+    ],
+    supabaseTruncated: true,
+    staticRollup: null,
+    baselineHistory: null,
+    latestPricePayload: null,
+  });
+
+  assert.equal(body.data.total, 1);
+  assert.equal(body.data.coverage.partial, true);
+  assert.equal(body.data.coverage.truncated, true);
+  assert.equal(body.data.coverage.totalIsLowerBound, true);
+});
+
+test('fetchSupabaseHistoryRows keyset pagination survives an insert between pages', async () => {
   const requests = [];
-  const rowsByOffset = new Map([
-    [0, [{ observation_id: 'obs-5' }, { observation_id: 'obs-4' }]],
-    [2, [{ observation_id: 'obs-3' }, { observation_id: 'obs-2' }]],
-    [4, [{ observation_id: 'obs-1' }]],
-  ]);
-  const rows = await __testables.fetchSupabaseHistoryRows('2026-05-01T00:00:00.000Z', {
+  const makeRow = (observationId, providerTimestampUtc, ingestedAtUtc) => ({
+    observation_id: observationId,
+    provider_timestamp_utc: providerTimestampUtc,
+    ingested_at_utc: ingestedAtUtc,
+  });
+  const serverRows = [
+    makeRow('obs-a', '2026-05-15T00:10:00.000Z', '2026-05-15T00:10:05.000Z'),
+    makeRow('obs-b', '2026-05-15T00:10:00.000Z', '2026-05-15T00:09:05.000Z'),
+    makeRow('obs-c', '2026-05-15T00:09:00.000Z', '2026-05-15T00:09:05.000Z'),
+    makeRow('obs-d', '2026-05-15T00:08:00.000Z', '2026-05-15T00:08:05.000Z'),
+    makeRow('obs-e', '2026-05-15T00:07:00.000Z', '2026-05-15T00:07:05.000Z'),
+    makeRow('obs-f', '2026-05-15T00:06:00.000Z', '2026-05-15T00:06:05.000Z'),
+  ];
+  const newerInsert = makeRow('obs-new', '2026-05-15T00:10:00.000Z', '2026-05-15T00:11:05.000Z');
+  const compareTuple = (left, right) =>
+    left.provider_timestamp_utc.localeCompare(right.provider_timestamp_utc) ||
+    left.ingested_at_utc.localeCompare(right.ingested_at_utc) ||
+    left.observation_id.localeCompare(right.observation_id);
+  let cursor = null;
+  let requestCount = 0;
+
+  const result = await __testables.fetchSupabaseHistoryRows('2026-05-01T00:00:00.000Z', {
     url: 'https://project.supabase.co',
     key: 'test-service-key',
     pageSize: 2,
@@ -262,26 +305,38 @@ test('fetchSupabaseHistoryRows uses deterministic bounded pagination', async () 
     fetchImpl: async (input, init) => {
       const url = new URL(input);
       requests.push({ url, headers: init.headers });
-      const offset = Number(url.searchParams.get('offset'));
+      assert.equal(
+        url.searchParams.get('or'),
+        cursor ? __testables.buildHistoryCursorFilter(cursor) : null
+      );
+      if (requestCount === 1) serverRows.push(newerInsert);
+      const page = serverRows
+        .filter((row) => !cursor || compareTuple(row, cursor) < 0)
+        .sort((left, right) => compareTuple(right, left))
+        .slice(0, Number(url.searchParams.get('limit')));
+      cursor = page.at(-1) || cursor;
+      requestCount += 1;
       return {
         ok: true,
         statusText: 'OK',
-        text: async () => JSON.stringify(rowsByOffset.get(offset) || []),
+        text: async () => JSON.stringify(page),
       };
     },
   });
 
+  assert.equal(result.truncated, true);
   assert.deepEqual(
-    rows.map((row) => row.observation_id),
-    ['obs-5', 'obs-4', 'obs-3', 'obs-2', 'obs-1']
+    result.rows.map((row) => row.observation_id),
+    ['obs-a', 'obs-b', 'obs-c', 'obs-d', 'obs-e']
   );
-  assert.deepEqual(
-    requests.map(({ url }) => url.searchParams.get('offset')),
-    ['0', '2', '4']
+  assert.equal(new Set(result.rows.map((row) => row.observation_id)).size, result.rows.length);
+  assert.equal(
+    result.rows.some((row) => row.observation_id === newerInsert.observation_id),
+    false
   );
   assert.deepEqual(
     requests.map(({ url }) => url.searchParams.get('limit')),
-    ['2', '2', '1']
+    ['2', '2', '2']
   );
   for (const { url, headers } of requests) {
     assert.equal(
@@ -291,8 +346,60 @@ test('fetchSupabaseHistoryRows uses deterministic bounded pagination', async () 
     assert.equal(url.searchParams.get('metal_symbol'), 'eq.XAU');
     assert.equal(url.searchParams.has('is_selected'), false);
     assert.equal(url.searchParams.get('provider_timestamp_utc'), 'gte.2026-05-01T00:00:00.000Z');
+    assert.equal(url.searchParams.has('offset'), false);
     assert.equal(headers.Authorization, 'Bearer test-service-key');
   }
+});
+
+test('latest Supabase helpers query lineage candidates and select the correction', async () => {
+  const predecessor = {
+    observation_id: 'obs-latest-predecessor',
+    provider_timestamp_utc: '2026-05-15T00:10:00.000Z',
+    fetched_at_utc: '2026-05-15T00:10:05.000Z',
+    ingested_at_utc: '2026-05-15T00:10:06.000Z',
+    price_usd_per_oz: 3200,
+    source_provider: 'supabase-feed',
+    is_selected: true,
+    quality_state: 'accepted',
+    is_correction: false,
+    correction_of_observation_id: null,
+  };
+  const correction = {
+    ...predecessor,
+    observation_id: 'obs-latest-correction',
+    ingested_at_utc: '2026-05-15T00:11:06.000Z',
+    price_usd_per_oz: 3205,
+    is_correction: true,
+    correction_of_observation_id: predecessor.observation_id,
+  };
+  let requestedUrl = null;
+  const candidates = await __testables.fetchSupabaseLatestRows({
+    url: 'https://project.supabase.co',
+    key: 'test-service-key',
+    fetchImpl: async (input) => {
+      requestedUrl = new URL(input);
+      return {
+        ok: true,
+        statusText: 'OK',
+        text: async () => JSON.stringify([correction, predecessor]),
+      };
+    },
+  });
+  const latest = __testables.selectLatestEffectiveSnapshotRow(candidates);
+
+  assert.equal(latest.observation_id, correction.observation_id);
+  assert.equal(latest.price_usd_per_oz, correction.price_usd_per_oz);
+  assert.equal(latest.correction_of_observation_id, predecessor.observation_id);
+  assert.equal(
+    requestedUrl.searchParams.get('order'),
+    'provider_timestamp_utc.desc,ingested_at_utc.desc,observation_id.desc'
+  );
+  assert.equal(requestedUrl.searchParams.get('metal_symbol'), 'eq.XAU');
+  assert.equal(requestedUrl.searchParams.has('is_selected'), false);
+  assert.equal(requestedUrl.searchParams.get('limit'), '100');
+  assert.match(requestedUrl.searchParams.get('select'), /correction_of_observation_id/);
+  assert.match(requestedUrl.searchParams.get('select'), /quality_state/);
+  assert.doesNotMatch(requestedUrl.searchParams.get('select'), /raw_payload_hash|workflow_run_id/);
 });
 
 test('buildHistoryResponse falls back to JSON snapshot when baseline is unavailable', () => {

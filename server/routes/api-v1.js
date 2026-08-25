@@ -55,6 +55,8 @@ const HISTORY_SUPABASE_PAGE_SIZE = 1000;
 const HISTORY_SUPABASE_MAX_ROWS = 10000;
 const HISTORY_SUPABASE_COLUMNS =
   'observation_id,metal_symbol,quote_currency,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,price_usd_per_oz,price_aed_per_gram,source_provider,freshness_state,market_state,freshness_seconds,is_fresh,is_fallback,is_selected,quality_state,quality_flags,correction_of_observation_id,is_correction';
+const LATEST_SUPABASE_CANDIDATE_LIMIT = 100;
+const LATEST_SUPABASE_COLUMNS = `${HISTORY_SUPABASE_COLUMNS},provider_chain,is_market_open`;
 const DEFAULT_LIMIT_PROVIDER_RUNS = 100;
 
 const PACKAGE_VERSION = (() => {
@@ -257,6 +259,46 @@ async function querySupabase(table, queryBuilder) {
   }
 }
 
+async function fetchSupabaseRestRows(endpoint, { key, fetchImpl, queryLabel }) {
+  try {
+    const response = await fetchImpl(endpoint, {
+      headers: { apikey: key, Authorization: `Bearer ${key}` },
+    });
+    const text = await response.text();
+    let data = null;
+    if (text) {
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = null;
+      }
+    }
+    if (!response.ok || !Array.isArray(data)) {
+      const message = data?.message || response.statusText || 'invalid response';
+      console.warn(`[api-v1] Supabase ${queryLabel} query failed: ${message}`);
+      return null;
+    }
+    return data;
+  } catch (error) {
+    console.warn(`[api-v1] Supabase ${queryLabel} query exception: ${error.message}`);
+    return null;
+  }
+}
+
+function buildHistoryCursorFilter(row) {
+  const providerTimestampUtc = toHistoryTimestampUtc(
+    row?.provider_timestamp_utc || row?.timestamp_utc
+  );
+  const ingestedAtUtc = toHistoryTimestampUtc(row?.ingested_at_utc);
+  const observationId = String(row?.observation_id || '').trim();
+  if (!providerTimestampUtc || !ingestedAtUtc || !observationId) return null;
+  return `(${[
+    `provider_timestamp_utc.lt.${providerTimestampUtc}`,
+    `and(provider_timestamp_utc.eq.${providerTimestampUtc},ingested_at_utc.lt.${ingestedAtUtc})`,
+    `and(provider_timestamp_utc.eq.${providerTimestampUtc},ingested_at_utc.eq.${ingestedAtUtc},observation_id.lt.${observationId})`,
+  ].join(',')})`;
+}
+
 async function fetchSupabaseHistoryRows(
   startTimestampUtc,
   {
@@ -270,49 +312,61 @@ async function fetchSupabaseHistoryRows(
   if (!url || !key || typeof fetchImpl !== 'function') return null;
   const boundedPageSize = Math.max(1, Math.min(Number(pageSize) || 1, HISTORY_SUPABASE_PAGE_SIZE));
   const boundedMaxRows = Math.max(1, Math.min(Number(maxRows) || 1, HISTORY_SUPABASE_MAX_ROWS));
+  const sentinelRowLimit = boundedMaxRows + 1;
   const rows = [];
   const baseUrl = String(url).replace(/\/$/, '');
+  let cursorFilter = null;
 
-  for (let offset = 0; offset < boundedMaxRows; offset += boundedPageSize) {
-    const requestSize = Math.min(boundedPageSize, boundedMaxRows - offset);
+  while (rows.length < sentinelRowLimit) {
+    const requestSize = Math.min(boundedPageSize, sentinelRowLimit - rows.length);
     const endpoint = new URL(`${baseUrl}/rest/v1/price_snapshots`);
     endpoint.searchParams.set('select', HISTORY_SUPABASE_COLUMNS);
     endpoint.searchParams.set('metal_symbol', 'eq.XAU');
     endpoint.searchParams.set('provider_timestamp_utc', `gte.${startTimestampUtc}`);
+    if (cursorFilter) endpoint.searchParams.set('or', cursorFilter);
     endpoint.searchParams.set(
       'order',
       'provider_timestamp_utc.desc,ingested_at_utc.desc,observation_id.desc'
     );
     endpoint.searchParams.set('limit', String(requestSize));
-    endpoint.searchParams.set('offset', String(offset));
 
-    try {
-      const response = await fetchImpl(endpoint, {
-        headers: { apikey: key, Authorization: `Bearer ${key}` },
-      });
-      const text = await response.text();
-      let data = null;
-      if (text) {
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = null;
-        }
-      }
-      if (!response.ok || !Array.isArray(data)) {
-        const message = data?.message || response.statusText || 'invalid response';
-        console.warn(`[api-v1] Supabase history query failed: ${message}`);
-        return null;
-      }
-      rows.push(...data);
-      if (data.length < requestSize) break;
-    } catch (error) {
-      console.warn(`[api-v1] Supabase history query exception: ${error.message}`);
+    const data = await fetchSupabaseRestRows(endpoint, {
+      key,
+      fetchImpl,
+      queryLabel: 'history',
+    });
+    if (data === null) return null;
+    rows.push(...data);
+    if (data.length < requestSize) break;
+    cursorFilter = buildHistoryCursorFilter(data[data.length - 1]);
+    if (!cursorFilter) {
+      console.warn('[api-v1] Supabase history query returned an invalid keyset cursor');
       return null;
     }
   }
 
-  return rows;
+  return {
+    rows: rows.slice(0, boundedMaxRows),
+    truncated: rows.length > boundedMaxRows,
+  };
+}
+
+async function fetchSupabaseLatestRows({
+  url = process.env.SUPABASE_URL,
+  key = process.env.SUPABASE_SERVICE_ROLE_KEY,
+  fetchImpl = globalThis.fetch,
+} = {}) {
+  if (!url || !key || typeof fetchImpl !== 'function') return null;
+  const baseUrl = String(url).replace(/\/$/, '');
+  const endpoint = new URL(`${baseUrl}/rest/v1/price_snapshots`);
+  endpoint.searchParams.set('select', LATEST_SUPABASE_COLUMNS);
+  endpoint.searchParams.set('metal_symbol', 'eq.XAU');
+  endpoint.searchParams.set(
+    'order',
+    'provider_timestamp_utc.desc,ingested_at_utc.desc,observation_id.desc'
+  );
+  endpoint.searchParams.set('limit', String(LATEST_SUPABASE_CANDIDATE_LIMIT));
+  return fetchSupabaseRestRows(endpoint, { key, fetchImpl, queryLabel: 'latest-price' });
 }
 
 function resolveEffectiveHistoryRows(rows) {
@@ -334,6 +388,14 @@ function resolveEffectiveHistoryRows(rows) {
     orderedRows.map((row) => row.correction_of_observation_id).filter(Boolean)
   );
   return orderedRows.filter((row) => !correctedObservationIds.has(row.observation_id));
+}
+
+function selectLatestEffectiveSnapshotRow(rows) {
+  return (
+    resolveEffectiveHistoryRows(rows)
+      .filter((row) => row.is_selected !== false)
+      .at(-1) || null
+  );
 }
 
 function mapPricePayloadToApiData(pricePayload) {
@@ -448,6 +510,7 @@ function buildHistoryResponse({
   range,
   limit,
   supabaseRows,
+  supabaseTruncated = false,
   staticRollup,
   baselineHistory,
   latestPricePayload,
@@ -488,7 +551,9 @@ function buildHistoryResponse({
         freshness: 'historical',
         coverage: buildHistoryCoverage(points, {
           providerBacked: true,
-          partial: points.length < effectiveRows.length,
+          partial: supabaseTruncated || points.length < effectiveRows.length,
+          truncated: supabaseTruncated,
+          totalIsLowerBound: supabaseTruncated,
         }),
         latestTimestampUtc: points[points.length - 1]?.timestampUtc || null,
         latestFetchedAtUtc: points[points.length - 1]?.fetchedAtUtc || null,
@@ -679,17 +744,11 @@ router.get('/config/public', (_req, res) => {
 });
 
 router.get('/prices/latest', async (_req, res) => {
-  const latestSnapshotRows = await querySupabase('price_snapshots', (table) =>
-    table
-      .select('*')
-      .eq('metal_symbol', 'XAU')
-      .eq('is_selected', true)
-      .order('timestamp_utc', { ascending: false })
-      .limit(1)
-  );
+  const latestSnapshotRows = await fetchSupabaseLatestRows();
+  const latestSnapshotRow = selectLatestEffectiveSnapshotRow(latestSnapshotRows);
 
-  if (Array.isArray(latestSnapshotRows) && latestSnapshotRows.length > 0) {
-    const latest = mapSnapshotRowToLatestApiData(latestSnapshotRows[0]);
+  if (latestSnapshotRow) {
+    const latest = mapSnapshotRowToLatestApiData(latestSnapshotRow);
     return res.json(
       successResponse(latest, {
         source: latest.provider || 'price_snapshots',
@@ -739,14 +798,15 @@ router.get('/prices/history', historyRateLimiter, async (req, res) => {
   const range = normalizeHistoryRange(requestedRange);
   const limit = parseLimit(req.query.limit, 120, 5000);
   const supabaseStart = getHistoryWindowStart(range);
-  const supabaseRows = await fetchSupabaseHistoryRows(supabaseStart);
+  const supabaseHistory = await fetchSupabaseHistoryRows(supabaseStart);
   const staticRollup = readDataCoreRollup(range);
   const history = readJsonFile(PRICE_HISTORY_FILE);
   const latestPricePayload = readJsonFile(GOLD_PRICE_FILE);
   const response = buildHistoryResponse({
     range,
     limit,
-    supabaseRows,
+    supabaseRows: supabaseHistory?.rows || null,
+    supabaseTruncated: supabaseHistory?.truncated === true,
     staticRollup,
     baselineHistory: Array.isArray(history) ? history : null,
     latestPricePayload,
@@ -1025,6 +1085,9 @@ module.exports.__testables = {
   buildHistoryResponse,
   buildHistorySuccessPayload,
   buildSystemStatus,
+  buildHistoryCursorFilter,
   fetchSupabaseHistoryRows,
+  fetchSupabaseLatestRows,
   resolveEffectiveHistoryRows,
+  selectLatestEffectiveSnapshotRow,
 };
