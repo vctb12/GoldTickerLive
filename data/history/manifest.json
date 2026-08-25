@@ -16,33 +16,33 @@
   "files": [
     {
       "path": "data/history/XAU/intraday-7d.json",
-      "sha256": "b9ce26bedd826089704870fcf09294d2d905ac6ed6d70e76b68e57cc65388240",
+      "sha256": "ab3541df329ba6ebb2ab2312cd3f1998ab68d826bd65e30746c36373562c3d44",
       "bytes": 1033
     },
     {
       "path": "data/history/XAU/hourly-90d.json",
-      "sha256": "080eb6b44ece3beb4200946856cdfc905689cf81045f7f6d8aedf11f0430fc24",
-      "bytes": 1439
+      "sha256": "da82ad2224fb240571f6e9ebfa79f6dee8331d526cd9d1477a7e010ae67718fe",
+      "bytes": 1423
     },
     {
       "path": "data/history/XAU/daily.json",
-      "sha256": "aa681b4f6e9edce7f38b3e2d1e8a07edb30345c33f0954fd09172154641bfb77",
-      "bytes": 1442
+      "sha256": "84f9cf0408b9dad239782a68f7b85f302777aee7572afe396329b0cb9d78e285",
+      "bytes": 1426
     },
     {
       "path": "data/history/XAU/quality.json",
-      "sha256": "1c7df852290b6bc1bdaa9868a3285d0799b104b64c542cc8c4d2175a316988f9",
-      "bytes": 1341
+      "sha256": "cd7f9fb65ea820329b999c1de083aac26f949de847d2b6f02dc41142beba1f27",
+      "bytes": 1364
     },
     {
       "path": "data/history/XAU/observations/2026-08.json",
-      "sha256": "28c2bf0c852168d98eaa889e8c28665bd41d611267285af527d219495b2ea723",
+      "sha256": "9fa8bcd77490f8b08df4606c02f3735ed5a7e39d3ef39ef0742d1e77cceaaf1d",
       "bytes": 1280
     },
     {
       "path": "data/provider-health/summary.json",
-      "sha256": "7af90c5dfe96436859d8399578476b73ea3ccb0b4e02e446f5b8fb7e1d7aa093",
-      "bytes": 2251
+      "sha256": "f5897ac24227074ea2f1819865abfd6670edc88b2e2ab7c06ba8ba8883fcda9d",
+      "bytes": 2272
     }
   ]
 }

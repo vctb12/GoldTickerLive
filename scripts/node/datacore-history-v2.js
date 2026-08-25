@@ -316,9 +316,10 @@ function maximumOpenMarketGap(selected) {
 function buildQualityProfile(
   observations,
   providerRuns,
-  { duplicateCount = 0, rejectedObservations = [] } = {}
+  { duplicateCount = 0, rehydratedOverlapCount = 0, rejectedObservations = [] } = {}
 ) {
-  const selected = effectiveObservations(observations)
+  const effective = effectiveObservations(observations);
+  const selected = effective
     .filter((row) => row.is_selected !== false)
     .sort((left, right) =>
       String(observationTimestamp(left)).localeCompare(String(observationTimestamp(right)))
@@ -385,9 +386,10 @@ function buildQualityProfile(
     },
     duplicateCount,
     duplicateRate:
-      selected.length + duplicateCount > 0
-        ? Number((duplicateCount / (selected.length + duplicateCount)).toFixed(6))
+      effective.length + duplicateCount > 0
+        ? Number((duplicateCount / (effective.length + duplicateCount)).toFixed(6))
         : 0,
+    rehydratedOverlapCount,
     invalidObservationCount: rejectedRows.length,
     futureObservationCount: rejectedFlags.filter((flag) => flag === 'future_provider_timestamp')
       .length,
@@ -474,6 +476,33 @@ function updateObservationArchives(historyDir, incomingRows) {
   return { duplicateCount, insertedCount, changedFiles };
 }
 
+function mergeObservationSources(existingRows, rehydratedRows, currentRows) {
+  const rehydrated = mergeObservationRows(existingRows, rehydratedRows);
+  const current = mergeObservationRows(rehydrated.rows, currentRows);
+  return {
+    rows: current.rows,
+    duplicateCount: current.duplicateCount,
+    rehydratedOverlapCount: rehydrated.duplicateCount,
+    insertedCount: rehydrated.insertedCount + current.insertedCount,
+    rehydratedInsertedCount: rehydrated.insertedCount,
+    currentInsertedCount: current.insertedCount,
+    changedFiles: [],
+  };
+}
+
+function updateObservationSources(historyDir, rehydratedRows, currentRows) {
+  const rehydrated = updateObservationArchives(historyDir, rehydratedRows);
+  const current = updateObservationArchives(historyDir, currentRows);
+  return {
+    duplicateCount: current.duplicateCount,
+    rehydratedOverlapCount: rehydrated.duplicateCount,
+    insertedCount: rehydrated.insertedCount + current.insertedCount,
+    rehydratedInsertedCount: rehydrated.insertedCount,
+    currentInsertedCount: current.insertedCount,
+    changedFiles: [...new Set([...rehydrated.changedFiles, ...current.changedFiles])],
+  };
+}
+
 function buildDatasetDocument({ metal, interval, generatedAtUtc, retention, points, quality }) {
   return {
     schemaVersion: OBSERVATION_SCHEMA_VERSION,
@@ -499,6 +528,7 @@ function buildStaticArtifacts({
   root = DEFAULT_ROOT,
   metal = DEFAULT_METAL,
   observations = [],
+  rehydratedObservations = [],
   providerRuns = [],
   providerHealthRows = [],
   rejectedObservations = [],
@@ -509,10 +539,14 @@ function buildStaticArtifacts({
   const historyDir = historyDirectory(root, metal);
   const providerHealthDir = path.join(root, 'data', 'provider-health');
   const suppliedObservations = Array.isArray(observations) ? observations : [];
+  const suppliedRehydratedObservations = Array.isArray(rehydratedObservations)
+    ? rehydratedObservations
+    : [];
   const rejectedById = new Map();
   for (const row of [
     ...(Array.isArray(rejectedObservations) ? rejectedObservations : []),
     ...suppliedObservations.filter((row) => row?.quality_state === 'rejected'),
+    ...suppliedRehydratedObservations.filter((row) => row?.quality_state === 'rejected'),
   ]) {
     const key = row?.observation_id || stableJsonStringify(row);
     if (!rejectedById.has(key)) rejectedById.set(key, row);
@@ -521,13 +555,17 @@ function buildStaticArtifacts({
   const acceptedObservations = suppliedObservations.filter(
     (row) => row?.quality_state !== 'rejected'
   );
+  const acceptedRehydratedObservations = suppliedRehydratedObservations.filter(
+    (row) => row?.quality_state !== 'rejected'
+  );
   const archivedObservations = loadObservationArchives(historyDir);
   const mergeResult = writeHistory
-    ? updateObservationArchives(historyDir, acceptedObservations)
-    : {
-        ...mergeObservationRows(archivedObservations, acceptedObservations),
-        changedFiles: [],
-      };
+    ? updateObservationSources(historyDir, acceptedRehydratedObservations, acceptedObservations)
+    : mergeObservationSources(
+        archivedObservations,
+        acceptedRehydratedObservations,
+        acceptedObservations
+      );
   const allObservations = writeHistory ? loadObservationArchives(historyDir) : mergeResult.rows;
   const selected = effectiveObservations(allObservations).filter(
     (row) => row.is_selected !== false
@@ -537,6 +575,7 @@ function buildStaticArtifacts({
     selected.at(-1)?.ingested_at_utc || selected.at(-1)?.fetched_at_utc || latestTimestampUtc;
   const quality = buildQualityProfile(allObservations, providerRuns, {
     duplicateCount: mergeResult.duplicateCount,
+    rehydratedOverlapCount: mergeResult.rehydratedOverlapCount,
     rejectedObservations: rejectedRows,
   });
   const intraday = buildIntradayPoints(allObservations, latestTimestampUtc);
@@ -558,7 +597,10 @@ function buildStaticArtifacts({
 
   const output = {
     insertedCount: mergeResult.insertedCount,
+    rehydratedInsertedCount: mergeResult.rehydratedInsertedCount,
+    currentInsertedCount: mergeResult.currentInsertedCount,
     duplicateCount: mergeResult.duplicateCount,
+    rehydratedOverlapCount: mergeResult.rehydratedOverlapCount,
     observationCount: quality.coverage.observationCount,
     intradayCount: intraday.length,
     hourlyCount: hourly.length,
@@ -703,6 +745,7 @@ module.exports = {
   buildIntradayPoints,
   buildRollups,
   buildQualityProfile,
+  mergeObservationSources,
   loadObservationArchivesForRoot,
   buildStaticArtifacts,
   runCli,

@@ -33,9 +33,7 @@
       "observedSlotCount": 1,
       "incomplete": true,
       "providerCount": 1,
-      "providers": [
-        "gold_api_com"
-      ],
+      "providers": ["gold_api_com"],
       "mixedProviders": false,
       "providerDistribution": {
         "gold_api_com": 1
@@ -45,9 +43,9 @@
       },
       "qualityFlags": [],
       "sourceObservationIds": [
-        "62c50066b3d5c9c653704fcdc60a04f58b366a5fb23061bc0b6a04a72107fc5b"
+        "1712bef910f85de62e5f7e4f47ebb0f95aa6bb4f3b1bf035f83f6a56c2d44f79"
       ],
-      "sourceObservationHash": "7d0ae89a3271738451113f6d26be2771abfdfbefc2d1fdf0ee99774f8af21b30"
+      "sourceObservationHash": "e532875ae4309647aebd23f129998fc9f3d0ab2527b1815cea35ed458b4db9d6"
     }
   ]
 }

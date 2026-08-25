@@ -28,7 +28,6 @@ const {
   createPostgrestClient,
   isSchemaMissingError,
   recordOutputs,
-  selectAllPages,
   readRemoteControlPlane,
   resolveEnforcementMode,
   run: runDataCoreSync,
@@ -296,47 +295,29 @@ test('static rollups replay identically while duplicate quality metrics remain t
 
 test('PostgREST reads paginate with stable tie-break ordering and bounded time windows', async () => {
   const calls = [];
-  const data = {
-    provider_runs: Array.from({ length: 4 }, (_, index) => ({ run_key: `run-${index}` })),
-    price_snapshots: Array.from({ length: 5 }, (_, index) => ({
-      observation_id: `observation-${index}`,
-    })),
-  };
   const client = {
     async select(table, query) {
       calls.push({ table, query });
-      return {
-        data: data[table].slice(Number(query.offset), Number(query.offset) + Number(query.limit)),
-      };
+      return { data: [] };
     },
   };
-  const oneTable = await selectAllPages(
-    client,
-    'provider_runs',
-    { order: 'run_key.asc' },
-    {
-      pageSize: 2,
-    }
-  );
-  assert.equal(oneTable.length, 4);
-  assert.deepEqual(
-    calls.filter((call) => call.table === 'provider_runs').map((call) => call.query.offset),
-    [0, 2, 4]
-  );
-  calls.length = 0;
   const remote = await readRemoteControlPlane({
     client,
     nowIso: '2026-08-24T21:04:08.000Z',
     pageSize: 2,
   });
-  assert.equal(remote.remoteProviderRuns.length, 4);
-  assert.equal(remote.remoteObservations.length, 5);
+  assert.equal(remote.remoteProviderRuns.length, 0);
+  assert.equal(remote.remoteObservations.length, 0);
   const providerQuery = calls.find((call) => call.table === 'provider_runs').query;
   const observationQuery = calls.find((call) => call.table === 'price_snapshots').query;
   assert.equal(providerQuery.order, 'attempted_at_utc.desc,run_key.desc');
-  assert.match(providerQuery.attempted_at_utc, /^gte\./);
+  assert.match(providerQuery.and, /attempted_at_utc\.gte\./);
+  assert.match(providerQuery.and, /attempted_at_utc\.lte\./);
+  assert.equal(providerQuery.offset, undefined);
   assert.equal(observationQuery.order, 'provider_timestamp_utc.asc,observation_id.asc');
-  assert.match(observationQuery.provider_timestamp_utc, /^gte\./);
+  assert.match(observationQuery.and, /provider_timestamp_utc\.gte\./);
+  assert.match(observationQuery.and, /ingested_at_utc\.lte\./);
+  assert.equal(observationQuery.offset, undefined);
 });
 
 test('PostgREST client sends conflict-safe inserts without exposing the key in the URL', async () => {

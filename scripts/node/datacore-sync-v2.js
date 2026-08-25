@@ -18,7 +18,7 @@ const {
 const ROOT = path.resolve(__dirname, '../..');
 const REMOTE_HISTORY_DAYS = 90;
 const POSTGREST_PAGE_SIZE = 1000;
-const POSTGREST_MAX_PAGES = 100;
+const POSTGREST_MAX_PAGES = 200;
 const ENFORCEMENT_MODES = Object.freeze([
   'observe-only',
   'warn',
@@ -126,29 +126,70 @@ function isSchemaMissingError(error) {
   return ['PGRST204', 'PGRST205', '42P01', '42703'].includes(String(error?.code || ''));
 }
 
-async function selectAllPages(
+function quotePostgrestLiteral(value) {
+  return `"${String(value).replaceAll('\\', '\\\\').replaceAll('"', '\\"')}"`;
+}
+
+function tupleCursorFilter(timestampColumn, idColumn, cursor, direction) {
+  if (!cursor) return null;
+  const operator = direction === 'desc' ? 'lt' : 'gt';
+  const timestamp = quotePostgrestLiteral(cursor.timestamp);
+  const id = quotePostgrestLiteral(cursor.id);
+  return `(${timestampColumn}.${operator}.${timestamp},and(${timestampColumn}.eq.${timestamp},${idColumn}.${operator}.${id}))`;
+}
+
+async function selectAllKeysetPages(
   client,
   table,
   query,
-  { pageSize = POSTGREST_PAGE_SIZE, maxPages = POSTGREST_MAX_PAGES } = {}
+  {
+    timestampColumn,
+    idColumn,
+    direction = 'asc',
+    pageSize = POSTGREST_PAGE_SIZE,
+    maxPages = POSTGREST_MAX_PAGES,
+  } = {}
 ) {
+  if (!timestampColumn || !idColumn || !['asc', 'desc'].includes(direction)) {
+    throw new Error(`PostgREST ${table} keyset pagination requires a complete tuple order`);
+  }
   const rows = [];
+  const seenTuples = new Set();
   const boundedPageSize = Math.max(1, Math.trunc(Number(pageSize)) || POSTGREST_PAGE_SIZE);
   const boundedMaxPages = Math.max(1, Math.trunc(Number(maxPages)) || POSTGREST_MAX_PAGES);
-  let offset = 0;
+  let cursor = null;
   for (let page = 0; page < boundedMaxPages; page += 1) {
+    const cursorFilter = tupleCursorFilter(timestampColumn, idColumn, cursor, direction);
     const response = await client.select(table, {
       ...query,
+      order: `${timestampColumn}.${direction},${idColumn}.${direction}`,
       limit: boundedPageSize,
-      offset,
+      or: cursorFilter || undefined,
     });
     const pageRows = Array.isArray(response.data) ? response.data : [];
-    rows.push(...pageRows);
     if (!pageRows.length) return rows;
-    offset += pageRows.length;
-    const totalMatch = String(response.contentRange || '').match(/\/(\d+)$/);
-    if (totalMatch && offset >= Number(totalMatch[1])) return rows;
-    if (!response.contentRange && pageRows.length < boundedPageSize) return rows;
+    for (const row of pageRows) {
+      const timestamp = row?.[timestampColumn];
+      const id = row?.[idColumn];
+      if (!timestamp || !id) {
+        throw new Error(`PostgREST ${table} keyset row is missing ${timestampColumn}/${idColumn}`);
+      }
+      const tuple = `${timestamp}\u0000${id}`;
+      if (seenTuples.has(tuple)) {
+        throw new Error(`PostgREST ${table} keyset pagination repeated tuple ${tuple}`);
+      }
+      seenTuples.add(tuple);
+      rows.push(row);
+    }
+    const last = pageRows.at(-1);
+    const nextCursor = {
+      timestamp: String(last[timestampColumn]),
+      id: String(last[idColumn]),
+    };
+    if (cursor && cursor.timestamp === nextCursor.timestamp && cursor.id === nextCursor.id) {
+      throw new Error(`PostgREST ${table} keyset pagination did not advance`);
+    }
+    cursor = nextCursor;
   }
   throw new Error(
     `PostgREST ${table} pagination exceeded ${boundedMaxPages} pages of ${boundedPageSize} rows`
@@ -165,34 +206,73 @@ function deduplicateRows(rows, keyName) {
   return [...byKey.values()];
 }
 
+function findMissingRemoteCorrectionTargets(observations, remoteObservations) {
+  const batchIds = new Set(
+    (Array.isArray(observations) ? observations : [])
+      .map((row) => row?.observation_id)
+      .filter(Boolean)
+  );
+  const remoteIds = new Set(
+    (Array.isArray(remoteObservations) ? remoteObservations : [])
+      .map((row) => row?.observation_id)
+      .filter(Boolean)
+  );
+  return [
+    ...new Set(
+      (Array.isArray(observations) ? observations : [])
+        .map((row) => row?.correction_of_observation_id)
+        .filter((targetId) => targetId && !batchIds.has(targetId) && !remoteIds.has(targetId))
+    ),
+  ].sort();
+}
+
+function assertRemoteCorrectionTargets(observations, remoteObservations) {
+  const missingTargets = findMissingRemoteCorrectionTargets(observations, remoteObservations);
+  if (!missingTargets.length) return;
+  const error = new Error(
+    `DataCore correction targets are absent from the remote control plane: ${missingTargets.join(',')}`
+  );
+  error.code = 'DATACORE_CORRECTION_TARGET_MISSING_REMOTE';
+  error.missingTargets = missingTargets;
+  throw error;
+}
+
 async function readRemoteControlPlane({ client, nowIso, pageSize = POSTGREST_PAGE_SIZE }) {
   const since24h = new Date(new Date(nowIso).getTime() - 24 * 60 * 60 * 1000).toISOString();
   const sinceHistory = new Date(
     new Date(nowIso).getTime() - REMOTE_HISTORY_DAYS * 24 * 60 * 60 * 1000
   ).toISOString();
   const [remoteProviderRuns, remoteObservations] = await Promise.all([
-    selectAllPages(
+    selectAllKeysetPages(
       client,
       'provider_runs',
       {
         select:
           'run_key,metal_symbol,provider_name,status,latency_ms,freshness_seconds,circuit_state,deviation_bps,attempted_at_utc,created_at',
-        attempted_at_utc: `gte.${since24h}`,
-        order: 'attempted_at_utc.desc,run_key.desc',
+        and: `(attempted_at_utc.gte.${quotePostgrestLiteral(since24h)},attempted_at_utc.lte.${quotePostgrestLiteral(nowIso)})`,
       },
-      { pageSize }
+      {
+        timestampColumn: 'attempted_at_utc',
+        idColumn: 'run_key',
+        direction: 'desc',
+        pageSize,
+      }
     ),
-    selectAllPages(
+    selectAllKeysetPages(
       client,
       'price_snapshots',
       {
         select:
           'observation_id,metal_symbol,quote_currency,price_usd_per_oz,price_aed_per_gram,source_provider,provider_chain,provider_timestamp_utc,fetched_at_utc,ingested_at_utc,slot_start_utc,slot_resolution_seconds,market_state,freshness_state,freshness_seconds,is_selected,selection_method,deviation_bps,provider_response_time_ms,quality_state,quality_flags,correction_of_observation_id,is_correction,raw_payload_hash,workflow_run_id,schema_version,symbol,currency,timestamp_utc,slot_5m_utc,xau_usd_per_oz,xau_aed_per_gram,is_fresh,is_fallback,is_market_open',
         metal_symbol: 'eq.XAU',
-        provider_timestamp_utc: `gte.${sinceHistory}`,
-        order: 'provider_timestamp_utc.asc,observation_id.asc',
+        and: `(provider_timestamp_utc.gte.${quotePostgrestLiteral(sinceHistory)},ingested_at_utc.lte.${quotePostgrestLiteral(nowIso)})`,
       },
-      { pageSize }
+      {
+        timestampColumn: 'provider_timestamp_utc',
+        idColumn: 'observation_id',
+        direction: 'asc',
+        pageSize,
+      }
     ),
   ]);
   return { remoteObservations, remoteProviderRuns };
@@ -210,6 +290,7 @@ async function syncRemoteControlPlane({
     Array.isArray(remoteObservations) && Array.isArray(remoteProviderRuns)
       ? { remoteObservations, remoteProviderRuns }
       : await readRemoteControlPlane({ client, nowIso });
+  assertRemoteCorrectionTargets(observations, preloaded.remoteObservations);
   const observationInsert = observations.length
     ? await client.insert('price_snapshots', observations, {
         onConflict: 'observation_id',
@@ -265,6 +346,7 @@ function emptyResult(overrides = {}) {
     publicExportBlocked: false,
     staticExportUpdated: false,
     staticObservationCount: 0,
+    staticRehydratedOverlapCount: 0,
     staticMissingSlotRate: null,
     staticMaxGapSeconds: 0,
     ...overrides,
@@ -293,6 +375,7 @@ function recordOutputs(result, env = process.env) {
     public_export_blocked: result.publicExportBlocked,
     static_export_updated: result.staticExportUpdated,
     static_observation_count: result.staticObservationCount,
+    static_rehydrated_overlap_count: result.staticRehydratedOverlapCount ?? 0,
     static_missing_slot_rate: result.staticMissingSlotRate ?? 'n/a',
     static_max_gap_seconds: result.staticMaxGapSeconds,
   };
@@ -365,16 +448,36 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
     workflowRunId,
     existingObservations: [...localObservations, ...remoteRead.remoteObservations],
   });
-  const staticInputs = [...remoteRead.remoteObservations, ...observations];
   const telemetryInputs = deduplicateRows(
     [...remoteRead.remoteProviderRuns, ...providerRuns],
     'run_key'
   );
 
+  if (client && schemaState === 'ready') {
+    try {
+      assertRemoteCorrectionTargets(observations, remoteRead.remoteObservations);
+    } catch (error) {
+      const result = emptyResult({
+        reason: 'correction_target_missing_remote',
+        schemaState,
+        enforcementMode,
+        gateStatus: 'fail',
+        gateFailures: ['missing_remote_correction_target'],
+        observationRows: observations.length,
+        providerRunRows: providerRuns.length,
+        historyWriteBlocked: true,
+        publicExportBlocked: true,
+      });
+      recordOutputs(result, env);
+      throw error;
+    }
+  }
+
   // Blocking modes evaluate a read-only view before any remote or filesystem mutation.
   const preview = buildStaticArtifacts({
     root,
-    observations: staticInputs,
+    observations,
+    rehydratedObservations: remoteRead.remoteObservations,
     providerRuns: telemetryInputs,
     syncState: 'quality-preview',
     writeHistory: false,
@@ -393,6 +496,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
       historyWriteBlocked: true,
       publicExportBlocked: true,
       staticObservationCount: preview.observationCount,
+      staticRehydratedOverlapCount: preview.rehydratedOverlapCount,
       staticMissingSlotRate: preview.quality.coverage.missingOpenMarketSlotRate,
       staticMaxGapSeconds: preview.quality.coverage.maxGapSeconds,
     });
@@ -413,6 +517,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
       providerRunRows: providerRuns.length,
       publicExportBlocked: true,
       staticObservationCount: preview.observationCount,
+      staticRehydratedOverlapCount: preview.rehydratedOverlapCount,
       staticMissingSlotRate: preview.quality.coverage.missingOpenMarketSlotRate,
       staticMaxGapSeconds: preview.quality.coverage.maxGapSeconds,
     });
@@ -450,7 +555,8 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
 
   const staticResult = buildStaticArtifacts({
     root,
-    observations: staticInputs,
+    observations,
+    rehydratedObservations: remoteRead.remoteObservations,
     providerRuns: telemetryInputs,
     providerHealthRows: remote.providerHealthRows,
     syncState: schemaState === 'ready' ? 'synced' : reason,
@@ -474,6 +580,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
     publicExportBlocked: false,
     staticExportUpdated: staticResult.publicExportUpdated,
     staticObservationCount: staticResult.observationCount,
+    staticRehydratedOverlapCount: staticResult.rehydratedOverlapCount,
     staticMissingSlotRate: staticResult.quality.coverage.missingOpenMarketSlotRate,
     staticMaxGapSeconds: staticResult.quality.coverage.maxGapSeconds,
   });
@@ -491,6 +598,7 @@ async function run({ env = process.env, fetchImpl = globalThis.fetch, root = ROO
       `- Gate warnings: \`${result.gateWarnings.join(',') || 'none'}\``,
       `- Canonical observation rows in this run: \`${observations.length}\``,
       `- Remote observations inserted / deduplicated: \`${remote.insertedObservations}\` / \`${remote.duplicateObservations}\``,
+      `- Remote rehydration overlaps excluded from duplicate rate: \`${staticResult.rehydratedOverlapCount}\``,
       `- Provider runs inserted: \`${remote.insertedProviderRuns}\``,
       `- Static observation count: \`${staticResult.observationCount}\``,
       `- Static missing open-market slot rate: \`${result.staticMissingSlotRate ?? 'n/a'}\``,
@@ -519,7 +627,9 @@ module.exports = {
   createPostgrestClient,
   isSchemaMissingError,
   recordOutputs,
-  selectAllPages,
+  findMissingRemoteCorrectionTargets,
+  assertRemoteCorrectionTargets,
+  selectAllKeysetPages,
   readRemoteControlPlane,
   syncRemoteControlPlane,
   run,

@@ -23,6 +23,7 @@
   },
   "duplicateCount": 0,
   "duplicateRate": 0,
+  "rehydratedOverlapCount": 0,
   "invalidObservationCount": 0,
   "futureObservationCount": 0,
   "lateArrivalCount": 0,
@@ -41,9 +42,7 @@
   "providerSuccessCount": 1,
   "providerDivergenceEventCount": 0,
   "providerFallbackCount": 0,
-  "warnings": [
-    "insufficient_continuity_evidence"
-  ],
+  "warnings": ["insufficient_continuity_evidence"],
   "failures": [],
   "generatedAtUtc": "2026-08-25T08:06:15.000Z"
 }
