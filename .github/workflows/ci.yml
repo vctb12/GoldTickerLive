@@ -165,10 +165,6 @@ jobs:
 
       - name: Serve dist and run E2E tests
         run: |
-          # Copy country leaf pages when present (excluded from Vite build, served as-is in deploy)
-          if [ -d countries ]; then
-            cp -r countries dist/
-          fi
           python3 -m http.server 8080 --directory dist &
           sleep 2
           npx playwright test --config=playwright.config.js --project=chromium
