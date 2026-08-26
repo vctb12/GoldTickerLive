@@ -96,7 +96,6 @@ def http_get(
     if headers:
         final_headers.update(headers)
 
-    last_exc: Optional[BaseException] = None
     attempt = 0
     while True:
         attempt += 1
@@ -118,7 +117,6 @@ def http_get(
             )
         except (requests.Timeout, requests.ConnectionError) as exc:
             elapsed_ms = int((time.monotonic() - start) * 1000)
-            last_exc = exc
             if attempt > retries:
                 return HttpResult(
                     response=None, elapsed_ms=elapsed_ms, exception=exc

@@ -249,7 +249,11 @@
 
 [data-theme='dark'] .calc-hero {
   background:
-    radial-gradient(120% 90% at 50% -10%, color-mix(in srgb, var(--color-gold) 14%, transparent) 0%, transparent 62%),
+    radial-gradient(
+      120% 90% at 50% -10%,
+      color-mix(in srgb, var(--color-gold) 14%, transparent) 0%,
+      transparent 62%
+    ),
     var(--surface-canvas);
   border-block-end-color: color-mix(in srgb, var(--color-gold) 28%, var(--border-default));
 }

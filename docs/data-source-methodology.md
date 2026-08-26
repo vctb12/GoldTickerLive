@@ -25,10 +25,11 @@ The AED peg is fixed by the UAE Central Bank — we do not derive it from a fore
 ever changes, update the env var; the math reflects it immediately.
 
 `TROY_OUNCE_GRAMS` is the authoritative conversion constant for all browser, Node, and Python
-pricing paths. Keep full precision during calculation and round only when formatting a displayed
-or exported value. The reference conversion examples are `1 oz = 31.1034768 g`, `0.5 oz =
-15.5517384 g`, and `10 oz = 311.034768 g`. The inverse conversion is `grams / 31.1034768 = oz`.
-Displayed prices are rounded to two decimal places only at the final formatting boundary.
+pricing paths. Keep full precision during calculation and round only when formatting a displayed or
+exported value. The reference conversion examples are `1 oz = 31.1034768 g`,
+`0.5 oz = 15.5517384 g`, and `10 oz = 311.034768 g`. The inverse conversion is
+`grams / 31.1034768 = oz`. Displayed prices are rounded to two decimal places only at the final
+formatting boundary.
 
 ## 2. AED math
 
@@ -180,8 +181,8 @@ exports. Understanding their resolution and limitations is important for honest 
 - **Trust label:** “Daily average spot-linked reference” / Arabic equivalent
 - **Formula:** AED/g (karat K) = daily avg XAU/USD ÷ troy oz grams × AED peg × karat purity
 - **Not used for:** retail shop quotes, LBMA fix, official Dubai rates, or live spot
-- **Failure behavior:** keep last good file; chart shows stale/unavailable states — no FreeGoldAPI or
-  embedded monthly baseline fallback on the homepage chart path
+- **Failure behavior:** keep last good file; chart shows stale/unavailable states — no FreeGoldAPI
+  or embedded monthly baseline fallback on the homepage chart path
 - **Loader:** `src/lib/uae-historical-source.js` (does not call `getUnifiedHistory()`)
 
 ### Layer 1 — Monthly LBMA baseline (embedded)

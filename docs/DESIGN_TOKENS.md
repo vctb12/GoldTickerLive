@@ -366,18 +366,18 @@ admin.css
 `styles/global.css` exposes a small intent layer for new frontend composition work. These aliases
 keep page implementations coupled to the existing token source of truth:
 
-| Alias | Intent | Constraint |
-| --- | --- | --- |
-| `--experience-content-width` / `--experience-gutter` | shared content measure and page edge | existing layout tokens |
-| `--experience-reading-width` | readable editorial measure | narrower under RTL for Arabic line length |
-| `--experience-section-gap` | section rhythm | existing spacing scale |
-| `--experience-panel-radius` / `--experience-control-radius` | surface/control geometry | semantic radii |
-| `--experience-focus` | keyboard focus affordance | existing focus token |
-| `--experience-display-leading` / `--experience-body-leading` | hierarchy and reading rhythm | existing line-height tokens |
-| `--experience-motion-ease` | shared motion behavior | linear under reduced motion |
+| Alias                                                        | Intent                               | Constraint                                |
+| ------------------------------------------------------------ | ------------------------------------ | ----------------------------------------- |
+| `--experience-content-width` / `--experience-gutter`         | shared content measure and page edge | existing layout tokens                    |
+| `--experience-reading-width`                                 | readable editorial measure           | narrower under RTL for Arabic line length |
+| `--experience-section-gap`                                   | section rhythm                       | existing spacing scale                    |
+| `--experience-panel-radius` / `--experience-control-radius`  | surface/control geometry             | semantic radii                            |
+| `--experience-focus`                                         | keyboard focus affordance            | existing focus token                      |
+| `--experience-display-leading` / `--experience-body-leading` | hierarchy and reading rhythm         | existing line-height tokens               |
+| `--experience-motion-ease`                                   | shared motion behavior               | linear under reduced motion               |
 
-These are composition tokens only. They must not encode prices, currencies, freshness states,
-source selection, or retail-vs-reference logic. EN and AR use the same semantic values; RTL may tune
+These are composition tokens only. They must not encode prices, currencies, freshness states, source
+selection, or retail-vs-reference logic. EN and AR use the same semantic values; RTL may tune
 reading measure, not meaning or interaction order.
 
 ---

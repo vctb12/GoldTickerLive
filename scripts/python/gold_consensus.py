@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from statistics import median
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from typing import Any, Dict, Iterable, Optional, Tuple
 
 
 def median_absolute_deviation(values: Iterable[float]) -> float:
