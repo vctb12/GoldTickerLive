@@ -1,8 +1,7 @@
 # Owner handoff — Gold Deal Intelligence MVP
 
-**Date:** 2026-08-04
-**Branch:** `codex/gold-deal-intelligence-mvp`
-**Status:** Draft PR to be opened; do not merge or start Phase 2
+**Date:** 2026-08-04 **Branch:** `codex/gold-deal-intelligence-mvp` **Status:** Draft PR to be
+opened; do not merge or start Phase 2
 
 ## What shipped in this phase
 

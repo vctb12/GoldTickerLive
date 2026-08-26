@@ -27,8 +27,8 @@ near-realtime updates through the one shared browser manager:
     surfaces cannot diverge within a render.
   - `_snapshot` has **no TTL** — it is cached until `getCanonicalSpot({ force: true })` is called.
     Periodic refreshers therefore pass `force: true`; the initial paint uses the memoized read.
-  - `deriveFromSpot(spot)` applies the immutable invariants (troy-oz 31.1034768, AED peg 3.6725, karat
-    purity = code/24) — never re-derived anywhere else.
+  - `deriveFromSpot(spot)` applies the immutable invariants (troy-oz 31.1034768, AED peg 3.6725,
+    karat purity = code/24) — never re-derived anywhere else.
   - `buildSnapshot()` returns
     `{ ok, spotUsdPerOz, usdPerGram24k, aedPerGram24k, karats[], freshness }`.
 

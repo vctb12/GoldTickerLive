@@ -1656,7 +1656,7 @@ def main():
     print(f"state_file:   data/last_gold_price.json (exists={STATE_FILE.exists()})")
     print(f"guard_state:  data/last_tweet_state.json (exists={LAST_TWEET_STATE_FILE.exists()})")
     print(f"source_ts:    {source_ts}")
-    print(f"--- guard state (data/last_tweet_state.json) ---")
+    print("--- guard state (data/last_tweet_state.json) ---")
     print(f"last_price_usd_oz (guard):              {_gs_price}")
     print(f"last_tweet_time_utc (guard):            {_gs_time}")
     print(f"last_provider_timestamp_utc (guard):    {_ltp_utc}")
@@ -2013,7 +2013,7 @@ def main():
                         ),
                         exit_code=1,
                     )
-                print(f"  [must_post] uniqueness suffix applied — proceeding to post.")
+                print("  [must_post] uniqueness suffix applied — proceeding to post.")
             elif must_post and decision.skip_reason in _MUST_POST_SOFT_SKIP_REASONS:
                 os.environ["POST_GOLD_DUPLICATE_GUARD_RESULT"] = f"bypassed:must_post_soft:{decision.skip_reason}"
                 # Soft guard reason: log context and proceed.
@@ -2046,10 +2046,10 @@ def main():
                     )
                     if post_type == "market_closed_reference":
                         skip_msg += (
-                            f"\n   SKIP: market_closed_reference same closing/reference price already posted"
-                            f" and force_summary_due=False."
-                            f"\n   To allow same-price market_closed_reference repost:"
-                            f" set allow_same_price_closed_market_repost=true in workflow_dispatch inputs."
+                            "\n   SKIP: market_closed_reference same closing/reference price already posted"
+                            " and force_summary_due=False."
+                            "\n   To allow same-price market_closed_reference repost:"
+                            " set allow_same_price_closed_market_repost=true in workflow_dispatch inputs."
                         )
                     else:
                         skip_msg += (

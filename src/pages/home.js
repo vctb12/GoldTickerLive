@@ -24,6 +24,7 @@ import { getMarketStatus, getLiveFreshness, applyMarketClosedOverlay } from '../
 import { getLivePriceManager } from '../lib/live-price-manager.js';
 import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
 import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
+import { formatUtcTimestamp } from '../lib/freshness.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
 import { updateTicker } from '../components/ticker.js';
 import { updateSpotBar } from '../components/spotBar.js';
@@ -543,8 +544,9 @@ function renderHeroCard() {
   const barText = document.getElementById('hfb-text');
   if (bar && barText) {
     const stale = !isLive;
-    const timeStr = goldUpdatedAt ? fmt.formatTimestampShort(goldUpdatedAt, lang) : '—';
+    const timeStr = `${formatUtcTimestamp(goldUpdatedAt, lang)} UTC`;
     bar.classList.toggle('home-freshness-bar--stale', stale);
+    bar.dataset.freshnessState = key;
     barText.textContent = stale
       ? `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${timeStr}`
       : `${txGlobal('freshness.statusLabel')}: ${statusText} · ${tx('source')}: ${sourceText} · ${tx('updated')}: ${timeStr}`;

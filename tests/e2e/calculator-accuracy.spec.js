@@ -13,6 +13,22 @@ const { test, expect } = require('@playwright/test');
 const TROY_OZ_GRAMS = 31.1034768;
 const AED_PEG = 3.6725;
 
+test.beforeEach(async ({ page }) => {
+  // Keep the pricing assertion independent of the third-party FX endpoint. AED
+  // still comes from the locked peg; this response only lets page boot settle.
+  await page.route('**/open.er-api.com/**', (route) =>
+    route.fulfill({
+      contentType: 'application/json',
+      body: JSON.stringify({
+        result: 'success',
+        rates: { USD: 1 },
+        time_last_update_utc: 'Wed, 26 Aug 2026 00:00:00 +0000',
+        time_next_update_utc: 'Thu, 27 Aug 2026 00:00:00 +0000',
+      }),
+    })
+  );
+});
+
 function parseAmount(text) {
   // "4,867.82 د.إ" / "1,325.48 $" → 4867.82 / 1325.48
   const m = (text || '').replace(/,/g, '').match(/-?\d+(\.\d+)?/);

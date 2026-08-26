@@ -162,7 +162,13 @@ function normalizeGoldResponse(data) {
     payload?.maxFreshnessSeconds ?? payload?.max_freshness_seconds
   );
   const sourceTimestamp =
-    payload?.sourceTimestamp || payload?.source_updated_at_gmt || payload?.timestamp_source || null;
+    payload?.sourceTimestamp ||
+    payload?.timestampUtc ||
+    payload?.timestamp_utc ||
+    payload?.fetchedAtUtc ||
+    payload?.fetched_at_utc ||
+    payload?.source_updated_at_gmt ||
+    null;
 
   return {
     price,

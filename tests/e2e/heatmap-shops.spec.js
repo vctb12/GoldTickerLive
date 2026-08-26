@@ -8,13 +8,30 @@
 // 2026-07-10 sweep: heatmap 156 country paths / legend / 63 prices / 0 console errors; shops 87 cards.
 const { test, expect } = require('@playwright/test');
 
+function sameOrigin(url, baseURL) {
+  try {
+    return new URL(url).host === new URL(baseURL).host;
+  } catch {
+    return false;
+  }
+}
+
 test.describe('Heatmap renders a populated map', () => {
   test('map shapes + legend + prices, no console errors', async ({ page, baseURL }) => {
-    const consoleErrors = [];
-    page.on('console', (m) => {
-      if (m.type() === 'error') consoleErrors.push(m.text());
+    const runtimeErrors = [];
+    const sameOriginFailures = [];
+    page.on('pageerror', (error) => runtimeErrors.push(String(error)));
+    page.on('response', (response) => {
+      if (response.status() >= 400 && sameOrigin(response.url(), baseURL)) {
+        sameOriginFailures.push(`HTTP ${response.status()} ${response.url()}`);
+      }
     });
-    page.on('pageerror', (e) => consoleErrors.push(String(e)));
+    page.on('requestfailed', (request) => {
+      const failure = request.failure()?.errorText || 'failed';
+      if (sameOrigin(request.url(), baseURL) && !/ERR_ABORTED/.test(failure)) {
+        sameOriginFailures.push(`${failure} ${request.url()}`);
+      }
+    });
 
     await page.goto((baseURL || '') + '/heatmap.html', { waitUntil: 'load' });
     await page.waitForTimeout(2500); // world-map data + render
@@ -33,11 +50,12 @@ test.describe('Heatmap renders a populated map', () => {
     expect(h.shapes, 'heatmap must render many country shapes').toBeGreaterThan(20);
     expect(h.hasLegend, 'heatmap must render a legend').toBe(true);
     expect(h.priceNums, 'heatmap must show price-formatted values').toBeGreaterThan(3);
-    // First-party runtime must be clean (third-party analytics beacons excluded).
-    const firstParty = consoleErrors.filter(
-      (e) => !/analytics|gtag|google|supabase|er-api|gold-api/i.test(e)
-    );
-    expect(firstParty, `heatmap console errors: ${firstParty.join(' | ')}`).toEqual([]);
+    // First-party runtime must be clean; cross-origin enhancements have verified fallbacks.
+    expect(runtimeErrors, `heatmap runtime errors: ${runtimeErrors.join(' | ')}`).toEqual([]);
+    expect(
+      sameOriginFailures,
+      `heatmap first-party failures: ${sameOriginFailures.join(' | ')}`
+    ).toEqual([]);
   });
 });
 

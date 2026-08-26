@@ -26,7 +26,9 @@ test('troy-ounce constant is authoritative and shared by browser and server', as
 });
 
 test('browser ounce conversion preserves precision for 1, 0.5, and 10 troy ounces', async () => {
-  const { toGrams, gramsToUnit } = await import(new URL('../src/lib/weight-units.js', `file://${__filename}`).href);
+  const { toGrams, gramsToUnit } = await import(
+    new URL('../src/lib/weight-units.js', `file://${__filename}`).href
+  );
   for (const ounces of [1, 0.5, 10]) {
     const grams = toGrams(ounces, 'oz');
     assert.equal(grams, ounces * TROY_OZ_GRAMS);
