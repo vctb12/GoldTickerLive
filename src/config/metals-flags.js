@@ -11,3 +11,15 @@
 
 /** Master switch for the non-gold metals UI. MUST stay false until live silver data exists. */
 export const METALS_PILOT_ENABLED = false;
+
+/**
+ * Resolve the UI gate. Production stays off until the owner-approved feed pipeline exists; a
+ * deliberate query switch is accepted only on a local development host for visual QA.
+ */
+export function isMetalsPilotEnabled({ hostname, search } = {}) {
+  if (METALS_PILOT_ENABLED) return true;
+  const host = String(hostname ?? globalThis.location?.hostname ?? '').toLowerCase();
+  const query = String(search ?? globalThis.location?.search ?? '');
+  const isLocal = host === 'localhost' || host === '127.0.0.1' || host === '::1';
+  return isLocal && new URLSearchParams(query).get('metals') === 'preview';
+}

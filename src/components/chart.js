@@ -10,7 +10,7 @@
  *   import { GoldChart } from './components/chart.js';
  *   const chart = new GoldChart('chart-container', lang);
  *   chart.addPoint(price, timestamp);  // call on every gold fetch
- *   chart.setRange('24H' | '7D' | '30D' | '90D' | '1Y' | '3Y' | '5Y' | 'ALL');
+ *   chart.setRange('24H' | '7D' | '30D' | '90D' | '6M' | '1Y' | '3Y' | '5Y' | 'ALL');
  */
 
 import { getUnifiedHistory, toChartData, filterByRange } from '../lib/historical-data.js';
@@ -52,11 +52,17 @@ const SHORT_RANGE_MS = {
 
 const CUSTOM_RANGE_MS = {
   '1D': 86400000,
+  '24H': 86400000,
   '1W': 604800000,
+  '7D': 604800000,
   '1M': 30 * 86400000,
+  '30D': 30 * 86400000,
   '3M': 90 * 86400000,
-  '6M': 180 * 86400000,
+  '90D': 90 * 86400000,
+  '6M': 183 * 86400000,
   '1Y': 365 * 86400000,
+  '3Y': 3 * 365 * 86400000,
+  '5Y': 5 * 365 * 86400000,
 };
 
 // Theme colors resolve from the chart's own container (container-scoped, see

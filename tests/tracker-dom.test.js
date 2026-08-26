@@ -88,6 +88,22 @@ test('tracker-dom: unit selector exists', () => {
 
 test('tracker-dom: range pills container exists', () => {
   assert.ok(/id="tp-range-pills"/.test(HTML), '#tp-range-pills must exist');
+  assert.ok(/data-range="6M"/.test(HTML), 'tracker must expose a six-month range');
+});
+
+test('tracker-dom: feature-gated multi-metal workspace has accessible controls', () => {
+  assert.ok(
+    /id="tp-metal-chart-workspace"[^>]*hidden/.test(HTML),
+    'pilot must be hidden by default'
+  );
+  assert.ok(/id="tp-metal-tabs"[^>]*role="tablist"/.test(HTML), 'metal selector must be a tablist');
+  assert.ok(
+    /id="tp-metal-tabs"[^>]*aria-describedby="tp-metal-tabs-hint"/.test(HTML),
+    'metal selector must explain its mobile overflow affordance'
+  );
+  assert.ok(/id="tp-metal-tabs-hint"[^>]*data-i18n="metalChart\.tabsHint"/.test(HTML));
+  assert.ok(/id="tp-metal-purity"/.test(HTML), 'metal grade selector must exist');
+  assert.ok(/id="tp-metal-freshness"/.test(HTML), 'per-metal freshness must stay visible');
 });
 
 test('tracker-dom: refresh button exists', () => {

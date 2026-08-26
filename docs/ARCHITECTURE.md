@@ -272,6 +272,25 @@ HTML loads page-specific JS (e.g. src/pages/home.js)
   └──► Render into DOM + update cache
 ```
 
+### Tracker metal-series boundary
+
+The tracker normalizes chart observations through `src/lib/metal-series.js` before rendering or
+export. The provider-neutral contract stores UTC observation time, USD/troy-ounce value, metal,
+resolution, source ID, ingestion time, provider time, freshness, derivation/verification markers,
+and quality flags. It sorts and de-duplicates deterministically, annotates gaps/outlier-review and
+partial coverage, and never interpolates, rebases, or shifts history.
+
+Gold continues to use the established provider and layered-history pipeline. A current quote may be
+appended only as a distinct, newer, metal-compatible point carrying a known freshness state; the
+historical values remain unchanged. The SVG chart, advanced chart, tooltip, summary, and CSV export
+consume the same normalized visible rows.
+
+The non-gold chart workspace is an additive, dynamically loaded pilot. Its production flag remains
+off; an explicit localhost query enables review. The isolated adapter can provide only a current
+XAG/XPT/XPD reference quote, so the UI reports current-only coverage and stores no quote history.
+Production history ingestion or pilot activation requires owner approval and a documented source,
+retention, attribution, timestamp, failure, and rollback contract.
+
 ### Admin Panel (browser → Supabase)
 
 ```

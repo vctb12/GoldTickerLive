@@ -3,7 +3,7 @@
 // Keeps a lightweight intersection observer and defers loading the heavy chart
 // library and component until the user can see it.
 
-export function installChartLoader({ state, el } = {}) {
+export function installChartLoader({ state, el, getVisibleRows } = {}) {
   if (typeof window === 'undefined') return;
   if (window.__trackerChartLoaderInstalled) return;
   window.__trackerChartLoaderInstalled = true;
@@ -28,6 +28,9 @@ export function installChartLoader({ state, el } = {}) {
   }
 
   async function loadChart() {
+    // The advanced component is XAU-specific. The local multi-metal pilot uses the provider-neutral
+    // SVG surface for non-gold quotes and must never relabel this gold chart as another metal.
+    if (state?.selectedMetal && state.selectedMetal !== 'gold') return;
     try {
       const _container = createContainer();
       const mod = await import('../components/chart.js');
@@ -39,6 +42,18 @@ export function installChartLoader({ state, el } = {}) {
       // provide initial history if available
       try {
         if (state && Array.isArray(state.history)) chart.setDailyHistory(state.history);
+        if (typeof getVisibleRows === 'function') {
+          const normalizedRows = getVisibleRows()
+            .map((row) => {
+              const date = row.date instanceof Date ? row.date : new Date(row.date);
+              const value = Number(row.spot ?? row.price);
+              return Number.isFinite(date.getTime()) && Number.isFinite(value) && value > 0
+                ? { time: Math.floor(date.getTime() / 1000), value }
+                : null;
+            })
+            .filter(Boolean);
+          chart.setCustomData(normalizedRows);
+        }
       } catch (e) {
         console.warn('[chart-loader] setDailyHistory failed', e);
       }

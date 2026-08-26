@@ -587,6 +587,7 @@
               <button type="button" class="tracker-pill" data-range="7D" aria-pressed="false" title="1 week">1W</button>
               <button type="button" class="tracker-pill" data-range="30D" aria-pressed="false" title="1 month">1M</button>
               <button type="button" class="tracker-pill" data-range="90D" aria-pressed="false" title="3 months">3M</button>
+              <button type="button" class="tracker-pill" data-range="6M" aria-pressed="false">6M</button>
               <button type="button" class="tracker-pill" data-range="1Y" aria-pressed="false" title="1 year">1Y</button>
               <button type="button" class="tracker-pill" data-range="3Y" aria-pressed="false">3Y</button>
               <button type="button" class="tracker-pill" data-range="5Y" aria-pressed="false">5Y</button>
@@ -808,6 +809,35 @@
                 </button>
               </div>
             </div>
+
+            <section class="tracker-metal-workspace" id="tp-metal-chart-workspace" hidden aria-labelledby="tp-metal-workspace-title">
+              <div class="tracker-metal-workspace__head">
+                <div>
+                  <p class="section-kicker" data-i18n="metalChart.kicker">Local pilot</p>
+                  <h3 id="tp-metal-workspace-title" data-i18n="metalChart.title">Precious-metal chart preview</h3>
+                </div>
+                <label class="tracker-metal-purity-label" for="tp-metal-purity">
+                  <span data-i18n="metalChart.gradeLabel">Purity / fineness</span>
+                  <select id="tp-metal-purity" class="tracker-select"></select>
+                </label>
+              </div>
+              <div class="tracker-metal-tabs-shell">
+                <div class="tracker-metal-tabs" id="tp-metal-tabs" role="tablist" aria-label="Precious metal" aria-describedby="tp-metal-tabs-hint" data-i18n-aria-label="metalChart.tablistLabel"></div>
+                <p class="tracker-metal-tabs-hint" id="tp-metal-tabs-hint" data-i18n="metalChart.tabsHint">Swipe horizontally to view all four metals.</p>
+              </div>
+              <div class="tracker-metal-readout" aria-live="polite">
+                <div>
+                  <span class="tracker-metal-readout__label" id="tp-metal-value-label">XAU/USD</span>
+                  <strong class="tracker-metal-readout__value" id="tp-metal-value">—</strong>
+                </div>
+                <div class="tracker-metal-readout__meta">
+                  <span id="tp-metal-coverage"></span>
+                  <span id="tp-metal-source"></span>
+                  <span id="tp-metal-freshness"></span>
+                  <span id="tp-metal-timestamp"></span>
+                </div>
+              </div>
+            </section>
 
             <div class="tracker-chart-meta">
               <div class="tracker-legend">

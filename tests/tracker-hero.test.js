@@ -201,6 +201,7 @@ describe('tracker hero module', () => {
       selectedCurrency: 'AED',
       selectedKarat: '24',
       selectedUnit: 'gram',
+      selectedMetal: 'gold',
       hasLiveFailure: false,
       live: {
         isFallback: false,
@@ -224,7 +225,17 @@ describe('tracker hero module', () => {
 
   it('renders the mini strip with the selected price', () => {
     assert.doesNotThrow(() => mod.renderMiniStrip());
+    assert.equal(miniStrip.hidden, false);
     assert.match(miniStrip.textContent, /AED|24/);
+  });
+
+  it('hides the gold-only mini strip for non-gold selections', () => {
+    state.selectedMetal = 'silver';
+    assert.doesNotThrow(() => mod.renderMiniStrip());
+    assert.equal(miniStrip.hidden, true);
+    state.selectedMetal = 'gold';
+    mod.renderMiniStrip();
+    assert.equal(miniStrip.hidden, false);
   });
 
   it('renders the karat table with partial DOM', () => {

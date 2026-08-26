@@ -197,6 +197,15 @@ describe('tracker chart helpers', () => {
       range: 'ALL',
       historyMonth: '',
       hasLiveFailure: false,
+      selectedMetal: 'gold',
+      selectedMetalPurity: '24',
+      live: {
+        updatedAt: '2024-01-03T00:00:00.000Z',
+        sourceTimestamp: '2024-01-03T00:00:00.000Z',
+        fetchedAt: '2024-01-03T00:00:01.000Z',
+        providerId: 'test-provider',
+        source: 'test-provider',
+      },
       history: [
         { date: '2024-01-01', spot: 2000, source: 'supabase', granularity: 'daily' },
         { date: '2024-01-02', spot: 2010, source: 'supabase', granularity: 'daily' },
@@ -216,6 +225,18 @@ describe('tracker chart helpers', () => {
     assert.equal(rows.length, 3);
     assert.equal(rows.at(-1).granularity, 'live');
     assert.equal(rows.at(-1).spot, 2020);
+    assert.equal(rows.at(-1).date.toISOString(), '2024-01-03T00:00:00.000Z');
+    assert.equal(rows.at(-1).isCurrentAnchor, true);
+  });
+
+  it('maps the same visible rows to timestamp-preserving advanced-chart data', () => {
+    const rows = mod.getVisibleHistoryRows();
+    const advanced = mod.toAdvancedChartData(rows);
+    assert.deepEqual(
+      advanced.map((point) => point.value),
+      rows.map((row) => row.spot)
+    );
+    assert.equal(advanced.at(-1).time, Date.parse('2024-01-03T00:00:00.000Z') / 1000);
   });
 
   it('filters by selected month and skips live point', () => {

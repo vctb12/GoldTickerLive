@@ -25,10 +25,11 @@ The AED peg is fixed by the UAE Central Bank — we do not derive it from a fore
 ever changes, update the env var; the math reflects it immediately.
 
 `TROY_OUNCE_GRAMS` is the authoritative conversion constant for all browser, Node, and Python
-pricing paths. Keep full precision during calculation and round only when formatting a displayed
-or exported value. The reference conversion examples are `1 oz = 31.1034768 g`, `0.5 oz =
-15.5517384 g`, and `10 oz = 311.034768 g`. The inverse conversion is `grams / 31.1034768 = oz`.
-Displayed prices are rounded to two decimal places only at the final formatting boundary.
+pricing paths. Keep full precision during calculation and round only when formatting a displayed or
+exported value. The reference conversion examples are `1 oz = 31.1034768 g`,
+`0.5 oz = 15.5517384 g`, and `10 oz = 311.034768 g`. The inverse conversion is
+`grams / 31.1034768 = oz`. Displayed prices are rounded to two decimal places only at the final
+formatting boundary.
 
 ## 2. AED math
 
@@ -180,8 +181,8 @@ exports. Understanding their resolution and limitations is important for honest 
 - **Trust label:** “Daily average spot-linked reference” / Arabic equivalent
 - **Formula:** AED/g (karat K) = daily avg XAU/USD ÷ troy oz grams × AED peg × karat purity
 - **Not used for:** retail shop quotes, LBMA fix, official Dubai rates, or live spot
-- **Failure behavior:** keep last good file; chart shows stale/unavailable states — no FreeGoldAPI or
-  embedded monthly baseline fallback on the homepage chart path
+- **Failure behavior:** keep last good file; chart shows stale/unavailable states — no FreeGoldAPI
+  or embedded monthly baseline fallback on the homepage chart path
 - **Loader:** `src/lib/uae-historical-source.js` (does not call `getUnifiedHistory()`)
 
 ### Layer 1 — Monthly LBMA baseline (embedded)
@@ -244,3 +245,22 @@ uncovered months. The UI notes the actual baseline range dynamically via `getBas
 To extend the baseline, add new entries to `src/data/historical-baseline.json` following the
 existing `{ "date": "YYYY-MM", "price": <XAU/USD monthly average> }` format. Use verified LBMA data
 only; mark estimated entries with `"estimated": true`.
+
+## 9. Feature-gated non-gold chart pilot
+
+The tracker contains a review-only Silver/Platinum/Palladium path behind
+`METALS_PILOT_ENABLED = false`. Production remains gold-only. Developers can inspect the interaction
+on localhost with `?metals=preview`; the same query is ignored on production hosts.
+
+The pilot's isolated Gold-API.com adapter requests one current USD/troy-ounce quote for the selected
+symbol. It validates the symbol, a metal-specific sanity range, and the provider timestamp. It does
+not join or reorder the production gold provider chain, persist observations, create history, or
+change pricing constants. The UI always exposes the source, canonical freshness/market-closed state,
+provider time, reference-price context, and `current reference quote only` coverage limitation.
+
+No XAG/XPT/XPD historical source is approved in this repository. Production activation therefore
+requires an owner-approved ingestion design and documented retention/redistribution rights. The
+provider's public assets page lists XAU/XAG/XPT/XPD, while its terms wording expressly discusses
+gold and silver; platinum/palladium production use remains a terms-confirmation gate. Paid history
+access, browser credentials, workflow changes, committed non-gold history, and synthetic proxy
+series are outside this phase.

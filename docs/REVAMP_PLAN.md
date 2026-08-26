@@ -995,6 +995,12 @@ Append one row per commit on the revamp branch. Keep commit SHA short (8 chars).
 update the "Last updated" banner at the top of the file and copy the merged commits into the
 "Merged" section below.
 
+### 2026-08-24 — Roadmap 2 safe multi-metal slice
+
+| SHA       | Bucket  | Summary                                                                                                                        |
+| --------- | ------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `3764d56` | tracker | Extend the frozen hash contract with gate-only `metal`/`grade`, add `6M`, normalized visible rows, and current-only pilot UI. |
+
 ### Round 1 — Track A foundation + Track C/D reveal wiring (in-branch, pending merge)
 
 | SHA        | Bucket    | Summary                                                     |
@@ -1610,7 +1616,9 @@ surfaces (`tracker.html`, `index.html`, `admin/`). Phases ship as single-concern
       shipped in Round 7._
 - [x] **Phase 7** — State/URL-hash contract freeze. Document `src/tracker/state.js` hash schema in
       [`docs/tracker-state.md`](./tracker-state.md); add round-trip tests in
-      `tests/tracker-hash.test.js`.
+      `tests/tracker-hash.test.js`. _2026-08-24 additive extension: optional `metal`/`grade` are
+      accepted only behind the localhost pilot gate and stripped in the production-default state;
+      existing gold links remain backward-compatible._
 - [x] **Phase 8** — Mode-tabs refactor (extract `#tab-*` wiring from `ui-shell.js` into `modes.js`).
       Landed as [`src/tracker/modes.js`](../src/tracker/modes.js): pure registry of 7 tab entries (5
       modes + 2 panels), bilingual labels, workspace gates, keyboard-shortcut map. `ui-shell.js`

@@ -9,9 +9,10 @@ import { isRealtimeDebugEnabled } from '../lib/realtime-debug.js';
 import { maybeTrackRealtimeSlo } from '../lib/realtime-slo-analytics.js';
 import { resolveGoldIsFresh } from '../lib/quote-freshness-bridge.js';
 import { formatProviderLabel } from '../lib/provider-labels.js';
-import { createInitialState, persistState } from '../tracker/state.js';
-import { getFreshnessModel } from '../tracker/freshness.js';
-import { deriveLiveRowFreshness } from '../tracker/chart.js';
+import { createInitialState, persistState, syncUrlFromState } from '../tracker/state.js';
+import { getVisibleHistoryRows } from '../tracker/chart.js';
+import { getMetal } from '../config/metals.js';
+import { isMetalsPilotEnabled } from '../config/metals-flags.js';
 import { el as safeEl } from '../lib/safe-dom.js';
 import { iconUseElement } from '../components/icon-sprite.js';
 import { track, EVENTS } from '../lib/analytics.js';
@@ -70,6 +71,7 @@ let realtimeEngine = null;
 let realtimeSnapshot = null;
 let inlineCalc = null;
 let alertEngine = null;
+let metalChartWorkspace = null;
 
 function trackerTx(key, params = {}) {
   const fullKey = `tracker.${key}`;
@@ -158,6 +160,13 @@ function localizeStaticTrackerCopy() {
   document.documentElement.lang = state.lang;
   document.documentElement.dir = state.lang === 'ar' ? 'rtl' : 'ltr';
   hydrateStaticI18n();
+
+  if (el.workspaceToggle) {
+    el.workspaceToggle.textContent = trackerTx(
+      state.workspaceLevel === 'advanced' ? 'workspace.toggleBasic' : 'workspace.toggleAdvanced'
+    );
+  }
+  metalChartWorkspace?.sync();
 
   const trustContent = document.querySelector('.tracker-trust-content');
   if (trustContent) {
@@ -1067,32 +1076,22 @@ function exportHistoryData() {
 }
 
 async function exportChartData() {
-  if (!state.history.length) {
+  const rows = getVisibleHistoryRows();
+  if (!rows.length) {
     showToast(trackerTx('toast.noChartData'));
     return;
   }
-  const flat = state.history.map((r) => ({
-    date: r.date instanceof Date ? r.date.toISOString().slice(0, 10) : String(r.date),
-    spot: r.spot,
-    price: r.spot,
-    source: r.source,
-  }));
-  const spot = currentSpot();
-  // Filter to the visible range before exporting so the CSV matches what the user sees
-  const { filterByRange } = await import('../lib/historical-data.js');
-  const rangeFiltered = state.range ? filterByRange(flat, state.range) : flat;
-  const rows = rangeFiltered.filter(Boolean);
-  if (spot)
-    rows.push({
-      date: new Date().toISOString().slice(0, 10),
-      spot,
-      price: spot,
-      granularity: 'live',
-      ...deriveLiveRowFreshness(getFreshnessModel().effectiveKey),
-    });
   try {
     const expMod = await import('../lib/export.js');
-    expMod.exportChartCSV(rows, state.range, state.selectedKarat);
+    const metal = getMetal(state.selectedMetal);
+    const purity = metal.purities.find((candidate) => candidate.code === state.selectedMetalPurity);
+    expMod.exportChartCSV(rows, state.range, {
+      metalKey: state.selectedMetal,
+      symbol: metal.symbol,
+      gradeCode: state.selectedMetalPurity,
+      purity: purity?.purity,
+      metadata: state.chartSeriesMetadata,
+    });
     showToast(trackerTx('toast.chartCsvDownloaded'));
   } catch (_e) {
     showToast(trackerTx('toast.exportFailed'));
@@ -1405,6 +1404,7 @@ function applyRealtimeSnapshot(snapshot) {
     renderAll?.();
   }
   renderTrackerAddonPanels();
+  metalChartWorkspace?.sync();
 
   // Run alert engine check after every price update
   if (alertEngine && state.live?.price) {
@@ -1430,6 +1430,9 @@ async function refreshData(forceLive = true, includeWire = true) {
   if (forceLive) tasks.push(fetchLive());
   tasks.push(ensureUnifiedHistory());
   if (includeWire) tasks.push(refreshWire());
+  if (state.selectedMetal !== 'gold' && metalChartWorkspace?.refreshSelected) {
+    tasks.push(metalChartWorkspace.refreshSelected());
+  }
   await Promise.all(tasks);
   // If advanced chart is loaded, give it the updated unified history
   try {
@@ -1648,6 +1651,7 @@ async function init() {
       renderAll();
       syncHeroReadout();
       renderTrackerAddonPanels();
+      metalChartWorkspace?.sync({ redrawChart: true });
     }
   );
 
@@ -1673,6 +1677,18 @@ async function init() {
   serverAlertsAvailable = await probeServerAlertsAvailability();
   updateServerAlertUiState();
   bindCoreEvents();
+  if (isMetalsPilotEnabled()) {
+    const { initMetalChartWorkspace } = await import('../tracker/metal-chart.js');
+    metalChartWorkspace = initMetalChartWorkspace({
+      state,
+      renderChart,
+      persistState: () => persistState(state),
+      syncUrlFromState: () => syncUrlFromState(state),
+      tx: trackerTx,
+      currentSpot,
+      showToast,
+    });
+  }
   wireUnitSegmentedControl();
   bindControlShortcuts({
     state,
@@ -1772,7 +1788,7 @@ async function init() {
   // Install the chart loader non-blocking; loader itself will lazy-load the heavy chart
   try {
     import('./tracker-chart-loader.js')
-      .then((m) => m.installChartLoader({ state, el }))
+      .then((m) => m.installChartLoader({ state, el, getVisibleRows: getVisibleHistoryRows }))
       .catch(() => {});
   } catch (_e) {
     // silent

@@ -1,5 +1,6 @@
 // tracker/hero.js — tracker hero, mini strip, and karat table rendering
 import { CONSTANTS, KARATS, COUNTRIES } from '../config/index.js';
+import { PRIMARY_METAL } from '../config/metals.js';
 import {
   _state,
   _el,
@@ -501,6 +502,9 @@ export function patchHeroLiveTick() {
 
 export function renderMiniStrip() {
   if (!_el.miniStrip) return;
+  const isGold = (_state.selectedMetal || PRIMARY_METAL) === PRIMARY_METAL;
+  _el.miniStrip.hidden = !isGold;
+  if (!isGold) return;
   const spot = _currentSpot();
   if (!spot) {
     _el.miniStrip.textContent = tx('waitingLive');
