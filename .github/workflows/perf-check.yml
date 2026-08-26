@@ -42,11 +42,20 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Production build
+        run: npm run build
+
+      - name: Stage deploy-only static files
+        run: node scripts/node/stage-dist-statics.js
+
       - name: Run image audit
         run: node scripts/node/image-audit.js || true
 
       - name: Run Playwright tests
-        run: npx playwright test --project=chromium --reporter=list || true
+        run: |
+          python3 -m http.server 8080 --directory dist &
+          sleep 2
+          npx playwright test --project=chromium --reporter=list || true
 
       - name: Summarize artifacts
         run: |
