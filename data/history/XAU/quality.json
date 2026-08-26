@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "dataset": "DataCore canonical XAU/USD observations",
+  "grain": "one immutable provider observation; selected observations drive public aggregates",
+  "gateStatus": "warn",
+  "pass": true,
+  "thresholds": {
+    "slotResolutionSeconds": 300,
+    "maximumMissingSlotRate": 0.2,
+    "maximumGapSeconds": 1800
+  },
+  "coverage": {
+    "firstObservationUtc": "2026-08-25T08:05:47.000Z",
+    "lastObservationUtc": "2026-08-25T08:05:47.000Z",
+    "observationCount": 1,
+    "expectedOpenMarketSlots": 1,
+    "observedOpenMarketSlots": 1,
+    "missingOpenMarketSlots": 0,
+    "missingOpenMarketSlotRate": 0,
+    "maxGapSeconds": 0,
+    "maxGapStartUtc": null,
+    "maxGapEndUtc": null
+  },
+  "duplicateCount": 0,
+  "duplicateRate": 0,
+  "rehydratedOverlapCount": 0,
+  "invalidObservationCount": 0,
+  "futureObservationCount": 0,
+  "lateArrivalCount": 0,
+  "outOfOrderCount": 0,
+  "correctionCount": 0,
+  "fallbackObservationCount": 0,
+  "staleObservationCount": 0,
+  "providerDistribution": {
+    "gold_api_com": 1
+  },
+  "freshnessDistribution": {
+    "updated": 1
+  },
+  "sourceTransitionCount": 0,
+  "providerAttemptCount": 1,
+  "providerSuccessCount": 1,
+  "providerDivergenceEventCount": 0,
+  "providerFallbackCount": 0,
+  "warnings": ["insufficient_continuity_evidence"],
+  "failures": [],
+  "generatedAtUtc": "2026-08-25T08:06:15.000Z"
+}

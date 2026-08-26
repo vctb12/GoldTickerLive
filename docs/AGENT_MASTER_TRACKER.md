@@ -1,6 +1,6 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-08-04 · **Updated by:** Codex **Purpose:** The single canonical source of
+**Last updated:** 2026-08-25 · **Updated by:** Codex **Purpose:** The single canonical source of
 truth for **every plan and every phase** in this repository — finished and unfinished — so no
 roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
 file is **canonical over chat memory**.
@@ -28,6 +28,25 @@ file is **canonical over chat memory**.
   so the tracker is maintained on its own branch/PR (`claude/revamp-master-tracker`) and refreshed
   at each checkpoint; per-phase PRs are cross-linked here rather than editing this file on every
   phase branch (that would conflict on merge).
+
+## Repository / GitHub Reconciliation (2026-08-25)
+
+DataCore 1.0 is refreshed on `origin/main` at `6516084307` on isolated branch
+`codex/datacore-dc1-historical-truth-2026-08-25`. PRs
+[#759](https://github.com/vctb12/GoldTickerLive/pull/759) and
+[#770](https://github.com/vctb12/GoldTickerLive/pull/770) remain open, have green/neutral checks,
+and are conflict-free against this base by local `git merge-tree`; DC-1 does not duplicate or absorb
+their freshness and gated tracker-preview scopes. The owner explicitly authorized DC-1 changes to
+the gold fetch workflow, snapshot sync, history/provider control-plane code and data, Supabase
+schema/migration files, tests, and docs. The authorization does not extend to X posting, production
+multi-metal activation, pricing constants/formulas, billing, secrets, merge, or deploy.
+
+The refreshed 2026-08-25 baseline audit found that the configured public Supabase Data API path
+returns schema-cache errors for the expected history/provider tables; the physical table inventory
+could not be verified without administrative access. The workflow's optional sync is also skipped
+because `@supabase/supabase-js` is not installed. The last 100 workflow conclusions are green
+despite sampled sync logs reporting no durable snapshot writes, so DC-1 treats workflow completion
+and observation continuity as separate signals.
 
 ## Repository / GitHub Reconciliation (2026-08-04)
 
@@ -106,14 +125,21 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 - **Preserve** EN/AR semantic parity, RTL, freshness labels, the **AED 3.6725** peg, troy
   **31.1034768 g**, and reference-price (spot ≠ retail) wording.
 - **No production DB writes** — migrations may be authored as files only.
+- **DC-1 owner authorization (2026-08-25):** the authorized DataCore surfaces may be edited on the
+  DC-1 branch only; migration files may be authored and verified locally but must not be applied to
+  production in this phase.
 
 ## Current Active Phase
 
-No phase is currently `in-progress`. D1 is complete for this session and awaits owner review in
-draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724); Phase 2 has not started.
+DC-1 strengthening is `done` in draft PR [#772](https://github.com/vctb12/GoldTickerLive/pull/772).
+The refreshed implementation adds the metal-neutral/correction-aware contract, formal quality gates,
+richer rollup provenance, staged enforcement, and migration/RLS proof required by the owner brief.
+Migration/application rollout remains owner-gated and unperformed. DC-2 through DC-4 are separately
+tracked and have not started.
 
 | Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
 | ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DataCore DC-1 — Historical Truth and Provider Control Plane | `codex/datacore-dc1-historical-truth-2026-08-25` | done        | [#772](https://github.com/vctb12/GoldTickerLive/pull/772) | Gold-only v2 contract, gates, rollups, migration/RLS proof, API, and evidence complete; production apply remains owner-gated                                      |
 | Gold Deal Intelligence MVP (2026-08-04)                    | `codex/gold-deal-intelligence-mvp`             | done        | [#724](https://github.com/vctb12/GoldTickerLive/pull/724) | Draft PR opened; owner review pending; Phase 2 not started                                                                                                       |
 | Master Tracker reconciliation (2026-08-04)                 | `codex/agent-tracker-reconciliation-2026-08-04` | done        | [#723](https://github.com/vctb12/GoldTickerLive/pull/723) | Merged tracker reconciliation; its verified corrections are included in current `origin/main`    |
 | UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | done        | [#714](https://github.com/vctb12/GoldTickerLive/pull/714) | Live bootstrap run 30469621213; production file committed; temp trigger removed; ready for human review                                                           |
@@ -128,6 +154,15 @@ draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724); Phase 2 has 
 | Phase | Branch | Status | PR | Scope / blocker note |
 | ----- | ------ | ------ | -- | -------------------- |
 | D1 | `codex/gold-deal-intelligence-mvp` | done | [#724](https://github.com/vctb12/GoldTickerLive/pull/724) | Draft PR opened; one safe vertical slice delivered; no paid API, account, DB, billing, legal/tax assertion, or production provider change |
+
+### DataCore 1.0 — Verified Market-Data Operating System
+
+| Phase | Branch                                           | Status      | PR  | Scope / blocker note                                                                                                                                                       |
+| ----- | ------------------------------------------------ | ----------- | --- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| DC-1  | `codex/datacore-dc1-historical-truth-2026-08-25` | done        | [#772](https://github.com/vctb12/GoldTickerLive/pull/772) | Gold-only metal-neutral/correction-aware contract, staged gates, provenance-complete exports, and migration/RLS tests complete; production apply remains owner-gated |
+| DC-2  | —                                                | not-started | —   | Separate future PR: multi-provider gold quality and consensus hardening; must not be absorbed by DC-1                                                                      |
+| DC-3  | —                                                | not-started | —   | Separate future PR: staged multi-metal ingestion after owner-controlled production flag decision                                                                           |
+| DC-4  | —                                                | not-started | —   | Separate future PR: consumer/reporting integration after DC-1–DC-3 evidence gates                                                                                          |
 
 ---
 
@@ -396,6 +431,7 @@ fail), `npm run build` all green.
 
 | PR   | Phase          | Title                                                  | Opened     |
 | ---- | -------------- | ------------------------------------------------------ | ---------- |
+| #772 | DataCore DC-1  | Historical truth and provider control plane            | 2026-08-25 (draft/open) |
 | #720 | Dependency maintenance | Bump the github-actions group with 4 updates          | 2026-08-03 (open) |
 | #723 | Tracker reconciliation | Reconcile agent tracker with repository reality     | 2026-08-04 (merged) |
 | #719 | Dependency maintenance | Bump stripe from 22.3.2 to 22.4.0                     | 2026-08-03 (merged 2026-08-04) |
@@ -427,6 +463,7 @@ fail), `npm run build` all green.
 
 | Date       | Actor       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-25 | Codex       | **DataCore DC-1 strengthened and completed in draft PR [#772](https://github.com/vctb12/GoldTickerLive/pull/772).** Refreshed the live baseline; added the metal-neutral/correction-aware v2 contract, immutable provider attempts, least-privilege column grants/RLS/pgTAP proof, formal quality gates and staged workflow enforcement, deterministic 7-day intraday/90-day hourly/daily outputs with complete contributor provenance, bounded/cacheable/rate-limited API fallback, ADR/rollback/handoff/report evidence, and 45 focused tests. No migration apply, merge, deploy, non-gold activation, paid API, secret, formula/constant, X workflow, billing, dependency, or `sw.js` change. Owner rollout and continuity proof remain pending. |
 | 2026-08-04 | Codex       | **Prior tracker reconciliation snapshot** on `codex/agent-tracker-reconciliation-2026-08-04` (docs-only). It was verified against `origin/main` `cc5b1d54fd` before the subsequent fast-forward and is superseded by the current reconciliation paragraph above and merged PR #723. |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP started** on `codex/gold-deal-intelligence-mvp`. Reused canonical spot/FX, karat, constants, formatter, safe-DOM, shared shell, and analytics contracts; added a local-first quote comparison surface with EN/AR RTL, tests, plan, handoff, screenshot evidence, and tracker queue entry. No Phase 2, paid API, secret, workflow, provider, dependency, DB, billing, tax/legal assertion, pricing constant, or `sw.js` change. |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP completed for this session** on `codex/gold-deal-intelligence-mvp`; draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724) opened. Tracker row is `done`; owner review is pending; no Phase 2 work started. |

@@ -1,7 +1,8 @@
 # ------------------------------------------------------------------
 # Gold Price Fetch — pulls live gold/AED rates from the provider-adapter
-# every 5 minutes while global gold markets are open and commits
-# data/gold_price.json if it changed. This is the single production
+# every 5 minutes while global gold markets are open and commits the
+# current quote plus bounded DataCore history/provider-health artifacts
+# if they changed. This is the single production
 # provider-call path; post_gold.yml reads the cached result and does not
 # fetch again.
 # Triggered by schedule and workflow_dispatch (not push).
@@ -28,7 +29,7 @@ concurrency:
 
 jobs:
   fetch:
-    name: Fetch provider consensus → data/gold_price.json
+    name: Fetch provider consensus → verified gold history
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -80,12 +81,15 @@ jobs:
           MAX_PRICE_JUMP_PCT: '12'
         run: python scripts/python/fetch_gold_consensus.py
 
-      - name: Sync latest snapshot to Supabase (optional)
+      - name: Sync DataCore observation and build static history
         id: snapshot_sync
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          SNAPSHOT_SYNC_STRICT: ${{ vars.SNAPSHOT_SYNC_STRICT || 'false' }}
+          # Owner-controlled staged gate. Start observe-only; later modes are enabled only after
+          # migration/RLS proof and a measured continuity window. Supported values:
+          # observe-only, warn, block-history-write, block-public-export.
+          DATACORE_ENFORCEMENT_MODE: ${{ vars.DATACORE_ENFORCEMENT_MODE || 'observe-only' }}
           PRICE_PROVIDER_CHAIN: ${{ steps.fetch_gold.outputs.reason }}
           PRICE_CIRCUIT_STATE: ${{ steps.fetch_gold.outputs.fresh == 'true' && 'closed' || 'fallback' }}
         run: node scripts/node/sync-price-snapshot.js
@@ -102,9 +106,25 @@ jobs:
             echo "- Snapshot synced: \`${{ steps.snapshot_sync.outputs.snapshot_synced || 'false' }}\`"
             echo "- Snapshot sync reason: \`${{ steps.snapshot_sync.outputs.snapshot_sync_reason || 'not_available' }}\`"
             echo "- Snapshot duplicate: \`${{ steps.snapshot_sync.outputs.snapshot_duplicate || 'false' }}\`"
+            echo "- DataCore schema state: \`${{ steps.snapshot_sync.outputs.datacore_schema_state || 'not_checked' }}\`"
+            echo "- DataCore enforcement: \`${{ steps.snapshot_sync.outputs.datacore_enforcement_mode || 'observe-only' }}\`"
+            echo "- DataCore quality gate: \`${{ steps.snapshot_sync.outputs.datacore_gate_status || 'not_checked' }}\`"
+            echo "- Gate failures: \`${{ steps.snapshot_sync.outputs.datacore_gate_failures || 'none' }}\`"
+            echo "- Gate warnings: \`${{ steps.snapshot_sync.outputs.datacore_gate_warnings || 'none' }}\`"
+            echo "- Observation rows: \`${{ steps.snapshot_sync.outputs.observation_rows || '0' }}\`"
+            echo "- Observations inserted: \`${{ steps.snapshot_sync.outputs.observation_inserted || '0' }}\`"
+            echo "- Observation duplicates: \`${{ steps.snapshot_sync.outputs.observation_duplicates || '0' }}\`"
+            echo "- Provider run rows: \`${{ steps.snapshot_sync.outputs.provider_run_rows || '0' }}\`"
+            echo "- Provider health rows: \`${{ steps.snapshot_sync.outputs.provider_health_rows || '0' }}\`"
+            echo "- Static export updated: \`${{ steps.snapshot_sync.outputs.static_export_updated || 'false' }}\`"
+            echo "- Static observations: \`${{ steps.snapshot_sync.outputs.static_observation_count || '0' }}\`"
+            echo "- Static missing-slot rate: \`${{ steps.snapshot_sync.outputs.static_missing_slot_rate || 'n/a' }}\`"
+            echo "- Static maximum gap seconds: \`${{ steps.snapshot_sync.outputs.static_max_gap_seconds || '0' }}\`"
+            echo "- History write blocked: \`${{ steps.snapshot_sync.outputs.history_write_blocked || 'false' }}\`"
+            echo "- Public export blocked: \`${{ steps.snapshot_sync.outputs.public_export_blocked || 'false' }}\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Commit data/gold_price.json if changed
+      - name: Commit price and bounded DataCore fallback if changed
         env:
           TARGET_BRANCH: ${{ github.ref_name }}
         run: |
@@ -113,8 +133,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           price_snapshot="$(mktemp)"
-          trap 'rm -f "$price_snapshot"' EXIT
+          datacore_snapshot="$(mktemp)"
+          cleanup() {
+            rm -f "$price_snapshot" "$datacore_snapshot"
+          }
+          trap cleanup EXIT
           cp data/gold_price.json "$price_snapshot"
+          tar -cf "$datacore_snapshot" data/history data/provider-health
 
           for attempt in 1 2 3 4; do
             # Other scheduled state writers can advance the branch while this
@@ -122,20 +147,21 @@ jobs:
             git fetch origin "$TARGET_BRANCH"
             git reset --hard "origin/$TARGET_BRANCH"
             cp "$price_snapshot" data/gold_price.json
-            git add data/gold_price.json
+            tar -xf "$datacore_snapshot"
+            git add data/gold_price.json data/history data/provider-health
 
             if git diff --cached --quiet; then
-              echo "data/gold_price.json unchanged; skipping commit."
+              echo "Price and DataCore outputs unchanged; skipping commit."
               exit 0
             fi
 
-            git commit -m 'chore(data): update gold price'
+            git commit -m 'chore(data): update gold price and history'
             if git push origin "HEAD:$TARGET_BRANCH"; then
               exit 0
             fi
 
             if [ "$attempt" -eq 4 ]; then
-              echo "ERROR: failed to push data/gold_price.json after 4 attempts."
+              echo "ERROR: failed to push gold price and DataCore outputs after 4 attempts."
               exit 1
             fi
 

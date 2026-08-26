@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "generatedAtUtc": "2026-08-25T08:06:15.000Z",
+  "sourceMode": "static-fallback",
+  "freshnessState": "historical",
+  "publicExportGateStatus": "warn",
+  "note": "Bounded reference history derived from verified observations; never a live retail quote.",
+  "metals": {
+    "XAU": {
+      "quoteCurrency": "USD",
+      "status": "active",
+      "nonGoldActivation": false,
+      "qualityPath": "data/history/XAU/quality.json"
+    }
+  },
+  "files": [
+    {
+      "path": "data/history/XAU/intraday-7d.json",
+      "sha256": "ab3541df329ba6ebb2ab2312cd3f1998ab68d826bd65e30746c36373562c3d44",
+      "bytes": 1033
+    },
+    {
+      "path": "data/history/XAU/hourly-90d.json",
+      "sha256": "da82ad2224fb240571f6e9ebfa79f6dee8331d526cd9d1477a7e010ae67718fe",
+      "bytes": 1423
+    },
+    {
+      "path": "data/history/XAU/daily.json",
+      "sha256": "84f9cf0408b9dad239782a68f7b85f302777aee7572afe396329b0cb9d78e285",
+      "bytes": 1426
+    },
+    {
+      "path": "data/history/XAU/quality.json",
+      "sha256": "cd7f9fb65ea820329b999c1de083aac26f949de847d2b6f02dc41142beba1f27",
+      "bytes": 1364
+    },
+    {
+      "path": "data/history/XAU/observations/2026-08.json",
+      "sha256": "9fa8bcd77490f8b08df4606c02f3735ed5a7e39d3ef39ef0742d1e77cceaaf1d",
+      "bytes": 1280
+    },
+    {
+      "path": "data/provider-health/summary.json",
+      "sha256": "f5897ac24227074ea2f1819865abfd6670edc88b2e2ab7c06ba8ba8883fcda9d",
+      "bytes": 2272
+    }
+  ]
+}
