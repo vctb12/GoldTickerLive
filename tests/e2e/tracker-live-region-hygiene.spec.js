@@ -32,6 +32,8 @@ const OBSERVED = {
   strip: '#tp-price-change-strip',
 };
 
+test.use({ serviceWorkers: 'block' });
+
 async function waitForSpotRender(page) {
   await page.waitForFunction(
     () => /\d/.test(document.getElementById('tp-readout-spot-value')?.textContent || ''),

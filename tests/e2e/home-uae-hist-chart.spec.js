@@ -16,6 +16,9 @@ const DAILY_FIXTURE = path.join(
   '../fixtures/gold-api-history/xau-usd-daily.live-fixture.json'
 );
 
+// Route-mocked reload states must not be satisfied by the production service-worker cache.
+test.use({ serviceWorkers: 'block' });
+
 async function installDailyHistoryRoute(page) {
   const body = fs.readFileSync(DAILY_FIXTURE, 'utf8');
   await page.route('**/data/historical/xau-usd-daily.json', (route) =>

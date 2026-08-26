@@ -19,6 +19,8 @@ const LRI = '\u2066';
 const PDI = '\u2069';
 const ISOLATED_DELTA = new RegExp(`${LRI}[^${PDI}]*\\d[^${PDI}]*${PDI}`);
 
+test.use({ serviceWorkers: 'block' });
+
 function readLocalSpot() {
   const raw = fs.readFileSync(
     path.resolve(__dirname, '..', '..', 'data', 'gold_price.json'),
