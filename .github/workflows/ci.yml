@@ -163,6 +163,9 @@ jobs:
       - name: Production build
         run: NODE_ENV=production npm run build
 
+      - name: Stage deploy-only static files
+        run: node scripts/node/stage-dist-statics.js
+
       - name: Serve dist and run E2E tests
         run: |
           python3 -m http.server 8080 --directory dist &
