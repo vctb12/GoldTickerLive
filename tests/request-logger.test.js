@@ -16,7 +16,13 @@ const {
   createRequestLogger,
 } = require('../server/lib/request-logger');
 
-function stubTokens({ status = '200', method = 'GET', responseTime = '12.3', ua = 'jest', contentLength = '42' } = {}) {
+function stubTokens({
+  status = '200',
+  method = 'GET',
+  responseTime = '12.3',
+  ua = 'jest',
+  contentLength = '42',
+} = {}) {
   return {
     status: () => status,
     method: () => method,
@@ -60,7 +66,9 @@ test('request-logger: truncates user-agent to MAX_USER_AGENT_LENGTH', () => {
   const res = {};
   const longUa = 'X'.repeat(MAX_USER_AGENT_LENGTH + 80);
 
-  const line = JSON.parse(formatRequestLogLine(stubTokens({ ua: longUa, contentLength: '' }), req, res));
+  const line = JSON.parse(
+    formatRequestLogLine(stubTokens({ ua: longUa, contentLength: '' }), req, res)
+  );
   assert.equal(line.userAgent.length, MAX_USER_AGENT_LENGTH);
   assert.equal(line.contentLength, null);
   assert.equal(line.ip, '::1');

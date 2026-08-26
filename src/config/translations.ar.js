@@ -1519,10 +1519,13 @@ export const AR = {
   'dealChecker.breadcrumb': 'مختبر فحص الصفقة',
   'dealChecker.eyebrow': 'أداة للمشتري',
   'dealChecker.title': 'افحص عرض الذهب بالأرقام الموجودة أمامك',
-  'dealChecker.subtitle': 'افصل قيمة الذهب النقي عن أجور الصياغة والعلاوات والضريبة وسعر البائع. هذه مقارنة مرجعية وليست حكماً على سعر التجزئة.',
-  'dealChecker.referenceNote': 'تقدير مرجعي فقط. قد يتضمن عرض المحل التصميم والعمالة والضريبة والتفاوض وتعديلات محلية أخرى.',
+  'dealChecker.subtitle':
+    'افصل قيمة الذهب النقي عن أجور الصياغة والعلاوات والضريبة وسعر البائع. هذه مقارنة مرجعية وليست حكماً على سعر التجزئة.',
+  'dealChecker.referenceNote':
+    'تقدير مرجعي فقط. قد يتضمن عرض المحل التصميم والعمالة والضريبة والتفاوض وتعديلات محلية أخرى.',
   'dealChecker.formTitle': 'أدخل تفاصيل العرض',
-  'dealChecker.formIntro': 'تبقى الرسوم غير المعروفة غير محسوبة. أضف البنود الموجودة في الفاتورة عندما تتوفر لديك.',
+  'dealChecker.formIntro':
+    'تبقى الرسوم غير المعروفة غير محسوبة. أضف البنود الموجودة في الفاتورة عندما تتوفر لديك.',
   'dealChecker.currency': 'عملة العرض',
   'dealChecker.purchaseType': 'نوع الشراء',
   'dealChecker.purchaseJewelry': 'مجوهرات',
@@ -1563,10 +1566,12 @@ export const AR = {
   'dealChecker.calculate': 'تحديث المقارنة',
   'dealChecker.reset': 'إعادة ضبط الحقول',
   'dealChecker.resultsTitle': 'مقارنتك',
-  'dealChecker.resultsIntro': 'تستخدم الأرقام التالية لقطة السعر المرجعي المختارة والبيانات التي أدخلتها.',
+  'dealChecker.resultsIntro':
+    'تستخدم الأرقام التالية لقطة السعر المرجعي المختارة والبيانات التي أدخلتها.',
   'dealChecker.loading': 'جارٍ تحميل اللقطة المرجعية…',
   'dealChecker.partialSource': 'مصدر الذهب وسعر الصرف ليسا بالحداثة نفسها؛ راجع وقتي التحديث.',
-  'dealChecker.sourceUnavailable': 'مصدر مطلوب غير متاح. يمكنك إدخال البيانات الآن ثم إعادة محاولة اللقطة قبل الاعتماد على المقارنة.',
+  'dealChecker.sourceUnavailable':
+    'مصدر مطلوب غير متاح. يمكنك إدخال البيانات الآن ثم إعادة محاولة اللقطة قبل الاعتماد على المقارنة.',
   'dealChecker.enterDetails': 'أدخل إجمالي العرض والوزن الإجمالي لحساب المقارنة.',
   'dealChecker.fineGold': 'الذهب النقي التقديري (غ)',
   'dealChecker.referenceValue': 'القيمة المرجعية المرتبطة بالسعر الفوري',
@@ -1590,21 +1595,25 @@ export const AR = {
   'dealChecker.statusWithin': 'ضمن الهامش الذي ضبطته',
   'dealChecker.statusAbove': 'فوق الهامش الذي ضبطته',
   'dealChecker.statusBelow': 'دون الهامش الذي ضبطته',
-  'dealChecker.statusExplain': 'تقارن هذه التسمية العرض بالهامش الذي ضبطته؛ ولا تقيم المحل ولا تقدم توصية شراء.',
+  'dealChecker.statusExplain':
+    'تقارن هذه التسمية العرض بالهامش الذي ضبطته؛ ولا تقيم المحل ولا تقدم توصية شراء.',
   'dealChecker.unknown': 'غير محسوب',
   'dealChecker.notAvailable': 'غير متاح',
   'dealChecker.referenceMethod': 'المنهجية والمعادلات',
-  'dealChecker.methodBody': 'الذهب النقي = الوزن القابل للحساب × نقاء العيار. القيمة المرجعية = الذهب النقي × سعر الذهب الفوري بالدولار لكل غرام × سعر الصرف المختار. قد تختلف عروض التجزئة.',
+  'dealChecker.methodBody':
+    'الذهب النقي = الوزن القابل للحساب × نقاء العيار. القيمة المرجعية = الذهب النقي × سعر الذهب الفوري بالدولار لكل غرام × سعر الصرف المختار. قد تختلف عروض التجزئة.',
   'dealChecker.sourceLabel': 'مصدر الذهب',
   'dealChecker.fxSourceLabel': 'مصدر الصرف',
   'dealChecker.updatedLabel': 'آخر تحديث',
   'dealChecker.freshnessLabel': 'حداثة البيانات',
   'dealChecker.localPrivacy': 'مساحة خاصة محلية',
-  'dealChecker.localPrivacyBody': 'تبقى العروض المحفوظة واسم المحل الاختياري في هذا المتصفح. لا ترسل هذه الأداة قيم العرض إلى التحليلات أو الخادم.',
+  'dealChecker.localPrivacyBody':
+    'تبقى العروض المحفوظة واسم المحل الاختياري في هذا المتصفح. لا ترسل هذه الأداة قيم العرض إلى التحليلات أو الخادم.',
   'dealChecker.saveOffer': 'حفظ العرض محلياً',
   'dealChecker.savedOffer': 'تم حفظ العرض محلياً',
   'dealChecker.offersTitle': 'العروض المحفوظة',
-  'dealChecker.offersEmpty': 'لا توجد عروض محفوظة بعد. احفظ حتى ثلاثة عروض لمقارنتها على هذا الجهاز.',
+  'dealChecker.offersEmpty':
+    'لا توجد عروض محفوظة بعد. احفظ حتى ثلاثة عروض لمقارنتها على هذا الجهاز.',
   'dealChecker.offersLimit': 'يمكنك الاحتفاظ بثلاثة عروض؛ حفظ عرض آخر يستبدل الأقدم.',
   'dealChecker.copyLink': 'نسخ رابط المشاركة',
   'dealChecker.copySuccess': 'تم نسخ رابط المشاركة',

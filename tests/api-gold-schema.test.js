@@ -28,6 +28,7 @@ test('fetchGold supports normalized schema (xau_usd_per_oz)', async () => {
     const result = await api.fetchGold();
     assert.equal(result.price, 4731.2);
     assert.equal(result.updatedAt, '2026-05-07T10:34:52Z');
+    assert.equal(result.sourceTimestamp, '2026-05-07T10:34:52Z');
     assert.equal(result.source, 'gold_api_com');
   } finally {
     global.fetch = originalFetch;
@@ -52,6 +53,7 @@ test('fetchGold supports legacy schema (gold.ounce_usd)', async () => {
     const result = await api.fetchGold();
     assert.equal(result.price, 4736.36);
     assert.equal(result.updatedAt, '2026-05-07T13:11:59Z');
+    assert.equal(result.sourceTimestamp, '2026-05-07T13:11:59Z');
     assert.equal(result.source, 'goldpricez.com');
   } finally {
     global.fetch = originalFetch;
@@ -79,6 +81,7 @@ test('fetchGold supports backend API envelope (/api/v1/prices/latest)', async ()
     const result = await api.fetchGold();
     assert.equal(result.price, 4720.55);
     assert.equal(result.updatedAt, '2026-05-07T10:40:00Z');
+    assert.equal(result.sourceTimestamp, '2026-05-07T10:40:00Z');
     assert.equal(result.source, 'price_snapshots');
   } finally {
     global.fetch = originalFetch;

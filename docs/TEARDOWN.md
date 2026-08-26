@@ -214,7 +214,7 @@ These are the heart of the application — shared modules imported by every page
 | ---------------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | `src/lib/api.js`                   | ~136    | Fetches gold spot price (XAU/USD) and FX rates with timeout, retry, and simulation hooks. Prefers `/api/v1/prices/latest`, then falls back to the committed `/data/gold_price.json` snapshot. | `fetchGold()`, `fetchFX()`, `setSimulateGoldFail()`, `setSimulateFxFail()`                   |
 | `src/lib/cache.js`                 | ~193    | Dual-layer localStorage cache with TTL (time-to-live). Primary + fallback keys prevent data loss on storage errors. Stale recovery returns expired data when API fails.                       | `get(key)`, `set(key, value, ttl)`, `clear()`, `showStorageQuotaWarning()`                   |
-| `src/lib/price-calculator.js`      | ~63     | Core pricing formulas. `usdPerGram(karat) = (spotUsdPerOz / 31.1034768) × purity`. Local price = USD × FX rate.                                                                                  | `usdPerGram(spot, karat)`, `localPerGram(spot, karat, fxRate)`                               |
+| `src/lib/price-calculator.js`      | ~63     | Core pricing formulas. `usdPerGram(karat) = (spotUsdPerOz / 31.1034768) × purity`. Local price = USD × FX rate.                                                                               | `usdPerGram(spot, karat)`, `localPerGram(spot, karat, fxRate)`                               |
 | `src/lib/formatter.js`             | ~142    | Formats prices with currency symbols, decimal places, and locale. Also formats dates, times, and karat labels for both EN and AR.                                                             | `formatPrice(value, currency, lang)`, `formatDate()`, `formatKarat()`, `formatCountryName()` |
 | `src/lib/historical-data.js`       | ~286    | Merges session price history with a baseline DataHub dataset. Provides historical ranges for charting.                                                                                        | `fetchGoldHistory()`, `getHistoricalRange(period)`                                           |
 | `src/lib/export.js`                | ~393    | Generates downloadable CSV and JSON files from current price data. Supports brief (summary) and full (all karats × countries) exports.                                                        | `exportToCSV(data)`, `exportToJSON(data)`                                                    |
@@ -248,15 +248,15 @@ Shared UI components injected into pages at runtime via JavaScript.
 
 ### 3.4 Configuration (`src/config/`)
 
-| File                         | What It Defines                                                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| File                         | What It Defines                                                                                                     |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `src/config/constants.js`    | `TROY_OZ_GRAMS = 31.1034768`, `AED_PEG = 3.6725`, API URLs, cache TTLs, refresh interval (90s), all cache key names |
-| `src/config/countries.js`    | Array of 15+ country objects: `{ code, name: {en, ar}, currency, flag, group, decimals, isPegged }`              |
-| `src/config/karats.js`       | Array of 7 karat objects: `{ code: '24K', purity: 1.0, label: {en, ar} }` down to 14K                            |
-| `src/config/translations.js` | All UI strings in EN/AR: button labels, status messages, error messages, section headings                        |
-| `src/config/supabase.js`     | Supabase project URL and anon key (public, safe for client-side)                                                 |
-| `src/config/index.js`        | Central re-export: `export { CONSTANTS, BASE_PATH, KARATS, COUNTRIES, TRANSLATIONS }`                            |
-| `config/twitter_bot/*.json`  | Tweet templates, karat weights, market session times, alert thresholds                                           |
+| `src/config/countries.js`    | Array of 15+ country objects: `{ code, name: {en, ar}, currency, flag, group, decimals, isPegged }`                 |
+| `src/config/karats.js`       | Array of 7 karat objects: `{ code: '24K', purity: 1.0, label: {en, ar} }` down to 14K                               |
+| `src/config/translations.js` | All UI strings in EN/AR: button labels, status messages, error messages, section headings                           |
+| `src/config/supabase.js`     | Supabase project URL and anon key (public, safe for client-side)                                                    |
+| `src/config/index.js`        | Central re-export: `export { CONSTANTS, BASE_PATH, KARATS, COUNTRIES, TRANSLATIONS }`                               |
+| `config/twitter_bot/*.json`  | Tweet templates, karat weights, market session times, alert thresholds                                              |
 
 ---
 

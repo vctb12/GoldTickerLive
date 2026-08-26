@@ -26,7 +26,7 @@ const PAGES = [
 async function head(page) {
   return page.evaluate(() => ({
     canonicals: [...document.querySelectorAll('link[rel="canonical"]')].map((l) => l.href),
-    titleCount: document.querySelectorAll('title').length,
+    titleCount: document.querySelectorAll('head > title').length,
     title: document.title,
     description: document.querySelector('meta[name="description"]')?.content || '',
     hreflangs: [...document.querySelectorAll('link[rel="alternate"][hreflang]')].map((l) => ({
@@ -47,8 +47,8 @@ test.describe('SEO head integrity (hydrated DOM)', () => {
       expect(h.canonicals.length, `${path} must have exactly one canonical`).toBe(1);
       expect(h.canonicals[0], `${path} canonical must be absolute https`).toMatch(/^https:\/\//);
 
-      // Exactly one non-empty <title>.
-      expect(h.titleCount, `${path} must have exactly one <title>`).toBe(1);
+      // Exactly one non-empty document <title>; SVG <title> nodes are valid a11y labels.
+      expect(h.titleCount, `${path} must have exactly one <head> <title>`).toBe(1);
       expect(h.title.trim().length, `${path} title must be non-empty`).toBeGreaterThan(0);
 
       // Meta description present and substantive.

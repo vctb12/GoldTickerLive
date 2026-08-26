@@ -90,7 +90,10 @@ after(() => {
 
 beforeEach(() => {
   // Fresh store per test so usage counters / keys do not leak.
-  const file = path.join(tmpDir, `billing-${Date.now()}-${Math.random().toString(16).slice(2)}.json`);
+  const file = path.join(
+    tmpDir,
+    `billing-${Date.now()}-${Math.random().toString(16).slice(2)}.json`
+  );
   loadAuthWithBillingFile(file);
 });
 

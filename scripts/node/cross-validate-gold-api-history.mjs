@@ -287,7 +287,8 @@ export function buildMonthlyCrossValidationRows(records, worldBankByMonth) {
       worldBank: wbValue,
       absoluteDiff: roundStoredUsdOz(diff),
       percentDiff: roundStoredUsdOz(pct),
-      methodology: 'mean of gold-api daily avgs vs World Bank Pink Sheet monthly (methodology differs)',
+      methodology:
+        'mean of gold-api daily avgs vs World Bank Pink Sheet monthly (methodology differs)',
       status: pct <= MONTHLY_TOLERANCE_PCT ? 'pass' : 'warn',
     });
   }

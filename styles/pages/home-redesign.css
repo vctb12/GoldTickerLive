@@ -25,7 +25,11 @@
    pricing behavior remain owned by the existing homepage components. */
 .home-market-desk {
   background:
-    linear-gradient(115deg, color-mix(in srgb, var(--gtl-gold-soft) 28%, transparent), transparent 42%),
+    linear-gradient(
+      115deg,
+      color-mix(in srgb, var(--gtl-gold-soft) 28%, transparent),
+      transparent 42%
+    ),
     var(--gtl-paper);
   border-block-end: 1px solid var(--gtl-line);
 }

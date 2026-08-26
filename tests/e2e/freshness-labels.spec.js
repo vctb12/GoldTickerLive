@@ -22,17 +22,18 @@ test.describe('Freshness / label honesty on price surfaces', () => {
     }) => {
       await page.goto((baseURL || '') + path, { waitUntil: 'load' });
       // The badge is populated after the price snapshot resolves.
-      await page.locator('[data-freshness-state]').first().waitFor({ timeout: 10_000 });
+      const badge = page.locator('[data-freshness-state]:visible').first();
+      await badge.waitFor({ timeout: 10_000 });
 
-      const info = await page.evaluate(() => {
-        const badge = document.querySelector('[data-freshness-state]');
-        if (!badge) return null;
+      const info = await badge.evaluate((badge) => {
         return {
           state: badge.getAttribute('data-freshness-state'),
           source:
             badge.querySelector('.freshness-badge__source')?.textContent?.trim() ||
             (/source|المصدر/i.test(badge.textContent || '') ? badge.textContent.trim() : ''),
-          timestamp: badge.querySelector('.freshness-badge__timestamp')?.textContent?.trim() || '',
+          timestamp:
+            badge.querySelector('.freshness-badge__timestamp')?.textContent?.trim() ||
+            (/UTC/i.test(badge.textContent || '') ? badge.textContent.trim() : ''),
           fullText: (badge.textContent || '').replace(/\s+/g, ' ').trim(),
           referenceFraming: /reference|estimate|estimat|تقدير|مرجع/i.test(
             document.body.textContent || ''

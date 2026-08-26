@@ -406,7 +406,9 @@ async function main() {
   }
 
   const crossValidation =
-    dataOrigin === DATA_ORIGIN_LIVE ? await crossValidateSample(records) : { ok: true, reason: 'fixture_mode' };
+    dataOrigin === DATA_ORIGIN_LIVE
+      ? await crossValidateSample(records)
+      : { ok: true, reason: 'fixture_mode' };
   if (!crossValidation.ok && crossValidation.reason === 'tolerance_exceeded') {
     console.error('ERROR: cross-validation tolerance exceeded');
     printSummary({
