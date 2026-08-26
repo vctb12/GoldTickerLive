@@ -1573,7 +1573,8 @@ export const EN = {
   'dealChecker.buyback': 'Estimated buyback rate (%)',
   'dealChecker.buybackHint': 'Optional; used only for a simple resale scenario.',
   'dealChecker.tolerance': 'Benchmark tolerance (%)',
-  'dealChecker.toleranceHint': 'Used only to label the comparison as below, within, or above your configured benchmark.',
+  'dealChecker.toleranceHint':
+    'Used only to label the comparison as below, within, or above your configured benchmark.',
   'dealChecker.shopLabel': 'Shop or quote label',
   'dealChecker.shopLabelHint': 'Stored locally on this device; not sent to analytics.',
   'dealChecker.quoteTimestamp': 'Quote date and time',
@@ -1581,10 +1582,12 @@ export const EN = {
   'dealChecker.calculate': 'Update comparison',
   'dealChecker.reset': 'Reset fields',
   'dealChecker.resultsTitle': 'Your comparison',
-  'dealChecker.resultsIntro': 'The figures below use the selected reference snapshot and your disclosed inputs.',
+  'dealChecker.resultsIntro':
+    'The figures below use the selected reference snapshot and your disclosed inputs.',
   'dealChecker.loading': 'Loading the reference snapshot…',
   'dealChecker.partialSource': 'Gold and FX sources are not equally fresh; review both timestamps.',
-  'dealChecker.sourceUnavailable': 'A required source is unavailable. Enter details now and retry the snapshot before relying on the comparison.',
+  'dealChecker.sourceUnavailable':
+    'A required source is unavailable. Enter details now and retry the snapshot before relying on the comparison.',
   'dealChecker.enterDetails': 'Enter a quoted total and gross weight to calculate the comparison.',
   'dealChecker.fineGold': 'Estimated fine gold (g)',
   'dealChecker.referenceValue': 'Spot-linked reference value',
@@ -1608,22 +1611,27 @@ export const EN = {
   'dealChecker.statusWithin': 'Within your configured benchmark',
   'dealChecker.statusAbove': 'Above your configured benchmark',
   'dealChecker.statusBelow': 'Below your configured benchmark',
-  'dealChecker.statusExplain': 'This label compares the quote with your configured tolerance; it does not rate a shop or make a buying recommendation.',
+  'dealChecker.statusExplain':
+    'This label compares the quote with your configured tolerance; it does not rate a shop or make a buying recommendation.',
   'dealChecker.unknown': 'Not modeled',
   'dealChecker.notAvailable': 'Not available',
   'dealChecker.referenceMethod': 'Methodology and formulas',
-  'dealChecker.methodBody': 'Fine gold = chargeable weight × karat purity. Reference value = fine gold × spot USD/gram × the selected FX rate. Retail quotes can differ.',
+  'dealChecker.methodBody':
+    'Fine gold = chargeable weight × karat purity. Reference value = fine gold × spot USD/gram × the selected FX rate. Retail quotes can differ.',
   'dealChecker.sourceLabel': 'Gold source',
   'dealChecker.fxSourceLabel': 'FX source',
   'dealChecker.updatedLabel': 'Updated',
   'dealChecker.freshnessLabel': 'Freshness',
   'dealChecker.localPrivacy': 'Private local workspace',
-  'dealChecker.localPrivacyBody': 'Saved offers and the optional shop label stay in this browser. Quote values are not sent to analytics or a server by this tool.',
+  'dealChecker.localPrivacyBody':
+    'Saved offers and the optional shop label stay in this browser. Quote values are not sent to analytics or a server by this tool.',
   'dealChecker.saveOffer': 'Save offer locally',
   'dealChecker.savedOffer': 'Offer saved locally',
   'dealChecker.offersTitle': 'Saved offers',
-  'dealChecker.offersEmpty': 'No saved offers yet. Save up to three offers to compare them on this device.',
-  'dealChecker.offersLimit': 'You can keep up to three offers; saving another replaces the oldest one.',
+  'dealChecker.offersEmpty':
+    'No saved offers yet. Save up to three offers to compare them on this device.',
+  'dealChecker.offersLimit':
+    'You can keep up to three offers; saving another replaces the oldest one.',
   'dealChecker.copyLink': 'Copy share link',
   'dealChecker.copySuccess': 'Share link copied',
   'dealChecker.copyFailure': 'Copy was not available; the URL is ready in the address bar.',

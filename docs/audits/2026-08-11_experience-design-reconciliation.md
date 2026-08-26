@@ -20,12 +20,12 @@ methodology links, retail disclaimers, and all pricing/data behavior remain prot
 
 ## User-intent map
 
-| Intent | EN requirement | AR / RTL parity | Accessibility note |
-| --- | --- | --- | --- |
-| Know the reference price | Reference readout and exact freshness state first; retain methodology and spot-vs-retail context | Same claim strength and state wording; readout and copy follow RTL flow | Named heading, truthful status semantics, and labels beyond color |
-| Calculate or compare | First useful control in the opening viewport; inputs, result, and next action distinct | Same sequence and labels; Arabic numerals and labels must fit at 390px | Associated labels, task-order keyboard flow, visible focus |
-| Learn / verify | Editorial measure with one clear path to methodology or glossary | Same claim and links; narrower reading measure allowed for Arabic | Heading hierarchy, skip link, link purpose, readable line length |
-| Explore markets / shops | Separate reference information from retail quote content | Same distinction; map/list controls mirror direction without changing meaning | List equivalent for maps; no color-only map meaning |
+| Intent                   | EN requirement                                                                                   | AR / RTL parity                                                               | Accessibility note                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Know the reference price | Reference readout and exact freshness state first; retain methodology and spot-vs-retail context | Same claim strength and state wording; readout and copy follow RTL flow       | Named heading, truthful status semantics, and labels beyond color |
+| Calculate or compare     | First useful control in the opening viewport; inputs, result, and next action distinct           | Same sequence and labels; Arabic numerals and labels must fit at 390px        | Associated labels, task-order keyboard flow, visible focus        |
+| Learn / verify           | Editorial measure with one clear path to methodology or glossary                                 | Same claim and links; narrower reading measure allowed for Arabic             | Heading hierarchy, skip link, link purpose, readable line length  |
+| Explore markets / shops  | Separate reference information from retail quote content                                         | Same distinction; map/list controls mirror direction without changing meaning | List equivalent for maps; no color-only map meaning               |
 
 ## Three visual direction mockups
 
@@ -82,11 +82,11 @@ raises performance/accessibility pressure.
 Scores are 1–5; weighting: trust 30%, task speed 25%, EN/AR + RTL 20%, accessibility 15%, reuse /
 performance 10%.
 
-| Direction | Trust | Task | EN/AR + RTL | A11y | Reuse/perf | Weighted | Decision |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| A — Bullion Brief | 5 | 3 | 4 | 5 | 5 | 4.25 | Editorial reserve |
-| B — Market Desk | 5 | 5 | 5 | 5 | 4 | **4.85** | **Selected** |
-| C — Souk Atlas | 4 | 4 | 3 | 3 | 2 | 3.55 | Selective market use |
+| Direction         | Trust | Task | EN/AR + RTL | A11y | Reuse/perf | Weighted | Decision             |
+| ----------------- | ----: | ---: | ----------: | ---: | ---------: | -------: | -------------------- |
+| A — Bullion Brief |     5 |    3 |           4 |    5 |          5 |     4.25 | Editorial reserve    |
+| B — Market Desk   |     5 |    5 |           5 |    5 |          4 | **4.85** | **Selected**         |
+| C — Souk Atlas    |     4 |    4 |           3 |    3 |          2 |     3.55 | Selective market use |
 
 Market Desk wins because it gives the reference state and user task a repeatable order while
 preserving the trust contract and avoiding a page-wide rewrite.

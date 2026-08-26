@@ -16,11 +16,7 @@ const auditLog = require('../../lib/audit-log');
 const shopsRepo = require('../../repositories/shops.repository');
 const auditRepo = require('../../repositories/audit.repository');
 const { ValidationError, NotFoundError: _NotFoundError } = require('../../lib/errors');
-const {
-  sanitizeString,
-  parseIntParam,
-  validateShopInput,
-} = require('../../lib/admin/validation');
+const { sanitizeString, parseIntParam, validateShopInput } = require('../../lib/admin/validation');
 const pendingShopsRepo = require('../../repositories/pending-shops.repository');
 const leadsRepo = require('../../repositories/leads.repository');
 const newsletterRepo = require('../../repositories/newsletter.repository');

@@ -85,7 +85,7 @@
 | ---------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------ | --------------------------------------------- |
 | `src/lib/api.js`                   | Fetch gold prices and FX rates with timeout, retry, and simulation hooks     | `src/config/index.js`                                                    | Change API endpoints, timeout, or retry logic |
 | `src/lib/cache.js`                 | Dual-layer localStorage persistence (primary + fallback) with stale recovery | None                                                                     | Change caching strategy or storage keys       |
-| `src/lib/price-calculator.js`      | Core pricing formulas: `usdPerGram = (spotPerOz / 31.1034768) × purity`         | `src/config/index.js`, `src/config/karats.js`, `src/config/countries.js` | Change pricing formulas or add new units      |
+| `src/lib/price-calculator.js`      | Core pricing formulas: `usdPerGram = (spotPerOz / 31.1034768) × purity`      | `src/config/index.js`, `src/config/karats.js`, `src/config/countries.js` | Change pricing formulas or add new units      |
 | `src/lib/formatter.js`             | Format prices, dates, times, countdowns, labels                              | `src/config/index.js`, `src/config/countries.js`, `src/config/karats.js` | Change display formatting                     |
 | `src/lib/export.js`                | CSV / JSON export generators                                                 | `src/lib/formatter.js`                                                   | Add new export formats                        |
 | `src/lib/historical-data.js`       | Merge session history with DataHub baseline dataset                          | `src/lib/cache.js`                                                       | Change historical data handling               |
@@ -128,14 +128,14 @@
 
 ## JavaScript — Config (src/config/)
 
-| File                         | Purpose                                                                                             | When to Edit                               |
-| ---------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| File                         | Purpose                                                                                                | When to Edit                               |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------ |
 | `src/config/constants.js`    | API URLs, timeouts, refresh interval (90s), cache keys, AED peg (3.6725), troy-oz divisor (31.1034768) | Change API endpoints, timing, or constants |
-| `src/config/countries.js`    | 24+ country definitions: code, names (EN/AR), currency, flag, regional group, peg flag, cities list | Add new countries or cities                |
-| `src/config/karats.js`       | 7 karat definitions (24K, 22K, 21K, 18K, 14K, etc.) with purity fractions and EN/AR labels          | Add or modify karat grades                 |
-| `src/config/translations.js` | All UI strings in English and Arabic                                                                | Change UI text or add new translations     |
-| `src/config/index.js`        | Re-exports all config modules                                                                       | Rarely edited                              |
-| `src/config/supabase.js`     | Supabase URL and anon key (public, browser-safe)                                                    | Change Supabase project                    |
+| `src/config/countries.js`    | 24+ country definitions: code, names (EN/AR), currency, flag, regional group, peg flag, cities list    | Add new countries or cities                |
+| `src/config/karats.js`       | 7 karat definitions (24K, 22K, 21K, 18K, 14K, etc.) with purity fractions and EN/AR labels             | Add or modify karat grades                 |
+| `src/config/translations.js` | All UI strings in English and Arabic                                                                   | Change UI text or add new translations     |
+| `src/config/index.js`        | Re-exports all config modules                                                                          | Rarely edited                              |
+| `src/config/supabase.js`     | Supabase URL and anon key (public, browser-safe)                                                       | Change Supabase project                    |
 
 ---
 

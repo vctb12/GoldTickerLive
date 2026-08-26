@@ -6,13 +6,13 @@
 
 ## Delivery plan
 
-| Task | Owner | Checkpoint | Output |
-| --- | --- | --- | --- |
-| Reconcile audit evidence and user intents | Design Systems | EN/AR, RTL, and AA notes reviewed | Versioned reconciliation audit |
-| Select visual direction | Design Systems + Product | Three directions scored with rationale | Market Desk selected |
-| Establish composition aliases | Frontend | Aliases map only to existing semantic tokens | Global CSS + token reference |
-| Apply Market Desk to flagship surfaces | Frontend | Preserve trust and pricing contracts | Home, tracker, and calculator polish complete |
-| Run integrated verification | QA | 390/768/1024/1440, EN/AR, light/dark, repository gates | `reports/EXP-04-verification-evidence-2026-08-11.md` |
+| Task                                      | Owner                    | Checkpoint                                             | Output                                               |
+| ----------------------------------------- | ------------------------ | ------------------------------------------------------ | ---------------------------------------------------- |
+| Reconcile audit evidence and user intents | Design Systems           | EN/AR, RTL, and AA notes reviewed                      | Versioned reconciliation audit                       |
+| Select visual direction                   | Design Systems + Product | Three directions scored with rationale                 | Market Desk selected                                 |
+| Establish composition aliases             | Frontend                 | Aliases map only to existing semantic tokens           | Global CSS + token reference                         |
+| Apply Market Desk to flagship surfaces    | Frontend                 | Preserve trust and pricing contracts                   | Home, tracker, and calculator polish complete        |
+| Run integrated verification               | QA                       | 390/768/1024/1440, EN/AR, light/dark, repository gates | `reports/EXP-04-verification-evidence-2026-08-11.md` |
 
 ## Checkpoints
 

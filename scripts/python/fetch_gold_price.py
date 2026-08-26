@@ -28,7 +28,7 @@ import argparse
 import json
 import os
 import sys
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -40,7 +40,6 @@ from gold_providers.base import (  # noqa: E402
     TROY_OUNCE_GRAMS,
     env_bool,
     env_float,
-    env_int,
     env_str,
     iso_z,
     parse_timestamp,

@@ -379,8 +379,8 @@ AED price         = usdPrice × 3.6725 (fixed peg)
 Calculation paths retain the full conversion precision; UI and exported prices round only at the
 display boundary (two decimal places for displayed prices). For example, `1 oz = 31.1034768 g`,
 `0.5 oz = 15.5517384 g`, and `10 oz = 311.034768 g`. The same constant is used when converting
-USD/oz to USD/g and AED/g, then karat purity is applied as `24K = 24/24`, `22K = 22/24`, `21K =
-21/24`, or `18K = 18/24`.
+USD/oz to USD/g and AED/g, then karat purity is applied as `24K = 24/24`, `22K = 22/24`,
+`21K = 21/24`, or `18K = 18/24`.
 
 > ⚠️ Prices are **spot-linked bullion-equivalent estimates**, not final retail prices. Real store
 > prices may differ due to making charges, dealer premiums, VAT, and shop markup.
