@@ -1,6 +1,6 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-08-04 · **Updated by:** Codex **Purpose:** The single canonical source of
+**Last updated:** 2026-08-25 · **Updated by:** Codex **Purpose:** The single canonical source of
 truth for **every plan and every phase** in this repository — finished and unfinished — so no
 roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
 file is **canonical over chat memory**.
@@ -29,7 +29,26 @@ file is **canonical over chat memory**.
   at each checkpoint; per-phase PRs are cross-linked here rather than editing this file on every
   phase branch (that would conflict on merge).
 
-## Repository / GitHub Reconciliation (2026-08-04)
+## Repository / GitHub Reconciliation (2026-08-25)
+
+An owner-authorized open-PR review, repair, ordered-merge, and release campaign is
+`gated-pending-owner-decision` on `codex/open-pr-merge-campaign-2026-08-25`. The immutable
+execution-time set was frozen at `2026-08-25T14:40:43Z` against `origin/main` `4da2484187`: #754,
+#759, #767, #768, #770, #772, and #774. The full settings, overlap, review, risk, disposition,
+merge-order, proof, and rollback record lives in `docs/audits/2026-08-25_open-pr-merge-audit.md`.
+#774 is formally blocked because it edits production-critical `.github/workflows/post_gold.yml`.
+
+The campaign repaired #759 at `8a82c61392`, #770 at `ea01bf50a3`, and #772 at `4801fd5383`, and
+formalized the review records for #754, #767, and #774. GitHub reports the canonical `CI` workflow
+as `disabled_manually`, so no candidate can obtain the required exact-head merge gate. No PR was
+merged or marked ready; no deployment, production smoke, production database apply, production
+activation, or repository-setting change was performed.
+
+GitHub reported `main` unprotected with required-status enforcement off. The campaign did not
+weaken or silently change repository settings; an owner decision is required before restarting the
+merge conveyor at #768.
+
+## Prior Repository / GitHub Reconciliation (2026-08-04)
 
 This snapshot is verified against the refreshed local checkout and GitHub on 2026-08-04.
 `origin/main` is `ac13c41fa1` (`chore(data): update x automation observability logs [skip ci]`).
@@ -109,11 +128,14 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
-No phase is currently `in-progress`. D1 is complete for this session and awaits owner review in
-draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724); Phase 2 has not started.
+The open-PR merge campaign is `gated-pending-owner-decision`. Review and safe source repair are
+complete for this checkpoint, but the merge/release conveyor stopped before its first merge because
+canonical CI is manually disabled. D1 remains complete in historical PR #724; no D2 or unrelated
+feature work starts during this campaign.
 
 | Phase                                                      | Branch                                        | Status      | PR                                                        | Notes                                                                                                                                                             |
 | ---------------------------------------------------------- | --------------------------------------------- | ----------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Open-PR review, repair, ordered merge, and release campaign (2026-08-25) | `codex/open-pr-merge-campaign-2026-08-25` | gated-pending-owner-decision | [#775](https://github.com/vctb12/GoldTickerLive/pull/775) | Review/repair complete; #759/#770/#772 repaired; #774 blocked. No merges/releases because canonical CI is manually disabled. Final reconciliation PR is draft/unmerged. |
 | Gold Deal Intelligence MVP (2026-08-04)                    | `codex/gold-deal-intelligence-mvp`             | done        | [#724](https://github.com/vctb12/GoldTickerLive/pull/724) | Draft PR opened; owner review pending; Phase 2 not started                                                                                                       |
 | Master Tracker reconciliation (2026-08-04)                 | `codex/agent-tracker-reconciliation-2026-08-04` | done        | [#723](https://github.com/vctb12/GoldTickerLive/pull/723) | Merged tracker reconciliation; its verified corrections are included in current `origin/main`    |
 | UAE Historical Karat Chart (homepage)                      | `cursor/home-uae-historical-karat-chart-6a31` | done        | [#714](https://github.com/vctb12/GoldTickerLive/pull/714) | Live bootstrap run 30469621213; production file committed; temp trigger removed; ready for human review                                                           |
@@ -391,11 +413,15 @@ fail), `npm run build` all green.
 | White-label multi-tenancy           | Roadmap #14          | Commercial/licensing terms (spike + brief are $0)                                           |
 | React Native app                    | Roadmap #16          | Developer program fees + second codebase decision                                           |
 | AI predictions engine               | Roadmap #17          | Forbidden as forecasts; owner gate for anything beyond descriptive                          |
+| Canonical CI / merge protection     | 2026-08-25 campaign  | Decide whether to re-enable `.github/workflows/ci.yml`; require exact-head CI and configure `main` protection before resuming merges |
+| Protected X workflow PR #774        | 2026-08-25 campaign  | Keep blocked or authorize a separate `post_gold.yml` review campaign; do not merge it through this campaign |
+| DataCore #772 staging rollout       | 2026-08-25 campaign  | After #770 and restored CI, approve staging migration, pgTAP/RLS/advisor/rollback, and continuity proof before production |
 
 ## Recently Opened PRs
 
 | PR   | Phase          | Title                                                  | Opened     |
 | ---- | -------------- | ------------------------------------------------------ | ---------- |
+| #775 | Campaign reconciliation | Reconcile blocked open-PR merge campaign       | 2026-08-25 (draft/open) |
 | #720 | Dependency maintenance | Bump the github-actions group with 4 updates          | 2026-08-03 (open) |
 | #723 | Tracker reconciliation | Reconcile agent tracker with repository reality     | 2026-08-04 (merged) |
 | #719 | Dependency maintenance | Bump stripe from 22.3.2 to 22.4.0                     | 2026-08-03 (merged 2026-08-04) |
@@ -427,6 +453,8 @@ fail), `npm run build` all green.
 
 | Date       | Actor       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-08-25 | Codex       | **Open-PR merge campaign stopped safely before merge/release; draft reconciliation PR [#775](https://github.com/vctb12/GoldTickerLive/pull/775) opened.** Repaired #759 (`8a82c61392`), #770 (`ea01bf50a3`, pilot still off), and #772 (`4801fd5383`, no DB apply); formalized #754/#767/#774 dispositions. Canonical CI is `disabled_manually`, so no exact-head merge gate exists. No PR was marked ready or merged; no deploy, production smoke, production DB migration, protected-workflow merge, or settings change occurred. Owner decision is required before restarting at #768. |
+| 2026-08-25 | Codex       | **Open-PR merge campaign started** on `codex/open-pr-merge-campaign-2026-08-25`. Frozen execution-time set: #754, #759, #767, #768, #770, #772, #774 at `main` `4da2484187`. Initial audit records settings, reviews, overlap graph, risks, proof gates, order, and rollback. #774 is blocked because it edits protected `post_gold.yml`; no merge occurred. |
 | 2026-08-04 | Codex       | **Prior tracker reconciliation snapshot** on `codex/agent-tracker-reconciliation-2026-08-04` (docs-only). It was verified against `origin/main` `cc5b1d54fd` before the subsequent fast-forward and is superseded by the current reconciliation paragraph above and merged PR #723. |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP started** on `codex/gold-deal-intelligence-mvp`. Reused canonical spot/FX, karat, constants, formatter, safe-DOM, shared shell, and analytics contracts; added a local-first quote comparison surface with EN/AR RTL, tests, plan, handoff, screenshot evidence, and tracker queue entry. No Phase 2, paid API, secret, workflow, provider, dependency, DB, billing, tax/legal assertion, pricing constant, or `sw.js` change. |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP completed for this session** on `codex/gold-deal-intelligence-mvp`; draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724) opened. Tracker row is `done`; owner review is pending; no Phase 2 work started. |
