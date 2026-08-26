@@ -109,6 +109,10 @@ test.describe('Tracker live-region hygiene (audit E)', () => {
       baseURL,
     }) => {
       test.setTimeout(60_000);
+      // The browser provider pool prefers Gold-API.com over the committed static snapshot.
+      // Keep this route-mocked test deterministic on runners with outbound network access so
+      // the same-origin fixture below is the quote source exercised by manual refreshes.
+      await page.route('https://api.gold-api.com/price/XAU', (route) => route.abort());
       await page.goto((baseURL || '') + path, { waitUntil: 'load' });
       await waitForSpotRender(page);
       // Bounded settle window: let boot renders/animations finish before instrumenting.
