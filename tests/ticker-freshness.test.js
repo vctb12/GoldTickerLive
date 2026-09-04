@@ -186,6 +186,23 @@ test('ticker sets data-freshness="cached" when hasLiveFailure is true', async ()
   dom.restore();
 });
 
+test('ticker preserves age-only delayed freshness when there was no live failure', async () => {
+  const dom = installDom();
+  const { injectTicker, updateTicker } = await loadTicker();
+  injectTicker('en', 0);
+  updateTicker({
+    xauUsd: 2300,
+    updatedAt: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+    isFresh: null,
+    isFallback: false,
+    hasLiveFailure: false,
+  });
+  assert.equal(dom.getTicker().getAttribute('data-freshness'), 'delayed');
+  assert.notEqual(dom.getTicker().getAttribute('data-freshness'), 'cached');
+  assert.notEqual(dom.getTicker().getAttribute('data-freshness'), 'live');
+  dom.restore();
+});
+
 test('ticker sets data-freshness="stale" for a timestamp older than the stale threshold', async () => {
   const dom = installDom();
   const { injectTicker, updateTicker } = await loadTicker();

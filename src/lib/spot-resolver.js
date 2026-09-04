@@ -15,6 +15,7 @@
 import { CONSTANTS } from '../config/constants.js';
 import { KARATS } from '../config/karats.js';
 import { fetchGold } from './api.js';
+import { getLiveFreshness } from './live-status.js';
 
 // The shared live manager updates its subscribed homepage surfaces; this
 // resolver remains the canonical static snapshot reader for other pages.
@@ -69,8 +70,9 @@ export function karatPerGram(derived, karatCode, currency = 'aed') {
  * mislabels a stale value as live.
  *
  * @param {object} gold normalized `fetchGold()` result
- * @returns {{ state:'live'|'delayed'|'cached'|'fallback'|'unavailable', source:string,
- *            seconds:(number|null), updatedAt:(string|null), isFallback:boolean }}
+ * @returns {{ state:'live'|'delayed'|'cached'|'stale'|'fallback'|'unavailable', source:string,
+ *            seconds:(number|null), updatedAt:(string|null), isFallback:boolean,
+ *            providerFallback:boolean, isFresh:(boolean|null), hasLiveFailure:boolean }}
  */
 export function classifyFreshness(gold) {
   if (!gold || !Number.isFinite(Number(gold.price))) {
@@ -80,27 +82,34 @@ export function classifyFreshness(gold) {
       seconds: null,
       updatedAt: null,
       isFallback: true,
+      providerFallback: true,
+      isFresh: null,
+      hasLiveFailure: true,
     };
   }
   const source = gold.source || 'unknown';
-  const seconds = Number.isFinite(gold.freshnessSeconds) ? gold.freshnessSeconds : null;
-  const maxSeconds = Number.isFinite(gold.maxFreshnessSeconds) ? gold.maxFreshnessSeconds : null;
   const updatedAt = gold.updatedAt || null;
-  const isFallback = gold.isFallback === true || source === 'cache-fallback';
+  const providerFallback = gold.isFallback === true;
+  const hasLiveFailure = source === 'cache-fallback';
+  const freshness = getLiveFreshness({
+    updatedAt,
+    isFallback: providerFallback,
+    isFresh: gold.isFresh ?? null,
+    hasLiveFailure,
+  });
 
-  let state;
-  if (isFallback) {
-    state = source === 'cache-fallback' ? 'cached' : 'fallback';
-  } else if (gold.isFresh === false) {
-    state = 'delayed';
-  } else if (seconds != null && maxSeconds != null) {
-    if (seconds <= maxSeconds) state = 'live';
-    else if (seconds <= maxSeconds * 2) state = 'delayed';
-    else state = 'cached';
-  } else {
-    state = 'live';
-  }
-  return { state, source, seconds, updatedAt, isFallback };
+  return {
+    state: freshness.key,
+    source,
+    // Do not replay the producer's frozen freshness_seconds after a static
+    // deploy. Canonical age is measured against the current render time.
+    seconds: Number.isFinite(freshness.ageMs) ? Math.round(freshness.ageMs / 1000) : null,
+    updatedAt,
+    isFallback: providerFallback || hasLiveFailure,
+    providerFallback,
+    isFresh: gold.isFresh ?? null,
+    hasLiveFailure,
+  };
 }
 
 /**
