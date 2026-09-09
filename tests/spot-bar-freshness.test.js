@@ -195,7 +195,7 @@ test('spotBar sets data-freshness="stale" for an old timestamp regardless of fai
   dom.restore();
 });
 
-test('spotBar sets data-freshness="delayed" between DELAYED_AFTER_MS and STALE_AFTER_MS', async () => {
+test('spotBar preserves age-only delayed freshness when there was no live failure', async () => {
   const dom = installDom();
   const { injectSpotBar, updateSpotBar } = await loadSpotBar();
 
@@ -205,9 +205,13 @@ test('spotBar sets data-freshness="delayed" between DELAYED_AFTER_MS and STALE_A
     xauUsd: 2300,
     aed24kGram: 280,
     updatedAt: oldIso,
+    isFresh: null,
+    isFallback: false,
     hasLiveFailure: false,
   });
   assert.equal(dom.getBar().getAttribute('data-freshness'), 'delayed');
+  assert.notEqual(dom.getBar().getAttribute('data-freshness'), 'cached');
+  assert.notEqual(dom.getBar().getAttribute('data-freshness'), 'live');
   dom.restore();
 });
 
