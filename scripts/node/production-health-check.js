@@ -10,8 +10,11 @@ const fs = require('node:fs/promises');
 
 const SITE_URL = (process.env.SITE_URL || 'https://goldtickerlive.com/').replace(/\/$/, '');
 const TIMEOUT_MS = 8000;
-const MAX_STATIC_FALLBACK_AGE_SECONDS = 15 * 60;
+// deploy.yml redeploys Pages every 30 min; bot data commits do not re-trigger deploy.
+const MAX_STATIC_FALLBACK_AGE_SECONDS = 35 * 60;
 const MAX_BROWSER_PROVIDER_AGE_SECONDS = 10 * 60;
+const MAX_FETCH_ATTEMPTS = 3;
+const RETRY_DELAY_MS = 400;
 
 async function fetchJson(url) {
   const controller = new AbortController();
@@ -42,6 +45,20 @@ async function fetchJson(url) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+function isTransientFetchFailure(result) {
+  return result.status === 0 || result.error === 'timeout';
+}
+
+async function fetchJsonWithRetry(url, { fetchJsonImpl = fetchJson, maxAttempts = MAX_FETCH_ATTEMPTS } = {}) {
+  let last;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    last = await fetchJsonImpl(url);
+    if (!isTransientFetchFailure(last) || attempt === maxAttempts) return last;
+    await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * attempt));
+  }
+  return last;
 }
 
 function timestampAgeSeconds(value, now = Date.now()) {
@@ -118,12 +135,13 @@ function assessHealth({ site, staticSnapshot, browserProvider, now = Date.now() 
 }
 
 async function runHealthCheck({ fetchJsonImpl = fetchJson, now = Date.now } = {}) {
+  const fetchWithRetry = (url) => fetchJsonWithRetry(url, { fetchJsonImpl });
   const [site, staticSnapshot, browserProvider] = await Promise.all([
-    fetchJsonImpl(`${SITE_URL}/`),
-    fetchJsonImpl(
+    fetchWithRetry(`${SITE_URL}/`),
+    fetchWithRetry(
       `${SITE_URL}/data/gold_price.json?health=${typeof now === 'function' ? now() : now}`
     ),
-    fetchJsonImpl('https://api.gold-api.com/price/XAU'),
+    fetchWithRetry('https://api.gold-api.com/price/XAU'),
   ]);
   return assessHealth({ site, staticSnapshot, browserProvider, now });
 }
@@ -137,7 +155,14 @@ async function main() {
   process.exitCode = report.status === 'degraded' ? 1 : 0;
 }
 
-module.exports = { assessHealth, finitePrice, timestampAgeSeconds, runHealthCheck };
+module.exports = {
+  assessHealth,
+  finitePrice,
+  fetchJsonWithRetry,
+  isTransientFetchFailure,
+  timestampAgeSeconds,
+  runHealthCheck,
+};
 
 if (require.main === module)
   main().catch((error) => {
