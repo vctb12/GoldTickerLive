@@ -3,7 +3,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { assessHealth } = require('../scripts/node/production-health-check.js');
+const {
+  assessHealth,
+  fetchJsonWithRetry,
+  isTransientFetchFailure,
+} = require('../scripts/node/production-health-check.js');
 
 const NOW = Date.parse('2026-08-13T16:00:00Z');
 const healthySite = { ok: true, status: 200, latencyMs: 10, body: {} };
@@ -21,7 +25,7 @@ test('a stale Pages fallback is a warning when the browser-live quote is fresh',
       ok: true,
       status: 200,
       latencyMs: 15,
-      body: { xau_usd_per_oz: 4300, timestamp_utc: '2026-08-13T15:30:00Z' },
+      body: { xau_usd_per_oz: 4300, timestamp_utc: '2026-08-13T15:20:00Z' },
     },
     browserProvider: healthyBrowser,
     now: NOW,
@@ -63,4 +67,34 @@ test('a fresh static fallback and browser-live quote remain healthy', () => {
   assert.equal(report.status, 'healthy');
   assert.deepEqual(report.critical, []);
   assert.deepEqual(report.warnings, []);
+});
+
+test('fetchJsonWithRetry succeeds after a transient network failure', async () => {
+  let calls = 0;
+  const fetchJsonImpl = async () => {
+    calls += 1;
+    if (calls === 1) return { ok: false, status: 0, body: null, latencyMs: 5, error: 'network_error' };
+    return {
+      ok: true,
+      status: 200,
+      body: { price: 4300, updatedAt: '2026-08-13T15:59:50Z' },
+      latencyMs: 10,
+    };
+  };
+
+  const result = await fetchJsonWithRetry('https://api.gold-api.com/price/XAU', {
+    fetchJsonImpl,
+    maxAttempts: 3,
+  });
+
+  assert.equal(calls, 2);
+  assert.equal(result.ok, true);
+  assert.equal(result.status, 200);
+});
+
+test('isTransientFetchFailure only matches network-style failures', () => {
+  assert.equal(isTransientFetchFailure({ status: 0 }), true);
+  assert.equal(isTransientFetchFailure({ status: 503, error: 'timeout' }), true);
+  assert.equal(isTransientFetchFailure({ status: 503 }), false);
+  assert.equal(isTransientFetchFailure({ status: 200 }), false);
 });
