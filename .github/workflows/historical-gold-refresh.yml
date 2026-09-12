@@ -47,6 +47,42 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure git push retry helper
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/git-push-with-retry" <<'BASH'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          TARGET_BRANCH="${GITHUB_REF_NAME:-main}"
+          retry=0
+          delay=4
+          while true; do
+            if git push "$@"; then
+              exit 0
+            fi
+
+            retry=$((retry + 1))
+            if [ "$retry" -gt 4 ]; then
+              echo "git push failed after $retry attempts."
+              exit 1
+            fi
+
+            echo "git push rejected; syncing with origin/${TARGET_BRANCH} before retry ${retry}/4."
+            git fetch origin "$TARGET_BRANCH"
+            if ! git rebase "origin/${TARGET_BRANCH}"; then
+              echo "git rebase onto origin/${TARGET_BRANCH} failed; aborting."
+              git rebase --abort || true
+              exit 1
+            fi
+
+            echo "retrying push in ${delay}s."
+            sleep "$delay"
+            delay=$((delay * 2))
+          done
+          BASH
+          chmod +x "$RUNNER_TEMP/git-push-with-retry"
+
       - name: Setup Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v6
         with:
@@ -156,7 +192,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "chore(data): refresh XAU/USD daily history [bot] run=${{ github.run_id }}"
-          git push
+          "$RUNNER_TEMP/git-push-with-retry"
 
       - name: Upload audit artifacts
         if: always()
