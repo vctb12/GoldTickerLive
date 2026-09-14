@@ -20,6 +20,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -137,7 +138,34 @@ def compute_karat_prices(spot_usd_per_oz: float) -> list[dict]:
     return rows
 
 
-def insert_to_supabase(rows: list[dict]) -> bool:
+def _is_transient_supabase_error(exc: Exception) -> bool:
+    """Return True when a Supabase/PostgREST error is likely transient."""
+    msg = str(exc)
+    transient_markers = (
+        "'code': 502",
+        "'code': 503",
+        "'code': 504",
+        '"code": 502',
+        '"code": 503',
+        '"code": 504',
+        "Gateway Timeout",
+        "Bad Gateway",
+        "Service Unavailable",
+        "timed out",
+        "Timeout",
+    )
+    return any(marker in msg for marker in transient_markers)
+
+
+def _insert_once(rows: list[dict], url: str, key: str):
+    """Perform a single Supabase insert attempt."""
+    from supabase import create_client
+
+    client = create_client(url, key)
+    return client.table("price_history").insert(rows).execute()
+
+
+def insert_to_supabase(rows: list[dict], max_retries: int = 3) -> bool:
     """Batch-insert price rows into Supabase price_history table.
 
     Returns True on success, False on transient/connection errors.
@@ -151,24 +179,45 @@ def insert_to_supabase(rows: list[dict]) -> bool:
         log.error("SUPABASE_URL or SUPABASE_SERVICE_KEY not set")
         return False
 
-    try:
-        from supabase import create_client
-
-        client = create_client(url, key)
-        result = client.table("price_history").insert(rows).execute()
-        log.info("Inserted %d rows into price_history", len(result.data or []))
-        return True
-    except Exception as exc:
-        msg = str(exc)
-        # Handle missing table gracefully — migration may not have been applied yet.
-        if "PGRST205" in msg or "Could not find the table" in msg:
-            log.warning(
-                "Table 'price_history' does not exist yet. "
-                "Run supabase/migrations/001_price_history.sql to create it."
-            )
+    last_error: Exception | None = None
+    for attempt in range(1, max_retries + 1):
+        try:
+            result = _insert_once(rows, url, key)
+            log.info("Inserted %d rows into price_history", len(result.data or []))
             return True
-        log.error("Supabase insert failed: %s", exc)
-        return False
+        except Exception as exc:
+            msg = str(exc)
+            # Handle missing table gracefully — migration may not have been applied yet.
+            if "PGRST205" in msg or "Could not find the table" in msg:
+                log.warning(
+                    "Table 'price_history' does not exist yet. "
+                    "Run supabase/migrations/001_price_history.sql to create it."
+                )
+                return True
+
+            last_error = exc
+            if _is_transient_supabase_error(exc) and attempt < max_retries:
+                wait_time = (2 ** attempt) * 2
+                log.warning(
+                    "Transient Supabase error on attempt %d/%d: %s. "
+                    "Retrying in %ds...",
+                    attempt,
+                    max_retries,
+                    exc,
+                    wait_time,
+                )
+                time.sleep(wait_time)
+                continue
+
+            log.error("Supabase insert failed: %s", exc)
+            return False
+
+    log.error(
+        "Supabase insert failed after %d attempts. Last error: %s",
+        max_retries,
+        last_error,
+    )
+    return False
 
 
 def main() -> int:
