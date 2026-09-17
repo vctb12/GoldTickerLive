@@ -35,8 +35,10 @@ export function renderLiveTick() {
   if (_state.mode === 'live') {
     renderMiniStrip();
     renderKaratTable();
+    renderComparisonWorkspace();
     updateShellTickerFromState(_state, _currentSpot(), _priceFor);
   }
+  applyExportReadiness();
 }
 
 export function renderAll() {
