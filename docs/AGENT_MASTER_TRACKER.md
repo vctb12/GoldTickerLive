@@ -1,7 +1,7 @@
 # Gold Ticker Live — Agent Master Tracker
 
-**Last updated:** 2026-08-04 · **Updated by:** Codex **Purpose:** The single canonical source of
-truth for **every plan and every phase** in this repository — finished and unfinished — so no
+**Last updated:** 2026-09-21 · **Updated by:** Claude Code **Purpose:** The single canonical source
+of truth for **every plan and every phase** in this repository — finished and unfinished — so no
 roadmap, phase, PR, decision, or skipped item is ever lost across sessions or context resets. This
 file is **canonical over chat memory**.
 
@@ -29,7 +29,37 @@ file is **canonical over chat memory**.
   at each checkpoint; per-phase PRs are cross-linked here rather than editing this file on every
   phase branch (that would conflict on merge).
 
-## Repository / GitHub Reconciliation (2026-08-04)
+## Repository / GitHub Reconciliation (2026-09-21)
+
+Verified against GitHub and a refreshed local checkout on 2026-09-21. `origin/main` is `0b5b69e314`
+(`fix(ci): rebase before historical gold refresh push retries (#850)`).
+
+**Open-PR sweep.** The queue went from **7 open PRs to 2**:
+
+| PR                                                        | Disposition                                                                                                      |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [#831](https://github.com/vctb12/GoldTickerLive/pull/831) | **Merged** — js-yaml 4.3.1 → 4.3.2; full CI green.                                                               |
+| [#837](https://github.com/vctb12/GoldTickerLive/pull/837) | **Merged** — dev-dependencies group (7 updates); full CI green.                                                  |
+| [#848](https://github.com/vctb12/GoldTickerLive/pull/848) | **Merged** — monitoring retry + 35-min fallback age tolerance; full CI green.                                    |
+| [#850](https://github.com/vctb12/GoldTickerLive/pull/850) | **Merged** — historical-gold-refresh push-race fix; promoted out of draft after local validation, full CI green. |
+| [#821](https://github.com/vctb12/GoldTickerLive/pull/821) | **Closed as superseded** by the merged #848.                                                                     |
+| [#759](https://github.com/vctb12/GoldTickerLive/pull/759) | Open; **superseded** by the freshness carry-forward on `claude/vibrant-darwin-6g0u9k`. Close on merge.           |
+| [#851](https://github.com/vctb12/GoldTickerLive/pull/851) | Open, **owner-gated** — edits `post_gold.yml`, a deny-listed surface. Added to the Owner-Gated Decision Queue.   |
+
+**Stale pointers corrected.** The 2026-08-04 snapshot listed #720 and #724 as open; neither is open
+now and neither appears in `origin/main`'s history, so both were closed without merge rather than
+landed. Their rows below are annotated rather than deleted. The "next safe candidates" list also
+named **P4 (`offline.html` `<main>` landmark)** as an available fallback — that work is already
+present (`offline.html` line 199 has `<main>`), so P4 is marked `done` and is not an eligible
+candidate.
+
+**Why #759 was blocked, and what fixed it.** Its `Validate & Build` failure was not in the product
+change. `tests/market-closed-overlay-coverage.test.js` is a static guard requiring the literal
+`!getMarketStatus().isOpen` branch inside `src/pages/calculator.js`; #759 correctly moved that
+branch down into the new `src/pages/calculator/freshness.js`, so the guard failed while the overlay
+was still being applied. The guard now asserts the delegation instead of the inline expression.
+
+### Archived reconciliation snapshot (2026-08-04)
 
 This snapshot is verified against the refreshed local checkout and GitHub on 2026-08-04.
 `origin/main` is `ac13c41fa1` (`chore(data): update x automation observability logs [skip ci]`). The
@@ -71,8 +101,9 @@ normal owner review:
 3. **P5 — Firefox/WebKit E2E stability:** test-only stabilization or a documented Chromium-only CI
    scope decision; no product behavior change.
 
-**Additional safe fallback:** P4 (`offline.html` `<main>` landmark) remains a small, low-risk
-accessibility phase. P6 (regression-guard consolidation) is also safe after overlap review.
+**Additional safe fallback:** ~~P4 (`offline.html` `<main>` landmark)~~ — **already done**, verified
+2026-09-21: `offline.html` carries `<main>` at line 199. Not an eligible candidate. P6
+(regression-guard consolidation) is also safe after overlap review.
 
 P1/P2 remain ahead of feature expansion in that plan but are not safe autonomous candidates: P2
 requires the owner to choose the canonical committed-file versus live-API source of truth. P3 has an
@@ -379,23 +410,32 @@ fail), `npm run build` all green.
 
 ## Owner-Gated Decision Queue
 
-| Item                                | Source               | What's needed from owner                                                                    |
-| ----------------------------------- | -------------------- | ------------------------------------------------------------------------------------------- |
-| Security header edge delivery (S-2) | 30-Revamp #3 report  | Front site with Cloudflare free tier to ship `_headers` (CSP/HSTS/framing)                  |
-| RLS migration 004 (S-3)             | 30-Revamp #3 report  | Apply staged `004_prisma_comparison_enable_rls.sql` to production DB                        |
-| Secondary provider go-live          | 30-Revamp #8         | Approve enabling cross-validation in production `gold-price-fetch.yml`                      |
-| Metals provider workflow            | Roadmap #2           | Approve `gold-price-fetch.yml` edits to fetch XAG/XPT/XPD (data-layer/UI can proceed at $0) |
-| Premium tier / billing              | Roadmap #3, #13, #15 | Billing RED zone + Supabase signups decision                                                |
-| Social automations                  | Roadmap #5, #18      | App approvals + new workflows + secrets                                                     |
-| Web Push / SW                       | Roadmap #11, #19     | `sw.js` + `gold-price-fetch.yml` edits                                                      |
-| White-label multi-tenancy           | Roadmap #14          | Commercial/licensing terms (spike + brief are $0)                                           |
-| React Native app                    | Roadmap #16          | Developer program fees + second codebase decision                                           |
-| AI predictions engine               | Roadmap #17          | Forbidden as forecasts; owner gate for anything beyond descriptive                          |
+| Item                                | Source                 | What's needed from owner                                                                                                                                                                                             |
+| ----------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Security header edge delivery (S-2) | 30-Revamp #3 report    | Front site with Cloudflare free tier to ship `_headers` (CSP/HSTS/framing)                                                                                                                                           |
+| RLS migration 004 (S-3)             | 30-Revamp #3 report    | Apply staged `004_prisma_comparison_enable_rls.sql` to production DB                                                                                                                                                 |
+| Secondary provider go-live          | 30-Revamp #8           | Approve enabling cross-validation in production `gold-price-fetch.yml`                                                                                                                                               |
+| Metals provider workflow            | Roadmap #2             | Approve `gold-price-fetch.yml` edits to fetch XAG/XPT/XPD (data-layer/UI can proceed at $0)                                                                                                                          |
+| Premium tier / billing              | Roadmap #3, #13, #15   | Billing RED zone + Supabase signups decision                                                                                                                                                                         |
+| Social automations                  | Roadmap #5, #18        | App approvals + new workflows + secrets                                                                                                                                                                              |
+| Web Push / SW                       | Roadmap #11, #19       | `sw.js` + `gold-price-fetch.yml` edits                                                                                                                                                                               |
+| White-label multi-tenancy           | Roadmap #14            | Commercial/licensing terms (spike + brief are $0)                                                                                                                                                                    |
+| React Native app                    | Roadmap #16            | Developer program fees + second codebase decision                                                                                                                                                                    |
+| AI predictions engine               | Roadmap #17            | Forbidden as forecasts; owner gate for anything beyond descriptive                                                                                                                                                   |
+| `post_gold.yml` push-race fix       | PR #851 (2026-09-21)   | Merge decision on [#851](https://github.com/vctb12/GoldTickerLive/pull/851) — change is correct and matches merged #850, but `post_gold.yml` is a deny-listed surface for agents                                     |
+| pa11y-ci advisory chain             | npm audit (2026-09-21) | 6 high transitive advisories (extract-zip/puppeteer) under dev-only `pa11y-ci`. No upstream fix: installed 4.1.1 IS latest; npm's remediation (3.1.0) is a downgrade. Accept-and-monitor, or replace the a11y runner |
 
 ## Recently Opened PRs
 
 | PR   | Phase                      | Title                                                  | Opened                         |
 | ---- | -------------------------- | ------------------------------------------------------ | ------------------------------ |
+| #850 | CI push-race               | Rebase before historical gold refresh push retries     | 2026-09-18 (merged 2026-09-21) |
+| #848 | Monitoring                 | Retry transient provider checks + 35-min age tolerance | 2026-09-17 (merged 2026-09-21) |
+| #837 | Dependency maintenance     | Bump dev-dependencies group (7 updates)                | 2026-09-14 (merged 2026-09-21) |
+| #831 | Dependency maintenance     | Bump js-yaml 4.3.1 to 4.3.2                            | 2026-09-13 (merged 2026-09-21) |
+| #851 | CI push-race               | Rebase before post_gold push retries                   | 2026-09-18 (open, owner-gated) |
+| #821 | Monitoring                 | Retry transient provider checks (superseded by #848)   | 2026-09-10 (closed 2026-09-21) |
+| #759 | Freshness trust P0         | Keep freshness labels age-aware                        | 2026-08-18 (open, superseded)  |
 | #720 | Dependency maintenance     | Bump the github-actions group with 4 updates           | 2026-08-03 (open)              |
 | #723 | Tracker reconciliation     | Reconcile agent tracker with repository reality        | 2026-08-04 (merged)            |
 | #719 | Dependency maintenance     | Bump stripe from 22.3.2 to 22.4.0                      | 2026-08-03 (merged 2026-08-04) |
@@ -427,6 +467,7 @@ fail), `npm run build` all green.
 
 | Date       | Actor       | Change                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ---------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 2026-09-21 | Claude Code | **Open-PR sweep + full repo/site audit.** Merged #831, #837, #848, #850 (all full-CI-green; #850 validated locally and promoted out of draft). Closed #821 as superseded by #848. Held #851 — `post_gold.yml` is a deny-listed surface, added to the Owner-Gated Decision Queue. Unblocked #759: its `Validate & Build` failure was a stale static guard in `tests/market-closed-overlay-coverage.test.js` requiring the literal `!getMarketStatus().isOpen` inside `calculator.js`, which #759 legitimately moved into `src/pages/calculator/freshness.js`; guard now asserts the delegation. Fixed a live EN/AR defect: `methodology.html` had a duplicated AR paragraph (114 EN vs 115 AR) whose stale copy also made a claim the EN never made. Resolved the two `brace-expansion` advisories (7→6 vulns; the remaining 6 are dev-only `pa11y-ci` transitives with no upstream fix — npm's suggested 3.1.0 is a downgrade from the latest 4.1.1). Git/prettier-ignored the date-stamped `uae-history-source-audit` files that `npm test` regenerates. Full report: `docs/audits/2026-09-21_full-repo-and-site-audit.md`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 2026-08-04 | Codex       | **Prior tracker reconciliation snapshot** on `codex/agent-tracker-reconciliation-2026-08-04` (docs-only). It was verified against `origin/main` `cc5b1d54fd` before the subsequent fast-forward and is superseded by the current reconciliation paragraph above and merged PR #723.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP started** on `codex/gold-deal-intelligence-mvp`. Reused canonical spot/FX, karat, constants, formatter, safe-DOM, shared shell, and analytics contracts; added a local-first quote comparison surface with EN/AR RTL, tests, plan, handoff, screenshot evidence, and tracker queue entry. No Phase 2, paid API, secret, workflow, provider, dependency, DB, billing, tax/legal assertion, pricing constant, or `sw.js` change.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | 2026-08-04 | Codex       | **Gold Deal Intelligence MVP completed for this session** on `codex/gold-deal-intelligence-mvp`; draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724) opened. Tracker row is `done`; owner review is pending; no Phase 2 work started.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
