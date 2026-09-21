@@ -55,14 +55,55 @@ for (const { file, closedLabel } of OVERLAY_SURFACES) {
 }
 
 test('calculator.js freshness note honors the market-closed overlay', () => {
+  // The calculator no longer inlines the overlay branch: it delegates to the
+  // single `getCalculatorFreshness()` truth so the hero note and the shared
+  // FreshnessBadge cannot drift apart. Guard the delegation instead of the old
+  // inline `!getMarketStatus().isOpen` expression.
   const src = read('src/pages/calculator.js');
   assert.match(
     src,
-    /!\s*getMarketStatus\(\)\.isOpen/,
-    'calculator note must branch on getMarketStatus().isOpen to show "Closed"'
+    /import\s*\{[^}]*getCalculatorFreshness[^}]*\}\s*from\s*['"][^'"]*calculator\/freshness\.js['"]/,
+    'calculator.js must import getCalculatorFreshness from ./calculator/freshness.js'
   );
-  // The note must show a Closed label in both languages.
-  assert.ok(src.includes("'Closed'") && src.includes("'مغلق'"), 'note needs EN+AR closed label');
+  assert.match(
+    src,
+    /getCalculatorFreshness\s*\(/,
+    'calculator.js must call getCalculatorFreshness() when deriving the freshness note'
+  );
+  assert.match(
+    src,
+    /freshness\.badge\.\$\{freshness\.state\}/,
+    'the hero note label must come from the overlaid freshness.state, not a raw source flag'
+  );
+});
+
+test('src/pages/calculator/freshness.js applies the market-closed overlay', () => {
+  const src = read('src/pages/calculator/freshness.js');
+  assert.match(
+    src,
+    /import\s*\{[^}]*applyMarketClosedOverlay[^}]*\}\s*from\s*['"][^'"]*live-status\.js['"]/,
+    'calculator/freshness.js must import applyMarketClosedOverlay from live-status.js'
+  );
+  assert.match(
+    src,
+    /applyMarketClosedOverlay\s*\(/,
+    'calculator/freshness.js must call applyMarketClosedOverlay() when deriving the state'
+  );
+});
+
+test('the shared freshness dictionary carries a bilingual closed label', () => {
+  // The calculator note renders `freshness.badge.<state>` through the global
+  // translator, so the EN+AR "Closed" pair now lives in the shared dictionary.
+  assert.match(
+    read('src/config/translations.en.js'),
+    /'freshness\.badge\.closed':\s*'Closed'/,
+    'EN dictionary missing freshness.badge.closed'
+  );
+  assert.match(
+    read('src/config/translations.ar.js'),
+    /'freshness\.badge\.closed':\s*'مغلق'/,
+    'AR dictionary missing freshness.badge.closed'
+  );
 });
 
 test('all overlaid surfaces still expose a bilingual closed label where they own one', () => {

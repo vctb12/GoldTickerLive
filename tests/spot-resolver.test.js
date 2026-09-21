@@ -73,19 +73,41 @@ test('classifyFreshness: fresh committed file → live', () => {
     isFallback: false,
     freshnessSeconds: 27,
     maxFreshnessSeconds: 900,
-    updatedAt: '2026-07-10T11:06:54Z',
+    updatedAt: new Date().toISOString(),
   });
   assert.equal(f.state, 'live');
   assert.equal(f.isFallback, false);
 });
 
-test('classifyFreshness: never mislabels — fallback / delayed / cached / unavailable', () => {
+test('classifyFreshness: current age wins over frozen producer metadata', () => {
+  const stale = R.classifyFreshness({
+    price: SPOT,
+    source: 'gold_api_com',
+    isFresh: true,
+    isFallback: false,
+    // True when fetched, but never valid as current render-time truth.
+    freshnessSeconds: 1,
+    maxFreshnessSeconds: 900,
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  });
+  assert.equal(stale.state, 'stale');
+  assert.notEqual(stale.state, 'live');
+  assert.ok(stale.seconds >= 2 * 60 * 60 - 1, 'age is measured at render time');
+});
+
+test('classifyFreshness: never mislabels — fallback / cached / stale / unavailable', () => {
+  const now = new Date().toISOString();
   assert.equal(
-    R.classifyFreshness({ price: SPOT, isFallback: true, source: 'gold_api_com' }).state,
+    R.classifyFreshness({
+      price: SPOT,
+      isFallback: true,
+      source: 'gold_api_com',
+      updatedAt: now,
+    }).state,
     'fallback'
   );
   assert.equal(
-    R.classifyFreshness({ price: SPOT, source: 'cache-fallback' }).state,
+    R.classifyFreshness({ price: SPOT, source: 'cache-fallback', updatedAt: now }).state,
     'cached',
     'localStorage cache fallback → cached'
   );
@@ -95,14 +117,20 @@ test('classifyFreshness: never mislabels — fallback / delayed / cached / unava
       isFresh: false,
       freshnessSeconds: 1200,
       maxFreshnessSeconds: 900,
+      updatedAt: now,
     }).state,
-    'delayed',
-    'explicit is_fresh:false downgrades'
+    'stale',
+    'explicit is_fresh:false is never live'
   );
   assert.equal(
-    R.classifyFreshness({ price: SPOT, freshnessSeconds: 5000, maxFreshnessSeconds: 900 }).state,
-    'cached',
-    'well beyond max age → cached'
+    R.classifyFreshness({
+      price: SPOT,
+      freshnessSeconds: 5000,
+      maxFreshnessSeconds: 900,
+      updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    }).state,
+    'stale',
+    'current timestamp, not frozen freshnessSeconds, governs state'
   );
   assert.equal(R.classifyFreshness(null).state, 'unavailable');
   assert.equal(R.classifyFreshness({ price: NaN }).state, 'unavailable');
@@ -116,6 +144,7 @@ test('buildSnapshot: ok snapshot carries derivation + freshness; bad price → n
     isFallback: false,
     freshnessSeconds: 27,
     maxFreshnessSeconds: 900,
+    updatedAt: new Date().toISOString(),
   });
   assert.equal(ok.ok, true);
   assert.equal(ok.karats.length, 7);
