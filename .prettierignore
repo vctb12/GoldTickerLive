@@ -28,6 +28,11 @@ reports/seo/governance.json
 reports/analytics/event-inventory.json
 reports/freshness-coverage.json
 reports/freshness-coverage.md
+# `npm test` re-runs scripts/node/audit-uae-history-source.js, which writes a
+# fresh date-stamped pair on every run. Only the committed 2026-07-29 baseline
+# is referenced by tests; the rest are transient run artifacts.
+reports/uae-history-source-audit-*.json
+reports/uae-history-source-audit-*.md
 
 # Playwright / test reports
 playwright-report/

@@ -118,7 +118,7 @@ export function mountQuickConvertWidget({ lang, spotUsdPerOz, getSpot, getFreshn
     {
       class: 'btn btn-outline btn-sm quick-convert-widget__cta',
       id: 'home-quick-calc-link',
-      href: 'calculator.html',
+      href: '/calculator.html',
     },
     [t('quickConvertCta')]
   );

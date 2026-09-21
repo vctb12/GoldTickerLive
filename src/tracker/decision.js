@@ -70,7 +70,7 @@ export function renderDecisionCues() {
         ' ',
         el(
           'a',
-          { href: 'methodology.html', class: 'tracker-inline-link' },
+          { href: '/methodology.html', class: 'tracker-inline-link' },
           tx('referenceBannerLink')
         ),
       ]),

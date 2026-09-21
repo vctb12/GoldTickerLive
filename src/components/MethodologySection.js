@@ -67,9 +67,9 @@ export function renderMethodologySection({ t = (key) => key, className = '' } = 
         ]),
       ]),
       el('div', { class: 'methodology-section__links' }, [
-        el('a', { href: 'methodology.html' }, t('methodology.fullPageLink')),
-        el('a', { href: 'calculator.html' }, t('methodology.calculatorLink')),
-        el('a', { href: 'tracker.html' }, t('methodology.trackerLink')),
+        el('a', { href: '/methodology.html' }, t('methodology.fullPageLink')),
+        el('a', { href: '/calculator.html' }, t('methodology.calculatorLink')),
+        el('a', { href: '/tracker.html' }, t('methodology.trackerLink')),
       ]),
     ]
   );

@@ -2250,6 +2250,7 @@ const REF_FRESH_KEY = {
   live: 'refLive',
   delayed: 'refDelayed',
   cached: 'refCached',
+  stale: 'refStale',
   fallback: 'refStale',
   unavailable: 'refStale',
   closed: 'refClosed',
@@ -2288,7 +2289,9 @@ function renderReferenceChip() {
     let stamp = '';
     if (fresh.updatedAt) {
       try {
+        const includeDate = ['stale', 'fallback', 'unavailable'].includes(displayState);
         stamp = new Intl.DateTimeFormat(STATE.lang === 'ar' ? 'ar' : 'en', {
+          ...(includeDate ? { year: 'numeric', month: 'short', day: 'numeric' } : {}),
           hour: '2-digit',
           minute: '2-digit',
           timeZone: 'Asia/Dubai',
