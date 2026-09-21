@@ -786,14 +786,14 @@ function renderDetail() {
         'a',
         {
           class: 'heatmap-detail-link',
-          href: `compare.html#compare=ae,${country.code.toLowerCase()}&k=${STATE.karat}`,
+          href: `/compare.html#compare=ae,${country.code.toLowerCase()}&k=${STATE.karat}`,
         },
         [dict.compareLink]
       )
     );
   }
   links.appendChild(
-    el('a', { class: 'heatmap-detail-link', href: 'calculator.html' }, [dict.calculatorLink])
+    el('a', { class: 'heatmap-detail-link', href: '/calculator.html' }, [dict.calculatorLink])
   );
   host.appendChild(links);
 }

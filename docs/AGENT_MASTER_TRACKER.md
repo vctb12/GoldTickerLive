@@ -140,6 +140,12 @@ without a known PR; `owner decision required` if blocked by an owner decision.
 
 ## Current Active Phase
 
+**20-Phase Site Revamp program run (A1–F20)** — `claude/vibrant-darwin-6g0u9k`. A1 `done`; A2 is the
+next phase. Ledger:
+[`docs/plans/2026-09-21_20-phase-site-revamp-program.md`](./plans/2026-09-21_20-phase-site-revamp-program.md).
+
+Previously:
+
 No phase is currently `in-progress`. D1 is complete for this session and awaits owner review in
 draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724); Phase 2 has not started.
 
@@ -283,6 +289,13 @@ draft PR [#724](https://github.com/vctb12/GoldTickerLive/pull/724); Phase 2 has 
 | 50-Plan | 50    | Launch, monitoring & docs            | not-started | —                                                        | Overlaps #30                                              |
 
 ### D. 20-Phase Audit Plan (Waves) — `docs/audits/MASTER_GOLDTICKERLIVE_WEBSITE_AUDIT_AND_20_PHASE_PLAN.md`
+
+> **ACTIVE PROGRAM RUN (2026-09-21):** the plan's § 11 "Net-new 20-phase plan" (A1–F20) is now being
+> executed. Ledger and per-phase records:
+> [`docs/plans/2026-09-21_20-phase-site-revamp-program.md`](./plans/2026-09-21_20-phase-site-revamp-program.md).
+> **A1 is `done`** (13 live dead-link defects fixed + `check-internal-hrefs` CI guard wired into
+> `npm run validate`). Next: **A2** (anchor-integrity checker). The wave rows below track the
+> _50-phase cross-walk_ and are separate from the A1–F20 ledger.
 
 | Source      | Wave         | Short Name                                                                         | Status      | PR  | Scope/Blocker Note                  |
 | ----------- | ------------ | ---------------------------------------------------------------------------------- | ----------- | --- | ----------------------------------- |

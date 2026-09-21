@@ -18,7 +18,7 @@ export function renderArchive(resetPage = false) {
     });
     const link = el(
       'a',
-      { href: 'methodology.html', class: 'tracker-inline-link' },
+      { href: '/methodology.html', class: 'tracker-inline-link' },
       tx('archive.sourceNoteLink')
     );
     archiveSourceNote.replaceChildren(noteText, ' ', link);

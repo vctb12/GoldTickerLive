@@ -29,7 +29,11 @@ export function localizeTrustBanner() {
     content.replaceChildren(
       el('strong', {}, tx('referenceBannerTitle')),
       ` — ${tx('referenceBannerBody')} `,
-      el('a', { href: 'methodology.html', class: 'tracker-inline-link' }, tx('referenceBannerLink'))
+      el(
+        'a',
+        { href: '/methodology.html', class: 'tracker-inline-link' },
+        tx('referenceBannerLink')
+      )
     );
   }
   const closeBtn = document.querySelector('.tracker-trust-close');

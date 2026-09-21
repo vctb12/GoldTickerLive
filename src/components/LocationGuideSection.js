@@ -30,11 +30,11 @@ export function renderLocationGuideSection({ lang = 'en', t = (key) => key, clas
         checklist.map((item) => el('li', null, item))
       ),
       el('div', { class: 'location-guide-card__links' }, [
-        el('a', { href: 'tracker.html' }, t('locationGuides.linkTracker')),
-        el('a', { href: 'calculator.html' }, t('locationGuides.linkCalculator')),
-        el('a', { href: 'methodology.html' }, t('locationGuides.linkMethodology')),
+        el('a', { href: '/tracker.html' }, t('locationGuides.linkTracker')),
+        el('a', { href: '/calculator.html' }, t('locationGuides.linkCalculator')),
+        el('a', { href: '/methodology.html' }, t('locationGuides.linkMethodology')),
         ...(guide.slug === 'uae-dubai'
-          ? [el('a', { href: 'dubai-gold-price.html' }, t('locationGuides.linkDubaiGuide'))]
+          ? [el('a', { href: '/dubai-gold-price.html' }, t('locationGuides.linkDubaiGuide'))]
           : []),
       ]),
     ]);
