@@ -94,10 +94,36 @@ jobs:
 
             echo "git push rejected; syncing with origin/${TARGET_BRANCH} before retry ${retry}/4."
             git fetch origin "$TARGET_BRANCH"
-            if ! git rebase "origin/${TARGET_BRANCH}"; then
-              echo "git rebase onto origin/${TARGET_BRANCH} failed; aborting."
-              git rebase --abort || true
-              exit 1
+            if ! git rebase --autostash "origin/${TARGET_BRANCH}"; then
+              CONFLICTS="$(git diff --name-only --diff-filter=U || true)"
+              RESOLVE_OBS=true
+              if [ -z "$CONFLICTS" ]; then
+                RESOLVE_OBS=false
+              else
+                while IFS= read -r conflict_path; do
+                  [ -z "$conflict_path" ] && continue
+                  case "$conflict_path" in
+                    data/automation_runs.json|data/tweet_posts.json|data/tweet_failures.json) ;;
+                    *) RESOLVE_OBS=false; break ;;
+                  esac
+                done <<< "$CONFLICTS"
+              fi
+              if [ "$RESOLVE_OBS" = true ]; then
+                echo "observability JSON rebase conflict; merging append logs before continue."
+                python scripts/python/merge_observability_json_conflicts.py || {
+                  git rebase --abort || true
+                  exit 1
+                }
+                if ! GIT_EDITOR=true git rebase --continue; then
+                  echo "git rebase --continue failed after observability merge; aborting."
+                  git rebase --abort || true
+                  exit 1
+                fi
+              else
+                echo "git rebase --autostash onto origin/${TARGET_BRANCH} failed; aborting."
+                git rebase --abort || true
+                exit 1
+              fi
             fi
 
             echo "retrying push in ${delay}s."
