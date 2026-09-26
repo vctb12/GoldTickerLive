@@ -94,8 +94,8 @@ jobs:
 
             echo "git push rejected; syncing with origin/${TARGET_BRANCH} before retry ${retry}/4."
             git fetch origin "$TARGET_BRANCH"
-            if ! git rebase "origin/${TARGET_BRANCH}"; then
-              echo "git rebase onto origin/${TARGET_BRANCH} failed; aborting."
+            if ! git rebase --autostash "origin/${TARGET_BRANCH}"; then
+              echo "git rebase --autostash onto origin/${TARGET_BRANCH} failed; aborting."
               git rebase --abort || true
               exit 1
             fi
