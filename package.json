@@ -81,13 +81,13 @@
     "eslint": "^10.11.0",
     "husky": "^9.1.7",
     "linkinator": "^8.1.0",
-    "lint-staged": "^17.5.1",
+    "lint-staged": "^17.6.0",
     "pa11y-ci": "^4.1.1",
     "prettier": "^3.9.9",
-    "stylelint": "^17.15.0",
+    "stylelint": "^17.16.0",
     "stylelint-config-standard": "^40.0.0",
     "terser": "^5.51.2",
-    "vite": "^8.3.1"
+    "vite": "^8.3.2"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
