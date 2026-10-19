@@ -36,6 +36,8 @@
 
 'use strict';
 
+const { execFileSync } = require('node:child_process');
+
 const DEFAULT_SITE = 'https://goldtickerlive.com';
 const DEFAULT_WARN_AGE_MS = 50 * 60 * 60 * 1000; // ~one weekend market close + margin
 
@@ -98,13 +100,50 @@ function checkCommitMatch(buildInfo, expectedSha) {
   const want = String(expectedSha);
   // Accept short/long SHA either direction.
   const match = live === want || live.startsWith(want) || want.startsWith(live);
-  return match
-    ? { ok: true, skipped: false, reason: `commit ${live.slice(0, 8)} live` }
-    : {
-        ok: false,
-        skipped: false,
-        reason: `deployed commit ${live.slice(0, 8)} != expected ${want.slice(0, 8)} — STALE DEPLOY`,
-      };
+  if (match) {
+    return { ok: true, skipped: false, reason: `commit ${live.slice(0, 8)} live` };
+  }
+  return {
+    ok: false,
+    skipped: false,
+    reason: `deployed commit ${live.slice(0, 8)} != expected ${want.slice(0, 8)} — STALE DEPLOY`,
+    live,
+    want,
+  };
+}
+
+/**
+ * True when `live` is a descendant of `expected` on the current git checkout
+ * (a newer deploy superseded this smoke's deploy while Pages concurrency overlapped).
+ * Returns false when git cannot decide (shallow/missing objects) — caller keeps hard fail.
+ */
+function liveCommitSupersedesExpected(liveSha, expectedSha, { gitDir = process.cwd() } = {}) {
+  if (!liveSha || !expectedSha) return false;
+  const live = String(liveSha).trim();
+  const want = String(expectedSha).trim();
+  if (!live || !want) return false;
+  try {
+    execFileSync('git', ['merge-base', '--is-ancestor', want, live], {
+      cwd: gitDir,
+      stdio: 'ignore',
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** Upgrade a failed commit-match when production is ahead of this deploy (not behind). */
+function reconcileCommitMatch(verdict, { isSuperseded = liveCommitSupersedesExpected } = {}) {
+  if (verdict.ok || verdict.skipped || !verdict.live || !verdict.want) return verdict;
+  if (isSuperseded(verdict.live, verdict.want)) {
+    return {
+      ok: true,
+      skipped: false,
+      reason: `commit ${verdict.live.slice(0, 8)} live (newer than expected ${verdict.want.slice(0, 8)} — superseded deploy)`,
+    };
+  }
+  return verdict;
 }
 
 // ── Orchestrator ──────────────────────────────────────────────────────────────
@@ -162,7 +201,8 @@ async function runSmoke({
   try {
     const res = await fetchImpl(`${siteUrl.replace(/\/$/, '')}/build-info.json?cb=${Date.now()}`);
     const info = res.status === 200 ? await res.json().catch(() => null) : null;
-    const verdict = checkCommitMatch(info, expectedSha);
+    let verdict = checkCommitMatch(info, expectedSha);
+    verdict = reconcileCommitMatch(verdict);
     if (verdict.skipped) warnings.push(`commit-match skipped: ${verdict.reason}`);
     else verdict.ok ? pass('commit-match', verdict.reason) : fail('commit-match', verdict.reason);
   } catch (e) {
@@ -235,7 +275,15 @@ async function main() {
   return 1;
 }
 
-module.exports = { classifyRoute, evaluateSnapshot, checkCommitMatch, runSmoke, routeUrl };
+module.exports = {
+  classifyRoute,
+  evaluateSnapshot,
+  checkCommitMatch,
+  liveCommitSupersedesExpected,
+  reconcileCommitMatch,
+  runSmoke,
+  routeUrl,
+};
 
 if (require.main === module) {
   main()

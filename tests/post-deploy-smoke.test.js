@@ -4,9 +4,14 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
-const { classifyRoute, evaluateSnapshot, checkCommitMatch, runSmoke } = require(
-  path.resolve(__dirname, '..', 'scripts', 'node', 'post-deploy-smoke.js')
-);
+const {
+  classifyRoute,
+  evaluateSnapshot,
+  checkCommitMatch,
+  liveCommitSupersedesExpected,
+  reconcileCommitMatch,
+  runSmoke,
+} = require(path.resolve(__dirname, '..', 'scripts', 'node', 'post-deploy-smoke.js'));
 
 // ── classifyRoute ─────────────────────────────────────────────────────────────
 test('classifyRoute: 200 with marker passes', () => {
@@ -68,6 +73,31 @@ test('checkCommitMatch: mismatch is a hard failure (stale deploy)', () => {
 test('checkCommitMatch: missing marker or sha is skipped, not failed', () => {
   assert.equal(checkCommitMatch(null, 'abc').skipped, true);
   assert.equal(checkCommitMatch({ commit: 'abc' }, '').skipped, true);
+});
+test('reconcileCommitMatch: newer live commit passes when superseded deploy', () => {
+  const stale = checkCommitMatch({ commit: 'e2bf1c424160506547da1e4caab2a05c268a0514' }, 'cd0682be');
+  assert.equal(stale.ok, false);
+  const fixed = reconcileCommitMatch(stale, {
+    isSuperseded: () => true,
+  });
+  assert.equal(fixed.ok, true);
+  assert.match(fixed.reason, /superseded deploy/);
+});
+test('liveCommitSupersedesExpected: detects ancestor on real repo history', () => {
+  assert.equal(
+    liveCommitSupersedesExpected(
+      'e2bf1c424160506547da1e4caab2a05c268a0514',
+      'cd0682bede13feb087af95f37537bcccaea00405'
+    ),
+    true
+  );
+  assert.equal(
+    liveCommitSupersedesExpected(
+      'cd0682bede13feb087af95f37537bcccaea00405',
+      'e2bf1c424160506547da1e4caab2a05c268a0514'
+    ),
+    false
+  );
 });
 
 // ── runSmoke (fake fetch) ─────────────────────────────────────────────────────
