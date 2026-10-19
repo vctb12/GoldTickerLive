@@ -15,4 +15,4 @@
 
 requests==2.34.2
 tweepy==4.17.0
-supabase==2.31.0
+supabase==2.33.0
