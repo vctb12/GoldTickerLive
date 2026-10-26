@@ -9,7 +9,8 @@
 const fs = require('node:fs/promises');
 
 const SITE_URL = (process.env.SITE_URL || 'https://goldtickerlive.com/').replace(/\/$/, '');
-const TIMEOUT_MS = 8000;
+// gold-api.com can exceed 8s from CI runners; align with uptime-check.js (10s) + headroom.
+const TIMEOUT_MS = 12_000;
 // deploy.yml redeploys Pages every 30 min; bot data commits do not re-trigger deploy.
 const MAX_STATIC_FALLBACK_AGE_SECONDS = 35 * 60;
 const MAX_BROWSER_PROVIDER_AGE_SECONDS = 10 * 60;
