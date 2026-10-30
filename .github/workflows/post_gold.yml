@@ -96,26 +96,34 @@ jobs:
             git fetch origin "$TARGET_BRANCH"
             if ! git rebase --autostash "origin/${TARGET_BRANCH}"; then
               CONFLICTS="$(git diff --name-only --diff-filter=U || true)"
-              RESOLVE_OBS=true
+              RESOLVE_KNOWN=true
               if [ -z "$CONFLICTS" ]; then
-                RESOLVE_OBS=false
+                RESOLVE_KNOWN=false
               else
                 while IFS= read -r conflict_path; do
                   [ -z "$conflict_path" ] && continue
                   case "$conflict_path" in
-                    data/automation_runs.json|data/tweet_posts.json|data/tweet_failures.json) ;;
-                    *) RESOLVE_OBS=false; break ;;
+                    data/gold_price.json|data/automation_runs.json|data/tweet_posts.json|data/tweet_failures.json) ;;
+                    *) RESOLVE_KNOWN=false; break ;;
                   esac
                 done <<< "$CONFLICTS"
               fi
-              if [ "$RESOLVE_OBS" = true ]; then
-                echo "observability JSON rebase conflict; merging append logs before continue."
-                python scripts/python/merge_observability_json_conflicts.py || {
-                  git rebase --abort || true
-                  exit 1
-                }
+              if [ "$RESOLVE_KNOWN" = true ]; then
+                echo "Known data-file rebase conflict; merging before continue."
+                if printf '%s\n' "$CONFLICTS" | grep -qx 'data/gold_price.json'; then
+                  python scripts/python/merge_gold_price_json_conflicts.py || {
+                    git rebase --abort || true
+                    exit 1
+                  }
+                fi
+                if printf '%s\n' "$CONFLICTS" | grep -Eq '^(data/automation_runs\.json|data/tweet_posts\.json|data/tweet_failures\.json)$'; then
+                  python scripts/python/merge_observability_json_conflicts.py || {
+                    git rebase --abort || true
+                    exit 1
+                  }
+                fi
                 if ! GIT_EDITOR=true git rebase --continue; then
-                  echo "git rebase --continue failed after observability merge; aborting."
+                  echo "git rebase --continue failed after data-file merge; aborting."
                   git rebase --abort || true
                   exit 1
                 fi
