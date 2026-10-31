@@ -79,10 +79,9 @@ Severity: **HIGH** = trust/correctness risk users can see · **MED** = quality/p
 
 ### Finding 2 — Cross-surface price inconsistency (HIGH — trust)
 
-- **Observed (live, 2026-07-10 snapshot):** home showed
-  **"$4,064 Cached"** while the calculator
-  showed **"$4,062.20 Live"** at the same moment; page
-  load fired **~15 duplicate `api.gold-api.com/price/XAU` calls**.
+- **Observed (live, 2026-07-10 snapshot):** home showed **"$4,064 Cached"** while the calculator
+  showed **"$4,062.20 Live"** at the same moment; page load fired **~15 duplicate
+  `api.gold-api.com/price/XAU` calls**.
 - **Root cause:** the **home** page renders the committed cached snapshot (`src/config/constants.js`
   → `API_GOLD_URL: '/data/gold_price.json'`), while other surfaces resolve spot through the live
   provider (`src/lib/quote-providers/gold-api-com-provider.js`, composed in `create-providers.js`).
