@@ -9,21 +9,21 @@
   "usd_per_gram_24k": 125.715848,
   "aed_per_gram_24k": 461.6915,
   "aed_peg": 3.6725,
-  "timestamp_utc": "2026-11-02T01:41:21Z",
+  "timestamp_utc": "2026-11-02T01:41:51Z",
   "timestamp_source": "provider",
-  "fetched_at_utc": "2026-11-02T01:41:50Z",
-  "freshness_seconds": 29,
+  "fetched_at_utc": "2026-11-02T01:42:19Z",
+  "freshness_seconds": 28,
   "max_freshness_seconds": 900,
   "is_fresh": true,
   "is_fallback": false,
   "bid": null,
   "ask": null,
   "spread": null,
-  "provider_response_time_ms": 320,
+  "provider_response_time_ms": 275,
   "raw_provider_confidence": null,
   "notes": "gold-api.com spot/reference price. Monitored with provider fallback.",
   "source": "gold_api_com",
-  "source_updated_at_gmt": "02-11-2026 01:41:21 am",
+  "source_updated_at_gmt": "02-11-2026 01:41:51 am",
   "gold": {
     "ounce_usd": 3910.2,
     "ounce_aed": 14360.21,
@@ -39,137 +39,5 @@
     "21k": 403.98,
     "18k": 346.27
   },
-  "status": "ok",
-  "selection_method": "median_consensus",
-  "consensus": {
-    "method": "median_consensus",
-    "median": 3910.7875,
-    "mad": 0.5875,
-    "inlier_count": 2,
-    "candidate_count": 2,
-    "outliers": []
-  },
-  "provider_diagnostics": [
-    {
-      "provider": "gold_api_com",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "success",
-      "valid": true,
-      "http_status": 200,
-      "response_time_ms": 320,
-      "provider_timestamp": "2026-11-02T01:41:21Z",
-      "normalized_price": 3910.2,
-      "reason": "fresh"
-    },
-    {
-      "provider": "goldapi_io",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "success",
-      "valid": true,
-      "http_status": 200,
-      "response_time_ms": 342,
-      "provider_timestamp": "2026-11-02T01:41:49Z",
-      "normalized_price": 3911.375,
-      "reason": "fresh"
-    },
-    {
-      "provider": "twelvedata_xauusd",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "provider_disabled"
-    },
-    {
-      "provider": "fmp_gcusd",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "provider_disabled"
-    },
-    {
-      "provider": "goldpricez",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": 200,
-      "response_time_ms": 278,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_price"
-    },
-    {
-      "provider": "finnhub_oanda",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": 403,
-      "response_time_ms": 227,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "plan_gated"
-    },
-    {
-      "provider": "metal_sentinel",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": 200,
-      "response_time_ms": 472,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_price"
-    },
-    {
-      "provider": "metals_dev",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_api_key"
-    },
-    {
-      "provider": "metalpriceapi_xau",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_api_key"
-    },
-    {
-      "provider": "metals_api_xau",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_api_key"
-    },
-    {
-      "provider": "alpha_vantage_gold",
-      "requested_at_utc": "2026-11-02T01:41:50Z",
-      "status": "error",
-      "valid": false,
-      "http_status": null,
-      "response_time_ms": null,
-      "provider_timestamp": null,
-      "normalized_price": null,
-      "reason": "missing_api_key"
-    }
-  ]
+  "status": "ok"
 }
