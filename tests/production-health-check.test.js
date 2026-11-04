@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 const {
   assessHealth,
   fetchJsonWithRetry,
+  getMarketStatus,
   isTransientFetchFailure,
 } = require('../scripts/node/production-health-check.js');
 
@@ -98,4 +99,47 @@ test('isTransientFetchFailure only matches network-style failures', () => {
   assert.equal(isTransientFetchFailure({ status: 503, error: 'timeout' }), true);
   assert.equal(isTransientFetchFailure({ status: 503 }), false);
   assert.equal(isTransientFetchFailure({ status: 200 }), false);
+});
+
+test('stale provider and Pages fallback during market closure are not P0-critical', () => {
+  const checkedAt = Date.parse('2026-11-01T04:51:52.579Z');
+  assert.equal(getMarketStatus(checkedAt).isOpen, false);
+
+  const report = assessHealth({
+    site: healthySite,
+    staticSnapshot: {
+      ok: true,
+      status: 200,
+      latencyMs: 224,
+      body: { xau_usd_per_oz: 3881.2, timestamp_utc: '2026-10-30T20:30:44Z' },
+    },
+    browserProvider: {
+      ok: true,
+      status: 200,
+      latencyMs: 661,
+      body: { price: 3876.4, updatedAt: '2026-11-01T03:29:21Z' },
+    },
+    now: checkedAt,
+  });
+
+  assert.equal(report.status, 'closed');
+  assert.equal(report.market, 'closed');
+  assert.deepEqual(report.critical, []);
+  assert.deepEqual(report.warnings, [
+    'browser_live_provider_unhealthy',
+    'actions_snapshot_stale_or_invalid',
+  ]);
+});
+
+test('Pages outage remains P0-critical even when the market is closed', () => {
+  const checkedAt = Date.parse('2026-11-01T04:51:52.579Z');
+  const report = assessHealth({
+    site: { ok: false, status: 503, latencyMs: 10, body: null },
+    staticSnapshot: { ok: false, status: 503, latencyMs: 15, body: null },
+    browserProvider: { ok: false, status: 0, latencyMs: 20, body: null },
+    now: checkedAt,
+  });
+
+  assert.equal(report.status, 'degraded');
+  assert.deepEqual(report.critical, ['pages_unreachable']);
 });
