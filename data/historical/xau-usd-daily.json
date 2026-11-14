@@ -8,13 +8,13 @@
   "currency": "USD",
   "groupBy": "day",
   "aggregation": "daily-average",
-  "retrievedAt": "2026-11-13T02:48:43.265Z",
-  "generatedAt": "2026-11-13T02:48:43.265Z",
+  "retrievedAt": "2026-11-14T02:48:29.584Z",
+  "generatedAt": "2026-11-14T02:48:29.584Z",
   "request": {
-    "startTimestamp": 1760054400,
-    "endTimestamp": 1794614399,
-    "startDate": "2025-10-10",
-    "endDate": "2026-11-13",
+    "startTimestamp": 1760140800,
+    "endTimestamp": 1794700799,
+    "startDate": "2025-10-11",
+    "endDate": "2026-11-14",
     "timestampUnit": "seconds"
   },
   "providerResponseRecordCount": 400,
@@ -31,13 +31,13 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "0b6c82a0ec00ed3f065643799bd53b6d70ee59871c10040134c4f699f9c3154e",
-  "normalizedRecordsSha256": "bd7b08c4c853f0cdfd1d17fb4c738db0bb2bd789aca916571bf2737a6cb5d690",
+  "rawResponseSha256": "8b8a0d7c1143e0fdd0f398af3096a19257052be7fc7ee0762a4be058e2ed3878",
+  "normalizedRecordsSha256": "0da10ffd27d1e62cde9229f7b9e4a8bb7e25bcc203dba16c0fef267399aeaf45",
   "workflow": {
     "repository": "vctb12/GoldTickerLive",
-    "runId": "43354625647",
+    "runId": "43548247695",
     "runAttempt": "1",
-    "commitSha": "51133724a9860f617f29dae4fa6f144245ea7ddd",
+    "commitSha": "165b206d1e622712f018e55ebd269c1443da9152",
     "ref": "refs/heads/main"
   },
   "normalizerVersion": "1.1.0",
@@ -47,9 +47,9 @@
     "maxMonotonicUp": 13,
     "maxMonotonicDown": 8,
     "maxRepeatedDelta": 1,
-    "dailyReturnStdDev": 55.2569,
+    "dailyReturnStdDev": 55.2478,
     "uniqueValueRatio": 0.9975,
-    "weekendRecordCount": 114,
+    "weekendRecordCount": 115,
     "maxAbsoluteDailyReturn": 386.7211,
     "minAbsoluteNonZeroDailyReturn": 0.0072,
     "dominantDecimalSuffix": {
@@ -58,16 +58,12 @@
     }
   },
   "coverage": {
-    "start": "2025-10-10",
-    "end": "2026-11-13",
+    "start": "2025-10-11",
+    "end": "2026-11-14",
     "recordCount": 400,
     "calendarAgeDays": 0
   },
   "records": [
-    {
-      "date": "2025-10-10",
-      "avgUsdOz": 3991.7122
-    },
     {
       "date": "2025-10-11",
       "avgUsdOz": 4018.3999
@@ -1662,7 +1658,11 @@
     },
     {
       "date": "2026-11-13",
-      "avgUsdOz": 3899.992
+      "avgUsdOz": 3895.5133
+    },
+    {
+      "date": "2026-11-14",
+      "avgUsdOz": 3887.6001
     }
   ]
 }
