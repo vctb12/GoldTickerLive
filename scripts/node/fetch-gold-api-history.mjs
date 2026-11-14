@@ -110,6 +110,25 @@ function httpErrorLabel(status) {
   return `http_error_${status}`;
 }
 
+/** Align with scripts/fetch_gold_price.py — do not retry auth/rate-limit client errors. */
+const HISTORY_FETCH_RETRY_BACKOFFS_MS = [2000, 4000];
+const HISTORY_FETCH_TIMEOUT_MS = 45_000;
+
+/**
+ * @param {number} status
+ * @returns {boolean}
+ */
+function isHistoryFetchRetryableStatus(status) {
+  if (status === 429) return false;
+  if (status >= 500) return true;
+  if (status === 408) return true;
+  return false;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * @param {string} apiKey
  * @param {number} days
@@ -119,29 +138,66 @@ function httpErrorLabel(status) {
 async function fetchHistory(apiKey, days, referenceDate) {
   const requestParams = buildHistoryRequestParams(days, referenceDate);
   const url = buildHistoryUrl(requestParams);
-  const response = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      'x-api-key': apiKey,
-    },
-  });
-  const rawText = await response.text();
-  const contentType = response.headers.get('content-type') || 'unknown';
-  let body;
-  try {
-    body = JSON.parse(rawText);
-  } catch {
-    throw new Error(`invalid_json: HTTP ${response.status}`);
+  const headers = {
+    Accept: 'application/json',
+    'x-api-key': apiKey,
+  };
+  const maxAttempts = HISTORY_FETCH_RETRY_BACKOFFS_MS.length + 1;
+  let lastError = null;
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    if (attempt > 0) {
+      const waitMs = HISTORY_FETCH_RETRY_BACKOFFS_MS[attempt - 1];
+      console.log(`history fetch attempt ${attempt + 1}/${maxAttempts} after ${waitMs}ms backoff`);
+      await sleep(waitMs);
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), HISTORY_FETCH_TIMEOUT_MS);
+    let response;
+    try {
+      response = await fetch(url, { headers, signal: controller.signal });
+    } catch (err) {
+      clearTimeout(timer);
+      const message =
+        err && typeof err === 'object' && err.name === 'AbortError'
+          ? `timeout: history fetch exceeded ${HISTORY_FETCH_TIMEOUT_MS}ms`
+          : err instanceof Error
+            ? err.message
+            : 'fetch failed';
+      lastError = new Error(message);
+      continue;
+    }
+    clearTimeout(timer);
+
+    const rawText = await response.text();
+    const contentType = response.headers.get('content-type') || 'unknown';
+    let body;
+    try {
+      body = JSON.parse(rawText);
+    } catch {
+      lastError = new Error(`invalid_json: HTTP ${response.status}`);
+      if (isHistoryFetchRetryableStatus(response.status)) {
+        continue;
+      }
+      throw lastError;
+    }
+    if (!response.ok) {
+      const label = httpErrorLabel(response.status);
+      const msg =
+        body && typeof body === 'object' && 'error' in body
+          ? String(/** @type {Record<string, unknown>} */ (body).error)
+          : label;
+      lastError = new Error(`${label}: ${msg}`);
+      if (isHistoryFetchRetryableStatus(response.status)) {
+        continue;
+      }
+      throw lastError;
+    }
+    return { body, status: response.status, contentType, rawText, requestParams, requestUrl: url };
   }
-  if (!response.ok) {
-    const label = httpErrorLabel(response.status);
-    const msg =
-      body && typeof body === 'object' && 'error' in body
-        ? String(/** @type {Record<string, unknown>} */ (body).error)
-        : label;
-    throw new Error(`${label}: ${msg}`);
-  }
-  return { body, status: response.status, contentType, rawText, requestParams, requestUrl: url };
+
+  throw lastError ?? new Error('fetch failed');
 }
 
 function printRequestSummary(requestParams) {
