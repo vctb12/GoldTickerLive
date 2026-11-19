@@ -1400,6 +1400,31 @@ def _is_spend_cap_problem(problem):
     )
 
 
+def _is_cloudflare_challenge_response(raw_text):
+    """True when X/Twitter edge returned an HTML bot challenge instead of API JSON."""
+    if not isinstance(raw_text, str) or not raw_text.strip():
+        return False
+    lowered = raw_text.lower()
+    if "application/json" in lowered[:200]:
+        return False
+    markers = (
+        "just a moment",
+        "challenges.cloudflare.com",
+        "cf_chl_opt",
+        "challenge-platform",
+    )
+    return any(marker in lowered for marker in markers)
+
+
+def _cloudflare_edge_skip_payload():
+    print("   SKIP: X API edge returned a Cloudflare challenge (transient); no post was sent.")
+    print("   Recovery: rerun the workflow; if this repeats, check X API status and runner egress.")
+    return {
+        "posted": False,
+        "skip_reason": "cloudflare_edge_challenge",
+    }
+
+
 def _spend_cap_skip_payload(problem):
     reset_date = problem.get("reset_date") or "unknown"
     print("   SKIP: X API spend cap reached; no post was sent.")
@@ -1481,6 +1506,10 @@ def post_tweet(text, post_type='hourly'):
         problem = _parse_x_api_problem(exc)
         if _is_spend_cap_problem(problem):
             return _spend_cap_skip_payload(problem)
+        resp = getattr(exc, "response", None)
+        raw_text = getattr(resp, "text", "") or ""
+        if _is_cloudflare_challenge_response(raw_text):
+            return _cloudflare_edge_skip_payload()
         print("   Likely cause: duplicate/near-duplicate content, or automation-rule violation."
               " Check recent posts from @GoldTickerLive.")
         raise
@@ -2155,11 +2184,28 @@ def main():
     if isinstance(post_result, dict) and not post_result.get("posted", False):
         if shortcut_attempt_recorded:
             _restore_text_file(LAST_TWEET_STATE_FILE, shortcut_state_snapshot)
+        skip_reason = post_result.get("skip_reason")
+        if skip_reason == "cloudflare_edge_challenge":
+            finish_run(
+                RunResult(
+                    outcome="SKIP_CLOUDFLARE_EDGE",
+                    status="skip",
+                    skip_reason=skip_reason,
+                    operator_action="rerun_post_workflow_or_check_x_api_edge",
+                    post_type=post_type,
+                    template_used=template_used,
+                    price_usd_oz=data['price'],
+                    tweet_length=tweet_length,
+                    trigger_source=trigger_source,
+                    trigger_nonce=trigger_nonce or "(none)",
+                ),
+                exit_code=0,
+            )
         finish_run(
             RunResult(
                 outcome="OPERATOR_ACTION_SPEND_CAP",
                 status="operator_action_needed",
-                skip_reason=post_result.get("skip_reason"),
+                skip_reason=skip_reason,
                 operator_action="increase_x_spend_cap_or_wait_for_reset",
                 reset_date=post_result.get('reset_date', 'unknown'),
                 post_type=post_type,
