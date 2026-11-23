@@ -16,6 +16,24 @@ const MAX_BROWSER_PROVIDER_AGE_SECONDS = 10 * 60;
 const MAX_FETCH_ATTEMPTS = 3;
 const RETRY_DELAY_MS = 400;
 
+// Keep in sync with src/lib/live-status.js GOLD_MARKET (LBMA weekly schedule).
+const GOLD_MARKET = {
+  OPEN_SUN_MINUTES: 22 * 60,
+  CLOSE_FRI_MINUTES: 21 * 60,
+};
+
+function getMarketStatus(now = Date.now()) {
+  const date = new Date(typeof now === 'function' ? now() : now);
+  const utcDay = date.getUTCDay();
+  const utcMinutes = date.getUTCHours() * 60 + date.getUTCMinutes();
+  const isOpen = !(
+    utcDay === 6 ||
+    (utcDay === 5 && utcMinutes >= GOLD_MARKET.CLOSE_FRI_MINUTES) ||
+    (utcDay === 0 && utcMinutes < GOLD_MARKET.OPEN_SUN_MINUTES)
+  );
+  return { isOpen, key: isOpen ? 'open' : 'closed' };
+}
+
 async function fetchJson(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -123,10 +141,30 @@ function assessHealth({ site, staticSnapshot, browserProvider, now = Date.now() 
     // age proof are healthy. This keeps the alert aligned with user impact.
     (checks.browserLiveProvider.ok ? warnings : critical).push('actions_snapshot_stale_or_invalid');
   }
+
+  const market = getMarketStatus(nowEpoch);
+  if (!market.isOpen) {
+    // docs/freshness-contract.md: stale ages during market closure are expected.
+    // deploy.yml also skips scheduled redeploys outside market hours, so Pages
+    // fallback JSON can lag without user-facing "live" impact.
+    const deferred = critical.filter((signal) => signal !== 'pages_unreachable');
+    for (const signal of deferred) {
+      if (!warnings.includes(signal)) warnings.push(signal);
+    }
+    critical.length = 0;
+    if (!checks.site.ok) critical.push('pages_unreachable');
+  }
+
+  let status = 'healthy';
+  if (critical.length) status = 'degraded';
+  else if (!market.isOpen) status = 'closed';
+  else if (warnings.length) status = 'warning';
+
   return {
     schemaVersion: 2,
     checkedAtUtc: new Date(nowEpoch).toISOString(),
-    status: critical.length ? 'degraded' : warnings.length ? 'warning' : 'healthy',
+    status,
+    market: market.key,
     critical,
     warnings,
     checks,
@@ -162,6 +200,7 @@ module.exports = {
   assessHealth,
   finitePrice,
   fetchJsonWithRetry,
+  getMarketStatus,
   isTransientFetchFailure,
   timestampAgeSeconds,
   runHealthCheck,
