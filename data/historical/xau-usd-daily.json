@@ -8,13 +8,13 @@
   "currency": "USD",
   "groupBy": "day",
   "aggregation": "daily-average",
-  "retrievedAt": "2026-11-22T02:48:43.333Z",
-  "generatedAt": "2026-11-22T02:48:43.333Z",
+  "retrievedAt": "2026-11-23T02:48:26.230Z",
+  "generatedAt": "2026-11-23T02:48:26.230Z",
   "request": {
-    "startTimestamp": 1760832000,
-    "endTimestamp": 1795391999,
-    "startDate": "2025-10-19",
-    "endDate": "2026-11-22",
+    "startTimestamp": 1760918400,
+    "endTimestamp": 1795478399,
+    "startDate": "2025-10-20",
+    "endDate": "2026-11-23",
     "timestampUnit": "seconds"
   },
   "providerResponseRecordCount": 400,
@@ -31,43 +31,39 @@
     "implausible_price": 0,
     "invalid_row": 0
   },
-  "rawResponseSha256": "ea29b253a2365ce8025cbb0a3b3db1b8f42390b58fc3a5879dd052527977d7d2",
-  "normalizedRecordsSha256": "3f42ce57b30d56eb07ee9cd726aeef9849f6efc1a28e42d0c7847660bea2b4a2",
+  "rawResponseSha256": "c7993f4a9132bb52da150fca580ce2f45224992eefa0ffd087fd14c295fa145e",
+  "normalizedRecordsSha256": "0b47e4ae61e08560bd0203c6f42589ff42fe5074ecccd260c02d2e3d4cddc8f8",
   "workflow": {
     "repository": "vctb12/GoldTickerLive",
-    "runId": "44977716183",
+    "runId": "45102219145",
     "runAttempt": "1",
-    "commitSha": "620c42bcbcd5fee80476612e01148f3547004e2a",
+    "commitSha": "8d5a25a7306d7baa16d3cb1cb0ea0d8610c1579b",
     "ref": "refs/heads/main"
   },
   "normalizerVersion": "1.1.0",
   "authenticity": {
-    "unchangedConsecutive": 2,
+    "unchangedConsecutive": 1,
     "maxUnchangedRun": 2,
     "maxMonotonicUp": 13,
     "maxMonotonicDown": 8,
-    "maxRepeatedDelta": 2,
-    "dailyReturnStdDev": 55.6441,
-    "uniqueValueRatio": 0.995,
-    "weekendRecordCount": 115,
+    "maxRepeatedDelta": 1,
+    "dailyReturnStdDev": 55.644,
+    "uniqueValueRatio": 0.9975,
+    "weekendRecordCount": 114,
     "maxAbsoluteDailyReturn": 386.7211,
     "minAbsoluteNonZeroDailyReturn": 0.0072,
     "dominantDecimalSuffix": {
       "suffix": "",
-      "count": 10
+      "count": 9
     }
   },
   "coverage": {
-    "start": "2025-10-19",
-    "end": "2026-11-22",
+    "start": "2025-10-20",
+    "end": "2026-11-23",
     "recordCount": 400,
     "calendarAgeDays": 0
   },
   "records": [
-    {
-      "date": "2025-10-19",
-      "avgUsdOz": 4252.8479
-    },
     {
       "date": "2025-10-20",
       "avgUsdOz": 4300.7918
@@ -1662,7 +1658,11 @@
     },
     {
       "date": "2026-11-22",
-      "avgUsdOz": 3539
+      "avgUsdOz": 3541.2385
+    },
+    {
+      "date": "2026-11-23",
+      "avgUsdOz": 3589.0033
     }
   ]
 }
