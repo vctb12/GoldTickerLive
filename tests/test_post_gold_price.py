@@ -701,6 +701,34 @@ def test_tweet_403_spend_cap_returns_skip_payload(capsys):
     assert "=== TWEET ERROR ===" in out
 
 
+def test_tweet_403_cloudflare_challenge_returns_skip_payload(capsys):
+    import tweepy
+
+    mock_response = MagicMock()
+    mock_response.status_code = 403
+    mock_response.text = (
+        "<!DOCTYPE html><html><head><title>Just a moment...</title>"
+        "<script src=\"https://challenges.cloudflare.com\"></script></head></html>"
+    )
+    mock_response.headers = {}
+
+    exc = tweepy.errors.Forbidden(response=mock_response)
+
+    mock_client = MagicMock()
+    mock_client.create_tweet.side_effect = exc
+
+    with patch('tweepy.Client', return_value=mock_client):
+        result = pg.post_tweet("test tweet text", post_type='hourly')
+
+    out = capsys.readouterr().out
+    assert result == {
+        "posted": False,
+        "skip_reason": "cloudflare_edge_challenge",
+    }
+    assert "SKIP: X API edge returned a Cloudflare challenge" in out
+    assert "=== TWEET ERROR ===" in out
+
+
 def test_tweet_402_credits_depleted_returns_skip_payload(capsys):
     import tweepy
 
@@ -1374,6 +1402,65 @@ def test_main_skips_cleanly_when_x_spend_cap_is_reached(tmp_path, monkeypatch, c
     assert "OPERATOR_ACTION_SPEND_CAP" in out
     assert "reset_date:" in out
     assert "2026-05-13" in out
+
+
+def test_main_skips_cleanly_when_cloudflare_edge_challenge(tmp_path, monkeypatch, capsys):
+    fresh_now = datetime.now(timezone.utc)
+    gold_file = tmp_path / "gold_price.json"
+    state_file = tmp_path / "last_gold_price.json"
+    tweet_state_file = tmp_path / "last_tweet_state.json"
+    gold_file.write_text(
+        json.dumps(
+            {
+                "provider": "gold_api_com",
+                "xau_usd_per_oz": 4715.7,
+                "timestamp_utc": (fresh_now - timedelta(seconds=20)).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "fetched_at_utc": fresh_now.strftime("%Y-%m-%dT%H:%M:%SZ"),
+                "aed_per_gram_24k": 556.8,
+                "karats_aed_per_gram": {
+                    "24k": 556.8,
+                    "22k": 510.4,
+                    "21k": 487.2,
+                    "18k": 417.6,
+                },
+            }
+        )
+    )
+    state_file.write_text(json.dumps({"price": 4700.0, "posted_at_utc": "2026-05-07T09:00:00Z"}))
+    tweet_state_file.write_text(json.dumps({"schema_version": 1}))
+
+    monkeypatch.setattr(pg, "GOLD_PRICE_FILE", gold_file)
+    monkeypatch.setattr(pg, "STATE_FILE", state_file)
+    monkeypatch.setattr(pg, "LAST_TWEET_STATE_FILE", tweet_state_file)
+    monkeypatch.setattr(
+        pg,
+        "post_tweet",
+        MagicMock(
+            return_value={
+                "posted": False,
+                "skip_reason": "cloudflare_edge_challenge",
+            }
+        ),
+    )
+    monkeypatch.setattr(pg, "is_market_open_time", lambda _now=None: True)
+    monkeypatch.setenv("TWITTER_API_KEY", "key")
+    monkeypatch.setenv("TWITTER_API_SECRET", "secret")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setenv("TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+    monkeypatch.setattr(pg, "TWITTER_API_KEY", "key")
+    monkeypatch.setattr(pg, "TWITTER_API_SECRET", "secret")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN", "token")
+    monkeypatch.setattr(pg, "TWITTER_ACCESS_TOKEN_SECRET", "token-secret")
+
+    try:
+        pg.main()
+    except SystemExit as exc:
+        assert exc.code == 0
+    else:
+        raise AssertionError("Expected main() to exit cleanly on Cloudflare edge challenge")
+
+    out = capsys.readouterr().out
+    assert "SKIP_CLOUDFLARE_EDGE" in out
 
 
 def test_main_shortcut_spend_cap_restores_guard_state(tmp_path, monkeypatch, capsys):
